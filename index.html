@@ -203,6 +203,30 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .mv-top{padding:18px 20px;border-bottom:0.5px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
 .mv-title{font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);}
 .mv-title em{color:var(--acc);}
+.mv-brand-landing{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding:20px 20px 0;}
+.mv-brand-card{border-radius:18px;overflow:hidden;cursor:pointer;transition:all .22s;position:relative;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;}
+.mv-brand-card:hover{transform:translateY(-3px);}
+.mv-brand-card.rss{background:linear-gradient(140deg,#0d1240 0%,#1a0d40 50%,#0a0a18 100%);border:0.5px solid rgba(91,110,247,.3);}
+.mv-brand-card.rss:hover{border-color:var(--acc);box-shadow:0 0 32px rgba(91,110,247,.15);}
+.mv-brand-card.vrc{background:linear-gradient(140deg,#002010 0%,#003018 50%,#001a0d 100%);border:0.5px solid rgba(48,209,88,.25);}
+.mv-brand-card.vrc:hover{border-color:var(--grn);box-shadow:0 0 32px rgba(48,209,88,.12);}
+.mv-brand-card.urd{background:linear-gradient(140deg,#1a0e00 0%,#2a1400 50%,#0d0800 100%);border:0.5px solid rgba(255,159,10,.25);}
+.mv-brand-card.urd:hover{border-color:var(--amb);box-shadow:0 0 32px rgba(255,159,10,.12);}
+.mv-brand-card-bg{position:absolute;inset:0;opacity:.04;font-size:120px;display:flex;align-items:center;justify-content:center;pointer-events:none;font-weight:900;font-style:italic;letter-spacing:-6px;overflow:hidden;}
+.mv-brand-card-content{position:relative;padding:22px 24px;}
+.mv-brand-card-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;opacity:.7;}
+.mv-brand-card-name{font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:#fff;line-height:1;margin-bottom:6px;}
+.mv-brand-card-sub{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:16px;}
+.mv-brand-card-stats{display:flex;gap:20px;margin-bottom:16px;}
+.mv-brand-stat-n{font-size:20px;font-weight:900;font-style:italic;letter-spacing:-1px;color:#fff;}
+.mv-brand-stat-l{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;opacity:.5;}
+.mv-brand-card-btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.mv-brand-card-mods{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.mv-brand-mod-pill{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);border:0.5px solid rgba(255,255,255,.08);}
+/* Brand detail view */
+.mv-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:color .12s;border-bottom:0.5px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
+.mv-back:hover{color:var(--t1);}
+.mv-section{padding:0 20px 32px;}
 .mv-section{padding:0 20px 32px;}
 .mv-brand-header{display:flex;align-items:center;gap:12px;padding:20px 0 16px;}
 .mv-brand-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
@@ -465,6 +489,12 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   <div class="view" id="view-mods">
     <div class="mv-top"><h2 class="mv-title">Supported <em>mods</em></h2></div>
     <div id="m-root"></div>
+  </div>
+
+  <!-- BRAND DETAIL -->
+  <div class="view" id="view-brand-detail">
+    <div class="mv-back" id="brand-back-btn" onclick="nav('mods')"><i class="ti ti-arrow-left"></i> All publishers</div>
+    <div id="brand-detail-content"></div>
   </div>
 
   <!-- MOD DETAIL -->
@@ -856,7 +886,20 @@ async function loadMods(){
   const livs=await fetchLiveries({sort:'votes',pageSize:1000});
   const lc={};livs.forEach(l=>{if(l.mod_id)lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
 
-  // Build championship map per mod
+  const BRAND_ORDER=['RSS','VRC','URD'];
+  const brandMeta={
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',label:'Race Sim Studio',desc:'Premium simulation mods for Assetto Corsa. Formula, GT, Hillclimb and more.'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',label:'Virtual Racing Cars',desc:'High-quality GT and touring car mods with detailed physics and models.'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',label:'URD Mods',desc:'Endurance and GT racing mods. Known for quality and competitive content.'},
+  };
+
+  // Group mods by brand
+  const branded={RSS:[],VRC:[],URD:[]};
+  _mods.forEach(m=>{
+    if(m.brand&&branded[m.brand])branded[m.brand].push(m);
+  });
+
+  // Build champ map per mod
   const modChamps={};
   livs.forEach(l=>{
     if(!l.mod_id||!l.championships)return;
@@ -864,90 +907,126 @@ async function loadMods(){
     modChamps[l.mod_id].set(l.championship_id,l.championships.short_name||l.championships.name);
   });
 
-  const BRAND_ORDER=['RSS','VRC','URD','Other'];
-  const brandMeta={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',icon:'R',label:'Race Sim Studio'},
-    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',icon:'V',label:'Virtual Racing Cars'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',icon:'U',label:'URD Mods'},
-    Other:{c:'#6E6E73',bg:'rgba(110,110,115,.10)',gbg:'linear-gradient(135deg,#111,#0a0a0a)',icon:'?',label:'Other mods'},
-  };
-
-  // Group by brand then category
-  const branded={};
-  BRAND_ORDER.forEach(b=>branded[b]={});
-  _mods.forEach(m=>{
-    const brand=m.brand&&brandMeta[m.brand]?m.brand:'Other';
-    const catName=m.categories?.name||'Other';
-    if(!branded[brand][catName])branded[brand][catName]={cat:m.categories,mods:[]};
-    branded[brand][catName].mods.push(m);
-  });
-  // Sort mods by livery count desc
-  Object.values(branded).forEach(cats=>Object.values(cats).forEach(g=>g.mods.sort((a,b)=>(lc[b.id]||0)-(lc[a.id]||0))));
-
-  let html='';
+  let html='<div class="mv-brand-landing">';
   BRAND_ORDER.forEach(brand=>{
-    const cats=branded[brand];
-    const allMods=Object.values(cats).flatMap(g=>g.mods);
-    if(!allMods.length)return;
+    const mods=branded[brand]||[];
+    if(!mods.length)return;
     const bm=brandMeta[brand];
-    const totalLivs=allMods.reduce((s,m)=>s+(lc[m.id]||0),0);
+    const totalLivs=mods.reduce((s,m)=>s+(lc[m.id]||0),0);
+    // Collect unique categories
+    const cats=[...new Set(mods.map(m=>m.categories?.name).filter(Boolean))];
+    const modPills=mods.slice(0,5).map(m=>`<span class="mv-brand-mod-pill">${m.name}</span>`).join('');
 
-    html+='<div class="mv-section">';
-    html+=`<div class="mv-brand-header">
-      <div class="mv-brand-icon" style="background:${bm.bg};color:${bm.c};">${bm.icon}</div>
-      <div>
-        <div class="mv-brand-name" style="color:${bm.c};">${bm.label}</div>
-        <div class="mv-brand-sub">${allMods.length} mod${allMods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'}</div>
+    html+=`<div class="mv-brand-card ${brand.toLowerCase()}" onclick="openBrandDetail('${brand}')">
+      <div class="mv-brand-card-bg">${brand}</div>
+      <div class="mv-brand-card-content">
+        <div class="mv-brand-card-label" style="color:${bm.c};">${brand} · ${bm.label}</div>
+        <div class="mv-brand-card-name">${bm.label}</div>
+        <div class="mv-brand-card-sub">${bm.desc}</div>
+        <div class="mv-brand-card-stats">
+          <div><div class="mv-brand-stat-n">${mods.length}</div><div class="mv-brand-stat-l">Mods</div></div>
+          <div><div class="mv-brand-stat-n">${totalLivs}</div><div class="mv-brand-stat-l">Liveries</div></div>
+          <div><div class="mv-brand-stat-n">${cats.length}</div><div class="mv-brand-stat-l">Categories</div></div>
+        </div>
+        <div class="mv-brand-card-mods">${modPills}${mods.length>5?`<span class="mv-brand-mod-pill">+${mods.length-5} more</span>`:''}</div>
+        <button class="mv-brand-card-btn" style="background:${bm.c};color:#fff;">
+          <i class="ti ti-layout-grid"></i> Browse ${mods.length} mod${mods.length>1?'s':''}
+        </button>
       </div>
-      <div class="mv-brand-sep"></div>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('m-root').innerHTML=html;
+}
+
+async function openBrandDetail(brand){
+  // Switch to brand detail view
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));
+  document.getElementById('view-brand-detail').classList.add('on');
+  document.getElementById('nl-mods').classList.add('on');
+  document.getElementById('main-scroll').scrollTop=0;
+  _prevView='mods';
+
+  const brandMeta={
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',label:'Race Sim Studio'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',label:'Virtual Racing Cars'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',label:'URD Mods'},
+  };
+  const bm=brandMeta[brand];
+  const mods=_mods.filter(m=>m.brand===brand);
+
+  const livs=await fetchLiveries({sort:'votes',pageSize:1000});
+  const lc={};livs.forEach(l=>{if(l.mod_id)lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
+  const modChamps={};
+  livs.forEach(l=>{
+    if(!l.mod_id||!l.championships)return;
+    if(!modChamps[l.mod_id])modChamps[l.mod_id]=new Map();
+    modChamps[l.mod_id].set(l.championship_id,l.championships.short_name||l.championships.name);
+  });
+
+  // Update back btn label
+  document.getElementById('brand-back-btn').innerHTML=`<i class="ti ti-arrow-left"></i> All publishers`;
+
+  // Group by category
+  const bycat={};
+  mods.forEach(m=>{
+    const k=m.categories?.name||'Other';
+    if(!bycat[k])bycat[k]={cat:m.categories,mods:[]};
+    bycat[k].mods.push(m);
+  });
+  Object.values(bycat).forEach(g=>g.mods.sort((a,b)=>(lc[b.id]||0)-(lc[a.id]||0)));
+
+  // Brand header
+  const totalLivs=mods.reduce((s,m)=>s+(lc[m.id]||0),0);
+  let html=`<div style="padding:20px 20px 0;">
+    <div style="background:${bm.bg};border:0.5px solid;border-color:${brand==='RSS'?'rgba(91,110,247,.25)':brand==='VRC'?'rgba(48,209,88,.2)':'rgba(255,159,10,.2)'};border-radius:14px;padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;">
+      <div style="width:44px;height:44px;border-radius:12px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
+      <div style="flex:1;">
+        <div style="font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);">${bm.label}</div>
+        <div style="font-size:12px;color:var(--t2);margin-top:2px;">${mods.length} mod${mods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'}</div>
+      </div>
     </div>`;
 
-    Object.entries(cats).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([catName,g])=>{
-      html+=`<div style="margin-bottom:22px;">
-        <div class="mv-cat-label">
-          <span class="mv-cat-dot" style="background:${g.cat?.color_text||'#888'};"></span>
-          ${catName}
-          <span style="font-weight:400;">${g.mods.length} mod${g.mods.length>1?'s':''}</span>
-          <span class="mv-cat-sep"></span>
+  Object.entries(bycat).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([catName,g])=>{
+    html+=`<div style="margin-bottom:24px;">
+      <div class="mv-cat-label" style="margin-bottom:10px;">
+        <span class="mv-cat-dot" style="background:${g.cat?.color_text||'#888'};"></span>
+        ${catName}
+        <span style="font-weight:400;">${g.mods.length} mod${g.mods.length>1?'s':''}</span>
+        <span class="mv-cat-sep"></span>
+      </div>
+      <div class="mv-cards-grid">`;
+    g.mods.forEach(m=>{
+      const cnt=lc[m.id]||0;
+      const champs=[...((modChamps[m.id]||new Map()).values())].slice(0,4);
+      html+=`<div class="mv-card ${brand.toLowerCase()}" onclick="openModDetail('${m.id}')">
+        <div class="mv-cover" style="${m.image_url?'':'background:'+bm.gbg+';'}">
+          ${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car mv-cover-ph"></i>`}
+          <div class="mv-cover-labels">
+            <span class="badge" style="background:${g.cat?.color_bg||'#222'};color:${g.cat?.color_text||'#888'};font-size:9px;">${catName}</span>
+            ${m.version?`<span class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.4);">v${m.version}</span>`:''}
+          </div>
         </div>
-        <div class="mv-cards-grid">`;
-
-      g.mods.forEach(m=>{
-        const cnt=lc[m.id]||0;
-        const champs=[...((modChamps[m.id]||new Map()).values())].slice(0,4);
-        const champPills=champs.map(c=>`<span class="mv-champ-pill">${c}</span>`).join('');
-        const coverBg=m.image_url?'':`style="background:${bm.gbg};"`;
-        html+=`<div class="mv-card ${brand.toLowerCase()}" onclick="openModDetail('${m.id}')">
-          <div class="mv-cover" ${coverBg}>
-            ${m.image_url
-              ?`<img src="${m.image_url}" alt="${m.name}">`
-              :`<i class="ti ti-car mv-cover-ph"></i>`}
-            <div class="mv-cover-labels">
-              <span class="badge" style="background:${g.cat?.color_bg||'#222'};color:${g.cat?.color_text||'#888'};font-size:9px;">${catName}</span>
-              ${m.version?`<span class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.4);">v${m.version}</span>`:''}
-            </div>
+        <div class="mv-body">
+          <div class="mv-mod-name">${m.name}</div>
+          ${m.description?`<div class="mv-mod-desc">${m.description}</div>`:''}
+          <div class="mv-stats">
+            <div><div class="mv-stat-n">${cnt}</div><div class="mv-stat-l">Liveries</div></div>
+            <div><div class="mv-stat-n">${champs.length}</div><div class="mv-stat-l">Champs</div></div>
           </div>
-          <div class="mv-body">
-            <div class="mv-mod-name">${m.name}</div>
-            ${m.description?`<div class="mv-mod-desc">${m.description}</div>`:'<div class="mv-mod-desc" style="color:var(--t3);">No description yet.</div>'}
-            <div class="mv-stats">
-              <div><div class="mv-stat-n">${cnt}</div><div class="mv-stat-l">Liveries</div></div>
-              <div><div class="mv-stat-n">${champs.length}</div><div class="mv-stat-l">Champs</div></div>
-            </div>
-            ${champPills?`<div class="mv-champs">${champPills}</div>`:''}
-          </div>
-          <div class="mv-footer">
-            <span class="mv-updated" style="color:${bm.c};font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;">${bm.label}</span>
-            <button class="mv-browse-btn" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid"></i> Browse</button>
-          </div>
-        </div>`;
-      });
-      html+='</div></div>';
+          ${champs.length?`<div class="mv-champs">${champs.map(c=>`<span class="mv-champ-pill">${c}</span>`).join('')}</div>`:''}
+        </div>
+        <div class="mv-footer">
+          <span class="mv-updated" style="color:${bm.c};font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;">${brand}</span>
+          <button class="mv-browse-btn" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid"></i> Browse</button>
+        </div>
+      </div>`;
     });
-    html+='</div>';
+    html+='</div></div>';
   });
-
-  document.getElementById('m-root').innerHTML=html;
+  html+='</div>';
+  document.getElementById('brand-detail-content').innerHTML=html;
 }
 
 
