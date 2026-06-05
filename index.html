@@ -203,28 +203,43 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .mv-top{padding:18px 20px;border-bottom:0.5px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
 .mv-title{font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);}
 .mv-title em{color:var(--acc);}
-.mv-section{padding:0 20px 28px;}
-.mv-brand-header{display:flex;align-items:center;gap:12px;padding:20px 0 14px;}
-.mv-brand-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
-.mv-brand-name{font-size:13px;font-weight:700;color:var(--t1);}
+.mv-section{padding:0 20px 32px;}
+.mv-brand-header{display:flex;align-items:center;gap:12px;padding:20px 0 16px;}
+.mv-brand-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
+.mv-brand-name{font-size:14px;font-weight:700;color:var(--t1);}
 .mv-brand-sub{font-size:11px;color:var(--t2);margin-top:1px;}
 .mv-brand-sep{flex:1;height:0.5px;background:var(--b1);}
-.mv-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
-.mv-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .18s;}
-.mv-card:hover{transform:translateY(-2px);background:var(--s2);}
-.mv-card.rss{border-color:rgba(91,110,247,.22);}
+.mv-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+/* Mod card — rich style */
+.mv-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;}
+.mv-card:hover{border-color:var(--b2);transform:translateY(-1px);}
+.mv-card.rss{border-color:rgba(91,110,247,.2);}
 .mv-card.rss:hover{border-color:var(--acc);}
-.mv-card.vrc{border-color:rgba(48,209,88,.22);}
+.mv-card.vrc{border-color:rgba(48,209,88,.2);}
 .mv-card.vrc:hover{border-color:var(--grn);}
-.mv-card.urd{border-color:rgba(255,159,10,.22);}
+.mv-card.urd{border-color:rgba(255,159,10,.2);}
 .mv-card.urd:hover{border-color:var(--amb);}
-.mv-cover{width:100%;height:90px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--s2);}
+.mv-cover{width:100%;height:110px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .mv-cover img{width:100%;height:100%;object-fit:cover;transition:transform .2s;}
 .mv-card:hover .mv-cover img{transform:scale(1.04);}
-.mv-body{padding:11px 13px 13px;}
-.mv-brand-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
-.mv-name{font-size:14px;font-weight:800;letter-spacing:-.5px;color:var(--t1);margin-bottom:7px;}
-.mv-foot{display:flex;align-items:center;justify-content:space-between;}
+.mv-cover-ph{font-size:40px;color:rgba(255,255,255,.04);}
+.mv-cover-labels{position:absolute;bottom:9px;left:11px;display:flex;gap:5px;}
+.mv-body{padding:13px 15px 0;flex:1;}
+.mv-mod-name{font-size:16px;font-weight:800;letter-spacing:-.6px;color:var(--t1);margin-bottom:4px;}
+.mv-mod-desc{font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:11px;}
+.mv-stats{display:flex;gap:14px;padding:9px 0;border-top:0.5px solid var(--b1);border-bottom:0.5px solid var(--b1);margin-bottom:10px;}
+.mv-stat-n{font-size:14px;font-weight:800;letter-spacing:-.5px;color:var(--t1);}
+.mv-stat-l{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+.mv-champs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
+.mv-champ-pill{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600;background:var(--s2);color:var(--t2);border:0.5px solid var(--b1);}
+.mv-footer{padding:0 15px 13px;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.mv-updated{font-size:10px;color:var(--t3);}
+.mv-browse-btn{height:26px;padding:0 10px;background:var(--acc3);color:var(--acc);border:0.5px solid rgba(91,110,247,.2);border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:all .15s;}
+.mv-browse-btn:hover{background:var(--acc2);}
+/* Cat sub-section label */
+.mv-cat-label{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.mv-cat-dot{width:5px;height:5px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.mv-cat-sep{flex:1;height:0.5px;background:var(--b1);}
 
 /* ── MOD DETAIL ── */
 .md-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:color .12s;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
@@ -841,15 +856,23 @@ async function loadMods(){
   const livs=await fetchLiveries({sort:'votes',pageSize:1000});
   const lc={};livs.forEach(l=>{if(l.mod_id)lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
 
+  // Build championship map per mod
+  const modChamps={};
+  livs.forEach(l=>{
+    if(!l.mod_id||!l.championships)return;
+    if(!modChamps[l.mod_id])modChamps[l.mod_id]=new Map();
+    modChamps[l.mod_id].set(l.championship_id,l.championships.short_name||l.championships.name);
+  });
+
   const BRAND_ORDER=['RSS','VRC','URD','Other'];
   const brandMeta={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',icon:'R',label:'Race Sim Studio'},
-    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',icon:'V',label:'Virtual Racing Cars'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',icon:'U',label:'URD Mods'},
-    Other:{c:'#6E6E73',bg:'rgba(110,110,115,.10)',icon:'?',label:'Other mods'},
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',icon:'R',label:'Race Sim Studio'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',icon:'V',label:'Virtual Racing Cars'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',icon:'U',label:'URD Mods'},
+    Other:{c:'#6E6E73',bg:'rgba(110,110,115,.10)',gbg:'linear-gradient(135deg,#111,#0a0a0a)',icon:'?',label:'Other mods'},
   };
 
-  // Group by brand then by category
+  // Group by brand then category
   const branded={};
   BRAND_ORDER.forEach(b=>branded[b]={});
   _mods.forEach(m=>{
@@ -858,13 +881,8 @@ async function loadMods(){
     if(!branded[brand][catName])branded[brand][catName]={cat:m.categories,mods:[]};
     branded[brand][catName].mods.push(m);
   });
-
-  // Sort mods by livery count desc within each group
-  Object.values(branded).forEach(cats=>{
-    Object.values(cats).forEach(g=>{
-      g.mods.sort((a,b)=>(lc[b.id]||0)-(lc[a.id]||0));
-    });
-  });
+  // Sort mods by livery count desc
+  Object.values(branded).forEach(cats=>Object.values(cats).forEach(g=>g.mods.sort((a,b)=>(lc[b.id]||0)-(lc[a.id]||0))));
 
   let html='';
   BRAND_ORDER.forEach(brand=>{
@@ -872,57 +890,66 @@ async function loadMods(){
     const allMods=Object.values(cats).flatMap(g=>g.mods);
     if(!allMods.length)return;
     const bm=brandMeta[brand];
-    const totalMods=allMods.length;
     const totalLivs=allMods.reduce((s,m)=>s+(lc[m.id]||0),0);
 
-    html+=`<div class="mv-section">
-      <div class="mv-brand-header">
-        <div class="mv-brand-icon" style="background:${bm.bg};color:${bm.c};">${bm.icon}</div>
-        <div>
-          <div class="mv-brand-name" style="color:${bm.c};">${bm.label}</div>
-          <div class="mv-brand-sub">${totalMods} mod${totalMods>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'}</div>
-        </div>
-        <div class="mv-brand-sep"></div>
-      </div>`;
+    html+='<div class="mv-section">';
+    html+=`<div class="mv-brand-header">
+      <div class="mv-brand-icon" style="background:${bm.bg};color:${bm.c};">${bm.icon}</div>
+      <div>
+        <div class="mv-brand-name" style="color:${bm.c};">${bm.label}</div>
+        <div class="mv-brand-sub">${allMods.length} mod${allMods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'}</div>
+      </div>
+      <div class="mv-brand-sep"></div>
+    </div>`;
 
-    // Sub-sections by category
     Object.entries(cats).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([catName,g])=>{
-      html+=`<div style="margin-bottom:20px;">
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-          <span style="width:5px;height:5px;border-radius:50%;background:${g.cat?.color_text||'#888'};display:inline-block;flex-shrink:0;"></span>
+      html+=`<div style="margin-bottom:22px;">
+        <div class="mv-cat-label">
+          <span class="mv-cat-dot" style="background:${g.cat?.color_text||'#888'};"></span>
           ${catName}
-          <span style="font-weight:400;color:var(--t3);">${g.mods.length} mod${g.mods.length>1?'s':''}</span>
-          <span style="flex:1;height:0.5px;background:var(--b1);"></span>
+          <span style="font-weight:400;">${g.mods.length} mod${g.mods.length>1?'s':''}</span>
+          <span class="mv-cat-sep"></span>
         </div>
         <div class="mv-cards-grid">`;
+
       g.mods.forEach(m=>{
         const cnt=lc[m.id]||0;
+        const champs=[...((modChamps[m.id]||new Map()).values())].slice(0,4);
+        const champPills=champs.map(c=>`<span class="mv-champ-pill">${c}</span>`).join('');
+        const coverBg=m.image_url?'':`style="background:${bm.gbg};"`;
         html+=`<div class="mv-card ${brand.toLowerCase()}" onclick="openModDetail('${m.id}')">
-          <div class="mv-cover">
-            ${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car" style="font-size:28px;color:rgba(255,255,255,.05);"></i>`}
-            <div style="position:absolute;top:8px;left:8px;">
-              <span class="badge" style="background:${bm.bg};color:${bm.c};">${brand}</span>
+          <div class="mv-cover" ${coverBg}>
+            ${m.image_url
+              ?`<img src="${m.image_url}" alt="${m.name}">`
+              :`<i class="ti ti-car mv-cover-ph"></i>`}
+            <div class="mv-cover-labels">
+              <span class="badge" style="background:${g.cat?.color_bg||'#222'};color:${g.cat?.color_text||'#888'};font-size:9px;">${catName}</span>
+              ${m.version?`<span class="badge" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.4);">v${m.version}</span>`:''}
             </div>
-            ${cnt>0?`<div style="position:absolute;bottom:6px;right:8px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);">${cnt} liveri${cnt!==1?'es':'y'}</div>`:''}
           </div>
           <div class="mv-body">
-            <div class="mv-brand-label" style="color:${bm.c};">${bm.label}</div>
-            <div class="mv-name">${m.name}</div>
-            <div class="mv-foot">
-              <span class="badge" style="background:${g.cat?.color_bg||'#222'};color:${g.cat?.color_text||'#888'};font-size:9px;">${catName}</span>
-              ${m.version?`<span style="font-size:10px;color:var(--t3);">v${m.version}</span>`:''}
+            <div class="mv-mod-name">${m.name}</div>
+            ${m.description?`<div class="mv-mod-desc">${m.description}</div>`:'<div class="mv-mod-desc" style="color:var(--t3);">No description yet.</div>'}
+            <div class="mv-stats">
+              <div><div class="mv-stat-n">${cnt}</div><div class="mv-stat-l">Liveries</div></div>
+              <div><div class="mv-stat-n">${champs.length}</div><div class="mv-stat-l">Champs</div></div>
             </div>
+            ${champPills?`<div class="mv-champs">${champPills}</div>`:''}
+          </div>
+          <div class="mv-footer">
+            <span class="mv-updated" style="color:${bm.c};font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;">${bm.label}</span>
+            <button class="mv-browse-btn" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid"></i> Browse</button>
           </div>
         </div>`;
       });
       html+='</div></div>';
     });
-
     html+='</div>';
   });
 
   document.getElementById('m-root').innerHTML=html;
 }
+
 
 // ── MOD DETAIL ──
 async function loadModDetail(id){
