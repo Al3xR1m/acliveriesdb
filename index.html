@@ -203,17 +203,27 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .mv-top{padding:18px 20px;border-bottom:0.5px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
 .mv-title{font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);}
 .mv-title em{color:var(--acc);}
-.mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5px;background:var(--b1);}
-.mv-card{background:var(--bg);padding:16px 18px;cursor:pointer;transition:background .12s;border-left:2px solid transparent;}
-.mv-card:hover{background:var(--s1);}
-.mv-card.rss{border-left-color:var(--acc);}
-.mv-card.vrc{border-left-color:var(--grn);}
-.mv-card.urd{border-left-color:var(--amb);}
-.mv-inner{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.mv-img{width:38px;height:38px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--s2);display:flex;align-items:center;justify-content:center;}
-.mv-img img{width:100%;height:100%;object-fit:cover;}
-.mv-brand{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;}
-.mv-name{font-size:14px;font-weight:800;letter-spacing:-.5px;color:var(--t1);}
+.mv-section{padding:0 20px 28px;}
+.mv-brand-header{display:flex;align-items:center;gap:12px;padding:20px 0 14px;}
+.mv-brand-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
+.mv-brand-name{font-size:13px;font-weight:700;color:var(--t1);}
+.mv-brand-sub{font-size:11px;color:var(--t2);margin-top:1px;}
+.mv-brand-sep{flex:1;height:0.5px;background:var(--b1);}
+.mv-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.mv-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .18s;}
+.mv-card:hover{transform:translateY(-2px);background:var(--s2);}
+.mv-card.rss{border-color:rgba(91,110,247,.22);}
+.mv-card.rss:hover{border-color:var(--acc);}
+.mv-card.vrc{border-color:rgba(48,209,88,.22);}
+.mv-card.vrc:hover{border-color:var(--grn);}
+.mv-card.urd{border-color:rgba(255,159,10,.22);}
+.mv-card.urd:hover{border-color:var(--amb);}
+.mv-cover{width:100%;height:90px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--s2);}
+.mv-cover img{width:100%;height:100%;object-fit:cover;transition:transform .2s;}
+.mv-card:hover .mv-cover img{transform:scale(1.04);}
+.mv-body{padding:11px 13px 13px;}
+.mv-brand-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.mv-name{font-size:14px;font-weight:800;letter-spacing:-.5px;color:var(--t1);margin-bottom:7px;}
 .mv-foot{display:flex;align-items:center;justify-content:space-between;}
 
 /* ── MOD DETAIL ── */
@@ -830,15 +840,54 @@ async function loadHome(){
 async function loadMods(){
   const livs=await fetchLiveries({sort:'votes',pageSize:1000});
   const lc={};livs.forEach(l=>{if(l.mod_id)lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
-  const g={};_mods.forEach(m=>{const k=m.categories?.name||'Other';if(!g[k])g[k]={cat:m.categories,mods:[]};g[k].mods.push(m);});
-  document.getElementById('m-root').innerHTML=`<div class="mv-grid">${_mods.map(m=>{
-    const br=m.brand?BR[m.brand]:null;const cnt=lc[m.id]||0;
-    return `<div class="mv-card${m.brand?' '+m.brand.toLowerCase():''}" onclick="openModDetail('${m.id}')">
-      <div class="mv-inner"><div class="mv-img">${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car" style="font-size:16px;color:var(--t3);"></i>`}</div>
-      <div><div class="mv-brand" style="color:${br?.c||'var(--t3)'};">${br?.l||m.brand||'—'}</div><div class="mv-name">${m.name}</div></div></div>
-      <div class="mv-foot"><span class="badge" style="background:${m.categories?.color_bg||'#222'};color:${m.categories?.color_text||'#888'};font-size:9px;">${m.categories?.name||'—'}</span><span style="font-size:11px;color:var(--t2);">${cnt} liveri${cnt!==1?'es':'y'}</span></div>
-    </div>`;
-  }).join('')}</div>`;
+
+  // Grouper par brand, puis par catégorie dans chaque brand
+  const BRAND_ORDER=['RSS','VRC','URD'];
+  const branded={RSS:[],VRC:[],URD:[],Other:[]};
+  _mods.forEach(m=>{
+    const b=m.brand&&BRAND_ORDER.includes(m.brand)?m.brand:'Other';
+    branded[b].push(m);
+  });
+
+  const brandMeta={
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',icon:'R',label:'Race Sim Studio',title:'RSS — Race Sim Studio'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',icon:'V',label:'Virtual Racing Cars',title:'VRC — Virtual Racing Cars'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',icon:'U',label:'URD Mods',title:'URD — URD Mods'},
+    Other:{c:'#6E6E73',bg:'rgba(110,110,115,.10)',icon:'?',label:'Other',title:'Other mods'},
+  };
+
+  let html='';
+  [...BRAND_ORDER,'Other'].forEach(brand=>{
+    const mods=branded[brand];if(!mods.length)return;
+    const bm=brandMeta[brand];
+    html+=`<div class="mv-section">
+      <div class="mv-brand-header">
+        <div class="mv-brand-icon" style="background:${bm.bg};color:${bm.c};">${bm.icon}</div>
+        <div><div class="mv-brand-name">${bm.title}</div><div class="mv-brand-sub">${mods.length} mod${mods.length>1?'s':''}</div></div>
+        <div class="mv-brand-sep"></div>
+      </div>
+      <div class="mv-cards-grid">`;
+    mods.forEach(m=>{
+      const cnt=lc[m.id]||0;
+      html+=`<div class="mv-card ${brand.toLowerCase()}" onclick="openModDetail('${m.id}')">
+        <div class="mv-cover">
+          ${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car" style="font-size:28px;color:rgba(255,255,255,.05);"></i>`}
+          <div style="position:absolute;top:8px;left:8px;"><span class="badge" style="background:${bm.bg};color:${bm.c};">${brand}</span></div>
+        </div>
+        <div class="mv-body">
+          <div class="mv-brand-label" style="color:${bm.c};">${bm.label}</div>
+          <div class="mv-name">${m.name}</div>
+          <div class="mv-foot">
+            <span class="badge" style="background:${m.categories?.color_bg||'#222'};color:${m.categories?.color_text||'#888'};font-size:9px;">${m.categories?.name||'—'}</span>
+            <span style="font-size:11px;color:var(--t2);">${cnt} liveri${cnt!==1?'es':'y'}</span>
+          </div>
+        </div>
+      </div>`;
+    });
+    html+='</div></div>';
+  });
+
+  document.getElementById('m-root').innerHTML=html;
 }
 
 // ── MOD DETAIL ──
