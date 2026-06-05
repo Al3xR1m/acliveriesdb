@@ -841,50 +841,84 @@ async function loadMods(){
   const livs=await fetchLiveries({sort:'votes',pageSize:1000});
   const lc={};livs.forEach(l=>{if(l.mod_id)lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
 
-  // Grouper par brand, puis par catégorie dans chaque brand
-  const BRAND_ORDER=['RSS','VRC','URD'];
-  const branded={RSS:[],VRC:[],URD:[],Other:[]};
-  _mods.forEach(m=>{
-    const b=m.brand&&BRAND_ORDER.includes(m.brand)?m.brand:'Other';
-    branded[b].push(m);
-  });
-
+  const BRAND_ORDER=['RSS','VRC','URD','Other'];
   const brandMeta={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',icon:'R',label:'Race Sim Studio',title:'RSS — Race Sim Studio'},
-    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',icon:'V',label:'Virtual Racing Cars',title:'VRC — Virtual Racing Cars'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',icon:'U',label:'URD Mods',title:'URD — URD Mods'},
-    Other:{c:'#6E6E73',bg:'rgba(110,110,115,.10)',icon:'?',label:'Other',title:'Other mods'},
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',icon:'R',label:'Race Sim Studio'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',icon:'V',label:'Virtual Racing Cars'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',icon:'U',label:'URD Mods'},
+    Other:{c:'#6E6E73',bg:'rgba(110,110,115,.10)',icon:'?',label:'Other mods'},
   };
 
+  // Group by brand then by category
+  const branded={};
+  BRAND_ORDER.forEach(b=>branded[b]={});
+  _mods.forEach(m=>{
+    const brand=m.brand&&brandMeta[m.brand]?m.brand:'Other';
+    const catName=m.categories?.name||'Other';
+    if(!branded[brand][catName])branded[brand][catName]={cat:m.categories,mods:[]};
+    branded[brand][catName].mods.push(m);
+  });
+
+  // Sort mods by livery count desc within each group
+  Object.values(branded).forEach(cats=>{
+    Object.values(cats).forEach(g=>{
+      g.mods.sort((a,b)=>(lc[b.id]||0)-(lc[a.id]||0));
+    });
+  });
+
   let html='';
-  [...BRAND_ORDER,'Other'].forEach(brand=>{
-    const mods=branded[brand];if(!mods.length)return;
+  BRAND_ORDER.forEach(brand=>{
+    const cats=branded[brand];
+    const allMods=Object.values(cats).flatMap(g=>g.mods);
+    if(!allMods.length)return;
     const bm=brandMeta[brand];
+    const totalMods=allMods.length;
+    const totalLivs=allMods.reduce((s,m)=>s+(lc[m.id]||0),0);
+
     html+=`<div class="mv-section">
       <div class="mv-brand-header">
         <div class="mv-brand-icon" style="background:${bm.bg};color:${bm.c};">${bm.icon}</div>
-        <div><div class="mv-brand-name">${bm.title}</div><div class="mv-brand-sub">${mods.length} mod${mods.length>1?'s':''}</div></div>
+        <div>
+          <div class="mv-brand-name" style="color:${bm.c};">${bm.label}</div>
+          <div class="mv-brand-sub">${totalMods} mod${totalMods>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'}</div>
+        </div>
         <div class="mv-brand-sep"></div>
-      </div>
-      <div class="mv-cards-grid">`;
-    mods.forEach(m=>{
-      const cnt=lc[m.id]||0;
-      html+=`<div class="mv-card ${brand.toLowerCase()}" onclick="openModDetail('${m.id}')">
-        <div class="mv-cover">
-          ${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car" style="font-size:28px;color:rgba(255,255,255,.05);"></i>`}
-          <div style="position:absolute;top:8px;left:8px;"><span class="badge" style="background:${bm.bg};color:${bm.c};">${brand}</span></div>
-        </div>
-        <div class="mv-body">
-          <div class="mv-brand-label" style="color:${bm.c};">${bm.label}</div>
-          <div class="mv-name">${m.name}</div>
-          <div class="mv-foot">
-            <span class="badge" style="background:${m.categories?.color_bg||'#222'};color:${m.categories?.color_text||'#888'};font-size:9px;">${m.categories?.name||'—'}</span>
-            <span style="font-size:11px;color:var(--t2);">${cnt} liveri${cnt!==1?'es':'y'}</span>
-          </div>
-        </div>
       </div>`;
+
+    // Sub-sections by category
+    Object.entries(cats).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([catName,g])=>{
+      html+=`<div style="margin-bottom:20px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="width:5px;height:5px;border-radius:50%;background:${g.cat?.color_text||'#888'};display:inline-block;flex-shrink:0;"></span>
+          ${catName}
+          <span style="font-weight:400;color:var(--t3);">${g.mods.length} mod${g.mods.length>1?'s':''}</span>
+          <span style="flex:1;height:0.5px;background:var(--b1);"></span>
+        </div>
+        <div class="mv-cards-grid">`;
+      g.mods.forEach(m=>{
+        const cnt=lc[m.id]||0;
+        html+=`<div class="mv-card ${brand.toLowerCase()}" onclick="openModDetail('${m.id}')">
+          <div class="mv-cover">
+            ${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car" style="font-size:28px;color:rgba(255,255,255,.05);"></i>`}
+            <div style="position:absolute;top:8px;left:8px;">
+              <span class="badge" style="background:${bm.bg};color:${bm.c};">${brand}</span>
+            </div>
+            ${cnt>0?`<div style="position:absolute;bottom:6px;right:8px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);">${cnt} liveri${cnt!==1?'es':'y'}</div>`:''}
+          </div>
+          <div class="mv-body">
+            <div class="mv-brand-label" style="color:${bm.c};">${bm.label}</div>
+            <div class="mv-name">${m.name}</div>
+            <div class="mv-foot">
+              <span class="badge" style="background:${g.cat?.color_bg||'#222'};color:${g.cat?.color_text||'#888'};font-size:9px;">${catName}</span>
+              ${m.version?`<span style="font-size:10px;color:var(--t3);">v${m.version}</span>`:''}
+            </div>
+          </div>
+        </div>`;
+      });
+      html+='</div></div>';
     });
-    html+='</div></div>';
+
+    html+='</div>';
   });
 
   document.getElementById('m-root').innerHTML=html;
