@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AC Liveries DB — Community livery database for Assetto Corsa</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AC Liveries DB">
+  <meta property="og:title" content="AC Liveries DB">
+  <meta property="og:description" content="Community-built skin library for Assetto Corsa mods. Free to browse, free to submit.">
+  <meta property="og:url" content="https://al3xr1m.github.io/acliveriesdb/">
+  <meta property="og:image" content="https://al3xr1m.github.io/acliveriesdb/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* Index-specific */
+    .filters-card {
+      background: var(--bg-s1);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 12px 14px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: var(--sp-4);
+    }
+    .new-banner {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--green-2); border: 1px solid rgba(34,197,94,0.3);
+      border-radius: var(--r-md); padding: 10px 14px;
+      margin-top: 12px; font-size: 13px; color: var(--green);
+    }
+    .new-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo__ac">AC</span>
+    <span class="nav-logo__name">&nbsp;Liveries</span>
+    <span class="nav-logo__db">DB</span>
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active" aria-current="page">Liveries</a>
+    <a href="mods.html"   class="nav-link">Mods</a>
+    <a href="artists.html" class="nav-link">Artists</a>
+    <a href="addons.html"  class="nav-link">Addons</a>
+    <a href="about.html"   class="nav-link">About</a>
+  </div>
+  <div class="nav-end">
+    <a href="submit.html" class="btn btn--primary">
+      <i class="ti ti-plus"></i> Submit
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page" style="padding-top:52px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:center;">
+
+    <div>
+      <div class="hero-eyebrow">
+        <i class="ti ti-flag-2"></i> Assetto Corsa · Community
+      </div>
+      <h1 class="hero-title">
+        The<br>
+        <span class="accent">livery</span><br>
+        database.
+      </h1>
+      <p class="hero-tagline" style="max-width:340px;">
+        Community-built skin library for Assetto Corsa mods.<br>
+        Find, share and discover liveries — free forever.
+      </p>
+      <div style="display:flex; gap:10px; margin-top:28px;">
+        <a href="submit.html" class="btn btn--primary btn--lg">
+          <i class="ti ti-plus"></i> Submit a livery
+        </a>
+        <a href="mods.html" class="btn btn--ghost btn--lg">
+          <i class="ti ti-package"></i> Browse mods
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div class="stat-row" style="grid-column:span 2; max-width:100%;">
+        <div class="stat-item stat-item--accent">
+          <div class="stat-item__n" id="s-total">—</div>
+          <div class="stat-item__l">Liveries</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__n" id="s-mods">—</div>
+          <div class="stat-item__l">Mods</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__n" id="s-votes">—</div>
+          <div class="stat-item__l">Upvotes</div>
+        </div>
+        <div class="stat-item" style="border-right:none;">
+          <div class="stat-item__n" style="font-size:16px; letter-spacing:-0.5px;" id="s-top">—</div>
+          <div class="stat-item__l">Most popular</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="page" style="padding-top:32px;">
+
+  <div class="filters-card">
+    <div class="search-box" style="flex:1; min-width:200px;">
+      <i class="ti ti-search search-box__icon"></i>
+      <input type="text" class="form-input" id="search"
+        placeholder="Search livery, driver, team, car number…"
+        style="background:var(--bg-s2); border-color:var(--border);">
+    </div>
+    <select class="filter-select" id="sort">
+      <option value="votes">↑ Most popular</option>
+      <option value="newest">Newest first</option>
+      <option value="name">A → Z</option>
+    </select>
+    <button class="btn btn--ghost btn--sm" id="filters-toggle-btn" onclick="toggleFilters()">
+      <i class="ti ti-adjustments-horizontal"></i> Filters
+      <span class="badge badge--new" id="filter-badge" style="display:none;">0</span>
+    </button>
+  </div>
+
+  <!-- Expanded filters -->
+  <div id="filters-panel" style="display:none; background:var(--bg-s1); border:1px solid var(--border); border-radius:var(--r-lg); padding:14px 16px; margin-top:8px; display:none;">
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+      <div class="form-group" style="margin-bottom:0; min-width:150px;">
+        <label class="form-label">Category</label>
+        <select class="filter-select" id="cat-select"><option value="all">All categories</option></select>
+      </div>
+      <div class="form-group" style="margin-bottom:0; min-width:180px;">
+        <label class="form-label">Championship</label>
+        <select class="filter-select" id="champ-select"><option value="all">All championships</option></select>
+      </div>
+      <div class="form-group" style="margin-bottom:0; min-width:130px;">
+        <label class="form-label">Pricing</label>
+        <select class="filter-select" id="pricing-select">
+          <option value="all">All pricing</option>
+          <option value="free">Free only</option>
+          <option value="paid">Paid only</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0; min-width:150px;">
+        <label class="form-label">Creator</label>
+        <select class="filter-select" id="artist-select">
+          <option value="all">All creators</option>
+          <option value="confirmed">👑 Confirmed artists</option>
+          <option value="community">Community</option>
+        </select>
+      </div>
+      <button onclick="resetFilters()" class="btn btn--ghost btn--sm" style="margin-left:auto; align-self:flex-end;">
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Category pills -->
+  <div class="filters-row" style="margin-top:12px;" id="cat-pills"></div>
+
+  <!-- New banner -->
+  <div id="new-banner" class="new-banner" style="display:none;">
+    <div class="new-dot"></div>
+    <span id="new-banner-text"></span>
+    <button onclick="showNewOnly()" class="btn btn--sm" style="background:transparent; border:1px solid var(--green); color:var(--green); border-radius:var(--r-full); margin-left:4px;">Show</button>
+    <button onclick="dismissBanner()" style="margin-left:auto; background:none; border:none; color:var(--green); cursor:pointer; font-size:18px; line-height:1;">×</button>
+  </div>
+
+  <!-- Results -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; margin-bottom:12px;">
+    <span class="label" id="results-count" style="display:none;"></span>
+  </div>
+
+  <!-- Grid -->
+  <div class="livery-grid" id="gallery">
+    <div class="skeleton" style="height:200px;"></div>
+    <div class="skeleton" style="height:200px;"></div>
+    <div class="skeleton" style="height:200px;"></div>
+    <div class="skeleton" style="height:200px;"></div>
+    <div class="skeleton" style="height:200px;"></div>
+    <div class="skeleton" style="height:200px;"></div>
+  </div>
+
+  <!-- Pagination -->
+  <div id="pagination" style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:24px 0 48px; flex-wrap:wrap;"></div>
+
+</div>
+
+<!-- REPORT MODAL -->
+<div id="report-modal" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <div class="modal__title"><i class="ti ti-flag" style="color:var(--acc);"></i> Report a problem</div>
+    <p style="font-size:13px; color:var(--text-2); margin-bottom:16px;">What's wrong with this livery?</p>
+    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="report-reason" value="broken_link" checked> Broken download link</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="report-reason" value="wrong_info"> Wrong information</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="report-reason" value="duplicate"> Duplicate entry</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="report-reason" value="other"> Other</label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Additional context <span style="font-weight:400;color:var(--text-3);">(optional)</span></label>
+      <textarea id="report-notes" class="form-textarea" placeholder="Describe the issue…" style="min-height:64px;"></textarea>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:4px;">
+      <button id="report-cancel" class="btn btn--ghost">Cancel</button>
+      <button id="report-submit" class="btn btn--primary">Send report</button>
+    </div>
+  </div>
+</div>
+
+<script src="supabase.js"></script>
+<script>
+  // ── State ──────────────────────────────────────────────
+  let activeCatId = 'all', activeChampId = 'all';
+  let activePricing = null, activeArtist = 'all';
+  let currentPage = 1, totalCount = 0;
+  const PAGE_SIZE = 24;
+  let currentPageData = [], isLoading = false;
+  let voted = getVotedSet();
+  let pendingReportId = null;
+  let _renderDebounce = null;
+  let _allChamps = [];
+
+  // ── Car SVG placeholder ────────────────────────────────
+  const CAT_COLORS = {
+    Formula: ['#E82020','#003087','#006400','#FF8000'],
+    GT:      ['#C8A800','#E82020','#003087'],
+    Hillclimb:['#E87000','#E82020','#1D9E75'],
+    Touring: ['#534AB7','#E82020','#185FA5'],
+  };
+  const CAT_BG = { Formula:'#0d0d1f', GT:'#0d1a0d', Hillclimb:'#1a0d00', Touring:'#1a001a' };
+
+  function carSVG(cat, seed) {
+    const p = CAT_COLORS[cat] || CAT_COLORS.Formula;
+    const col = p[seed % p.length];
+    const num = (seed * 7 + 1) % 99 + 1;
+    const bg  = CAT_BG[cat] || '#111';
+    if (cat === 'Hillclimb') {
+      return `<svg viewBox="0 0 200 100" width="100%" height="100%" style="position:absolute;inset:0"><rect width="200" height="100" fill="${bg}"/><ellipse cx="100" cy="72" rx="42" ry="7" fill="#000" opacity=".4"/><path d="M68 66 Q73 52 83 48 L100 43 L117 48 Q127 52 132 66Z" fill="${col}"/><path d="M83 48 L85 37 Q100 33 115 37 L117 48Z" fill="${col}" opacity=".75"/><rect x="90" y="35" width="20" height="9" rx="2" fill="#88ccff" opacity=".5"/><circle cx="76" cy="68" r="8" fill="#1a1a1a"/><circle cx="76" cy="68" r="4" fill="#333"/><circle cx="124" cy="68" r="8" fill="#1a1a1a"/><circle cx="124" cy="68" r="4" fill="#333"/><text x="100" y="61" text-anchor="middle" fill="white" font-size="7" font-family="sans-serif" font-weight="bold">${num}</text></svg>`;
+    }
+    return `<svg viewBox="0 0 200 100" width="100%" height="100%" style="position:absolute;inset:0"><rect width="200" height="100" fill="${bg}"/><ellipse cx="100" cy="68" rx="65" ry="10" fill="#000" opacity=".4"/><path d="M36 62 Q45 46 60 42 L76 36 Q100 30 124 36 L140 42 Q155 46 164 62Z" fill="${col}"/><path d="M60 42 L64 32 Q100 24 136 32 L140 42Z" fill="${col}" opacity=".75"/><rect x="76" y="30" width="48" height="9" rx="2" fill="#88ccff" opacity=".5"/><circle cx="60" cy="64" r="10" fill="#1a1a1a"/><circle cx="60" cy="64" r="5.5" fill="#333"/><circle cx="140" cy="64" r="10" fill="#1a1a1a"/><circle cx="140" cy="64" r="5.5" fill="#333"/><text x="100" y="54" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">${num}</text></svg>`;
+  }
+
+  // ── Filters ────────────────────────────────────────────
+  document.getElementById('pricing-select').addEventListener('change', function () {
+    activePricing = this.value === 'free' ? false : this.value === 'paid' ? true : null;
+    resetAndRender();
+  });
+  document.getElementById('artist-select').addEventListener('change', function () {
+    activeArtist = this.value; resetAndRender();
+  });
+
+  function updateChampSelect(catId) {
+    const sel = document.getElementById('champ-select');
+    const prev = sel.value;
+    const filtered = catId === 'all' ? _allChamps : _allChamps.filter(ch => ch.linked_categories?.some(lc => lc.id === catId));
+    sel.innerHTML = '<option value="all">All championships</option>' + filtered.map(ch => `<option value="${ch.id}">${ch.short_name || ch.name}</option>`).join('');
+    if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
+    else { sel.value = 'all'; activeChampId = 'all'; }
+  }
+
+  async function buildFilters() {
+    const [cats, champs] = await Promise.all([fetchCategories(), fetchChampionships()]);
+    _allChamps = champs;
+
+    // Category select
+    const catSel = document.getElementById('cat-select');
+    catSel.innerHTML = '<option value="all">All categories</option>' + cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    catSel.addEventListener('change', function () {
+      activeCatId = this.value; activeChampId = 'all';
+      updateChampSelect(this.value); resetAndRender();
+    });
+
+    // Champ select
+    updateChampSelect('all');
+    document.getElementById('champ-select').addEventListener('change', function () {
+      activeChampId = this.value; resetAndRender();
+    });
+
+    // Pills
+    const pillsEl = document.getElementById('cat-pills');
+    const allPill = document.createElement('button');
+    allPill.className = 'pill active'; allPill.textContent = 'All';
+    allPill.addEventListener('click', () => { activeCatId = 'all'; activeChampId = 'all'; updateChampSelect('all'); document.getElementById('cat-select').value = 'all'; updatePills('all'); resetAndRender(); });
+    pillsEl.appendChild(allPill);
+    cats.forEach(cat => {
+      const pill = document.createElement('button');
+      pill.className = 'pill'; pill.textContent = cat.name; pill.dataset.catId = cat.id;
+      pill.addEventListener('click', () => { activeCatId = cat.id; activeChampId = 'all'; updateChampSelect(cat.id); document.getElementById('cat-select').value = cat.id; updatePills(cat.id); resetAndRender(); });
+      pillsEl.appendChild(pill);
+    });
+  }
+
+  function updatePills(catId) {
+    document.querySelectorAll('#cat-pills .pill').forEach(p => {
+      p.classList.toggle('active', (p.dataset.catId || 'all') === catId);
+    });
+  }
+
+  // ── Render ─────────────────────────────────────────────
+  async function render() {
+    if (isLoading) return;
+    isLoading = true;
+    const search = document.getElementById('search').value.trim();
+    const sort   = document.getElementById('sort').value;
+    const g      = document.getElementById('gallery');
+    const countEl = document.getElementById('results-count');
+
+    const params = {
+      categoryId:     activeCatId !== 'all'    ? activeCatId    : undefined,
+      championshipId: activeChampId !== 'all'  ? activeChampId  : undefined,
+      isPaid:         activePricing,
+      confirmedOnly:  activeArtist === 'confirmed',
+      communityOnly:  activeArtist === 'community',
+      search:         search || undefined,
+      sort, page: currentPage, pageSize: PAGE_SIZE,
+    };
+
+    const [list, total] = await Promise.all([
+      fetchLiveries(params),
+      fetchLiveriesCount({
+        categoryId: params.categoryId, championshipId: params.championshipId,
+        isPaid: params.isPaid, confirmedOnly: params.confirmedOnly,
+        communityOnly: params.communityOnly, search: params.search,
+      }),
+    ]);
+
+    currentPageData = list; totalCount = total;
+    voted = getVotedSet(); isLoading = false;
+
+    if (!list.length) {
+      const hasFilters = activeCatId !== 'all' || activeChampId !== 'all' || activePricing !== null || activeArtist !== 'all' || search;
+      g.innerHTML = `<div style="grid-column:1/-1;padding:60px 24px;text-align:center;color:var(--text-2);"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:12px;color:var(--text-3);"></i><p>No liveries match your filters.${hasFilters ? ` <button onclick="resetFilters()" style="background:none;border:none;color:var(--acc);cursor:pointer;font-size:14px;text-decoration:underline;">Reset filters</button>` : ''}</p></div>`;
+      document.getElementById('pagination').innerHTML = '';
+      countEl.style.display = 'none';
+      return;
+    }
+
+    const showing = Math.min(currentPage * PAGE_SIZE, total);
+    countEl.style.display = 'block';
+    countEl.textContent = `Showing ${(currentPage - 1) * PAGE_SIZE + 1}–${showing} of ${total} liveri${total !== 1 ? 'es' : 'y'}`;
+
+    renderPagination(total);
+
+    const seed = l => parseInt((l.id || '').replace(/\D/g, '').slice(0, 6)) || 0;
+    g.innerHTML = list.map(l => {
+      const cn      = l.categories?.name || '';
+      const isVoted = voted.has(l.id);
+      const isNew   = l.created_at && (Date.now() - new Date(l.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000;
+      return `
+        <div class="livery-card" data-id="${l.id}">
+          <div class="livery-card__thumb">
+            ${l.image_url ? `<img src="${l.image_url}" alt="${l.name}" loading="lazy">` : carSVG(cn, seed(l))}
+            <div class="livery-card__thumb-overlay"></div>
+            <div class="livery-card__badges">
+              ${isNew ? '<span class="badge badge--new">New</span>' : ''}
+              ${l.is_paid ? '<span class="badge badge--paid">Paid</span>' : '<span class="badge badge--free">Free</span>'}
+            </div>
+            ${l.artists ? '<span class="livery-card__crown">👑</span>' : ''}
+            <div class="livery-card__votes"><i class="ti ti-heart" style="font-size:10px;"></i> ${l.upvotes.toLocaleString()}</div>
+          </div>
+          <div class="livery-card__body">
+            <div class="livery-card__series">${l.championships?.short_name || cn || '—'}</div>
+            <div class="livery-card__name">${l.name}</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+              <span class="livery-card__mod">${l.mods?.name || '—'}</span>
+              <div style="display:flex;gap:4px;flex-shrink:0;margin-left:6px;">
+                <button class="btn btn--ghost btn--sm" onclick="event.stopPropagation();copyLiveryLink('${l.id}')" title="Copy link" style="width:22px;height:22px;border-radius:5px;padding:0;"><i class="ti ti-link" style="font-size:11px;"></i></button>
+                <button class="btn btn--ghost btn--sm" onclick="event.stopPropagation();openReport('${l.id}')" title="Report" style="width:22px;height:22px;border-radius:5px;padding:0;"><i class="ti ti-flag" style="font-size:11px;"></i></button>
+                <button class="btn btn--sm ${isVoted ? 'btn--primary' : 'btn--ghost'} upvote-btn${isVoted ? ' voted' : ''}" data-vote="${l.id}" onclick="event.stopPropagation()" style="height:22px;padding:0 7px;border-radius:5px;font-size:11px;gap:3px;">
+                  <i class="ti ti-thumb-up" style="font-size:11px;"></i> ${isVoted ? 'Upvoted' : 'Upvote'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    g.querySelectorAll('.livery-card').forEach(card => {
+      card.addEventListener('click', () => location.href = `livery.html?id=${card.dataset.id}`);
+    });
+    g.querySelectorAll('[data-vote]').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.stopPropagation();
+        const id = btn.dataset.vote;
+        const isVoted = voted.has(id);
+        const liv = currentPageData.find(l => l.id === id);
+        if (isVoted) {
+          const ok = await removeUpvoteLivery(id);
+          if (ok && liv) { liv.upvotes = Math.max(0, liv.upvotes - 1); voted = getVotedSet(); render(); }
+        } else {
+          const ok = await upvoteLivery(id);
+          if (ok && liv) { liv.upvotes++; voted = getVotedSet(); render(); }
+        }
+      });
+    });
+  }
+
+  function renderPagination(total) {
+    const totalPages = Math.ceil(total / PAGE_SIZE);
+    const pg = document.getElementById('pagination');
+    if (totalPages <= 1) { pg.innerHTML = ''; return; }
+    const showing = Math.min(currentPage * PAGE_SIZE, total);
+    let html = `<span style="font-size:12px;color:var(--text-3);">Showing ${(currentPage-1)*PAGE_SIZE+1}–${showing} of ${total}</span>`;
+    html += `<div style="display:flex;gap:3px;">`;
+    html += `<button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''} class="page-btn"><i class="ti ti-chevron-left"></i></button>`;
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
+        html += `<button onclick="goPage(${i})" class="page-btn${i===currentPage?' active':''}">${i}</button>`;
+      } else if (Math.abs(i - currentPage) === 2) {
+        html += `<span style="color:var(--text-3);font-size:13px;padding:0 4px;display:flex;align-items:center;">…</span>`;
+      }
+    }
+    html += `<button onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''} class="page-btn"><i class="ti ti-chevron-right"></i></button>`;
+    html += `</div>`;
+    pg.innerHTML = html;
+  }
+
+  function goPage(n) {
+    currentPage = n; render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copyLiveryLink(id) {
+    const url = `${location.origin}${location.pathname.replace('index.html', '')}livery.html?id=${id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.querySelector(`[onclick*="copyLiveryLink('${id}')"]`);
+      if (btn) { btn.innerHTML = '<i class="ti ti-check" style="font-size:11px;color:var(--green);"></i>'; setTimeout(() => btn.innerHTML = '<i class="ti ti-link" style="font-size:11px;"></i>', 1500); }
+    });
+  }
+
+  function openReport(id) { pendingReportId = id; document.getElementById('report-modal').style.display = 'flex'; }
+  document.getElementById('report-cancel').addEventListener('click', () => { document.getElementById('report-modal').style.display = 'none'; document.getElementById('report-notes').value = ''; });
+  document.getElementById('report-submit').addEventListener('click', async () => {
+    if (!pendingReportId) return;
+    const reason = document.querySelector('input[name="report-reason"]:checked')?.value || 'broken_link';
+    const notes  = document.getElementById('report-notes').value.trim() || null;
+    await reportLivery(pendingReportId, reason, notes);
+    document.getElementById('report-modal').style.display = 'none';
+    document.getElementById('report-notes').value = '';
+    pendingReportId = null;
+    alert('Report sent. Thank you!');
+  });
+
+  function toggleFilters() {
+    const panel = document.getElementById('filters-panel');
+    const isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'flex';
+    document.getElementById('filters-toggle-btn').classList.toggle('btn--primary', !isOpen);
+    document.getElementById('filters-toggle-btn').classList.toggle('btn--ghost', isOpen);
+  }
+
+  function updateFilterBadge() {
+    const count = [activeCatId !== 'all', activeChampId !== 'all', activePricing !== null, activeArtist !== 'all'].filter(Boolean).length;
+    const badge = document.getElementById('filter-badge');
+    badge.style.display = count > 0 ? 'inline-flex' : 'none';
+    badge.textContent = count;
+  }
+
+  function resetAndRender() { currentPage = 1; updateFilterBadge(); render(); }
+  function resetAndRenderDebounced() {
+    clearTimeout(_renderDebounce);
+    _renderDebounce = setTimeout(() => { currentPage = 1; render(); }, 300);
+  }
+
+  function resetFilters() {
+    activeCatId = 'all'; activeChampId = 'all'; activePricing = null; activeArtist = 'all';
+    document.getElementById('cat-select').value = 'all';
+    document.getElementById('champ-select').value = 'all';
+    document.getElementById('pricing-select').value = 'all';
+    document.getElementById('artist-select').value = 'all';
+    document.getElementById('search').value = '';
+    updateChampSelect('all'); updatePills('all'); updateFilterBadge();
+    resetAndRender();
+  }
+
+  function showNewOnly() {
+    document.getElementById('sort').value = 'newest';
+    dismissBanner(); resetAndRender();
+  }
+  function dismissBanner() {
+    document.getElementById('new-banner').style.display = 'none';
+    localStorage.setItem('acliveries_last_visit', Date.now().toString());
+  }
+
+  document.getElementById('search').addEventListener('input', resetAndRenderDebounced);
+  document.getElementById('sort').addEventListener('change', resetAndRender);
+
+  async function init() {
+    await buildFilters();
+    const stats = await fetchStats();
+    document.getElementById('s-total').textContent = stats.total;
+    document.getElementById('s-mods').textContent  = stats.mods;
+    document.getElementById('s-votes').textContent = stats.votes;
+    document.getElementById('s-top').textContent   = stats.top;
+
+    const lastVisit = parseInt(localStorage.getItem('acliveries_last_visit') || '0');
+    if (lastVisit) {
+      const newCount = await fetchNewLiveriesCount(lastVisit);
+      if (newCount > 0) {
+        document.getElementById('new-banner-text').textContent = `${newCount} new liver${newCount !== 1 ? 'ies' : 'y'} since your last visit`;
+        document.getElementById('new-banner').style.display = 'flex';
+      }
+    }
+    localStorage.setItem('acliveries_last_visit', Date.now().toString());
+
+    const params = new URLSearchParams(location.search);
+    if (params.get('mod_id')) document.getElementById('search').value = params.get('mod_id');
+
+    render();
+  }
+
+  init();
+</script>
+</body>
+</html>
