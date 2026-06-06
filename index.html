@@ -524,16 +524,16 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   <!-- LIVERIES -->
   <div class="view on" id="view-liveries">
 
-    <!-- Header — même style que Home -->
-    <div style="padding:32px 28px 26px;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+    <!-- Header -->
+    <div style="padding:36px 28px 28px;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
         <span style="width:18px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
         Assetto Corsa · Community
       </div>
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;">
-        <h2 style="font-size:46px;font-weight:900;font-style:italic;letter-spacing:-3px;line-height:.88;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
-        <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px;">
-          <div class="sbox" style="width:200px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search livery, driver, team…"></div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <h2 style="font-size:52px;font-weight:900;font-style:italic;letter-spacing:-3.5px;line-height:.88;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
+        <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px;flex-wrap:wrap;">
+          <div class="sbox" style="width:210px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search livery, driver, team…"></div>
           <select class="fsel" id="l-sort"><option value="votes">↑ Popular</option><option value="newest">Newest</option><option value="name">A–Z</option></select>
           <button class="filters-btn" id="filters-btn" onclick="openDrawer()">
             <i class="ti ti-adjustments-horizontal" style="font-size:13px;"></i> Filters
@@ -1596,7 +1596,8 @@ function closeDrawer(){
   document.getElementById('drawer-overlay').classList.remove('open');
 }
 
-// Drawer item clicks
+// Drawer item clicks — called after DOM ready
+function initDrawerListeners(){
 document.getElementById('filter-drawer').addEventListener('click',e=>{
   const btn=e.target.closest('.di[data-type]');
   if(!btn)return;
@@ -1610,9 +1611,9 @@ document.getElementById('filter-drawer').addEventListener('click',e=>{
   if(type==='artist'){_artistFilter=val;_page=1;}
   updateFilterBadge();
   loadLiveries();
-  // Re-populate champs when cat changes
   if(type==='cat')openDrawer();
 });
+} // end initDrawerListeners
 
 function updateFilterBadge(){
   const count=[
@@ -1660,7 +1661,6 @@ function resetFilters(){
 }
 
 // Live counts cache
-let _champLivCounts={cat:{},champ:{},brand:{}};
 async function buildLivCounts(){
   const all=await fetchLiveries({sort:'votes',pageSize:5000});
   all.forEach(l=>{
@@ -1671,7 +1671,7 @@ async function buildLivCounts(){
 }
 
 // ── BOOT ──────────────────────────────────────
-boot().then(handleHash).then(()=>buildLivCounts());
+boot().then(handleHash).then(()=>{ buildLivCounts(); initDrawerListeners(); });
 </script>
 <!-- DRAWER OVERLAY — outside .main so position:fixed works -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
