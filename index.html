@@ -657,7 +657,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 // ── CONSTANTS ──
 const CB={Formula:['#E82020','#003087','#006400','#FF8000'],GT:['#C8A800','#E82020','#003087'],Hillclimb:['#E87000','#E82020'],Touring:['#534AB7','#E82020']};
 const BG={Formula:'#0d0d1f',GT:'#0d1a0d',Hillclimb:'#1a0d00',Touring:'#1a001a'};
-const BR={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',l:'Race Sim Studio'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',l:'Virtual Racing Cars'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',l:'URD Mods'}};
+const BR={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',l:'Race Sim Studio'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',l:'Virtual Racing Cars'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',l:'United Racing Design'}};
 const AVC=[['rgba(91,110,247,.14)','#5B6EF7'],['rgba(255,159,10,.12)','#FF9F0A'],['rgba(48,209,88,.10)','#30D158'],['rgba(191,90,242,.10)','#BF5AF2']];
 const ADMIN_PW='Kx9LpQvT8mZ!';
 
@@ -902,7 +902,7 @@ async function loadMods(){
   const brandMeta = {
     RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(140deg,#0d1240,#0d0514)',label:'Race Sim Studio'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(140deg,#002010,#001a10)',label:'Virtual Racing Cars'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(140deg,#1a0d00,#0d0800)',label:'URD Mods'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(140deg,#1a0d00,#0d0800)',label:'United Racing Design'},
   };
 
   // Group mods by brand
@@ -1027,7 +1027,7 @@ async function openBrandDetail(brand){
   const brandMeta={
     RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',label:'Race Sim Studio'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',label:'Virtual Racing Cars'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',label:'URD Mods'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',label:'United Racing Design'},
   };
   const bm=brandMeta[brand];
   const mods=_mods.filter(m=>m.brand===brand);
