@@ -435,24 +435,54 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
   <!-- HOME -->
   <div class="view" id="view-home">
-    <div id="h-hero"><div class="sk" style="height:260px;border-radius:0;"></div></div>
+    <!-- TICKER -->
     <div class="ticker"><span class="ticker-label">New</span><div class="ticker-scroll" id="h-ticker"></div></div>
-    <div class="home-grid">
-      <div class="hg" style="border-right:0.5px solid var(--b1);cursor:default;">
-        <div class="hg-label"><span class="dot" style="background:var(--acc);"></span> Most popular</div>
-        <div class="mini-list" id="h-top"></div>
+
+    <!-- HERO: titre gauche + affiches droite -->
+    <div style="display:grid;grid-template-columns:240px 1fr;min-height:400px;background:var(--b1);gap:2px;">
+      <!-- Titre -->
+      <div id="h-title-block" style="background:var(--bg);padding:28px 24px;display:flex;flex-direction:column;gap:16px;">
+        <div class="sk" style="height:200px;border-radius:8px;"></div>
       </div>
-      <div class="hg" style="cursor:default;">
-        <div class="hg-label"><span class="dot" style="background:var(--grn);"></span> Recently added</div>
-        <div class="mini-list" id="h-recent"></div>
+      <!-- Affiches -->
+      <div id="h-posters" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:2px;background:var(--b1);">
+        <div class="sk" style="border-radius:0;grid-row:span 3;"></div>
+        <div class="sk" style="border-radius:0;"></div>
+        <div class="sk" style="border-radius:0;"></div>
+        <div class="sk" style="border-radius:0;"></div>
       </div>
-      <div class="hg" style="border-top:0.5px solid var(--b1);border-right:0.5px solid var(--b1);cursor:default;">
-        <div class="hg-label"><span class="dot" style="background:var(--crown);"></span> Confirmed artists</div>
-        <div id="h-artists"></div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div id="h-stats">
+      <div style="display:flex;border-bottom:0.5px solid var(--b1);">
+        <div class="sk" style="flex:1;height:52px;border-radius:0;margin:1px;"></div>
       </div>
-      <div class="hg" style="border-top:0.5px solid var(--b1);cursor:default;">
-        <div class="hg-label"><span class="dot" style="background:var(--pur);"></span> Mods</div>
-        <div id="h-mods-mini"></div>
+    </div>
+
+    <!-- BOTTOM GRID -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5px;background:var(--b1);">
+      <!-- Popular -->
+      <div style="background:var(--bg);padding:16px 18px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--acc);display:inline-block;"></span> Most popular
+        </div>
+        <div id="h-popular"></div>
+      </div>
+      <!-- Recent + Artists -->
+      <div style="display:flex;flex-direction:column;gap:0.5px;background:var(--b1);">
+        <div style="background:var(--bg);padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--grn);display:inline-block;"></span> Recently added
+          </div>
+          <div id="h-recent-list"></div>
+        </div>
+        <div style="background:var(--bg);padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--amb);display:inline-block;"></span> Confirmed artists
+          </div>
+          <div id="h-artists-list"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -843,45 +873,177 @@ async function submitReport(){
 
 // ── HOME ──
 async function loadHome(){
-  const[top,recent,lc]=await Promise.all([
-    fetchLiveries({sort:'votes',pageSize:6}),
-    fetchLiveries({sort:'newest',pageSize:5}),
-    Promise.resolve(_artists.map(async(a,i)=>{const s=await Promise.resolve({c:0,v:0});return{...a,s};})),
+  const [top, recent, livCount] = await Promise.all([
+    fetchLiveries({sort:'votes', pageSize:6}),
+    fetchLiveries({sort:'newest', pageSize:3}),
+    fetchLiveries({sort:'votes', pageSize:1000}),
   ]);
-  if(top.length){
-    const h=top[0];const cn=h.categories?.name||'';
-    document.getElementById('h-hero').innerHTML=`<div style="position:relative;height:260px;cursor:pointer;" onclick="openLivery('${h.id}')">
-      ${h.image_url?`<img src="${h.image_url}" alt="${h.name}" style="width:100%;height:260px;object-fit:cover;display:block;">`:`<div style="height:260px;position:relative;background:${BG[cn]||'#111'};">${svg(cn,seed(h))}</div>`}
-      <div class="hero-overlay"></div>
-      <div class="hero-content"><div class="hero-eyebrow"><i class="ti ti-crown"></i> Most upvoted</div><div class="hero-name">${h.name}</div><div class="hero-meta">${h.mods?.name||'—'} · ${h.championships?.short_name||cn||'—'} · ${h.upvotes||0} upvotes</div></div>
-      <div class="hero-badges">${h.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}${h.artists?'<span style="font-size:14px;margin-left:4px;">👑</span>':''}</div>
+
+  // Stats
+  const totalLivs = livCount.length;
+  const totalVotes = livCount.reduce((s,l)=>s+(l.upvotes||0),0);
+  document.getElementById('sb-tot').textContent = totalLivs;
+  document.getElementById('sb-art').textContent = _artists.length;
+  document.getElementById('sb-vot').textContent = totalVotes.toLocaleString();
+  document.getElementById('sb-lc').textContent  = totalLivs;
+  document.getElementById('sb-mc').textContent  = _mods.length;
+  document.getElementById('sb-ac').textContent  = _artists.length;
+
+  // Champ map
+  const modChamps = {};
+  livCount.forEach(l=>{
+    if(!l.mod_id||!l.championships) return;
+    if(!modChamps[l.mod_id]) modChamps[l.mod_id]=new Map();
+    modChamps[l.mod_id].set(l.championship_id, l.championships.short_name||l.championships.name);
+  });
+  const lc = {};
+  livCount.forEach(l=>{ if(l.mod_id) lc[l.mod_id]=(lc[l.mod_id]||0)+1; });
+
+  const brandMeta = {
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',label:'Race Sim Studio'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',label:'Virtual Racing Cars'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',label:'United Racing Design'},
+  };
+
+  // ── TITLE BLOCK ──
+  const brandPills = ['RSS','VRC','URD'].map(brand=>{
+    const bm = brandMeta[brand];
+    const mods = _mods.filter(m=>m.brand===brand);
+    const cnt = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
+    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.06);border-radius:10px;cursor:pointer;transition:all .15s;flex:1;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
+      <div style="min-width:0;">
+        <div style="font-size:11px;font-weight:700;color:${bm.c};letter-spacing:-.2px;white-space:nowrap;">${brand}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${cnt} liveries</div>
+      </div>
     </div>`;
-    const tk=top.slice(1).concat(top.slice(0,3));
-    const tHTML=tk.map(l=>`<span class="t-item"><i class="ti ti-car" style="font-size:10px;"></i>${l.name}</span>`).join('');
-    document.getElementById('h-ticker').innerHTML=tHTML+tHTML;
+  }).join('');
+
+  document.getElementById('h-title-block').innerHTML = `
+    <div style="flex:1;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:7px;">
+        <span style="width:20px;height:1px;background:var(--acc);display:inline-block;"></span>
+        Assetto Corsa · Community
+      </div>
+      <h1 style="font-size:44px;font-weight:900;font-style:italic;letter-spacing:-3px;line-height:.88;color:var(--t1);margin-bottom:14px;">
+        The<em style="color:var(--acc);font-style:italic;display:block;">livery</em>database.
+      </h1>
+      <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:20px;">Community-built skin library for AC mods.<br>Find, share and discover — free forever.</p>
+      <button onclick="nav('liveries')" style="height:32px;padding:0 15px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        <i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse liveries
+      </button>
+    </div>
+    <div style="display:flex;gap:6px;flex-direction:column;">
+      ${brandPills}
+    </div>`;
+
+  // ── POSTERS ──
+  const posterSVG = (l) => {
+    const cn = l.categories?.name||''; const s = seed(l);
+    if(l.image_url) return `<img src="${l.image_url}" alt="${l.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s;">`;
+    return `<div style="position:absolute;inset:0;">${svg(cn,s)}</div>`;
+  };
+
+  if(top.length){
+    const main = top[0];
+    const smalls = top.slice(1,4);
+    document.getElementById('h-posters').innerHTML = `
+      <div style="position:relative;overflow:hidden;cursor:pointer;background:var(--s2);grid-row:span 3;" onclick="openLivery('${main.id}')">
+        ${posterSVG(main)}
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.25) 55%,transparent 100%);"></div>
+        ${main.artists?'<span style="position:absolute;top:10px;right:10px;font-size:14px;">👑</span>':''}
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:22px 24px;">
+          <div style="font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px;"><i class="ti ti-crown" style="font-size:9px;"></i> Most upvoted</div>
+          <div style="font-size:24px;font-weight:900;font-style:italic;letter-spacing:-.8px;color:#fff;line-height:1;margin-bottom:6px;">${main.name}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:10px;">${main.mods?.name||'—'} · ${main.championships?.short_name||main.categories?.name||'—'}</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            ${main.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
+            <span style="margin-left:auto;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:3px;"><i class="ti ti-heart" style="font-size:10px;"></i>${main.upvotes||0}</span>
+          </div>
+        </div>
+      </div>
+      ${smalls.map(l=>`
+        <div style="position:relative;overflow:hidden;cursor:pointer;background:var(--s2);" onclick="openLivery('${l.id}')">
+          ${posterSVG(l)}
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%,transparent 100%);"></div>
+          ${l.artists?'<span style="position:absolute;top:7px;right:8px;font-size:12px;">👑</span>':''}
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px;">
+            <div style="font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px;">${l.championships?.short_name||l.categories?.name||'—'}</div>
+            <div style="font-size:13px;font-weight:700;font-style:italic;letter-spacing:-.4px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;">${l.mods?.name||'—'}</div>
+          </div>
+        </div>`).join('')}`;
   }
-  document.getElementById('h-top').innerHTML=top.slice(0,5).map(l=>{
+
+  // ── STATS STRIP ──
+  const adds = await fetchAddons({});
+  document.getElementById('h-stats').innerHTML = `
+    <div style="display:flex;border-bottom:0.5px solid var(--b1);">
+      ${[
+        {icon:'ti-photo',     c:'var(--acc)',   bg:'var(--acc2)',                   n:totalLivs,           l:'Liveries'},
+        {icon:'ti-user-star', c:'#FF9F0A',      bg:'rgba(255,159,10,.1)',           n:_artists.length,     l:'Artists'},
+        {icon:'ti-package',   c:'#30D158',      bg:'rgba(48,209,88,.1)',            n:_mods.length,        l:'Mods'},
+        {icon:'ti-thumb-up',  c:'#BF5AF2',      bg:'rgba(191,90,242,.1)',           n:totalVotes.toLocaleString(), l:'Upvotes'},
+        {icon:'ti-puzzle',    c:'var(--acc)',   bg:'var(--acc2)',                   n:adds.length,         l:'Addons'},
+      ].map(s=>`<div style="flex:1;padding:12px 16px;border-right:0.5px solid var(--b1);display:flex;align-items:center;gap:9px;">
+        <div style="width:26px;height:26px;border-radius:7px;background:${s.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ${s.icon}" style="font-size:12px;color:${s.c};"></i></div>
+        <div><div style="font-size:20px;font-weight:900;font-style:italic;letter-spacing:-.8px;color:${s.l==='Liveries'?'var(--acc)':'var(--t1)'};">${s.n}</div><div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;">${s.l}</div></div>
+      </div>`).join('')}
+    </div>`;
+  // Remove last border-right
+  const lastSS = document.querySelector('#h-stats > div > div:last-child');
+  if(lastSS) lastSS.style.borderRight = 'none';
+
+  // ── POPULAR ──
+  const stArtist = {};
+  livCount.forEach(l=>{ if(!l.artist_id)return; if(!stArtist[l.artist_id])stArtist[l.artist_id]={c:0,v:0}; stArtist[l.artist_id].c++; stArtist[l.artist_id].v+=l.upvotes||0; });
+  const AVC=[['rgba(91,110,247,.14)','#5B6EF7'],['rgba(255,159,10,.12)','#FF9F0A'],['rgba(48,209,88,.10)','#30D158'],['rgba(191,90,242,.10)','#BF5AF2']];
+
+  document.getElementById('h-popular').innerHTML = top.slice(0,5).map(l=>{
     const cn=l.categories?.name||'';
-    return `<div class="ml-item" onclick="openLivery('${l.id}')"><div class="ml-thumb" style="position:relative;">${l.image_url?`<img src="${l.image_url}" alt="${l.name}">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}</div><div style="flex:1;min-width:0;"><div class="ml-name">${l.name}</div><div class="ml-sub">${l.mods?.name||'—'}</div></div><span class="ml-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</span></div>`;
+    return `<div style="display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:7px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:44px;height:28px;border-radius:5px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
+        ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:600;color:var(--t1);letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:1px;">${l.mods?.name||'—'}</div>
+      </div>
+      <div style="flex-shrink:0;text-align:right;">
+        ${l.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
+        <div style="font-size:10px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:2px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
+      </div>
+    </div>`;
   }).join('');
-  document.getElementById('h-recent').innerHTML=recent.map(l=>{
+
+  // ── RECENT ──
+  document.getElementById('h-recent-list').innerHTML = recent.map(l=>{
     const cn=l.categories?.name||'';
-    return `<div class="ml-item" onclick="openLivery('${l.id}')"><div class="ml-thumb" style="position:relative;">${l.image_url?`<img src="${l.image_url}" alt="${l.name}">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}</div><div style="flex:1;min-width:0;"><div class="ml-name">${l.name}</div><div class="ml-sub">${l.mods?.name||'—'}</div></div>${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div>`;
+    return `<div style="display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:7px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:44px;height:28px;border-radius:5px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
+        ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:600;color:var(--t1);letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:1px;">${l.mods?.name||'—'}</div>
+      </div>
+      <span class="b-n badge">New</span>
+    </div>`;
   }).join('');
-  const livs2=await fetchLiveries({sort:'votes',pageSize:1000});
-  const st={};livs2.forEach(l=>{if(!l.artist_id)return;if(!st[l.artist_id])st[l.artist_id]={c:0,v:0};st[l.artist_id].c++;st[l.artist_id].v+=l.upvotes||0;});
-  document.getElementById('h-artists').innerHTML=_artists.slice(0,4).map((a,i)=>{
+
+  // ── ARTISTS ──
+  document.getElementById('h-artists-list').innerHTML = _artists.slice(0,3).map((a,i)=>{
     const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const[abg,ac]=AVC[i%AVC.length];const s=st[a.id]||{c:0,v:0};
-    return `<div class="am-item" onclick="nav('artists')"><div class="am-av" style="background:${abg};color:${ac};">${ini}</div><div><div class="am-name">${a.name} 👑</div><div class="am-count">${s.c} liveri${s.c!==1?'es':'y'}</div></div></div>`;
-  }).join('');
-  document.getElementById('h-mods-mini').innerHTML=_mods.slice(0,4).map(m=>{
-    const br=m.brand?BR[m.brand]:null;
-    return `<div class="mod-mini-item" onclick="openModDetail('${m.id}')"><div class="mod-mini-logo">${m.image_url?`<img src="${m.image_url}" alt="${m.name}">`:`<i class="ti ti-car" style="font-size:12px;color:var(--t3);"></i>`}</div><div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>${br?`<div style="font-size:9px;font-weight:700;color:${br.c};text-transform:uppercase;letter-spacing:.3px;">${m.brand}</div>`:''}</div></div>`;
+    const [abg,ac]=AVC[i%AVC.length]; const s=stArtist[a.id]||{c:0,v:0};
+    return `<div style="display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:7px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:32px;height:32px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-style:italic;background:${abg};color:${ac};">${ini}</div>
+      <div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--t1);">${a.name} 👑</div><div style="font-size:10px;color:var(--t2);margin-top:1px;">${s.c} liveries</div></div>
+      <span style="font-size:11px;font-weight:600;color:var(--t3);">${s.v} votes</span>
+    </div>`;
   }).join('');
 }
 
-// ── MODS ──
+
 async function loadMods(){
   const livs = await fetchLiveries({sort:'newest', pageSize:1000});
   const lc = {}; livs.forEach(l=>{ if(l.mod_id) lc[l.mod_id]=(lc[l.mod_id]||0)+1; });
