@@ -524,25 +524,21 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   <!-- LIVERIES -->
   <div class="view on" id="view-liveries">
 
-    <!-- Header -->
-    <div style="padding:28px 24px 20px;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+    <!-- Header — même style que Home -->
+    <div style="padding:32px 28px 26px;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
         <span style="width:18px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
         Assetto Corsa · Community
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-        <h2 style="font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2.2px;line-height:.9;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <!-- Search -->
-          <div class="sbox" style="width:220px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search…"></div>
-          <!-- Sort -->
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;">
+        <h2 style="font-size:46px;font-weight:900;font-style:italic;letter-spacing:-3px;line-height:.88;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
+        <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px;">
+          <div class="sbox" style="width:200px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search livery, driver, team…"></div>
           <select class="fsel" id="l-sort"><option value="votes">↑ Popular</option><option value="newest">Newest</option><option value="name">A–Z</option></select>
-          <!-- Filters btn -->
           <button class="filters-btn" id="filters-btn" onclick="openDrawer()">
             <i class="ti ti-adjustments-horizontal" style="font-size:13px;"></i> Filters
             <span class="filters-count" id="filters-count" style="display:none;">0</span>
           </button>
-          <!-- View toggle -->
           <div style="display:flex;gap:3px;">
             <button class="vt-btn on" id="vt-list" onclick="setVMode('list')" aria-label="List"><i class="ti ti-list"></i></button>
             <button class="vt-btn" id="vt-grid" onclick="setVMode('grid')" aria-label="Grid"><i class="ti ti-layout-grid"></i></button>
@@ -566,66 +562,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
   </div>
 
-  <!-- DRAWER OVERLAY -->
-  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 
-  <!-- FILTER DRAWER -->
-  <div class="drawer" id="filter-drawer">
-    <div class="drawer-head">
-      <span class="drawer-title">Filters</span>
-      <button class="drawer-close" onclick="closeDrawer()">×</button>
-    </div>
-    <div class="drawer-body">
-
-      <!-- Publisher -->
-      <div class="drawer-section">
-        <div class="drawer-section-title">Publisher</div>
-        <div class="drawer-items" id="dr-publishers">
-          <button class="di on" data-type="brand" data-val="all"><span style="font-size:13px;">🏁</span><span style="flex:1;">All publishers</span></button>
-          <button class="di" data-type="brand" data-val="RSS"><div class="di-icon" style="background:rgba(91,110,247,.14);color:#5B6EF7;">R</div><span style="flex:1;">RSS — Race Sim Studio</span><span class="di-count" id="dr-cnt-RSS">—</span></button>
-          <button class="di" data-type="brand" data-val="VRC"><div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div><span style="flex:1;">VRC — Virtual Racing Cars</span><span class="di-count" id="dr-cnt-VRC">—</span></button>
-          <button class="di" data-type="brand" data-val="URD"><div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div><span style="flex:1;">URD — United Racing Design</span><span class="di-count" id="dr-cnt-URD">—</span></button>
-        </div>
-      </div>
-
-      <!-- Category -->
-      <div class="drawer-section">
-        <div class="drawer-section-title">Category</div>
-        <div class="drawer-items" id="dr-categories"></div>
-      </div>
-
-      <!-- Championship -->
-      <div class="drawer-section">
-        <div class="drawer-section-title">Championship</div>
-        <div class="drawer-items" id="dr-championships"></div>
-      </div>
-
-      <!-- Pricing -->
-      <div class="drawer-section">
-        <div class="drawer-section-title">Pricing</div>
-        <div class="drawer-items">
-          <button class="di on" data-type="price" data-val="all"><span style="font-size:13px;">💰</span><span style="flex:1;">All pricing</span></button>
-          <button class="di" data-type="price" data-val="free"><span style="font-size:13px;color:#30D158;">🔓</span><span style="flex:1;">Free only</span></button>
-          <button class="di" data-type="price" data-val="paid"><span style="font-size:13px;color:#FF9F0A;">🔒</span><span style="flex:1;">Paid only</span></button>
-        </div>
-      </div>
-
-      <!-- Creator -->
-      <div class="drawer-section">
-        <div class="drawer-section-title">Creator</div>
-        <div class="drawer-items">
-          <button class="di on" data-type="artist" data-val="all"><span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span></button>
-          <button class="di" data-type="artist" data-val="confirmed"><span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span></button>
-          <button class="di" data-type="artist" data-val="community"><span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span></button>
-        </div>
-      </div>
-
-    </div>
-    <div class="drawer-foot">
-      <button class="drawer-reset" onclick="resetFilters()">Reset all</button>
-      <button class="drawer-apply" onclick="closeDrawer()">Show results</button>
-    </div>
-  </div>
 
   <!-- LIVERY DETAIL -->
   <div class="view" id="view-livery-detail">
@@ -1736,5 +1673,53 @@ async function buildLivCounts(){
 // ── BOOT ──────────────────────────────────────
 boot().then(handleHash).then(()=>buildLivCounts());
 </script>
+<!-- DRAWER OVERLAY — outside .main so position:fixed works -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="filter-drawer">
+  <div class="drawer-head">
+    <span class="drawer-title">Filters</span>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <div class="drawer-section-title">Publisher</div>
+      <div class="drawer-items" id="dr-publishers">
+        <button class="di on" data-type="brand" data-val="all"><span style="font-size:13px;">🏁</span><span style="flex:1;">All publishers</span></button>
+        <button class="di" data-type="brand" data-val="RSS"><div class="di-icon" style="background:rgba(91,110,247,.14);color:#5B6EF7;">R</div><span style="flex:1;">RSS — Race Sim Studio</span><span class="di-count" id="dr-cnt-RSS">—</span></button>
+        <button class="di" data-type="brand" data-val="VRC"><div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div><span style="flex:1;">VRC — Virtual Racing Cars</span><span class="di-count" id="dr-cnt-VRC">—</span></button>
+        <button class="di" data-type="brand" data-val="URD"><div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div><span style="flex:1;">URD — United Racing Design</span><span class="di-count" id="dr-cnt-URD">—</span></button>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Category</div>
+      <div class="drawer-items" id="dr-categories"></div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Championship</div>
+      <div class="drawer-items" id="dr-championships"></div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Pricing</div>
+      <div class="drawer-items">
+        <button class="di on" data-type="price" data-val="all"><span style="font-size:13px;">💰</span><span style="flex:1;">All pricing</span></button>
+        <button class="di" data-type="price" data-val="free"><span style="font-size:13px;color:#30D158;">🔓</span><span style="flex:1;">Free only</span></button>
+        <button class="di" data-type="price" data-val="paid"><span style="font-size:13px;color:#FF9F0A;">🔒</span><span style="flex:1;">Paid only</span></button>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Creator</div>
+      <div class="drawer-items">
+        <button class="di on" data-type="artist" data-val="all"><span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span></button>
+        <button class="di" data-type="artist" data-val="confirmed"><span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span></button>
+        <button class="di" data-type="artist" data-val="community"><span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span></button>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="drawer-reset" onclick="resetFilters()">Reset all</button>
+    <button class="drawer-apply" onclick="closeDrawer()">Show results</button>
+  </div>
+</div>
+
 </body>
 </html>
