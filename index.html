@@ -439,7 +439,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     <div class="ticker"><span class="ticker-label">New</span><div class="ticker-scroll" id="h-ticker"></div></div>
 
     <!-- HERO: titre gauche + affiches droite -->
-    <div style="display:grid;grid-template-columns:400px 1fr;min-height:520px;background:var(--b1);gap:2px;">
+    <div style="display:grid;grid-template-columns:440px 1fr;min-height:520px;background:var(--b1);gap:2px;">
       <!-- Titre -->
       <div id="h-title-block" style="background:var(--bg);padding:40px 36px;display:flex;flex-direction:column;justify-content:space-between;overflow:visible;">
         <div class="sk" style="height:200px;border-radius:8px;"></div>
@@ -928,13 +928,13 @@ async function loadHome(){
       <h1 style="font-size:46px;font-weight:900;font-style:italic;letter-spacing:-3px;line-height:.92;color:var(--t1);margin-bottom:20px;">
         The<em style="color:var(--acc);font-style:italic;display:block;">livery</em>database.
       </h1>
-      <p style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:24px;">Community-built skin library for Assetto Corsa mods. Find, share and discover — free forever.</p>
-      <button onclick="nav('liveries')" style="height:34px;padding:0 16px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-        <i class="ti ti-layout-grid" style="font-size:13px;"></i> Browse liveries
-      </button>
+      <p style="font-size:13px;color:var(--t2);line-height:1.7;">Community-built skin library for Assetto Corsa mods. Find, share and discover — free forever.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:9px;">
       ${brandPills}
+      <button onclick="nav('liveries')" style="height:34px;padding:0 16px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s;margin-top:4px;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        <i class="ti ti-layout-grid" style="font-size:13px;"></i> Browse liveries
+      </button>
     </div>`;
 
   // ── POSTERS ──
