@@ -883,61 +883,137 @@ async function loadHome(){
 
 // ── MODS ──
 async function loadMods(){
-  const livs=await fetchLiveries({sort:'votes',pageSize:1000});
-  const lc={};livs.forEach(l=>{if(l.mod_id)lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
+  const livs = await fetchLiveries({sort:'newest', pageSize:1000});
+  const lc = {}; livs.forEach(l=>{ if(l.mod_id) lc[l.mod_id]=(lc[l.mod_id]||0)+1; });
 
-  const BRAND_ORDER=['RSS','VRC','URD'];
-  const brandMeta={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',label:'Race Sim Studio',desc:'Premium simulation mods for Assetto Corsa. Formula, GT, Hillclimb and more.'},
-    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',label:'Virtual Racing Cars',desc:'High-quality GT and touring car mods with detailed physics and models.'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',label:'URD Mods',desc:'Endurance and GT racing mods. Known for quality and competitive content.'},
+  // Champ map per mod
+  const modChamps = {};
+  livs.forEach(l=>{
+    if(!l.mod_id||!l.championships) return;
+    if(!modChamps[l.mod_id]) modChamps[l.mod_id]=new Map();
+    modChamps[l.mod_id].set(l.championship_id, l.championships.short_name||l.championships.name);
+  });
+
+  // Last livery date per mod
+  const modLastDate = {};
+  livs.forEach(l=>{ if(l.mod_id && !modLastDate[l.mod_id]) modLastDate[l.mod_id]=l.created_at; });
+
+  const BRAND_ORDER = ['RSS','VRC','URD'];
+  const brandMeta = {
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(140deg,#0d1240,#0d0514)',label:'Race Sim Studio'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(140deg,#002010,#001a10)',label:'Virtual Racing Cars'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(140deg,#1a0d00,#0d0800)',label:'URD Mods'},
   };
 
   // Group mods by brand
-  const branded={RSS:[],VRC:[],URD:[]};
-  _mods.forEach(m=>{
-    if(m.brand&&branded[m.brand])branded[m.brand].push(m);
-  });
+  const branded = {RSS:[],VRC:[],URD:[]};
+  _mods.forEach(m=>{ if(m.brand && branded[m.brand]) branded[m.brand].push(m); });
 
-  // Build champ map per mod
-  const modChamps={};
-  livs.forEach(l=>{
-    if(!l.mod_id||!l.championships)return;
-    if(!modChamps[l.mod_id])modChamps[l.mod_id]=new Map();
-    modChamps[l.mod_id].set(l.championship_id,l.championships.short_name||l.championships.name);
-  });
-
-  let html='<div class="mv-brand-landing">';
+  // ── SECTION A — 3 brand cards ──────────────────────────
+  let secA = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 20px 0;">';
   BRAND_ORDER.forEach(brand=>{
-    const mods=branded[brand]||[];
-    if(!mods.length)return;
-    const bm=brandMeta[brand];
-    const totalLivs=mods.reduce((s,m)=>s+(lc[m.id]||0),0);
-    // Collect unique categories
-    const cats=[...new Set(mods.map(m=>m.categories?.name).filter(Boolean))];
-    const modPills=mods.slice(0,5).map(m=>`<span class="mv-brand-mod-pill">${m.name}</span>`).join('');
-
-    html+=`<div class="mv-brand-card ${brand.toLowerCase()}" onclick="openBrandDetail('${brand}')">
-      <div class="mv-brand-card-bg">${brand}</div>
-      <div class="mv-brand-card-content">
-        <div class="mv-brand-card-label" style="color:${bm.c};">${brand} · ${bm.label}</div>
-        <div class="mv-brand-card-name">${bm.label}</div>
-        <div class="mv-brand-card-sub">${bm.desc}</div>
-        <div class="mv-brand-card-stats">
-          <div><div class="mv-brand-stat-n">${mods.length}</div><div class="mv-brand-stat-l">Mods</div></div>
-          <div><div class="mv-brand-stat-n">${totalLivs}</div><div class="mv-brand-stat-l">Liveries</div></div>
-          <div><div class="mv-brand-stat-n">${cats.length}</div><div class="mv-brand-stat-l">Categories</div></div>
-        </div>
-        <div class="mv-brand-card-mods">${modPills}${mods.length>5?`<span class="mv-brand-mod-pill">+${mods.length-5} more</span>`:''}</div>
-        <button class="mv-brand-card-btn" style="background:${bm.c};color:#fff;">
-          <i class="ti ti-layout-grid"></i> Browse ${mods.length} mod${mods.length>1?'s':''}
-        </button>
+    const mods = branded[brand]||[];
+    const bm = brandMeta[brand];
+    const totalLivs = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
+    const cats = [...new Set(mods.map(m=>m.categories?.name).filter(Boolean))];
+    const modPills = mods.slice(0,4).map(m=>`<span style="padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);border:0.5px solid rgba(255,255,255,.08);">${m.name}</span>`).join('');
+    secA += `<div style="background:${brand==='RSS'?'linear-gradient(140deg,#0d1240,#0d0514)':brand==='VRC'?'linear-gradient(140deg,#002010,#001a10)':'linear-gradient(140deg,#1a0d00,#0d0800)'};border:0.5px solid ${brand==='RSS'?'rgba(91,110,247,.3)':brand==='VRC'?'rgba(48,209,88,.25)':'rgba(255,159,10,.25)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;" onclick="openBrandDetail('${brand}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:90px;font-weight:900;font-style:italic;letter-spacing:-5px;color:rgba(255,255,255,.04);pointer-events:none;overflow:hidden;">${brand}</div>
+      <div style="position:relative;padding:20px 22px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:${bm.c};margin-bottom:8px;">${brand} · ${bm.label}</div>
+        <div style="font-size:24px;font-weight:900;font-style:italic;letter-spacing:-1.2px;color:#fff;line-height:1;margin-bottom:5px;">${bm.label}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:14px;">${mods.length} mod${mods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'} · ${cats.length} catégorie${cats.length>1?'s':''}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;">${modPills}${mods.length>4?`<span style="padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.06);color:rgba(255,255,255,.35);">+${mods.length-4}</span>`:''}</div>
+        <button style="height:28px;padding:0 13px;background:${bm.c};color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;" onclick="event.stopPropagation();openBrandDetail('${brand}')"><i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse ${mods.length} mod${mods.length>1?'s':''}</button>
       </div>
     </div>`;
   });
-  html+='</div>';
-  document.getElementById('m-root').innerHTML=html;
+  secA += '</div>';
+
+  // ── SECTION B — derniers ajouts (liste compacte) ────────
+  const recentMods = [..._mods]
+    .filter(m=>modLastDate[m.id])
+    .sort((a,b)=>new Date(modLastDate[b.id])-new Date(modLastDate[a.id]))
+    .slice(0,6);
+
+  let secB = '<div style="padding:28px 20px 0;">';
+  secB += '<div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Recent livery additions <span style="flex:1;height:0.5px;background:var(--b1);"></span></div>';
+  secB += '<div style="display:flex;flex-direction:column;gap:5px;">';
+  recentMods.forEach(m=>{
+    const brand = m.brand&&brandMeta[m.brand]?m.brand:null;
+    const bm = brand?brandMeta[brand]:null;
+    const cnt = lc[m.id]||0;
+    const champs = [...((modChamps[m.id]||new Map()).values())].slice(0,3);
+    const lastDate = modLastDate[m.id];
+    const timeAgo = lastDate ? (() => {
+      const d = Math.floor((Date.now()-new Date(lastDate))/86400000);
+      return d===0?'Today':d===1?'Yesterday':`${d} days ago`;
+    })() : '—';
+    secB += `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s1);border:0.5px solid var(--b1);border-left:2.5px solid ${bm?.c||'var(--t3)'};border-radius:10px;cursor:pointer;transition:all .15s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='var(--s1)')">
+      <div style="width:44px;height:44px;border-radius:9px;overflow:hidden;flex-shrink:0;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
+        ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
+          `<span style="font-size:14px;font-weight:900;font-style:italic;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;font-style:italic;color:var(--t1);letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:1px;">${bm?.label||'—'} · ${m.categories?.name||'—'}${champs.length?' · '+champs[0]:''}</div>
+      </div>
+      <div style="flex-shrink:0;text-align:right;">
+        <div style="font-size:11px;font-weight:600;color:var(--t1);">${cnt} liveri${cnt!==1?'es':'y'}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:1px;">${timeAgo}</div>
+      </div>
+      ${brand?`<span style="flex-shrink:0;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;background:${bm.bg};color:${bm.c};">${brand}</span>`:''}
+    </div>`;
+  });
+  secB += '</div></div>';
+
+  // ── SECTION C — top 3 mods par liveries (cards avec barre) ──
+  const top3 = [..._mods]
+    .filter(m=>lc[m.id])
+    .sort((a,b)=>(lc[b.id]||0)-(lc[a.id]||0))
+    .slice(0,3);
+  const maxLivs = top3.length ? (lc[top3[0].id]||1) : 1;
+
+  let secC = '<div style="padding:28px 20px 40px;">';
+  secC += '<div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Most popular mods <span style="flex:1;height:0.5px;background:var(--b1);"></span></div>';
+  secC += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">';
+  top3.forEach((m,i)=>{
+    const brand = m.brand&&brandMeta[m.brand]?m.brand:null;
+    const bm = brand?brandMeta[brand]:null;
+    const cnt = lc[m.id]||0;
+    const pct = Math.round((cnt/maxLivs)*100);
+    const champs = [...((modChamps[m.id]||new Map()).values())].slice(0,3);
+    secC += `<div style="background:var(--s1);border:0.5px solid ${bm?`rgba(${brand==='RSS'?'91,110,247':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="padding:14px 15px 0;display:flex;align-items:center;gap:10px;margin-bottom:11px;">
+        <div style="width:38px;height:38px;border-radius:10px;flex-shrink:0;overflow:hidden;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
+          ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
+            `<span style="font-size:15px;font-weight:900;font-style:italic;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:800;letter-spacing:-.5px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
+          <div style="font-size:10px;font-weight:700;color:${bm?.c||'var(--t3)'};text-transform:uppercase;letter-spacing:.3px;margin-top:1px;">${brand||'—'}</div>
+        </div>
+        <div style="width:22px;height:22px;border-radius:50%;background:${bm?.bg||'var(--s2)'};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:${bm?.c||'var(--t2)'};">#${i+1}</div>
+      </div>
+      <div style="padding:0 15px;font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:10px;min-height:34px;">${m.description||'<span style="color:var(--t3);">No description yet.</span>'}</div>
+      <div style="margin:0 15px 4px;height:3px;background:var(--b1);border-radius:2px;">
+        <div style="height:100%;border-radius:2px;background:${bm?.c||'var(--t2)'};width:${pct}%;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin:0 15px 10px;">
+        <span style="color:${bm?.c||'var(--t1)'};font-weight:600;">${cnt} liveri${cnt!==1?'es':'y'}</span>
+        <span>${m.categories?.name||'—'}</span>
+      </div>
+      ${champs.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 15px 12px;">${champs.map(c=>`<span style="padding:2px 7px;border-radius:5px;font-size:10px;font-weight:600;background:var(--s2);color:var(--t2);border:0.5px solid var(--b1);">${c}</span>`).join('')}</div>`:''}
+      <div style="padding:8px 15px 12px;border-top:0.5px solid var(--b1);display:flex;justify-content:flex-end;">
+        <button style="height:24px;padding:0 10px;background:${bm?.bg||'var(--s2)'};color:${bm?.c||'var(--t2)'};border:0.5px solid ${bm?`rgba(${brand==='RSS'?'91,110,247':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid" style="font-size:11px;"></i> Browse</button>
+      </div>
+    </div>`;
+  });
+  secC += '</div></div>';
+
+  document.getElementById('m-root').innerHTML = secA + secB + secC;
 }
+
 
 async function openBrandDetail(brand){
   // Switch to brand detail view
