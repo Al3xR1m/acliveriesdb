@@ -133,13 +133,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 /* LIST mode */
 .lv-list{padding:0 20px;}
-.lv-row{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--b1);cursor:pointer;border-radius:8px;transition:all .12s;}
+.lv-row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:11px 0;border-bottom:0.5px solid var(--b1);cursor:pointer;border-radius:8px;transition:all .12s;}
 .lv-row:hover{background:var(--s1);margin:0 -8px;padding:9px 8px;}
 .lv-row:last-child{border-bottom:none;}
-.lv-thumb{width:52px;height:33px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;}
+.lv-thumb{width:64px;height:40px;border-radius:7px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;}
 .lv-thumb img{width:100%;height:100%;object-fit:cover;}
-.lv-name{font-size:13px;font-weight:600;font-style:italic;color:var(--t1);letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lv-meta{font-size:10px;color:var(--t2);margin-top:1px;}
+.lv-name{font-size:14px;font-weight:600;font-style:italic;color:var(--t1);letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-meta{font-size:11px;color:var(--t2);margin-top:3px;}
 .lv-right{display:flex;align-items:center;gap:5px;flex-shrink:0;}
 .lv-votes{font-size:10px;font-weight:600;color:var(--t3);display:flex;align-items:center;gap:2px;}
 
@@ -488,24 +488,46 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
   <!-- LIVERIES -->
   <div class="view on" id="view-liveries">
-    <div class="lv-top">
-      <h2 class="lv-title">All <em>liveries</em></h2>
-      <div class="vt">
-        <button class="vt-btn on" id="vt-list" onclick="setVMode('list')" aria-label="List view"><i class="ti ti-list"></i></button>
-        <button class="vt-btn" id="vt-grid" onclick="setVMode('grid')" aria-label="Grid view"><i class="ti ti-layout-grid"></i></button>
+
+    <!-- Header -->
+    <div style="padding:32px 28px 24px;border-bottom:0.5px solid var(--b1);background:var(--bg);">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="width:18px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
+        Assetto Corsa · Community
       </div>
-      <span class="lv-count" id="l-count"></span>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;">
+        <h2 style="font-size:42px;font-weight:900;font-style:italic;letter-spacing:-2.8px;line-height:.88;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
+        <div style="display:flex;align-items:center;gap:8px;padding-bottom:4px;">
+          <span style="font-size:12px;color:var(--t2);" id="l-count"></span>
+          <div style="display:flex;gap:3px;">
+            <button class="vt-btn on" id="vt-list" onclick="setVMode('list')" aria-label="List"><i class="ti ti-list"></i></button>
+            <button class="vt-btn" id="vt-grid" onclick="setVMode('grid')" aria-label="Grid"><i class="ti ti-layout-grid"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="fbar">
-      <div class="sbox"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search livery, driver, team…"></div>
+
+    <!-- Filters -->
+    <div style="padding:14px 28px;border-bottom:0.5px solid var(--b1);background:var(--bg);display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <div class="sbox" style="flex:1;min-width:200px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search livery, driver, team…"></div>
       <select class="fsel" id="l-sort"><option value="votes">↑ Popular</option><option value="newest">Newest</option><option value="name">A–Z</option></select>
       <select class="fsel" id="l-champ"><option value="all">Championship</option></select>
       <select class="fsel" id="l-price"><option value="all">All pricing</option><option value="free">Free</option><option value="paid">Paid</option></select>
       <select class="fsel" id="l-artist"><option value="all">All creators</option><option value="confirmed">👑 Confirmed</option><option value="community">Community</option></select>
     </div>
-    <div class="cpills" id="l-pills"></div>
-    <div id="l-content"></div>
-    <div class="bot"><span class="bot-info" id="l-info"></span><div class="pag" id="l-pag"></div></div>
+
+    <!-- Category pills -->
+    <div style="padding:10px 28px;border-bottom:0.5px solid var(--b1);background:var(--bg);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;" id="l-pills"></div>
+
+    <!-- Grid -->
+    <div style="padding:20px 28px 0;" id="l-content"></div>
+
+    <!-- Pagination -->
+    <div style="padding:16px 28px 32px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:11px;color:var(--t3);" id="l-info"></span>
+      <div class="pag" id="l-pag"></div>
+    </div>
+
   </div>
 
   <!-- LIVERY DETAIL -->
@@ -777,8 +799,8 @@ async function loadLiveries(){
   document.getElementById('l-count').textContent=`${total} liveri${total!==1?'es':'y'}`;
   document.getElementById('l-info').textContent=`${Math.min((_page-1)*PAGE+1,total)}–${Math.min(_page*PAGE,total)} of ${total}`;
   const empty=`<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i><p>No liveries found.</p></div>`;
-  if(_vmode==='list') document.getElementById('l-content').innerHTML=list.length?`<div class="lv-list">${list.map(lvRow).join('')}</div>`:empty;
-  else document.getElementById('l-content').innerHTML=list.length?`<div class="lv-grid">${list.map(gcCard).join('')}</div>`:empty;
+  if(_vmode==='list') document.getElementById('l-content').innerHTML=list.length?`<div class="lv-list" style="margin:0 -4px;">${list.map(lvRow).join('')}</div>`:empty;
+  else document.getElementById('l-content').innerHTML=list.length?`<div class="lv-grid" style="margin:0;">${list.map(gcCard).join('')}</div>`:empty;
   renderPag();
 }
 function renderPag(){
