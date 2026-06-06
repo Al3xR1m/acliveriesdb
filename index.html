@@ -111,6 +111,41 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 /* ── LIVERIES ── */
 .lv-top{padding:18px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:10;}
+/* FILTER DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none;backdrop-filter:blur(2px);}
+.drawer-overlay.open{display:block;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--s1);border-left:0.5px solid var(--b2);z-index:151;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:18px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.drawer-title{font-size:15px;font-weight:700;font-style:italic;letter-spacing:-.4px;color:var(--t1);}
+.drawer-close{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--b1);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:16px;transition:all .12s;}
+.drawer-close:hover{background:var(--s2);color:var(--t1);}
+.drawer-body{flex:1;overflow-y:auto;padding:0;}
+.drawer-section{padding:14px 20px;border-bottom:0.5px solid var(--b1);}
+.drawer-section-title{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
+.drawer-items{display:flex;flex-direction:column;gap:2px;}
+.di{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;border:none;background:none;font-family:inherit;width:100%;text-align:left;}
+.di:hover{background:var(--s2);color:var(--t1);}
+.di.on{background:var(--acc2);color:var(--acc);}
+.di.on .di-count{color:var(--acc);opacity:.7;}
+.di .di-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.di .di-count{margin-left:auto;font-size:10px;font-weight:700;color:var(--t3);}
+.di .di-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;font-style:italic;flex-shrink:0;}
+.drawer-foot{padding:14px 20px;border-top:0.5px solid var(--b1);display:flex;gap:8px;flex-shrink:0;}
+.drawer-reset{flex:1;height:34px;background:transparent;border:0.5px solid var(--b1);border-radius:8px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .12s;}
+.drawer-reset:hover{color:var(--t1);border-color:var(--b2);}
+.drawer-apply{flex:2;height:34px;background:var(--acc);border:none;border-radius:8px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+.drawer-apply:hover{opacity:.88;}
+/* Filter chips */
+.filter-chips{display:flex;gap:5px;flex-wrap:wrap;padding:8px 20px;border-bottom:0.5px solid var(--b1);}
+.fchip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:var(--acc2);border:0.5px solid rgba(91,110,247,.25);font-size:10px;font-weight:600;color:var(--acc);cursor:pointer;transition:all .12s;}
+.fchip:hover{background:rgba(91,110,247,.2);}
+.fchip-x{opacity:.6;margin-left:1px;}
+/* Filters btn badge */
+.filters-btn{display:flex;align-items:center;gap:6px;height:30px;padding:0 12px;background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .12s;flex-shrink:0;}
+.filters-btn:hover{color:var(--t1);border-color:var(--b2);}
+.filters-btn.active{background:var(--acc2);border-color:rgba(91,110,247,.3);color:var(--acc);}
+.filters-count{background:var(--acc);color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:1px 5px;min-width:16px;text-align:center;}
 .lv-title{font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);}
 .lv-title em{color:var(--acc);}
 .vt{display:flex;gap:3px;margin-left:4px;}
@@ -490,44 +525,106 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   <div class="view on" id="view-liveries">
 
     <!-- Header -->
-    <div style="padding:32px 28px 24px;border-bottom:0.5px solid var(--b1);background:var(--bg);">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+    <div style="padding:28px 24px 20px;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
         <span style="width:18px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
         Assetto Corsa · Community
       </div>
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;">
-        <h2 style="font-size:42px;font-weight:900;font-style:italic;letter-spacing:-2.8px;line-height:.88;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
-        <div style="display:flex;align-items:center;gap:8px;padding-bottom:4px;">
-          <span style="font-size:12px;color:var(--t2);" id="l-count"></span>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <h2 style="font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2.2px;line-height:.9;color:var(--t1);">All <em style="color:var(--acc);">liveries</em></h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <!-- Search -->
+          <div class="sbox" style="width:220px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search…"></div>
+          <!-- Sort -->
+          <select class="fsel" id="l-sort"><option value="votes">↑ Popular</option><option value="newest">Newest</option><option value="name">A–Z</option></select>
+          <!-- Filters btn -->
+          <button class="filters-btn" id="filters-btn" onclick="openDrawer()">
+            <i class="ti ti-adjustments-horizontal" style="font-size:13px;"></i> Filters
+            <span class="filters-count" id="filters-count" style="display:none;">0</span>
+          </button>
+          <!-- View toggle -->
           <div style="display:flex;gap:3px;">
             <button class="vt-btn on" id="vt-list" onclick="setVMode('list')" aria-label="List"><i class="ti ti-list"></i></button>
             <button class="vt-btn" id="vt-grid" onclick="setVMode('grid')" aria-label="Grid"><i class="ti ti-layout-grid"></i></button>
           </div>
+          <span style="font-size:11px;color:var(--t3);white-space:nowrap;" id="l-count"></span>
         </div>
       </div>
     </div>
 
-    <!-- Filters -->
-    <div style="padding:14px 28px;border-bottom:0.5px solid var(--b1);background:var(--bg);display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <div class="sbox" style="flex:1;min-width:200px;"><i class="ti ti-search"></i><input type="text" id="l-search" placeholder="Search livery, driver, team…"></div>
-      <select class="fsel" id="l-sort"><option value="votes">↑ Popular</option><option value="newest">Newest</option><option value="name">A–Z</option></select>
-      <select class="fsel" id="l-champ"><option value="all">Championship</option></select>
-      <select class="fsel" id="l-price"><option value="all">All pricing</option><option value="free">Free</option><option value="paid">Paid</option></select>
-      <select class="fsel" id="l-artist"><option value="all">All creators</option><option value="confirmed">👑 Confirmed</option><option value="community">Community</option></select>
-    </div>
+    <!-- Active filter chips -->
+    <div id="l-chips" style="display:none;padding:8px 24px;border-bottom:0.5px solid var(--b1);display:flex;gap:5px;flex-wrap:wrap;"></div>
 
-    <!-- Category pills -->
-    <div style="padding:10px 28px;border-bottom:0.5px solid var(--b1);background:var(--bg);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;" id="l-pills"></div>
-
-    <!-- Grid -->
-    <div style="padding:20px 28px 0;" id="l-content"></div>
+    <!-- Content -->
+    <div style="padding:20px 24px 0;" id="l-content"></div>
 
     <!-- Pagination -->
-    <div style="padding:16px 28px 32px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="padding:16px 24px 32px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:11px;color:var(--t3);" id="l-info"></span>
       <div class="pag" id="l-pag"></div>
     </div>
 
+  </div>
+
+  <!-- DRAWER OVERLAY -->
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <!-- FILTER DRAWER -->
+  <div class="drawer" id="filter-drawer">
+    <div class="drawer-head">
+      <span class="drawer-title">Filters</span>
+      <button class="drawer-close" onclick="closeDrawer()">×</button>
+    </div>
+    <div class="drawer-body">
+
+      <!-- Publisher -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Publisher</div>
+        <div class="drawer-items" id="dr-publishers">
+          <button class="di on" data-type="brand" data-val="all"><span style="font-size:13px;">🏁</span><span style="flex:1;">All publishers</span></button>
+          <button class="di" data-type="brand" data-val="RSS"><div class="di-icon" style="background:rgba(91,110,247,.14);color:#5B6EF7;">R</div><span style="flex:1;">RSS — Race Sim Studio</span><span class="di-count" id="dr-cnt-RSS">—</span></button>
+          <button class="di" data-type="brand" data-val="VRC"><div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div><span style="flex:1;">VRC — Virtual Racing Cars</span><span class="di-count" id="dr-cnt-VRC">—</span></button>
+          <button class="di" data-type="brand" data-val="URD"><div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div><span style="flex:1;">URD — United Racing Design</span><span class="di-count" id="dr-cnt-URD">—</span></button>
+        </div>
+      </div>
+
+      <!-- Category -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Category</div>
+        <div class="drawer-items" id="dr-categories"></div>
+      </div>
+
+      <!-- Championship -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Championship</div>
+        <div class="drawer-items" id="dr-championships"></div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Pricing</div>
+        <div class="drawer-items">
+          <button class="di on" data-type="price" data-val="all"><span style="font-size:13px;">💰</span><span style="flex:1;">All pricing</span></button>
+          <button class="di" data-type="price" data-val="free"><span style="font-size:13px;color:#30D158;">🔓</span><span style="flex:1;">Free only</span></button>
+          <button class="di" data-type="price" data-val="paid"><span style="font-size:13px;color:#FF9F0A;">🔒</span><span style="flex:1;">Paid only</span></button>
+        </div>
+      </div>
+
+      <!-- Creator -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">Creator</div>
+        <div class="drawer-items">
+          <button class="di on" data-type="artist" data-val="all"><span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span></button>
+          <button class="di" data-type="artist" data-val="confirmed"><span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span></button>
+          <button class="di" data-type="artist" data-val="community"><span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span></button>
+        </div>
+      </div>
+
+    </div>
+    <div class="drawer-foot">
+      <button class="drawer-reset" onclick="resetFilters()">Reset all</button>
+      <button class="drawer-apply" onclick="closeDrawer()">Show results</button>
+    </div>
   </div>
 
   <!-- LIVERY DETAIL -->
@@ -767,18 +864,14 @@ async function boot(){
 }
 
 // ── FILTERS ──
-function buildCatPills(){
-  document.getElementById('l-pills').innerHTML='<button class="pill on" data-c="all" onclick="setC(\'all\',this)">All</button>'+_cats.map(c=>`<button class="pill" data-c="${c.id}" onclick="setC('${c.id}',this)">${c.name}</button>`).join('');
-}
-function buildChampSelect(){
-  document.getElementById('l-champ').innerHTML='<option value="all">Championship</option>'+_champs.map(c=>`<option value="${c.id}">${c.short_name||c.name}</option>`).join('');
-}
-function setC(id,btn){_cat=id;_page=1;document.querySelectorAll('#l-pills .pill').forEach(p=>p.classList.toggle('on',p.dataset.c===id));loadLiveries();}
+function buildCatPills(){}
+function buildChampSelect(){}
+
 document.getElementById('l-search').addEventListener('input',e=>{_search=e.target.value;_page=1;clearTimeout(window._st);window._st=setTimeout(loadLiveries,280);});
 document.getElementById('l-sort').addEventListener('change',e=>{_sort=e.target.value;_page=1;loadLiveries();});
-document.getElementById('l-champ').addEventListener('change',e=>{_champ=e.target.value;_page=1;loadLiveries();});
-document.getElementById('l-price').addEventListener('change',e=>{_price=e.target.value==='free'?false:e.target.value==='paid'?true:null;_page=1;loadLiveries();});
-document.getElementById('l-artist').addEventListener('change',e=>{_artistFilter=e.target.value;_page=1;loadLiveries();});
+
+
+
 function setVMode(m){_vmode=m;document.getElementById('vt-list').classList.toggle('on',m==='list');document.getElementById('vt-grid').classList.toggle('on',m==='grid');loadLiveries();}
 
 // ── LIVERY CARD (grid) ──
@@ -794,6 +887,7 @@ function lvRow(l){
 // ── LOAD LIVERIES ──
 async function loadLiveries(){
   const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
+  // Brand filter applied client-side after fetch
   const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
   _total=total;_voted=getVotedSet();
   document.getElementById('l-count').textContent=`${total} liveri${total!==1?'es':'y'}`;
@@ -1522,7 +1616,125 @@ function handleHash(){
 window.addEventListener('hashchange',handleHash);
 
 // ── BOOT ──
-boot().then(handleHash);
+// ── DRAWER ──────────────────────────────────
+function openDrawer(){
+  // Populate categories
+  const catEl=document.getElementById('dr-categories');
+  catEl.innerHTML='<button class="di '+((_cat==='all')?'on':'')+'" data-type="cat" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
+    +_cats.map(c=>`<button class="di ${_cat===c.id?'on':''}" data-type="cat" data-val="${c.id}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count">${_champLivCounts?.cat?.[c.id]||''}</span></button>`).join('');
+
+  // Populate championships — filtered by active cat & brand
+  const champEl=document.getElementById('dr-championships');
+  const visibleChamps=_champs.filter(ch=>{
+    if(_cat!=='all'&&!ch.championship_categories?.some(cc=>cc.category_id===_cat))return false;
+    return true;
+  });
+  champEl.innerHTML='<button class="di '+((_champ==='all')?'on':'')+'" data-type="champ" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All championships</span></button>'
+    +visibleChamps.map(c=>`<button class="di ${_champ===c.id?'on':''}" data-type="champ" data-val="${c.id}"><span class="di-dot" style="background:#5B6EF7;"></span><span style="flex:1;">${c.short_name||c.name}</span><span class="di-count">${_champLivCounts?.champ?.[c.id]||''}</span></button>`).join('');
+
+  // Brand counts
+  ['RSS','VRC','URD'].forEach(b=>{
+    const el=document.getElementById('dr-cnt-'+b);
+    if(el)el.textContent=_champLivCounts?.brand?.[b]||'—';
+  });
+
+  // Sync active states
+  document.querySelectorAll('.di[data-type="brand"]').forEach(btn=>{
+    btn.classList.toggle('on',btn.dataset.val===(_activeBrand||'all'));
+  });
+  document.querySelectorAll('.di[data-type="price"]').forEach(btn=>{
+    const v=btn.dataset.val;
+    btn.classList.toggle('on',(v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true));
+  });
+  document.querySelectorAll('.di[data-type="artist"]').forEach(btn=>{
+    btn.classList.toggle('on',btn.dataset.val===_artistFilter);
+  });
+
+  document.getElementById('filter-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+
+function closeDrawer(){
+  document.getElementById('filter-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+// Drawer item clicks
+document.getElementById('filter-drawer').addEventListener('click',e=>{
+  const btn=e.target.closest('.di[data-type]');
+  if(!btn)return;
+  const type=btn.dataset.type, val=btn.dataset.val;
+  document.querySelectorAll(`.di[data-type="${type}"]`).forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(type==='brand'){_activeBrand=val==='all'?null:val;_page=1;}
+  if(type==='cat'){_cat=val;_page=1;}
+  if(type==='champ'){_champ=val;_page=1;}
+  if(type==='price'){_price=val==='free'?false:val==='paid'?true:null;_page=1;}
+  if(type==='artist'){_artistFilter=val;_page=1;}
+  updateFilterBadge();
+  loadLiveries();
+  // Re-populate champs when cat changes
+  if(type==='cat')openDrawer();
+});
+
+function updateFilterBadge(){
+  const count=[
+    _activeBrand!==null,
+    _cat!=='all',
+    _champ!=='all',
+    _price!==null,
+    _artistFilter!=='all'
+  ].filter(Boolean).length;
+  const btn=document.getElementById('filters-btn');
+  const badge=document.getElementById('filters-count');
+  if(count>0){badge.style.display='inline-block';badge.textContent=count;btn.classList.add('active');}
+  else{badge.style.display='none';btn.classList.remove('active');}
+  // Update chips
+  const chips=[];
+  if(_activeBrand)chips.push({label:_activeBrand,type:'brand'});
+  if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)chips.push({label:c.name,type:'cat'});}
+  if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)chips.push({label:c.short_name||c.name,type:'champ'});}
+  if(_price===false)chips.push({label:'Free',type:'price'});
+  if(_price===true)chips.push({label:'Paid',type:'price'});
+  if(_artistFilter==='confirmed')chips.push({label:'👑 Confirmed',type:'artist'});
+  if(_artistFilter==='community')chips.push({label:'Community',type:'artist'});
+  const chipsEl=document.getElementById('l-chips');
+  if(chips.length){
+    chipsEl.style.display='flex';
+    chipsEl.innerHTML=chips.map(ch=>`<span class="fchip" onclick="removeChip('${ch.type}')">${ch.label} <span class="fchip-x">×</span></span>`).join('');
+  } else {
+    chipsEl.style.display='none';
+  }
+}
+
+function removeChip(type){
+  if(type==='brand'){_activeBrand=null;}
+  if(type==='cat'){_cat='all';}
+  if(type==='champ'){_champ='all';}
+  if(type==='price'){_price=null;}
+  if(type==='artist'){_artistFilter='all';}
+  _page=1;updateFilterBadge();loadLiveries();
+}
+
+function resetFilters(){
+  _activeBrand=null;_cat='all';_champ='all';_price=null;_artistFilter='all';_search='';_page=1;
+  document.getElementById('l-search').value='';
+  updateFilterBadge();loadLiveries();closeDrawer();
+}
+
+// Live counts cache
+let _champLivCounts={cat:{},champ:{},brand:{}};
+async function buildLivCounts(){
+  const all=await fetchLiveries({sort:'votes',pageSize:5000});
+  all.forEach(l=>{
+    if(l.category_id) _champLivCounts.cat[l.category_id]=(_champLivCounts.cat[l.category_id]||0)+1;
+    if(l.championship_id) _champLivCounts.champ[l.championship_id]=(_champLivCounts.champ[l.championship_id]||0)+1;
+    if(l.mods?.brand) _champLivCounts.brand[l.mods.brand]=(_champLivCounts.brand[l.mods.brand]||0)+1;
+  });
+}
+
+// ── BOOT ──────────────────────────────────────
+boot().then(handleHash).then(()=>buildLivCounts());
 </script>
 </body>
 </html>
