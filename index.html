@@ -439,13 +439,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     <div class="ticker"><span class="ticker-label">New</span><div class="ticker-scroll" id="h-ticker"></div></div>
 
     <!-- HERO: titre gauche + affiches droite -->
-    <div style="display:grid;grid-template-columns:240px 1fr;min-height:400px;background:var(--b1);gap:2px;">
+    <div style="display:grid;grid-template-columns:320px 1fr;height:340px;background:var(--b1);gap:2px;">
       <!-- Titre -->
-      <div id="h-title-block" style="background:var(--bg);padding:28px 24px;display:flex;flex-direction:column;gap:16px;">
+      <div id="h-title-block" style="background:var(--bg);padding:28px 26px;display:flex;flex-direction:column;gap:16px;overflow:hidden;">
         <div class="sk" style="height:200px;border-radius:8px;"></div>
       </div>
       <!-- Affiches -->
-      <div id="h-posters" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:2px;background:var(--b1);">
+      <div id="h-posters" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:2px;background:var(--b1);overflow:hidden;">
         <div class="sk" style="border-radius:0;grid-row:span 3;"></div>
         <div class="sk" style="border-radius:0;"></div>
         <div class="sk" style="border-radius:0;"></div>
@@ -463,23 +463,23 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     <!-- BOTTOM GRID -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5px;background:var(--b1);">
       <!-- Popular -->
-      <div style="background:var(--bg);padding:16px 18px;">
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--acc);display:inline-block;"></span> Most popular
+      <div style="background:var(--bg);padding:20px 22px;">
+        <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;display:flex;align-items:center;gap:7px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--acc);display:inline-block;flex-shrink:0;"></span> Most popular
         </div>
         <div id="h-popular"></div>
       </div>
       <!-- Recent + Artists -->
       <div style="display:flex;flex-direction:column;gap:0.5px;background:var(--b1);">
-        <div style="background:var(--bg);padding:16px 18px;">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            <span style="width:5px;height:5px;border-radius:50%;background:var(--grn);display:inline-block;"></span> Recently added
+        <div style="background:var(--bg);padding:20px 22px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;display:flex;align-items:center;gap:7px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--grn);display:inline-block;flex-shrink:0;"></span> Recently added
           </div>
           <div id="h-recent-list"></div>
         </div>
-        <div style="background:var(--bg);padding:16px 18px;">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
-            <span style="width:5px;height:5px;border-radius:50%;background:var(--amb);display:inline-block;"></span> Confirmed artists
+        <div style="background:var(--bg);padding:20px 22px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px;display:flex;align-items:center;gap:7px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--amb);display:inline-block;flex-shrink:0;"></span> Confirmed artists
           </div>
           <div id="h-artists-list"></div>
         </div>
@@ -910,30 +910,31 @@ async function loadHome(){
     const bm = brandMeta[brand];
     const mods = _mods.filter(m=>m.brand===brand);
     const cnt = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
-    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.06);border-radius:10px;cursor:pointer;transition:all .15s;flex:1;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-      <div style="width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
-      <div style="min-width:0;">
-        <div style="font-size:11px;font-weight:700;color:${bm.c};letter-spacing:-.2px;white-space:nowrap;">${brand}</div>
-        <div style="font-size:9px;color:rgba(255,255,255,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${cnt} liveries</div>
+    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.06);border-radius:9px;cursor:pointer;transition:all .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
+      <div style="min-width:0;flex:1;">
+        <div style="font-size:11px;font-weight:700;color:${bm.c};letter-spacing:-.2px;">${brand} — ${bm.label}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.35);">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
       </div>
+      <i class="ti ti-chevron-right" style="font-size:12px;color:rgba(255,255,255,.2);flex-shrink:0;"></i>
     </div>`;
   }).join('');
 
   document.getElementById('h-title-block').innerHTML = `
-    <div style="flex:1;">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:7px;">
-        <span style="width:20px;height:1px;background:var(--acc);display:inline-block;"></span>
+    <div style="flex:1;min-height:0;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+        <span style="width:16px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
         Assetto Corsa · Community
       </div>
-      <h1 style="font-size:44px;font-weight:900;font-style:italic;letter-spacing:-3px;line-height:.88;color:var(--t1);margin-bottom:14px;">
+      <h1 style="font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2.2px;line-height:.9;color:var(--t1);margin-bottom:10px;">
         The<em style="color:var(--acc);font-style:italic;display:block;">livery</em>database.
       </h1>
-      <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:20px;">Community-built skin library for AC mods.<br>Find, share and discover — free forever.</p>
-      <button onclick="nav('liveries')" style="height:32px;padding:0 15px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+      <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:14px;">Community-built skin library for AC mods. Find, share and discover — free forever.</p>
+      <button onclick="nav('liveries')" style="height:30px;padding:0 14px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
         <i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse liveries
       </button>
     </div>
-    <div style="display:flex;gap:6px;flex-direction:column;">
+    <div style="display:flex;gap:5px;flex-direction:column;flex-shrink:0;">
       ${brandPills}
     </div>`;
 
@@ -1001,17 +1002,17 @@ async function loadHome(){
 
   document.getElementById('h-popular').innerHTML = top.slice(0,5).map(l=>{
     const cn=l.categories?.name||'';
-    return `<div style="display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:7px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
-      <div style="width:44px;height:28px;border-radius:5px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
+    return `<div style="display:flex;align-items:center;gap:11px;padding:8px 9px;border-radius:8px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:54px;height:34px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
         ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
       </div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:12px;font-weight:600;color:var(--t1);letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-        <div style="font-size:10px;color:var(--t2);margin-top:1px;">${l.mods?.name||'—'}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--t1);letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:2px;">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div>
       </div>
       <div style="flex-shrink:0;text-align:right;">
         ${l.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
-        <div style="font-size:10px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:2px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:2px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:10px;"></i>${l.upvotes||0}</div>
       </div>
     </div>`;
   }).join('');
