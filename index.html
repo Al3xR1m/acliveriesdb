@@ -438,16 +438,18 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     <!-- TICKER -->
     <div class="ticker"><span class="ticker-label">New</span><div class="ticker-scroll" id="h-ticker"></div></div>
 
-    <!-- TITRE FULL WIDTH -->
-    <div id="h-title-block" style="background:var(--bg);padding:28px 28px 24px;border-bottom:0.5px solid var(--b1);">
-      <div class="sk" style="height:100px;border-radius:8px;"></div>
-    </div>
-
-    <!-- AFFICHES -->
-    <div id="h-posters" style="display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;height:320px;gap:2px;background:var(--b1);">
-      <div class="sk" style="border-radius:0;grid-row:span 2;"></div>
-      <div class="sk" style="border-radius:0;"></div>
-      <div class="sk" style="border-radius:0;"></div>
+    <!-- HERO: titre gauche + affiches droite -->
+    <div style="display:grid;grid-template-columns:380px 1fr;height:420px;background:var(--b1);gap:2px;">
+      <!-- Titre -->
+      <div id="h-title-block" style="background:var(--bg);padding:36px 32px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;">
+        <div class="sk" style="height:200px;border-radius:8px;"></div>
+      </div>
+      <!-- Affiches -->
+      <div id="h-posters" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;background:var(--b1);overflow:hidden;">
+        <div class="sk" style="border-radius:0;grid-row:span 2;"></div>
+        <div class="sk" style="border-radius:0;"></div>
+        <div class="sk" style="border-radius:0;"></div>
+      </div>
     </div>
 
     <!-- STATS STRIP -->
@@ -907,39 +909,32 @@ async function loadHome(){
     const bm = brandMeta[brand];
     const mods = _mods.filter(m=>m.brand===brand);
     const cnt = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
-    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.06);border-radius:9px;cursor:pointer;transition:all .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-      <div style="width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
+    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.07);border-radius:10px;cursor:pointer;transition:all .15s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+      <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
       <div style="min-width:0;flex:1;">
-        <div style="font-size:11px;font-weight:700;color:${bm.c};letter-spacing:-.2px;">${brand} — ${bm.label}</div>
-        <div style="font-size:9px;color:rgba(255,255,255,.35);">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
+        <div style="font-size:12px;font-weight:700;color:${bm.c};letter-spacing:-.2px;">${brand} — ${bm.label}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
       </div>
-      <i class="ti ti-chevron-right" style="font-size:12px;color:rgba(255,255,255,.2);flex-shrink:0;"></i>
+      <i class="ti ti-chevron-right" style="font-size:13px;color:rgba(255,255,255,.2);flex-shrink:0;"></i>
     </div>`;
   }).join('');
 
   document.getElementById('h-title-block').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;align-items:center;">
-      <!-- Titre -->
-      <div style="grid-column:span 1;">
-        <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:10px;display:flex;align-items:center;gap:7px;">
-          <span style="width:16px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
-          Assetto Corsa · Community
-        </div>
-        <h1 style="font-size:38px;font-weight:900;font-style:italic;letter-spacing:-2.5px;line-height:.88;color:var(--t1);margin-bottom:12px;">
-          The<em style="color:var(--acc);font-style:italic;display:block;">livery</em>database.
-        </h1>
-        <button onclick="nav('liveries')" style="height:32px;padding:0 14px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-          <i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse liveries
-        </button>
+    <div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <span style="width:18px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
+        Assetto Corsa · Community
       </div>
-      <!-- Description -->
-      <div style="grid-column:span 1;">
-        <p style="font-size:13px;color:var(--t2);line-height:1.7;">Community-built skin library for Assetto Corsa mods. Find, share and discover liveries — free forever.</p>
-      </div>
-      <!-- Brand pills — 2 colonnes -->
-      <div style="grid-column:span 2;display:flex;flex-direction:column;gap:8px;">
-        ${brandPills}
-      </div>
+      <h1 style="font-size:52px;font-weight:900;font-style:italic;letter-spacing:-3.5px;line-height:.88;color:var(--t1);margin-bottom:16px;">
+        The<em style="color:var(--acc);font-style:italic;display:block;">livery</em>database.
+      </h1>
+      <p style="font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:22px;">Community-built skin library for Assetto Corsa mods. Find, share and discover — free forever.</p>
+      <button onclick="nav('liveries')" style="height:34px;padding:0 16px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        <i class="ti ti-layout-grid" style="font-size:13px;"></i> Browse liveries
+      </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;">
+      ${brandPills}
     </div>`;
 
   // ── POSTERS ──
