@@ -628,9 +628,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
           <i class="ti ti-adjustments-horizontal" style="font-size:13px;"></i> Filters
           <span class="cnt" id="filters-count" style="display:none;">0</span>
         </button>
-        <div class="tb-views">
-          <button class="tb-vbtn on" id="vt-grid"><i class="ti ti-layout-grid"></i></button>
-        </div>
+
         <div class="tb-count" id="l-count"></div>
       </div>
       <div class="tb-accent"></div>
@@ -1837,6 +1835,7 @@ function resetFilters(){
 }
 
 // Live counts cache
+var _champLivCounts={cat:{},champ:{},brand:{}};
 async function buildLivCounts(){
   const all=await fetchLiveries({sort:'votes',pageSize:5000});
   all.forEach(l=>{
