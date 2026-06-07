@@ -629,8 +629,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
           <span class="cnt" id="filters-count" style="display:none;">0</span>
         </button>
         <div class="tb-views">
-          <button class="tb-vbtn on" id="vt-grid" onclick="setVMode('grid')"><i class="ti ti-layout-grid"></i></button>
-          <button class="tb-vbtn" id="vt-list" onclick="setVMode('list')"><i class="ti ti-list"></i></button>
+          <button class="tb-vbtn on" id="vt-grid"><i class="ti ti-layout-grid"></i></button>
         </div>
         <div class="tb-count" id="l-count"></div>
       </div>
@@ -984,7 +983,7 @@ document.getElementById('l-search').addEventListener('input',e=>{_search=e.targe
 
 
 
-function setVMode(m){_vmode=m;document.getElementById('vt-list').classList.toggle('on',m==='list');document.getElementById('vt-grid').classList.toggle('on',m==='grid');loadLiveries();}
+function setVMode(m){_vmode='grid';loadLiveries();}
 
 // ── LIVERY CARD (grid) ──
 function gcCard(l){
@@ -1006,10 +1005,9 @@ async function loadLiveries(){
   document.getElementById('l-info').textContent=`${Math.min((_page-1)*PAGE+1,total)}–${Math.min(_page*PAGE,total)} of ${total}`;
   const empty=`<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i><p>No liveries found.</p></div>`;
   const grid = document.getElementById('l-content');
-  grid.className = _vmode==='list' ? 'lv-list' : 'lv-cards';
+  grid.className = 'lv-cards';
   if(!list.length){ grid.innerHTML=empty; return; }
-  if(_vmode==='list'){ grid.innerHTML=list.map(lvRow).join(''); }
-  else { grid.innerHTML=list.map(richCard).join(''); }
+  grid.innerHTML=list.map(richCard).join('');
   renderPag();
 }
 function renderPag(){
