@@ -825,6 +825,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 <script src="supabase.js"></script>
 <script>
+var _champLivCounts={cat:{},champ:{},brand:{}};
+
 // ── CONSTANTS ──
 const CB={Formula:['#E82020','#003087','#006400','#FF8000'],GT:['#C8A800','#E82020','#003087'],Hillclimb:['#E87000','#E82020'],Touring:['#534AB7','#E82020']};
 const BG={Formula:'#0d0d1f',GT:'#0d1a0d',Hillclimb:'#1a0d00',Touring:'#1a001a'};
@@ -1835,7 +1837,6 @@ function resetFilters(){
 }
 
 // Live counts cache
-var _champLivCounts={cat:{},champ:{},brand:{}};
 async function buildLivCounts(){
   const all=await fetchLiveries({sort:'votes',pageSize:5000});
   all.forEach(l=>{
