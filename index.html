@@ -1730,39 +1730,67 @@ window.addEventListener('hashchange',handleHash);
 
 // ── BOOT ──
 // ── DRAWER ──────────────────────────────────
-function openDrawer(){
-  // Populate categories
+var _drawerBuilt=false;
+function buildDrawerOnce(){
+  if(_drawerBuilt)return;
+  _drawerBuilt=true;
+  // Categories
   const catEl=document.getElementById('dr-categories');
-  catEl.innerHTML='<button class="di '+((_cat==='all')?'on':'')+'" data-type="cat" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
-    +_cats.map(c=>`<button class="di ${_cat===c.id?'on':''}" data-type="cat" data-val="${c.id}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count">${_champLivCounts?.cat?.[c.id]||''}</span></button>`).join('');
-
-  // Populate championships — filtered by active cat & brand
-  const champEl=document.getElementById('dr-championships');
-  const visibleChamps=_champs.filter(ch=>{
-    if(_cat!=='all'&&!ch.championship_categories?.some(cc=>cc.category_id===_cat))return false;
-    return true;
-  });
-  champEl.innerHTML='<button class="di '+((_champ==='all')?'on':'')+'" data-type="champ" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All championships</span></button>'
-    +visibleChamps.map(c=>`<button class="di ${_champ===c.id?'on':''}" data-type="champ" data-val="${c.id}"><span class="di-dot" style="background:#5B6EF7;"></span><span style="flex:1;">${c.short_name||c.name}</span><span class="di-count">${_champLivCounts?.champ?.[c.id]||''}</span></button>`).join('');
-
+  catEl.innerHTML='<button class="di on" data-type="cat" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
+    +_cats.map(c=>`<button class="di" data-type="cat" data-val="${c.id}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count" id="drc-${c.id}"></span></button>`).join('');
+  // Championships — grouped, searchable
+  renderDrawerChamps('');
   // Brand counts
   ['RSS','VRC','URD'].forEach(b=>{
     const el=document.getElementById('dr-cnt-'+b);
-    if(el)el.textContent=_champLivCounts?.brand?.[b]||'—';
+    if(el)el.textContent='—';
   });
+  // Search in champ section
+  const cs=document.getElementById('dr-champ-search');
+  if(cs) cs.addEventListener('input',e=>renderDrawerChamps(e.target.value));
+}
 
-  // Sync active states
-  document.querySelectorAll('.di[data-type="brand"]').forEach(btn=>{
-    btn.classList.toggle('on',btn.dataset.val===(_activeBrand||'all'));
+function renderDrawerChamps(q){
+  const champEl=document.getElementById('dr-championships');
+  const vis=_champs.filter(ch=>{
+    if(_cat!=='all'&&!ch.championship_categories?.some(cc=>cc.category_id===_cat))return false;
+    if(q&&!(ch.short_name||ch.name).toLowerCase().includes(q.toLowerCase()))return false;
+    return true;
   });
-  document.querySelectorAll('.di[data-type="price"]').forEach(btn=>{
-    const v=btn.dataset.val;
-    btn.classList.toggle('on',(v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true));
+  // Group by category name
+  const groups={};
+  vis.forEach(ch=>{
+    const catIds=ch.championship_categories?.map(cc=>cc.category_id)||[];
+    const cat=_cats.find(c=>catIds.includes(c.id));
+    const key=cat?.name||'Other';
+    if(!groups[key])groups[key]=[];
+    groups[key].push(ch);
   });
-  document.querySelectorAll('.di[data-type="artist"]').forEach(btn=>{
-    btn.classList.toggle('on',btn.dataset.val===_artistFilter);
+  let html='<button class="di'+((_champ==='all')?' on':'')+'" data-type="champ" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All championships</span></button>';
+  Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([grp,champs])=>{
+    html+=`<div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:8px 9px 3px;">${grp}</div>`;
+    html+=champs.map(c=>`<button class="di${_champ===c.id?' on':''}" data-type="champ" data-val="${c.id}"><span class="di-dot" style="background:#5B6EF7;"></span><span style="flex:1;">${c.short_name||c.name}</span><span class="di-count" id="drch-${c.id}">${_champLivCounts?.champ?.[c.id]||''}</span></button>`).join('');
   });
+  champEl.innerHTML=html;
+}
 
+function syncDrawerState(){
+  // Sync all active classes without rebuilding DOM
+  document.querySelectorAll('.di[data-type="brand"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===(_activeBrand||'all')));
+  document.querySelectorAll('.di[data-type="cat"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===_cat));
+  document.querySelectorAll('.di[data-type="champ"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===_champ));
+  document.querySelectorAll('.di[data-type="price"]').forEach(btn=>{const v=btn.dataset.val;btn.classList.toggle('on',(v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true));});
+  document.querySelectorAll('.di[data-type="artist"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===_artistFilter));
+  // Update counts
+  ['RSS','VRC','URD'].forEach(b=>{const el=document.getElementById('dr-cnt-'+b);if(el)el.textContent=_champLivCounts?.brand?.[b]||'—';});
+  _cats.forEach(c=>{const el=document.getElementById('drc-'+c.id);if(el)el.textContent=_champLivCounts?.cat?.[c.id]||'';});
+}
+
+function openDrawer(){
+  buildDrawerOnce();
+  // Re-render champs if category changed (fast)
+  renderDrawerChamps(document.getElementById('dr-champ-search')?.value||'');
+  syncDrawerState();
   document.getElementById('filter-drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
 }
@@ -1851,6 +1879,7 @@ boot().then(handleHash).then(()=>{
   buildLivCounts();
   initDrawerListeners();
   loadLOTD();
+  buildDrawerOnce();
   // Toolbar focus
   const inp=document.getElementById('l-search');
   const wrap=document.getElementById('tb-wrap');
@@ -1888,11 +1917,15 @@ boot().then(handleHash).then(()=>{
     </div>
     <div class="drawer-section">
       <div class="drawer-section-title">Category</div>
-      <div class="drawer-items" id="dr-categories"></div>
+      <div class="drawer-items" id="dr-categories" style="max-height:160px;overflow-y:auto;"></div>
     </div>
     <div class="drawer-section">
       <div class="drawer-section-title">Championship</div>
-      <div class="drawer-items" id="dr-championships"></div>
+      <div style="position:relative;margin-bottom:8px;">
+        <i class="ti ti-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:12px;pointer-events:none;"></i>
+        <input id="dr-champ-search" style="width:100%;background:var(--s2);border:0.5px solid var(--b1);border-radius:8px;padding:6px 9px 6px 28px;font-size:12px;color:var(--t1);outline:none;font-family:inherit;" placeholder="Search championship…">
+      </div>
+      <div class="drawer-items" id="dr-championships" style="max-height:200px;overflow-y:auto;"></div>
     </div>
     <div class="drawer-section">
       <div class="drawer-section-title">Pricing</div>
