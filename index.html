@@ -825,7 +825,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 <script src="supabase.js"></script>
 <script>
-var _champLivCounts={cat:{},champ:{},brand:{}};
 
 // ── CONSTANTS ──
 const CB={Formula:['#E82020','#003087','#006400','#FF8000'],GT:['#C8A800','#E82020','#003087'],Hillclimb:['#E87000','#E82020'],Touring:['#534AB7','#E82020']};
@@ -928,8 +927,9 @@ function renderLOTD(idx){
 const isNew=l=>l.created_at&&(Date.now()-new Date(l.created_at).getTime())<7*24*60*60*1000;
 
 // ── STATE ──
-let _cats=[],_champs=[],_mods=[],_artists=[];
-let _cat='all',_champ='all',_price=null,_artistFilter='all',_sort='votes',_search='',_page=1,_total=0,_vmode='list';
+var _cats=[],_champs=[],_mods=[],_artists=[];
+var _cat='all',_champ='all',_price=null,_artistFilter='all',_activeBrand=null,_sort='votes',_search='',_page=1,_total=0,_vmode='grid';
+var _champLivCounts={cat:{},champ:{},brand:{}};
 let _prevView='liveries',_voted=getVotedSet(),_pendingReport=null;
 const PAGE=20;
 let _sAvailMods=[],_sAvailChamps=[],_sSelMod='',_sSelChamp='',_sArtistId=null,_sPreviewImg=null,_sMode='livery';
