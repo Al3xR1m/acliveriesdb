@@ -133,6 +133,30 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .toast.err{background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.3);}
 @keyframes slideup{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
 
+/* CARD GRIDS */
+.admin-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+.admin-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .18s;}
+.admin-card:hover{border-color:var(--b2);transform:translateY(-1px);}
+.admin-card.rss{border-color:rgba(91,110,247,.2);}
+.admin-card.rss:hover{border-color:var(--acc);}
+.admin-card.vrc{border-color:rgba(48,209,88,.2);}
+.admin-card.vrc:hover{border-color:var(--grn);}
+.admin-card.urd{border-color:rgba(255,159,10,.2);}
+.admin-card.urd:hover{border-color:var(--amb);}
+.admin-card-cover{width:100%;height:72px;object-fit:cover;display:block;background:var(--s2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.admin-card-cover img{width:100%;height:100%;object-fit:cover;}
+.admin-card-body{padding:10px 12px 12px;}
+.admin-card-name{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:-.2px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.admin-card-meta{font-size:11px;color:var(--t2);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.admin-card-foot{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-top:0.5px solid var(--b1);}
+.admin-group-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin:20px 0 10px;display:flex;align-items:center;gap:8px;}
+.admin-group-label::after{content:'';flex:1;height:0.5px;background:var(--b1);}
+/* Cat cards */
+.cat-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:12px;}
+.cat-card:hover{border-color:var(--b2);background:var(--s2);}
+.cat-dot{width:28px;height:28px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.champ-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .18s;}
+.champ-card:hover{border-color:var(--b2);background:var(--s2);}
 /* LOGIN */
 .login-wrap{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg);}
 .login-box{background:var(--s1);border:0.5px solid var(--b1);border-radius:18px;padding:36px;width:100%;max-width:380px;text-align:center;}
@@ -192,6 +216,9 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       </button>
       <button class="sb-link" id="nl-artists" onclick="nav('artists')">
         <i class="ti ti-user-star sb-icon"></i> Artists
+      </button>
+      <button class="sb-link" id="nl-categories" onclick="nav('categories')">
+        <i class="ti ti-tag sb-icon"></i> Categories
       </button>
       <button class="sb-link" id="nl-mods" onclick="nav('mods-admin')">
         <i class="ti ti-package sb-icon"></i> Mods
@@ -307,42 +334,55 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       </div>
     </div>
 
+    <!-- CATEGORIES -->
+    <div class="view" id="view-categories">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+          <h1 class="page-h1">Categories</h1>
+          <button class="btn-primary" style="margin-bottom:4px;" onclick="openCatModal()"><i class="ti ti-plus"></i> Add category</button>
+        </div>
+      </div>
+      <div style="padding:20px 24px;" id="categories-grid"></div>
+    </div>
+
     <!-- MODS ADMIN -->
     <div class="view" id="view-mods-admin">
       <div class="page-top">
         <div class="page-eyebrow"><span></span>Content</div>
-        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;">
           <h1 class="page-h1">Mods</h1>
-          <button class="btn-primary" style="margin-bottom:4px;" onclick="openModModal()"><i class="ti ti-plus"></i> Add mod</button>
+          <div style="display:flex;gap:8px;padding-bottom:4px;">
+            <select id="mods-filter-brand" onchange="loadMods()" style="appearance:none;background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--t2);font-family:inherit;cursor:pointer;outline:none;">
+              <option value="all">All publishers</option>
+              <option value="RSS">RSS</option>
+              <option value="VRC">VRC</option>
+              <option value="URD">URD</option>
+            </select>
+            <input id="mods-search" placeholder="Search mod…" oninput="loadMods()" style="background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--t1);outline:none;font-family:inherit;width:160px;">
+            <button class="btn-primary" onclick="openModModal()"><i class="ti ti-plus"></i> Add mod</button>
+          </div>
         </div>
       </div>
-      <div style="padding:16px 24px;">
-        <div style="border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-          <table class="data-table">
-            <thead><tr><th>Mod</th><th>Brand</th><th>Category</th><th>Version</th><th>Liveries</th><th>Actions</th></tr></thead>
-            <tbody id="mods-tbody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--t2);">Loading…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
+      <div style="padding:16px 24px 32px;" id="mods-grid"></div>
     </div>
 
     <!-- CHAMPIONSHIPS -->
     <div class="view" id="view-championships">
       <div class="page-top">
         <div class="page-eyebrow"><span></span>Content</div>
-        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;">
           <h1 class="page-h1">Championships</h1>
-          <button class="btn-primary" style="margin-bottom:4px;" onclick="openChampModal()"><i class="ti ti-plus"></i> Add championship</button>
+          <div style="display:flex;gap:8px;padding-bottom:4px;">
+            <select id="champs-filter-cat" onchange="loadChampionships()" style="appearance:none;background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--t2);font-family:inherit;cursor:pointer;outline:none;">
+              <option value="all">All categories</option>
+            </select>
+            <input id="champs-search" placeholder="Search…" oninput="loadChampionships()" style="background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--t1);outline:none;font-family:inherit;width:160px;">
+            <button class="btn-primary" onclick="openChampModal()"><i class="ti ti-plus"></i> Add championship</button>
+          </div>
         </div>
       </div>
-      <div style="padding:16px 24px;">
-        <div style="border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-          <table class="data-table">
-            <thead><tr><th>Name</th><th>Short name</th><th>Categories</th><th>Liveries</th><th>Actions</th></tr></thead>
-            <tbody id="champs-tbody"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--t2);">Loading…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
+      <div style="padding:16px 24px 32px;" id="champs-grid"></div>
     </div>
 
     <!-- STATS -->
@@ -530,6 +570,7 @@ function nav(v){
   if(v==='edit-requests')loadEditRequests();
   if(v==='liveries')loadAllLiveries();
   if(v==='artists')loadArtists();
+  if(v==='categories')loadCategories();
   if(v==='mods-admin')loadMods();
   if(v==='championships')loadChampionships();
   if(v==='stats')loadStats();
@@ -852,82 +893,55 @@ async function deleteArtist(){
 // ── MODS ADMIN ─────────────────────────────────────────────
 var _editModId=null, _allCats=[];
 async function loadMods(){
+  const brandFilter=document.getElementById('mods-filter-brand')?.value||'all';
+  const search=(document.getElementById('mods-search')?.value||'').toLowerCase();
   const [{data:mods},{data:cats},{data:livs}]=await Promise.all([
-    db.from('mods').select('*,categories(name)').order('name'),
+    db.from('mods').select('*,categories(name,color_bg,color_text)').order('name'),
     db.from('categories').select('*').order('name'),
     db.from('liveries').select('mod_id').eq('approved',true),
   ]);
   _allCats=cats||[];
   const lc={};livs?.forEach(l=>{lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
-  const tbody=document.getElementById('mods-tbody');
-  tbody.innerHTML=(mods||[]).map(m=>`<tr>
-    <td><div style="display:flex;align-items:center;gap:8px;">
-      ${m.image_url?`<img src="${m.image_url}" style="width:32px;height:32px;object-fit:cover;border-radius:5px;">`:
-        `<div style="width:32px;height:32px;border-radius:5px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);"><i class="ti ti-car"></i></div>`}
-      <span style="font-weight:600;">${m.name}</span>
-    </div></td>
-    <td>${m.brand?`<span class="badge" style="background:${m.brand==='RSS'?'rgba(91,110,247,.15)':m.brand==='VRC'?'rgba(48,209,88,.12)':'rgba(255,159,10,.12)'};color:${m.brand==='RSS'?'#5B6EF7':m.brand==='VRC'?'#30D158':'#FF9F0A'};">${m.brand}</span>`:'—'}</td>
-    <td style="color:var(--t2);">${m.categories?.name||'—'}</td>
-    <td style="color:var(--t2);">${m.version?'v'+m.version:'—'}</td>
-    <td style="color:var(--t2);">${lc[m.id]||0}</td>
-    <td><button class="btn-edit" onclick="openModModal('${m.id}')" style="font-size:11px;height:26px;padding:0 8px;">Edit</button></td>
-  </tr>`).join('');
+  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)'}};
+  let filtered=(mods||[]).filter(m=>{
+    if(brandFilter!=='all'&&m.brand!==brandFilter)return false;
+    if(search&&!m.name.toLowerCase().includes(search))return false;
+    return true;
+  });
+  const groups={};
+  ['RSS','VRC','URD','Other'].forEach(b=>groups[b]=[]);
+  filtered.forEach(m=>{ const k=m.brand&&BRC[m.brand]?m.brand:'Other'; groups[k].push(m); });
+  const el=document.getElementById('mods-grid');
+  if(!filtered.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">No mods found.</div>';return;}
+  el.innerHTML=['RSS','VRC','URD','Other'].filter(b=>groups[b].length).map(brand=>{
+    const bm=BRC[brand];
+    return '<div>'
+      +'<div class="admin-group-label">'
+      +(bm?'<span style="padding:2px 8px;border-radius:5px;background:'+bm.bg+';color:'+bm.c+';font-size:10px;font-weight:700;">'+brand+'</span>':'<span>'+brand+'</span>')
+      +' <span style="font-weight:400;font-size:10px;">'+groups[brand].length+' mod'+(groups[brand].length>1?'s':'')+'</span>'
+      +'</div>'
+      +'<div class="admin-cards-grid">'
+      +groups[brand].map(m=>'<div class="admin-card '+brand.toLowerCase()+'" onclick="openModModal(''+m.id+'')">'
+        +'<div class="admin-card-cover" style="'+(m.image_url?'':'background:'+(bm?.gbg||'var(--s2)'))+'">'
+        +(m.image_url?'<img src="'+m.image_url+'" alt="'+m.name+'">'
+          :'<i class="ti ti-car" style="font-size:24px;color:rgba(255,255,255,.06);"></i>')
+        +'</div>'
+        +'<div class="admin-card-body">'
+        +'<div class="admin-card-name">'+m.name+'</div>'
+        +'<div class="admin-card-meta">'
+        +(m.categories?.name?'<span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:'+(m.categories.color_bg||'#222')+';color:'+(m.categories.color_text||'#888')+';">'+m.categories.name+'</span>':'')
+        +(m.version?' <span style="color:var(--t3);font-size:10px;">v'+m.version+'</span>':'')
+        +'</div></div>'
+        +'<div class="admin-card-foot">'
+        +'<span style="font-size:11px;color:var(--t2);">'+(lc[m.id]||0)+' liveri'+((lc[m.id]||0)!==1?'es':'y')+'</span>'
+        +'<button class="btn-edit" style="font-size:10px;height:24px;padding:0 8px;" onclick="event.stopPropagation();openModModal(''+m.id+'')">Edit</button>'
+        +'</div></div>').join('')
+      +'</div></div>';
+  }).join('');
 }
-
-function openModModal(id=null){
-  _editModId=id;
-  document.getElementById('mod-modal-title').textContent=id?'Edit mod':'Add mod';
-  document.getElementById('mod-delete-btn').style.display=id?'flex':'none';
-  ['mod-name','mod-version','mod-desc','mod-img','mod-url','mod-changelog'].forEach(f=>document.getElementById(f).value='');
-  document.getElementById('mod-brand').value='';
-  // Populate category select
-  const cs=document.getElementById('mod-category');
-  cs.innerHTML='<option value="">— None —</option>'+_allCats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  if(id){
-    db.from('mods').select('*').eq('id',id).single().then(({data:m})=>{
-      if(!m)return;
-      document.getElementById('mod-name').value=m.name||'';
-      document.getElementById('mod-brand').value=m.brand||'';
-      document.getElementById('mod-category').value=m.category_id||'';
-      document.getElementById('mod-version').value=m.version||'';
-      document.getElementById('mod-desc').value=m.description||'';
-      document.getElementById('mod-img').value=m.image_url||'';
-      document.getElementById('mod-url').value=m.official_url||'';
-      document.getElementById('mod-changelog').value=m.changelog||'';
-    });
-  }
-  document.getElementById('mod-save-btn').onclick=saveMod;
-  document.getElementById('mod-delete-btn').onclick=()=>{if(confirm('Delete mod?'))deleteMod();};
-  document.getElementById('mod-modal').classList.add('open');
-}
-
-async function saveMod(){
-  const name=document.getElementById('mod-name').value.trim();
-  if(!name){toast('Name required','err');return;}
-  const payload={
-    name,
-    brand:document.getElementById('mod-brand').value||null,
-    category_id:document.getElementById('mod-category').value||null,
-    version:document.getElementById('mod-version').value.trim()||null,
-    description:document.getElementById('mod-desc').value.trim()||null,
-    image_url:document.getElementById('mod-img').value.trim()||null,
-    official_url:document.getElementById('mod-url').value.trim()||null,
-    changelog:document.getElementById('mod-changelog').value.trim()||null,
-  };
-  let error;
-  if(_editModId){({error}=await db.from('mods').update(payload).eq('id',_editModId));}
-  else{({error}=await db.from('mods').insert(payload));}
-  if(error){toast('Error: '+error.message,'err');return;}
-  closeModal('mod-modal');toast('Mod saved!');loadMods();
-}
-async function deleteMod(){
-  await db.from('mods').delete().eq('id',_editModId);
-  closeModal('mod-modal');toast('Deleted.');loadMods();
-}
-
-// ── CHAMPIONSHIPS ──────────────────────────────────────────
-var _editChampId=null;
 async function loadChampionships(){
+  const catFilter=document.getElementById('champs-filter-cat')?.value||'all';
+  const search=(document.getElementById('champs-search')?.value||'').toLowerCase();
   const [{data:champs},{data:cats},{data:livs},{data:cc}]=await Promise.all([
     db.from('championships').select('*').order('name'),
     db.from('categories').select('*').order('name'),
@@ -935,124 +949,46 @@ async function loadChampionships(){
     db.from('championship_categories').select('*'),
   ]);
   _allCats=cats||[];
+  const cf=document.getElementById('champs-filter-cat');
+  if(cf&&cf.options.length<=1) cats?.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;cf.appendChild(o);});
   const lc={};livs?.forEach(l=>{lc[l.championship_id]=(lc[l.championship_id]||0)+1;});
   const champCats={};cc?.forEach(x=>{if(!champCats[x.championship_id])champCats[x.championship_id]=[];champCats[x.championship_id].push(x.category_id);});
-  const tbody=document.getElementById('champs-tbody');
-  tbody.innerHTML=(champs||[]).map(ch=>{
-    const catNames=(champCats[ch.id]||[]).map(cid=>cats?.find(c=>c.id===cid)?.name||cid).join(', ');
-    return `<tr>
-      <td style="font-weight:600;">${ch.name}</td>
-      <td style="color:var(--t2);">${ch.short_name||'—'}</td>
-      <td style="color:var(--t2);font-size:11px;">${catNames||'—'}</td>
-      <td style="color:var(--t2);">${lc[ch.id]||0}</td>
-      <td><button class="btn-edit" onclick="openChampModal('${ch.id}')" style="font-size:11px;height:26px;padding:0 8px;">Edit</button></td>
-    </tr>`;
-  }).join('');
+  let filtered=(champs||[]).filter(ch=>{
+    if(search&&!ch.name.toLowerCase().includes(search)&&!(ch.short_name||'').toLowerCase().includes(search))return false;
+    if(catFilter!=='all'&&!champCats[ch.id]?.includes(catFilter))return false;
+    return true;
+  });
+  const groups={};
+  filtered.forEach(ch=>{
+    const catIds=champCats[ch.id]||[];
+    const cat=cats?.find(c=>catIds.includes(c.id));
+    const key=cat?.name||'Other';
+    if(!groups[key])groups[key]={cat,champs:[]};
+    groups[key].champs.push(ch);
+  });
+  const el=document.getElementById('champs-grid');
+  if(!filtered.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">No championships found.</div>';return;}
+  el.innerHTML=Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).map(([catName,g])=>
+    '<div>'
+    +'<div class="admin-group-label">'
+    +'<span style="width:8px;height:8px;border-radius:50%;background:'+(g.cat?.color_text||'#888')+';display:inline-block;flex-shrink:0;"></span>'
+    +' '+catName
+    +' <span style="font-weight:400;font-size:10px;">'+g.champs.length+' championship'+(g.champs.length>1?'s':'')+'</span>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;">'
+    +g.champs.map(ch=>'<div class="champ-card" onclick="openChampModal(''+ch.id+'')">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'
+      +(ch.logo_url
+        ?'<img src="'+ch.logo_url+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px;background:var(--s2);">'
+        :'<div style="width:28px;height:28px;border-radius:6px;background:'+(g.cat?.color_bg||'var(--s2)')+';display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:13px;color:'+(g.cat?.color_text||'var(--t3)')+';" ></i></div>')
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(ch.short_name||ch.name)+'</div>'
+      +'<div style="font-size:10px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+ch.name+'</div>'
+      +'</div></div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;">'
+      +'<span style="font-size:11px;color:var(--t2);">'+(lc[ch.id]||0)+' liveri'+((lc[ch.id]||0)!==1?'es':'y')+'</span>'
+      +'<button class="btn-edit" style="font-size:10px;height:22px;padding:0 8px;" onclick="event.stopPropagation();openChampModal(''+ch.id+'')">Edit</button>'
+      +'</div></div>').join('')
+    +'</div></div>').join('');
 }
 
-function openChampModal(id=null){
-  _editChampId=id;
-  document.getElementById('champ-modal-title').textContent=id?'Edit championship':'Add championship';
-  document.getElementById('ch-delete-btn').style.display=id?'flex':'none';
-  ['ch-name','ch-short','ch-logo'].forEach(f=>document.getElementById(f).value='');
-  const cs=document.getElementById('ch-cats');
-  cs.innerHTML=_allCats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  if(id){
-    Promise.all([
-      db.from('championships').select('*').eq('id',id).single(),
-      db.from('championship_categories').select('category_id').eq('championship_id',id),
-    ]).then(([{data:ch},{data:cc2}])=>{
-      if(!ch)return;
-      document.getElementById('ch-name').value=ch.name||'';
-      document.getElementById('ch-short').value=ch.short_name||'';
-      document.getElementById('ch-logo').value=ch.logo_url||'';
-      const selCats=(cc2||[]).map(x=>x.category_id);
-      Array.from(cs.options).forEach(o=>{o.selected=selCats.includes(o.value);});
-    });
-  }
-  document.getElementById('ch-save-btn').onclick=saveChamp;
-  document.getElementById('ch-delete-btn').onclick=()=>{if(confirm('Delete?'))deleteChamp();};
-  document.getElementById('champ-modal').classList.add('open');
-}
-
-async function saveChamp(){
-  const name=document.getElementById('ch-name').value.trim();
-  const short=document.getElementById('ch-short').value.trim();
-  if(!name||!short){toast('Name and short name required','err');return;}
-  const cats=Array.from(document.getElementById('ch-cats').selectedOptions).map(o=>o.value);
-  const payload={name,short_name:short,logo_url:document.getElementById('ch-logo').value.trim()||null};
-  let champId=_editChampId,error;
-  if(champId){({error}=await db.from('championships').update(payload).eq('id',champId));}
-  else{const res=await db.from('championships').insert(payload).select().single();error=res.error;champId=res.data?.id;}
-  if(error){toast('Error: '+error.message,'err');return;}
-  // Update categories
-  await db.from('championship_categories').delete().eq('championship_id',champId);
-  if(cats.length) await db.from('championship_categories').insert(cats.map(cid=>({championship_id:champId,category_id:cid})));
-  closeModal('champ-modal');toast('Championship saved!');loadChampionships();
-}
-async function deleteChamp(){
-  await db.from('championship_categories').delete().eq('championship_id',_editChampId);
-  await db.from('championships').delete().eq('id',_editChampId);
-  closeModal('champ-modal');toast('Deleted.');loadChampionships();
-}
-
-// ── STATS ──────────────────────────────────────────────────
-async function loadStats(){
-  const [{data:livs},{data:arts},{data:mods},{data:adds}]=await Promise.all([
-    db.from('liveries').select('id,upvotes,approved,category_id,categories(name)').eq('approved',true),
-    db.from('artists').select('id'),
-    db.from('mods').select('id,name,brand'),
-    db.from('addons').select('id').eq('approved',true),
-  ]);
-  const totalVotes=livs?.reduce((s,l)=>s+(l.upvotes||0),0)||0;
-  // By category
-  const byCat={};
-  livs?.forEach(l=>{const n=l.categories?.name||'Other';byCat[n]=(byCat[n]||0)+1;});
-  // By brand
-  const byBrand={RSS:0,VRC:0,URD:0};
-  mods?.forEach(m=>{if(m.brand&&byBrand[m.brand]!==undefined)byBrand[m.brand]++;});
-  document.getElementById('stats-content').innerHTML=`
-    <div style="grid-column:1/-1;background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;">
-      ${[
-        {n:livs?.length||0,l:'Approved liveries',c:'var(--acc)'},
-        {n:arts?.length||0,l:'Confirmed artists',c:'var(--amb)'},
-        {n:mods?.length||0,l:'Mods indexed',c:'var(--grn)'},
-        {n:adds?.length||0,l:'Addons',c:'var(--pur)'},
-        {n:totalVotes.toLocaleString(),l:'Total upvotes',c:'var(--t1)'},
-      ].map((s,i)=>`<div style="padding:12px 16px;${i>0?'border-left:0.5px solid var(--b1);':''}text-align:center;"><div style="font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:${s.c};">${s.n}</div><div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">${s.l}</div></div>`).join('')}
-    </div>
-    <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:16px;">
-      <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">Liveries by category</div>
-      ${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="font-size:12px;color:var(--t1);flex:1;">${k}</span>
-          <div style="flex:2;background:var(--s2);border-radius:4px;height:6px;overflow:hidden;">
-            <div style="height:100%;background:var(--acc);width:${Math.round(v/(livs?.length||1)*100)}%;border-radius:4px;"></div>
-          </div>
-          <span style="font-size:11px;color:var(--t2);min-width:24px;text-align:right;">${v}</span>
-        </div>`).join('')}
-    </div>
-    <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:16px;">
-      <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">Mods by publisher</div>
-      ${Object.entries(byBrand).map(([b,v])=>{
-        const c=b==='RSS'?'#5B6EF7':b==='VRC'?'#30D158':'#FF9F0A';
-        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="font-size:11px;font-weight:700;color:${c};min-width:28px;">${b}</span>
-          <div style="flex:1;background:var(--s2);border-radius:4px;height:6px;overflow:hidden;">
-            <div style="height:100%;background:${c};width:${Math.round(v/(mods?.length||1)*100)}%;border-radius:4px;"></div>
-          </div>
-          <span style="font-size:11px;color:var(--t2);">${v} mods</span>
-        </div>`;
-      }).join('')}
-    </div>`;
-}
-
-// ── BOOT ───────────────────────────────────────────────────
-function bootAdmin(){
-  nav('queue');
-}
-
-if(sessionStorage.getItem('acl_admin')==='1') bootAdmin();
-</script>
-</body>
-</html>
