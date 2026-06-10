@@ -187,6 +187,21 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .lv-card-mod{font-size:11px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* FILTER DRAWER */
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none;backdrop-filter:blur(2px);}
+/* Cascade steps */
+.dr-step{border-bottom:0.5px solid var(--b1);transition:opacity .2s;}
+.dr-step.locked{opacity:.4;pointer-events:none;}
+.dr-step.locked .dr-step-body{display:none;}
+.dr-step-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;}
+.dr-step-num{width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dr-step.locked .dr-step-num{background:var(--t3);}
+.dr-step.done .dr-step-num{background:var(--grn);}
+.dr-step-title{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:-.2px;}
+.dr-step-hint{font-size:11px;color:var(--t2);margin-left:auto;}
+.dr-step-body{padding:0 8px 12px;}
+/* Breadcrumb */
+.dr-crumb{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:var(--s2);border:0.5px solid var(--b1);font-size:11px;font-weight:600;color:var(--t1);cursor:pointer;}
+.dr-crumb:hover{border-color:var(--b2);}
+.dr-crumb-sep{color:var(--t3);font-size:10px;}
 .drawer-overlay.open{display:block;}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--s1);border-left:0.5px solid var(--b2);z-index:151;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;}
 .drawer.open{transform:translateX(0);}
@@ -1730,67 +1745,105 @@ window.addEventListener('hashchange',handleHash);
 
 // ── BOOT ──
 // ── DRAWER ──────────────────────────────────
+// ── FILTER DRAWER (cascade) ────────────────────────────────
 var _drawerBuilt=false;
+
 function buildDrawerOnce(){
   if(_drawerBuilt)return;
   _drawerBuilt=true;
-  // Categories
+  // Build category step
   const catEl=document.getElementById('dr-categories');
-  catEl.innerHTML='<button class="di on" data-type="cat" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
-    +_cats.map(c=>`<button class="di" data-type="cat" data-val="${c.id}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count" id="drc-${c.id}"></span></button>`).join('');
-  // Championships — grouped, searchable
-  renderDrawerChamps('');
-  // Brand counts
+  catEl.innerHTML=
+    '<button class="di on" data-step="2" data-type="cat" data-val="all" data-label="All categories"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
+    +_cats.map(c=>`<button class="di" data-step="2" data-type="cat" data-val="${c.id}" data-label="${c.name}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count" id="drc-${c.id}"></span></button>`).join('');
+  updateDrawerCounts();
+  initDrawerListeners();
+}
+
+function updateDrawerCounts(){
   ['RSS','VRC','URD'].forEach(b=>{
     const el=document.getElementById('dr-cnt-'+b);
-    if(el)el.textContent='—';
+    if(el)el.textContent=_champLivCounts.brand[b]||'';
   });
-  // Search in champ section
-  const cs=document.getElementById('dr-champ-search');
-  if(cs) cs.addEventListener('input',e=>renderDrawerChamps(e.target.value));
+  _cats.forEach(c=>{
+    const el=document.getElementById('drc-'+c.id);
+    if(el)el.textContent=_champLivCounts.cat[c.id]||'';
+  });
 }
 
-function renderDrawerChamps(q){
+function rebuildChampStep(){
+  // Only show champs matching current cat (and brand via mods)
   const champEl=document.getElementById('dr-championships');
   const vis=_champs.filter(ch=>{
-    if(_cat!=='all'&&!ch.championship_categories?.some(cc=>cc.category_id===_cat))return false;
-    if(q&&!(ch.short_name||ch.name).toLowerCase().includes(q.toLowerCase()))return false;
-    return true;
+    if(_cat==='all')return true;
+    return ch.championship_categories?.some(cc=>cc.category_id===_cat);
   });
-  // Group by category name
-  const groups={};
-  vis.forEach(ch=>{
-    const catIds=ch.championship_categories?.map(cc=>cc.category_id)||[];
-    const cat=_cats.find(c=>catIds.includes(c.id));
-    const key=cat?.name||'Other';
-    if(!groups[key])groups[key]=[];
-    groups[key].push(ch);
-  });
-  let html='<button class="di'+((_champ==='all')?' on':'')+'" data-type="champ" data-val="all"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All championships</span></button>';
-  Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([grp,champs])=>{
-    html+=`<div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:8px 9px 3px;">${grp}</div>`;
-    html+=champs.map(c=>`<button class="di${_champ===c.id?' on':''}" data-type="champ" data-val="${c.id}"><span class="di-dot" style="background:#5B6EF7;"></span><span style="flex:1;">${c.short_name||c.name}</span><span class="di-count" id="drch-${c.id}">${_champLivCounts?.champ?.[c.id]||''}</span></button>`).join('');
-  });
-  champEl.innerHTML=html;
+  if(!vis.length){
+    champEl.innerHTML='<div style="padding:8px 9px;font-size:12px;color:var(--t3);">No championships for this category.</div>';
+    return;
+  }
+  champEl.innerHTML=
+    '<button class="di on" data-step="3" data-type="champ" data-val="all" data-label="All championships"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All championships</span></button>'
+    +vis.map(c=>`<button class="di" data-step="3" data-type="champ" data-val="${c.id}" data-label="${c.short_name||c.name}"><span class="di-dot" style="background:#5B6EF7;"></span><span style="flex:1;">${c.short_name||c.name}</span><span class="di-count">${_champLivCounts.champ[c.id]||''}</span></button>`).join('');
 }
 
-function syncDrawerState(){
-  // Sync all active classes without rebuilding DOM
-  document.querySelectorAll('.di[data-type="brand"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===(_activeBrand||'all')));
-  document.querySelectorAll('.di[data-type="cat"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===_cat));
-  document.querySelectorAll('.di[data-type="champ"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===_champ));
-  document.querySelectorAll('.di[data-type="price"]').forEach(btn=>{const v=btn.dataset.val;btn.classList.toggle('on',(v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true));});
-  document.querySelectorAll('.di[data-type="artist"]').forEach(btn=>btn.classList.toggle('on',btn.dataset.val===_artistFilter));
-  // Update counts
-  ['RSS','VRC','URD'].forEach(b=>{const el=document.getElementById('dr-cnt-'+b);if(el)el.textContent=_champLivCounts?.brand?.[b]||'—';});
-  _cats.forEach(c=>{const el=document.getElementById('drc-'+c.id);if(el)el.textContent=_champLivCounts?.cat?.[c.id]||'';});
+function syncDrawerActive(){
+  // Brand
+  document.querySelectorAll('.di[data-type="brand"]').forEach(b=>b.classList.toggle('on',b.dataset.val===(_activeBrand||'all')));
+  // Cat
+  document.querySelectorAll('.di[data-type="cat"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_cat));
+  // Champ
+  document.querySelectorAll('.di[data-type="champ"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_champ));
+  // Price
+  document.querySelectorAll('.di[data-type="price"]').forEach(b=>{
+    const v=b.dataset.val;
+    b.classList.toggle('on',(v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true));
+  });
+  // Artist
+  document.querySelectorAll('.di[data-type="artist"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_artistFilter));
+  // Step lock/unlock
+  const step2=document.getElementById('dr-step-2');
+  const step3=document.getElementById('dr-step-3');
+  // Step 2 always unlocked (brand doesn't gate category)
+  step2?.classList.remove('locked');
+  document.getElementById('dr-step-2-hint').textContent=_activeBrand&&_activeBrand!=='all'?_activeBrand:'All publishers';
+  // Step 3 unlocks after cat chosen
+  if(_cat!=='all'){
+    step3?.classList.remove('locked');
+    const catName=_cats.find(c=>c.id===_cat)?.name||'';
+    document.getElementById('dr-step-3-hint').textContent=catName;
+    // Mark step 2 done
+    step2?.classList.add('done');
+  } else {
+    step3?.classList.add('locked');
+    step3?.classList.remove('done');
+    document.getElementById('dr-step-3-hint').textContent='Choose category first';
+    step2?.classList.remove('done');
+  }
+  if(_champ!=='all') step3?.classList.add('done');
+  else step3?.classList.remove('done');
+  updateBreadcrumb();
+}
+
+function updateBreadcrumb(){
+  const crumbs=[];
+  if(_activeBrand) crumbs.push({label:_activeBrand,type:'brand'});
+  if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)crumbs.push({label:c.name,type:'cat'});}
+  if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)crumbs.push({label:c.short_name||c.name,type:'champ'});}
+  if(_price===false)crumbs.push({label:'Free',type:'price'});
+  if(_price===true)crumbs.push({label:'Paid',type:'price'});
+  if(_artistFilter==='confirmed')crumbs.push({label:'👑 Confirmed',type:'artist'});
+  if(_artistFilter==='community')crumbs.push({label:'Community',type:'artist'});
+  const el=document.getElementById('dr-breadcrumb');
+  if(!el)return;
+  if(!crumbs.length){el.innerHTML='<span style="font-size:11px;color:var(--t3);">No filters active</span>';return;}
+  el.innerHTML=crumbs.map((c,i)=>`${i>0?'<span class="dr-crumb-sep">›</span>':''}<span class="dr-crumb" onclick="removeChip('${c.type}')">${c.label} <span style="opacity:.5;margin-left:2px;">×</span></span>`).join('');
 }
 
 function openDrawer(){
   buildDrawerOnce();
-  // Re-render champs if category changed (fast)
-  renderDrawerChamps(document.getElementById('dr-champ-search')?.value||'');
-  syncDrawerState();
+  rebuildChampStep();
+  syncDrawerActive();
   document.getElementById('filter-drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
 }
@@ -1800,23 +1853,33 @@ function closeDrawer(){
   document.getElementById('drawer-overlay').classList.remove('open');
 }
 
-// Drawer item clicks — called after DOM ready
 function initDrawerListeners(){
-document.getElementById('filter-drawer').addEventListener('click',e=>{
-  const btn=e.target.closest('.di[data-type]');
-  if(!btn)return;
-  const type=btn.dataset.type, val=btn.dataset.val;
-  document.querySelectorAll(`.di[data-type="${type}"]`).forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  if(type==='brand'){_activeBrand=val==='all'?null:val;_page=1;}
-  if(type==='cat'){_cat=val;_page=1;}
-  if(type==='champ'){_champ=val;_page=1;}
-  if(type==='price'){_price=val==='free'?false:val==='paid'?true:null;_page=1;}
-  if(type==='artist'){_artistFilter=val;_page=1;}
-  updateFilterBadge();
-  loadLiveries();
-  if(type==='cat')openDrawer();
-});
+  const drawer=document.getElementById('filter-drawer');
+  if(!drawer)return;
+  drawer.addEventListener('click',e=>{
+    const btn=e.target.closest('.di[data-type]');
+    if(!btn)return;
+    const type=btn.dataset.type, val=btn.dataset.val;
+    if(type==='brand'){
+      _activeBrand=val==='all'?null:val;
+      // Reset downstream
+      _cat='all';_champ='all';_page=1;
+    } else if(type==='cat'){
+      _cat=val;
+      // Reset downstream
+      _champ='all';_page=1;
+      rebuildChampStep();
+    } else if(type==='champ'){
+      _champ=val;_page=1;
+    } else if(type==='price'){
+      _price=val==='free'?false:val==='paid'?true:null;_page=1;
+    } else if(type==='artist'){
+      _artistFilter=val;_page=1;
+    }
+    syncDrawerActive();
+    updateFilterBadge();
+    loadLiveries();
+  });
 } // end initDrawerListeners
 
 function updateFilterBadge(){
@@ -1898,49 +1961,91 @@ boot().then(handleHash).then(()=>{
   // Remove old sort listener if any
 });
 </script>
-<!-- DRAWER OVERLAY — outside .main so position:fixed works -->
+<!-- DRAWER OVERLAY -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="filter-drawer">
   <div class="drawer-head">
     <span class="drawer-title">Filters</span>
     <button class="drawer-close" onclick="closeDrawer()">×</button>
   </div>
-  <div class="drawer-body">
-    <div class="drawer-section">
-      <div class="drawer-section-title">Publisher</div>
-      <div class="drawer-items" id="dr-publishers">
-        <button class="di on" data-type="brand" data-val="all"><span style="font-size:13px;">🏁</span><span style="flex:1;">All publishers</span></button>
-        <button class="di" data-type="brand" data-val="RSS"><div class="di-icon" style="background:rgba(91,110,247,.14);color:#5B6EF7;">R</div><span style="flex:1;">RSS — Race Sim Studio</span><span class="di-count" id="dr-cnt-RSS">—</span></button>
-        <button class="di" data-type="brand" data-val="VRC"><div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div><span style="flex:1;">VRC — Virtual Racing Cars</span><span class="di-count" id="dr-cnt-VRC">—</span></button>
-        <button class="di" data-type="brand" data-val="URD"><div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div><span style="flex:1;">URD — United Racing Design</span><span class="di-count" id="dr-cnt-URD">—</span></button>
+  <!-- BREADCRUMB -->
+  <div id="dr-breadcrumb" style="padding:10px 16px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:38px;"></div>
+  <!-- STEPS CONTAINER -->
+  <div class="drawer-body" id="dr-steps">
+    <!-- Step 1: Publisher -->
+    <div class="dr-step" id="dr-step-1">
+      <div class="dr-step-header">
+        <span class="dr-step-num">1</span>
+        <span class="dr-step-title">Publisher</span>
+        <span class="dr-step-hint">Choose a mod publisher</span>
+      </div>
+      <div class="dr-step-body">
+        <button class="di on" data-step="1" data-type="brand" data-val="all" data-label="All publishers">
+          <span style="font-size:15px;">🏁</span><span style="flex:1;">All publishers</span>
+          <span class="di-count" id="dr-cnt-all-brand"></span>
+        </button>
+        <button class="di" data-step="1" data-type="brand" data-val="RSS" data-label="RSS">
+          <div class="di-icon" style="background:rgba(91,110,247,.14);color:#5B6EF7;">R</div>
+          <span style="flex:1;">RSS — Race Sim Studio</span>
+          <span class="di-count" id="dr-cnt-RSS">—</span>
+        </button>
+        <button class="di" data-step="1" data-type="brand" data-val="VRC" data-label="VRC">
+          <div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div>
+          <span style="flex:1;">VRC — Virtual Racing Cars</span>
+          <span class="di-count" id="dr-cnt-VRC">—</span>
+        </button>
+        <button class="di" data-step="1" data-type="brand" data-val="URD" data-label="URD">
+          <div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div>
+          <span style="flex:1;">URD — United Racing Design</span>
+          <span class="di-count" id="dr-cnt-URD">—</span>
+        </button>
       </div>
     </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">Category</div>
-      <div class="drawer-items" id="dr-categories" style="max-height:160px;overflow-y:auto;"></div>
-    </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">Championship</div>
-      <div style="position:relative;margin-bottom:8px;">
-        <i class="ti ti-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:12px;pointer-events:none;"></i>
-        <input id="dr-champ-search" style="width:100%;background:var(--s2);border:0.5px solid var(--b1);border-radius:8px;padding:6px 9px 6px 28px;font-size:12px;color:var(--t1);outline:none;font-family:inherit;" placeholder="Search championship…">
+    <!-- Step 2: Category (unlocks after step 1) -->
+    <div class="dr-step locked" id="dr-step-2">
+      <div class="dr-step-header">
+        <span class="dr-step-num">2</span>
+        <span class="dr-step-title">Category</span>
+        <span class="dr-step-hint" id="dr-step-2-hint">Choose publisher first</span>
       </div>
-      <div class="drawer-items" id="dr-championships" style="max-height:200px;overflow-y:auto;"></div>
+      <div class="dr-step-body" id="dr-categories"></div>
     </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">Pricing</div>
-      <div class="drawer-items">
-        <button class="di on" data-type="price" data-val="all"><span style="font-size:13px;">💰</span><span style="flex:1;">All pricing</span></button>
-        <button class="di" data-type="price" data-val="free"><span style="font-size:13px;color:#30D158;">🔓</span><span style="flex:1;">Free only</span></button>
-        <button class="di" data-type="price" data-val="paid"><span style="font-size:13px;color:#FF9F0A;">🔒</span><span style="flex:1;">Paid only</span></button>
+    <!-- Step 3: Championship (unlocks after step 2) -->
+    <div class="dr-step locked" id="dr-step-3">
+      <div class="dr-step-header">
+        <span class="dr-step-num">3</span>
+        <span class="dr-step-title">Championship</span>
+        <span class="dr-step-hint" id="dr-step-3-hint">Choose category first</span>
       </div>
+      <div class="dr-step-body" id="dr-championships"></div>
     </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">Creator</div>
-      <div class="drawer-items">
-        <button class="di on" data-type="artist" data-val="all"><span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span></button>
-        <button class="di" data-type="artist" data-val="confirmed"><span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span></button>
-        <button class="di" data-type="artist" data-val="community"><span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span></button>
+    <!-- Step 4: Pricing + Creator (always visible) -->
+    <div class="dr-step" id="dr-step-4">
+      <div class="dr-step-header">
+        <span class="dr-step-num">4</span>
+        <span class="dr-step-title">Pricing & Creator</span>
+      </div>
+      <div class="dr-step-body">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:0 9px 6px;">Pricing</div>
+        <button class="di on" data-step="4" data-type="price" data-val="all" data-label="">
+          <span style="font-size:13px;">💰</span><span style="flex:1;">All pricing</span>
+        </button>
+        <button class="di" data-step="4" data-type="price" data-val="free" data-label="Free">
+          <span style="font-size:13px;color:#30D158;">🔓</span><span style="flex:1;">Free only</span>
+        </button>
+        <button class="di" data-step="4" data-type="price" data-val="paid" data-label="Paid">
+          <span style="font-size:13px;color:#FF9F0A;">🔒</span><span style="flex:1;">Paid only</span>
+        </button>
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:12px 9px 6px;">Creator</div>
+        <button class="di on" data-step="4" data-type="artist" data-val="all" data-label="">
+          <span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span>
+        </button>
+        <button class="di" data-step="4" data-type="artist" data-val="confirmed" data-label="👑 Confirmed">
+          <span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span>
+        </button>
+        <button class="di" data-step="4" data-type="artist" data-val="community" data-label="Community">
+          <span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span>
+        </button>
       </div>
     </div>
   </div>
