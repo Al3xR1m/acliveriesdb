@@ -549,7 +549,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     <button class="sb-link" id="nl-addons" onclick="nav('addons')"><i class="ti ti-puzzle sb-icon"></i> Addons <span class="sb-badge" id="sb-addc">—</span></button>
     <div class="sb-section" style="margin-top:8px;">Account</div>
     <button class="sb-link" id="nl-artist-edit" onclick="nav('artist-edit')"><i class="ti ti-edit sb-icon"></i> My Dashboard</button>
-    <button class="sb-link" id="nl-admin" onclick="nav('admin')"><i class="ti ti-shield sb-icon"></i> Admin</button>
   </nav>
   <button class="sb-submit" onclick="nav('submit')"><i class="ti ti-plus"></i> Submit a livery</button>
 </aside>
@@ -788,19 +787,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     </div>
   </div>
 
-  <!-- ADMIN -->
-  <div class="view" id="view-admin">
-    <div style="padding:18px 20px;border-bottom:0.5px solid var(--b1);">
-      <h2 style="font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);">Admin <em style="color:var(--acc);">Panel</em></h2>
-    </div>
-    <div id="admin-content" style="padding:20px;">
-      <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:20px;max-width:360px;">
-        <div class="field" style="margin-bottom:12px;"><label>Password</label><input type="password" id="admin-pw" placeholder="Enter password"></div>
-        <button class="sub-cta" id="admin-login-btn"><i class="ti ti-lock-open"></i> Enter</button>
-        <div style="color:var(--red);font-size:12px;margin-top:8px;display:none;" id="admin-err">Incorrect password.</div>
-      </div>
-    </div>
-  </div>
+
 
 </div>
 </div>
@@ -846,7 +833,6 @@ const CB={Formula:['#E82020','#003087','#006400','#FF8000'],GT:['#C8A800','#E820
 const BG={Formula:'#0d0d1f',GT:'#0d1a0d',Hillclimb:'#1a0d00',Touring:'#1a001a'};
 const BR={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',l:'Race Sim Studio'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',l:'Virtual Racing Cars'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',l:'United Racing Design'}};
 const AVC=[['rgba(91,110,247,.14)','#5B6EF7'],['rgba(255,159,10,.12)','#FF9F0A'],['rgba(48,209,88,.10)','#30D158'],['rgba(191,90,242,.10)','#BF5AF2']];
-const ADMIN_PW='Kx9LpQvT8mZ!';
 
 function svg(cat,seed){
   const p=CB[cat]||CB.Formula;const col=p[seed%p.length];const num=(seed*7+1)%99+1;const bg=BG[cat]||'#111';
@@ -963,7 +949,6 @@ function nav(v){
   if(v==='artists')loadArtists();
   if(v==='addons')loadAddons();
   if(v==='submit')initSubmit();
-  if(v==='admin')initAdmin();
 }
 function navBack(){nav(_prevView);}
 function openLivery(id){_prevView=document.querySelector('.view.on')?.id?.replace('view-','')??'liveries';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('view-livery-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;loadLiveryDetail(id);}
@@ -1709,18 +1694,7 @@ document.getElementById('s-submit-btn').addEventListener('click',async()=>{
   else{btn.disabled=false;btn.textContent='Submit for review';errEl.style.display='block';errEl.textContent='Something went wrong. Please try again.';}
 });
 
-// ── ADMIN ──
-function initAdmin(){
-  if(sessionStorage.getItem('acl_admin')==='1'){loadAdminPanel();return;}
-  document.getElementById('admin-login-btn').onclick=()=>{
-    if(document.getElementById('admin-pw').value===ADMIN_PW){sessionStorage.setItem('acl_admin','1');loadAdminPanel();}
-    else document.getElementById('admin-err').style.display='block';
-  };
-  document.getElementById('admin-pw').onkeydown=e=>{if(e.key==='Enter')document.getElementById('admin-login-btn').click();};
-}
-function loadAdminPanel(){
-  document.getElementById('admin-content').innerHTML=`<div style="padding:10px 0;"><div style="font-size:13px;color:var(--t2);margin-bottom:16px;display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--s1);border:0.5px solid var(--b1);border-radius:10px;"><i class="ti ti-shield-check" style="color:var(--acc);"></i> Admin panel is available at <a href="admin.html" style="color:var(--acc);">admin.html</a></div><button onclick="sessionStorage.removeItem('acl_admin');location.reload();" style="height:34px;padding:0 14px;background:transparent;color:var(--t2);border:0.5px solid var(--b2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;"><i class="ti ti-logout"></i> Logout</button></div>`;
-}
+
 
 // ── ARTIST EDIT TOKEN CHECK ──
 const urlParams=new URLSearchParams(location.search);
