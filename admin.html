@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — AC Liveries DB</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,900;1,14..32,700;1,14..32,900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#07070A;--s1:#0E0E13;--s2:#141419;--s3:#1C1C22;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.14);
+  --t1:#F5F5F7;--t2:#6E6E73;--t3:#38383D;
+  --acc:#5B6EF7;--acc2:rgba(91,110,247,0.12);
+  --grn:#30D158;--grn2:rgba(48,209,88,0.10);
+  --amb:#FF9F0A;--amb2:rgba(255,159,10,0.10);
+  --red:#FF453A;--red2:rgba(255,69,58,0.10);
+  --pur:#BF5AF2;--pur2:rgba(191,90,242,0.10);
+}
+html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;height:100%;}
+.shell{display:grid;grid-template-columns:220px 1fr;height:100vh;}
+
+/* SIDEBAR */
+.sidebar{background:var(--s1);border-right:0.5px solid var(--b1);display:flex;flex-direction:column;height:100vh;}
+.sb-logo{padding:20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:8px;cursor:pointer;}
+.sb-logo a{text-decoration:none;display:flex;align-items:baseline;gap:2px;}
+.sb-ac{font-size:16px;font-weight:900;font-style:italic;color:var(--acc);}
+.sb-name{font-size:16px;font-weight:900;font-style:italic;color:var(--t1);}
+.sb-db{font-size:8px;font-weight:700;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-left:5px;align-self:center;}
+.sb-badge{background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.2);border-radius:5px;font-size:9px;font-weight:700;padding:2px 7px;letter-spacing:.3px;text-transform:uppercase;}
+.sb-nav{padding:10px;flex:1;overflow-y:auto;}
+.sb-section{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:10px 10px 4px;}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:all .12s;border:none;background:none;font-family:inherit;width:100%;text-align:left;}
+.sb-link:hover{color:var(--t1);background:var(--b1);}
+.sb-link.on{color:var(--t1);background:var(--acc2);}
+.sb-link.on .sb-icon{color:var(--acc);}
+.sb-link .sb-badge-count{margin-left:auto;background:var(--amb);color:#000;border-radius:10px;font-size:9px;font-weight:700;padding:1px 6px;}
+.sb-icon{font-size:16px;flex-shrink:0;color:var(--t3);}
+.sb-logout{margin:10px;padding:10px;background:transparent;border:0.5px solid var(--b1);border-radius:10px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;}
+.sb-logout:hover{color:var(--red);border-color:rgba(255,69,58,.3);}
+
+/* MAIN */
+.main{height:100vh;overflow-y:auto;}
+.view{display:none;}
+.view.on{display:block;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.page-top{padding:28px 24px 20px;border-bottom:0.5px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
+.page-eyebrow{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.page-eyebrow span{width:18px;height:1px;background:var(--acc);display:inline-block;}
+.page-h1{font-size:32px;font-weight:900;font-style:italic;letter-spacing:-2px;color:var(--t1);}
+.page-h1 em{color:var(--acc);}
+
+/* BADGES */
+.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.3px;text-transform:uppercase;}
+.b-pending{background:var(--amb2);color:var(--amb);}
+.b-approved{background:var(--grn2);color:var(--grn);}
+.b-rejected{background:var(--red2);color:var(--red);}
+.b-new{background:var(--pur2);color:var(--pur);}
+.b-free{background:var(--grn2);color:var(--grn);}
+.b-paid{background:var(--amb2);color:var(--amb);}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:0.5px solid var(--b1);}
+.stat-box{padding:16px 20px;border-right:0.5px solid var(--b1);}
+.stat-box:last-child{border-right:none;}
+.stat-n{font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);}
+.stat-n.acc{color:var(--acc);}
+.stat-n.amb{color:var(--amb);}
+.stat-n.red{color:var(--red);}
+.stat-l{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-top:4px;}
+
+/* QUEUE */
+.queue{padding:20px 24px;}
+.q-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.q-title{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;}
+.q-actions{display:flex;gap:6px;}
+.q-list{display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;background:var(--b1);}
+.q-item{background:var(--bg);padding:12px 16px;display:flex;align-items:center;gap:12px;transition:background .12s;}
+.q-item:hover{background:var(--s1);}
+.q-thumb{width:64px;height:40px;border-radius:7px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;}
+.q-thumb img{width:100%;height:100%;object-fit:cover;}
+.q-info{flex:1;min-width:0;}
+.q-name{font-size:13px;font-weight:600;font-style:italic;color:var(--t1);letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.q-meta{font-size:11px;color:var(--t2);margin-top:2px;}
+.q-btns{display:flex;gap:5px;flex-shrink:0;}
+.btn-approve{height:28px;padding:0 12px;background:var(--grn2);color:var(--grn);border:0.5px solid rgba(48,209,88,.25);border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:all .15s;}
+.btn-approve:hover{background:rgba(48,209,88,.18);}
+.btn-reject{height:28px;padding:0 12px;background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.25);border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:all .15s;}
+.btn-reject:hover{background:rgba(255,69,58,.18);}
+.btn-edit{height:28px;padding:0 10px;background:transparent;color:var(--t2);border:0.5px solid var(--b1);border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.btn-edit:hover{color:var(--t1);border-color:var(--b2);}
+.q-empty{padding:40px;text-align:center;color:var(--t2);background:var(--bg);font-size:13px;}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:8px 12px;text-align:left;border-bottom:0.5px solid var(--b1);}
+.data-table td{padding:10px 12px;border-bottom:0.5px solid var(--b1);font-size:13px;color:var(--t1);vertical-align:middle;}
+.data-table tr:hover td{background:var(--s1);}
+.data-table tr:last-child td{border-bottom:none;}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.field label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.field input,.field select,.field textarea{background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;transition:border-color .12s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
+.field select{appearance:none;cursor:pointer;}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field.full{grid-column:1/-1;}
+.btn-primary{height:38px;padding:0 18px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s;}
+.btn-primary:hover{opacity:.88;}
+.btn-ghost{height:38px;padding:0 14px;background:transparent;color:var(--t2);border:0.5px solid var(--b1);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
+.btn-ghost:hover{color:var(--t1);border-color:var(--b2);}
+.btn-danger{height:38px;padding:0 14px;background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.25);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
+.btn-danger:hover{background:rgba(255,69,58,.18);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;}
+.modal-title{font-size:18px;font-weight:700;font-style:italic;letter-spacing:-.5px;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--b1);}
+
+/* SK */
+.sk{background:linear-gradient(90deg,var(--s1) 25%,var(--s2) 50%,var(--s1) 75%);background-size:200% 100%;animation:sk 1.4s infinite;border-radius:8px;}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:300;display:none;align-items:center;gap:8px;animation:slideup .2s ease;}
+.toast.ok{background:var(--grn2);color:var(--grn);border:0.5px solid rgba(48,209,88,.3);}
+.toast.err{background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.3);}
+@keyframes slideup{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+
+/* LOGIN */
+.login-wrap{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg);}
+.login-box{background:var(--s1);border:0.5px solid var(--b1);border-radius:18px;padding:36px;width:100%;max-width:380px;text-align:center;}
+.login-logo{font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;margin-bottom:6px;}
+.login-logo em{color:var(--acc);}
+.login-sub{font-size:13px;color:var(--t2);margin-bottom:28px;}
+.login-badge{display:inline-block;background:var(--red2);color:var(--red);border-radius:6px;font-size:10px;font-weight:700;padding:2px 8px;letter-spacing:.3px;text-transform:uppercase;margin-bottom:20px;}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><em>AC</em> Liveries DB</div>
+    <div class="login-sub">Admin Panel</div>
+    <div class="login-badge"><i class="ti ti-shield"></i> Restricted access</div>
+    <div class="field" style="text-align:left;">
+      <label>Password</label>
+      <input type="password" id="login-pw" placeholder="Enter admin password" autofocus>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="tryLogin()">
+      <i class="ti ti-lock-open"></i> Enter Admin Panel
+    </button>
+    <div style="color:var(--red);font-size:12px;margin-top:10px;display:none;" id="login-err">Incorrect password.</div>
+  </div>
+</div>
+
+<!-- ADMIN SHELL (hidden until logged in) -->
+<div class="shell" id="admin-shell" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <a href="index.html">
+        <span class="sb-ac">AC</span><span class="sb-name"> Liveries</span><span class="sb-db">DB</span>
+      </a>
+      <span class="sb-badge">Admin</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Moderation</div>
+      <button class="sb-link on" id="nl-queue" onclick="nav('queue')">
+        <i class="ti ti-inbox sb-icon"></i> Pending queue
+        <span class="sb-badge-count" id="sb-pending-count" style="display:none;">0</span>
+      </button>
+      <button class="sb-link" id="nl-reports" onclick="nav('reports')">
+        <i class="ti ti-flag sb-icon"></i> Reports
+        <span class="sb-badge-count" id="sb-reports-count" style="display:none;">0</span>
+      </button>
+      <button class="sb-link" id="nl-edit-requests" onclick="nav('edit-requests')">
+        <i class="ti ti-edit sb-icon"></i> Edit requests
+        <span class="sb-badge-count" id="sb-edits-count" style="display:none;">0</span>
+      </button>
+      <div class="sb-section">Content</div>
+      <button class="sb-link" id="nl-liveries" onclick="nav('liveries')">
+        <i class="ti ti-layout-grid sb-icon"></i> All liveries
+      </button>
+      <button class="sb-link" id="nl-artists" onclick="nav('artists')">
+        <i class="ti ti-user-star sb-icon"></i> Artists
+      </button>
+      <button class="sb-link" id="nl-mods" onclick="nav('mods-admin')">
+        <i class="ti ti-package sb-icon"></i> Mods
+      </button>
+      <button class="sb-link" id="nl-championships" onclick="nav('championships')">
+        <i class="ti ti-trophy sb-icon"></i> Championships
+      </button>
+      <div class="sb-section">Stats</div>
+      <button class="sb-link" id="nl-stats" onclick="nav('stats')">
+        <i class="ti ti-chart-bar sb-icon"></i> Overview
+      </button>
+    </nav>
+    <button class="sb-logout" onclick="logout()"><i class="ti ti-logout"></i> Logout</button>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main" id="admin-main">
+
+    <!-- QUEUE -->
+    <div class="view on" id="view-queue">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Moderation</div>
+        <h1 class="page-h1">Pending <em>queue</em></h1>
+      </div>
+      <div class="stats-strip" id="queue-stats">
+        <div class="stat-box"><div class="stat-n amb sk" style="width:40px;height:32px;"></div><div class="stat-l">Pending</div></div>
+        <div class="stat-box"><div class="stat-n acc sk" style="width:40px;height:32px;"></div><div class="stat-l">Total liveries</div></div>
+        <div class="stat-box"><div class="stat-n sk" style="width:40px;height:32px;"></div><div class="stat-l">Reports</div></div>
+        <div class="stat-box"><div class="stat-n sk" style="width:40px;height:32px;"></div><div class="stat-l">Edit requests</div></div>
+      </div>
+      <div class="queue">
+        <div class="q-header">
+          <span class="q-title">Liveries awaiting approval</span>
+          <div class="q-actions">
+            <button class="btn-ghost" onclick="approveAll()" style="font-size:11px;height:28px;"><i class="ti ti-checks"></i> Approve all</button>
+          </div>
+        </div>
+        <div class="q-list" id="queue-list"><div class="q-empty"><div class="sk" style="height:56px;margin-bottom:1px;"></div><div class="sk" style="height:56px;"></div></div></div>
+      </div>
+      <!-- Pending addons -->
+      <div class="queue">
+        <div class="q-header"><span class="q-title">Addons awaiting approval</span></div>
+        <div class="q-list" id="addon-queue-list"><div class="q-empty sk" style="height:56px;"></div></div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="view" id="view-reports">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Moderation</div>
+        <h1 class="page-h1">User <em>reports</em></h1>
+      </div>
+      <div class="queue">
+        <div class="q-list" id="reports-list"><div class="q-empty sk" style="height:56px;"></div></div>
+      </div>
+    </div>
+
+    <!-- EDIT REQUESTS -->
+    <div class="view" id="view-edit-requests">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Moderation</div>
+        <h1 class="page-h1">Edit <em>requests</em></h1>
+      </div>
+      <div class="queue">
+        <div class="q-list" id="edit-requests-list"><div class="q-empty sk" style="height:56px;"></div></div>
+      </div>
+    </div>
+
+    <!-- ALL LIVERIES -->
+    <div class="view" id="view-liveries">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+          <h1 class="page-h1">All <em>liveries</em></h1>
+          <div style="display:flex;gap:8px;padding-bottom:4px;">
+            <select id="lv-filter-status" onchange="loadAllLiveries()" style="appearance:none;background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--t2);font-family:inherit;cursor:pointer;outline:none;">
+              <option value="all">All status</option>
+              <option value="approved">Approved</option>
+              <option value="pending">Pending</option>
+            </select>
+            <input id="lv-search" placeholder="Search…" oninput="loadAllLiveries()" style="background:var(--s1);border:0.5px solid var(--b1);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--t1);outline:none;font-family:inherit;width:180px;">
+          </div>
+        </div>
+      </div>
+      <div style="padding:16px 24px;">
+        <div style="border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+          <table class="data-table" id="liveries-table">
+            <thead><tr>
+              <th>Livery</th><th>Mod</th><th>Category</th><th>Author</th><th>Status</th><th>Votes</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="liveries-tbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--t2);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTISTS -->
+    <div class="view" id="view-artists">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+          <h1 class="page-h1">Confirmed <em>artists</em></h1>
+          <button class="btn-primary" style="margin-bottom:4px;" onclick="openArtistModal()"><i class="ti ti-plus"></i> Add artist</button>
+        </div>
+      </div>
+      <div style="padding:16px 24px;">
+        <div style="border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+          <table class="data-table" id="artists-table">
+            <thead><tr><th>Artist</th><th>Discord</th><th>Liveries</th><th>Edit token</th><th>Actions</th></tr></thead>
+            <tbody id="artists-tbody"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--t2);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODS ADMIN -->
+    <div class="view" id="view-mods-admin">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+          <h1 class="page-h1">Mods</h1>
+          <button class="btn-primary" style="margin-bottom:4px;" onclick="openModModal()"><i class="ti ti-plus"></i> Add mod</button>
+        </div>
+      </div>
+      <div style="padding:16px 24px;">
+        <div style="border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+          <table class="data-table">
+            <thead><tr><th>Mod</th><th>Brand</th><th>Category</th><th>Version</th><th>Liveries</th><th>Actions</th></tr></thead>
+            <tbody id="mods-tbody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--t2);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAMPIONSHIPS -->
+    <div class="view" id="view-championships">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+          <h1 class="page-h1">Championships</h1>
+          <button class="btn-primary" style="margin-bottom:4px;" onclick="openChampModal()"><i class="ti ti-plus"></i> Add championship</button>
+        </div>
+      </div>
+      <div style="padding:16px 24px;">
+        <div style="border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Short name</th><th>Categories</th><th>Liveries</th><th>Actions</th></tr></thead>
+            <tbody id="champs-tbody"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--t2);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="view" id="view-stats">
+      <div class="page-top">
+        <div class="page-eyebrow"><span></span>Overview</div>
+        <h1 class="page-h1">Stats</h1>
+      </div>
+      <div id="stats-content" style="padding:20px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<!-- Edit livery modal -->
+<div class="modal-overlay" id="livery-modal">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-edit" style="color:var(--acc);"></i> Edit livery</div>
+    <div class="form-grid">
+      <div class="field full"><label>Name</label><input id="m-name" type="text"></div>
+      <div class="field"><label>Team</label><input id="m-team" type="text"></div>
+      <div class="field"><label>Driver</label><input id="m-driver" type="text"></div>
+      <div class="field"><label>Season</label><input id="m-season" type="text"></div>
+      <div class="field"><label>Car #</label><input id="m-carnumber" type="text"></div>
+      <div class="field"><label>Status</label>
+        <select id="m-status">
+          <option value="true">Approved</option>
+          <option value="false">Pending</option>
+        </select>
+      </div>
+      <div class="field full"><label>Notes</label><textarea id="m-notes"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('livery-modal')">Cancel</button>
+      <button class="btn-danger" id="m-delete-btn">Delete</button>
+      <button class="btn-primary" id="m-save-btn"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Artist modal -->
+<div class="modal-overlay" id="artist-modal">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-user-star" style="color:var(--amb);"></i> <span id="artist-modal-title">Add artist</span></div>
+    <div class="form-grid">
+      <div class="field full"><label>Name *</label><input id="a-name" type="text" placeholder="e.g. SimPainter_IT"></div>
+      <div class="field"><label>Discord</label><input id="a-discord" type="text" placeholder="@username"></div>
+      <div class="field"><label>Email</label><input id="a-email" type="email" placeholder="optional"></div>
+      <div class="field full"><label>Avatar URL</label><input id="a-avatar" type="url" placeholder="https://…"></div>
+      <div class="field"><label>Twitter/X</label><input id="a-twitter" type="url" placeholder="https://…"></div>
+      <div class="field"><label>Patreon</label><input id="a-patreon" type="url" placeholder="https://…"></div>
+      <div class="field"><label>YouTube</label><input id="a-youtube" type="url" placeholder="https://…"></div>
+      <div class="field"><label>Overtake</label><input id="a-overtake" type="url" placeholder="https://…"></div>
+      <div class="field full"><label>Edit token (auto-generated)</label><input id="a-token" type="text" readonly style="opacity:.6;cursor:default;" placeholder="Will be generated automatically"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('artist-modal')">Cancel</button>
+      <button class="btn-danger" id="a-delete-btn" style="display:none;">Delete</button>
+      <button class="btn-primary" id="a-save-btn"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mod modal -->
+<div class="modal-overlay" id="mod-modal">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-package" style="color:var(--grn);"></i> <span id="mod-modal-title">Add mod</span></div>
+    <div class="form-grid">
+      <div class="field full"><label>Name *</label><input id="mod-name" type="text"></div>
+      <div class="field"><label>Brand</label>
+        <select id="mod-brand">
+          <option value="">— None —</option>
+          <option value="RSS">RSS</option>
+          <option value="VRC">VRC</option>
+          <option value="URD">URD</option>
+        </select>
+      </div>
+      <div class="field"><label>Category</label><select id="mod-category"></select></div>
+      <div class="field"><label>Version</label><input id="mod-version" type="text" placeholder="e.g. 1.4"></div>
+      <div class="field full"><label>Description</label><textarea id="mod-desc"></textarea></div>
+      <div class="field full"><label>Image URL</label><input id="mod-img" type="url"></div>
+      <div class="field full"><label>Official URL</label><input id="mod-url" type="url"></div>
+      <div class="field full"><label>Changelog (Markdown)</label><textarea id="mod-changelog" style="min-height:120px;font-family:monospace;font-size:12px;"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('mod-modal')">Cancel</button>
+      <button class="btn-danger" id="mod-delete-btn" style="display:none;">Delete</button>
+      <button class="btn-primary" id="mod-save-btn"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Championship modal -->
+<div class="modal-overlay" id="champ-modal">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-trophy" style="color:var(--acc);"></i> <span id="champ-modal-title">Add championship</span></div>
+    <div class="form-grid">
+      <div class="field full"><label>Name *</label><input id="ch-name" type="text" placeholder="e.g. FIA Formula 1 World Championship"></div>
+      <div class="field full"><label>Short name *</label><input id="ch-short" type="text" placeholder="e.g. F1 2024"></div>
+      <div class="field full"><label>Logo URL</label><input id="ch-logo" type="url"></div>
+      <div class="field full"><label>Categories (hold Ctrl/Cmd to select multiple)</label>
+        <select id="ch-cats" multiple style="min-height:100px;"></select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" onclick="closeModal('champ-modal')">Cancel</button>
+      <button class="btn-danger" id="ch-delete-btn" style="display:none;">Delete</button>
+      <button class="btn-primary" id="ch-save-btn"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="supabase.js"></script>
+<script>
+const ADMIN_PW = 'Kx9LpQvT8mZ!';
+
+// ── LOGIN ──────────────────────────────────────────────────
+function tryLogin(){
+  const pw = document.getElementById('login-pw').value;
+  if(pw === ADMIN_PW){
+    sessionStorage.setItem('acl_admin','1');
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-shell').style.display='grid';
+    bootAdmin();
+  } else {
+    document.getElementById('login-err').style.display='block';
+  }
+}
+document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+
+function logout(){
+  sessionStorage.removeItem('acl_admin');
+  location.reload();
+}
+
+// Check if already logged in
+if(sessionStorage.getItem('acl_admin')==='1'){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-shell').style.display='grid';
+}
+
+// ── NAV ────────────────────────────────────────────────────
+function nav(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));
+  document.getElementById('view-'+v)?.classList.add('on');
+  document.getElementById('nl-'+v)?.classList.add('on');
+  document.getElementById('admin-main').scrollTop=0;
+  if(v==='queue')loadQueue();
+  if(v==='reports')loadReports();
+  if(v==='edit-requests')loadEditRequests();
+  if(v==='liveries')loadAllLiveries();
+  if(v==='artists')loadArtists();
+  if(v==='mods-admin')loadMods();
+  if(v==='championships')loadChampionships();
+  if(v==='stats')loadStats();
+}
+
+// ── TOAST ──────────────────────────────────────────────────
+function toast(msg, type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type;t.style.display='flex';
+  setTimeout(()=>t.style.display='none',3000);
+}
+
+// ── MODAL ──────────────────────────────────────────────────
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ── QUEUE ──────────────────────────────────────────────────
+async function loadQueue(){
+  const [pending, total, reports, edits, addons] = await Promise.all([
+    db.from('liveries').select('id',{count:'exact',head:true}).eq('approved',false),
+    db.from('liveries').select('id',{count:'exact',head:true}),
+    db.from('reports').select('id',{count:'exact',head:true}).eq('resolved',false),
+    db.from('livery_edit_requests').select('id',{count:'exact',head:true}).eq('status','pending'),
+    db.from('addons').select('*,mods(name),categories(name)').eq('approved',false).order('created_at',{ascending:false}),
+  ]);
+  // Stats
+  document.getElementById('queue-stats').innerHTML=`
+    <div class="stat-box"><div class="stat-n amb">${pending.count||0}</div><div class="stat-l">Pending liveries</div></div>
+    <div class="stat-box"><div class="stat-n acc">${total.count||0}</div><div class="stat-l">Total liveries</div></div>
+    <div class="stat-box"><div class="stat-n ${(reports.count||0)>0?'red':''}">${reports.count||0}</div><div class="stat-l">Open reports</div></div>
+    <div class="stat-box"><div class="stat-n ${(edits.count||0)>0?'amb':''}">${edits.count||0}</div><div class="stat-l">Edit requests</div></div>`;
+  // Sidebar badges
+  const pc=pending.count||0;
+  const sbp=document.getElementById('sb-pending-count');
+  if(pc>0){sbp.textContent=pc;sbp.style.display='inline-block';}else sbp.style.display='none';
+  const rc=reports.count||0;
+  const sbr=document.getElementById('sb-reports-count');
+  if(rc>0){sbr.textContent=rc;sbr.style.display='inline-block';}else sbr.style.display='none';
+  const ec=edits.count||0;
+  const sbe=document.getElementById('sb-edits-count');
+  if(ec>0){sbe.textContent=ec;sbe.style.display='inline-block';}else sbe.style.display='none';
+  // Pending liveries
+  const {data:livs} = await db.from('liveries')
+    .select('*,mods(name),categories(name),championships(short_name)')
+    .eq('approved',false).order('created_at',{ascending:false});
+  renderQueue(livs||[], 'queue-list', 'livery');
+  // Pending addons
+  renderQueue(addons.data||[], 'addon-queue-list', 'addon');
+}
+
+function renderQueue(items, elId, type){
+  const el=document.getElementById(elId);
+  if(!items.length){el.innerHTML=`<div class="q-empty"><i class="ti ti-check" style="font-size:24px;display:block;margin-bottom:8px;color:var(--grn);"></i>All clear!</div>`;return;}
+  el.innerHTML=items.map(item=>`
+    <div class="q-item" id="qi-${item.id}">
+      <div class="q-thumb">${item.image_url?`<img src="${item.image_url}" alt="${item.name}">`:'<i class="ti ti-photo" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--t3);font-size:18px;"></i>'}</div>
+      <div class="q-info">
+        <div class="q-name">${item.name}</div>
+        <div class="q-meta">
+          ${item.mods?.name||'—'} · ${item.categories?.name||'—'}
+          ${item.championships?.short_name?' · '+item.championships.short_name:''}
+          ${item.author?' · by '+item.author:''}
+          ${item.download_url?` · <a href="${item.download_url}" target="_blank" style="color:var(--acc);text-decoration:none;">Download link</a>`:''}
+        </div>
+      </div>
+      <div class="q-btns">
+        <button class="btn-edit" onclick="openEditModal('${item.id}','${type}')"><i class="ti ti-eye"></i></button>
+        <button class="btn-reject" onclick="rejectItem('${item.id}','${type}')"><i class="ti ti-x"></i> Reject</button>
+        <button class="btn-approve" onclick="approveItem('${item.id}','${type}')"><i class="ti ti-check"></i> Approve</button>
+      </div>
+    </div>`).join('');
+}
+
+async function approveItem(id, type){
+  const tbl=type==='livery'?'liveries':'addons';
+  const {error}=await db.from(tbl).update({approved:true}).eq('id',id);
+  if(error){toast('Error: '+error.message,'err');return;}
+  document.getElementById('qi-'+id)?.remove();
+  toast('Approved!');
+  loadQueue();
+}
+
+async function rejectItem(id, type){
+  if(!confirm('Delete this submission?'))return;
+  const tbl=type==='livery'?'liveries':'addons';
+  const {error}=await db.from(tbl).delete().eq('id',id);
+  if(error){toast('Error: '+error.message,'err');return;}
+  document.getElementById('qi-'+id)?.remove();
+  toast('Rejected & deleted.','ok');
+  loadQueue();
+}
+
+async function approveAll(){
+  if(!confirm('Approve all pending liveries?'))return;
+  const {error}=await db.from('liveries').update({approved:true}).eq('approved',false);
+  if(error){toast('Error','err');return;}
+  toast('All approved!');
+  loadQueue();
+}
+
+// ── REPORTS ────────────────────────────────────────────────
+async function loadReports(){
+  const {data}=await db.from('reports')
+    .select('*,liveries(name,image_url)')
+    .eq('resolved',false)
+    .order('created_at',{ascending:false});
+  const el=document.getElementById('reports-list');
+  if(!data?.length){el.innerHTML='<div class="q-empty"><i class="ti ti-check" style="font-size:24px;display:block;margin-bottom:8px;color:var(--grn);"></i>No open reports.</div>';return;}
+  el.innerHTML=data.map(r=>`
+    <div class="q-item" id="rp-${r.id}">
+      <div class="q-thumb">${r.liveries?.image_url?`<img src="${r.liveries.image_url}">`:'<i class="ti ti-flag" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--red);font-size:18px;"></i>'}</div>
+      <div class="q-info">
+        <div class="q-name">${r.liveries?.name||'Unknown livery'}</div>
+        <div class="q-meta"><span class="badge b-pending" style="background:var(--red2);color:var(--red);">${r.reason||'—'}</span>${r.notes?' · '+r.notes:''}</div>
+      </div>
+      <div class="q-btns">
+        <button class="btn-ghost" onclick="resolveReport('${r.id}')" style="font-size:11px;height:28px;"><i class="ti ti-check"></i> Resolve</button>
+        <button class="btn-reject" onclick="resolveReport('${r.id}',true)"><i class="ti ti-trash"></i> Delete livery</button>
+      </div>
+    </div>`).join('');
+}
+
+async function resolveReport(id, deleteLivery=false){
+  if(deleteLivery){
+    const {data:r}=await db.from('reports').select('livery_id').eq('id',id).single();
+    if(r?.livery_id) await db.from('liveries').delete().eq('id',r.livery_id);
+  }
+  await db.from('reports').update({resolved:true}).eq('id',id);
+  document.getElementById('rp-'+id)?.remove();
+  toast(deleteLivery?'Report resolved & livery deleted.':'Report resolved.');
+}
+
+// ── EDIT REQUESTS ──────────────────────────────────────────
+async function loadEditRequests(){
+  const {data}=await db.from('livery_edit_requests')
+    .select('*,liveries(name)')
+    .eq('status','pending')
+    .order('created_at',{ascending:false});
+  const el=document.getElementById('edit-requests-list');
+  if(!data?.length){el.innerHTML='<div class="q-empty"><i class="ti ti-check" style="font-size:24px;display:block;margin-bottom:8px;color:var(--grn);"></i>No pending edit requests.</div>';return;}
+  el.innerHTML=data.map(r=>`
+    <div class="q-item" id="er-${r.id}">
+      <div class="q-info" style="flex:1;">
+        <div class="q-name">${r.liveries?.name||'Unknown'}</div>
+        <div class="q-meta">${r.field_name||'—'} → <strong style="color:var(--t1);">${r.new_value||'—'}</strong><br><span style="opacity:.6;">${r.reason||''}</span></div>
+      </div>
+      <div class="q-btns">
+        <button class="btn-approve" onclick="applyEdit('${r.id}','${r.livery_id}','${r.field_name}','${(r.new_value||'').replace(/'/g,"\\'")}')"><i class="ti ti-check"></i> Apply</button>
+        <button class="btn-reject" onclick="rejectEdit('${r.id}')"><i class="ti ti-x"></i> Reject</button>
+      </div>
+    </div>`).join('');
+}
+
+async function applyEdit(id, liveryId, field, val){
+  await db.from('liveries').update({[field]:val}).eq('id',liveryId);
+  await db.from('livery_edit_requests').update({status:'approved'}).eq('id',id);
+  document.getElementById('er-'+id)?.remove();
+  toast('Edit applied!');
+}
+async function rejectEdit(id){
+  await db.from('livery_edit_requests').update({status:'rejected'}).eq('id',id);
+  document.getElementById('er-'+id)?.remove();
+  toast('Edit rejected.');
+}
+
+// ── ALL LIVERIES ────────────────────────────────────────────
+async function loadAllLiveries(){
+  const status=document.getElementById('lv-filter-status')?.value||'all';
+  const search=(document.getElementById('lv-search')?.value||'').trim();
+  let q=db.from('liveries').select('*,mods(name),categories(name),championships(short_name)').order('created_at',{ascending:false}).limit(200);
+  if(status==='approved')q=q.eq('approved',true);
+  if(status==='pending')q=q.eq('approved',false);
+  if(search)q=q.ilike('name','%'+search+'%');
+  const {data}=await q;
+  const tbody=document.getElementById('liveries-tbody');
+  if(!data?.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--t2);">No liveries found.</td></tr>';return;}
+  tbody.innerHTML=data.map(l=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px;">
+      ${l.image_url?`<img src="${l.image_url}" style="width:42px;height:26px;object-fit:cover;border-radius:4px;">`:''}
+      <span style="font-weight:600;font-style:italic;">${l.name}</span>
+    </div></td>
+    <td style="color:var(--t2);">${l.mods?.name||'—'}</td>
+    <td style="color:var(--t2);">${l.categories?.name||'—'}</td>
+    <td style="color:var(--t2);">${l.author||'—'}</td>
+    <td><span class="badge ${l.approved?'b-approved':'b-pending'}">${l.approved?'Approved':'Pending'}</span></td>
+    <td style="color:var(--t2);">${l.upvotes||0}</td>
+    <td><div style="display:flex;gap:4px;">
+      <button class="btn-edit" onclick="openEditModal('${l.id}','livery')" style="font-size:11px;height:26px;padding:0 8px;">Edit</button>
+      ${!l.approved?`<button class="btn-approve" onclick="approveItem('${l.id}','livery')" style="height:26px;padding:0 8px;font-size:10px;"><i class="ti ti-check"></i></button>`:''}
+    </div></td>
+  </tr>`).join('');
+}
+
+// ── EDIT LIVERY MODAL ──────────────────────────────────────
+var _editId=null, _editType=null;
+async function openEditModal(id, type){
+  _editId=id;_editType=type;
+  const tbl=type==='livery'?'liveries':'addons';
+  const {data:item}=await db.from(tbl).select('*').eq('id',id).single();
+  if(!item)return;
+  document.getElementById('m-name').value=item.name||'';
+  document.getElementById('m-team').value=item.team||'';
+  document.getElementById('m-driver').value=item.driver||'';
+  document.getElementById('m-season').value=item.season||'';
+  document.getElementById('m-carnumber').value=item.car_number||'';
+  document.getElementById('m-status').value=item.approved?'true':'false';
+  document.getElementById('m-notes').value=item.notes||'';
+  document.getElementById('livery-modal').classList.add('open');
+  document.getElementById('m-save-btn').onclick=saveEditModal;
+  document.getElementById('m-delete-btn').onclick=()=>{if(confirm('Delete?'))deleteItem(id,type);};
+}
+async function saveEditModal(){
+  const tbl=_editType==='livery'?'liveries':'addons';
+  const updates={
+    name:document.getElementById('m-name').value.trim(),
+    team:document.getElementById('m-team').value.trim()||null,
+    driver:document.getElementById('m-driver').value.trim()||null,
+    season:document.getElementById('m-season').value.trim()||null,
+    car_number:document.getElementById('m-carnumber').value.trim()||null,
+    approved:document.getElementById('m-status').value==='true',
+    notes:document.getElementById('m-notes').value.trim()||null,
+  };
+  const {error}=await db.from(tbl).update(updates).eq('id',_editId);
+  if(error){toast('Error: '+error.message,'err');return;}
+  closeModal('livery-modal');toast('Saved!');
+  if(document.getElementById('view-liveries').classList.contains('on'))loadAllLiveries();
+  if(document.getElementById('view-queue').classList.contains('on'))loadQueue();
+}
+async function deleteItem(id,type){
+  const tbl=type==='livery'?'liveries':'addons';
+  await db.from(tbl).delete().eq('id',id);
+  closeModal('livery-modal');toast('Deleted.');
+  loadAllLiveries();
+}
+
+// ── ARTISTS ────────────────────────────────────────────────
+var _editArtistId=null;
+async function loadArtists(){
+  const {data}=await db.from('artists').select('*').order('name');
+  const livCounts={};
+  const {data:livs}=await db.from('liveries').select('artist_id').not('artist_id','is',null);
+  livs?.forEach(l=>{livCounts[l.artist_id]=(livCounts[l.artist_id]||0)+1;});
+  const tbody=document.getElementById('artists-tbody');
+  if(!data?.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--t2);">No artists yet.</td></tr>';return;}
+  tbody.innerHTML=data.map(a=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px;">
+      ${a.avatar_url?`<img src="${a.avatar_url}" style="width:28px;height:28px;object-fit:cover;border-radius:6px;">`:
+        `<div style="width:28px;height:28px;border-radius:6px;background:rgba(91,110,247,.14);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#5B6EF7;">${a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>`}
+      <span style="font-weight:600;">${a.name} 👑</span>
+    </div></td>
+    <td style="color:var(--t2);">${a.discord||'—'}</td>
+    <td style="color:var(--t2);">${livCounts[a.id]||0}</td>
+    <td style="font-family:monospace;font-size:11px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;">${a.edit_token||'—'}</td>
+    <td><div style="display:flex;gap:4px;">
+      <button class="btn-edit" onclick="openArtistModal('${a.id}')" style="font-size:11px;height:26px;padding:0 8px;">Edit</button>
+      <button class="btn-ghost" onclick="copyArtistLink('${a.edit_token||''}')" style="font-size:11px;height:26px;padding:0 8px;"><i class="ti ti-link"></i></button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function copyArtistLink(token){
+  if(!token){toast('No token','err');return;}
+  const url=location.origin+'/acliveriesdb/artist-edit.html?token='+token;
+  navigator.clipboard.writeText(url).then(()=>toast('Link copied!'));
+}
+
+function openArtistModal(id=null){
+  _editArtistId=id;
+  document.getElementById('artist-modal-title').textContent=id?'Edit artist':'Add artist';
+  document.getElementById('a-delete-btn').style.display=id?'flex':'none';
+  ['a-name','a-discord','a-email','a-avatar','a-twitter','a-patreon','a-youtube','a-overtake'].forEach(f=>document.getElementById(f).value='');
+  document.getElementById('a-token').value='';
+  if(id){
+    db.from('artists').select('*').eq('id',id).single().then(({data:a})=>{
+      if(!a)return;
+      document.getElementById('a-name').value=a.name||'';
+      document.getElementById('a-discord').value=a.discord||'';
+      document.getElementById('a-email').value=a.email||'';
+      document.getElementById('a-avatar').value=a.avatar_url||'';
+      document.getElementById('a-twitter').value=a.url_twitter||'';
+      document.getElementById('a-patreon').value=a.url_patreon||'';
+      document.getElementById('a-youtube').value=a.url_youtube||'';
+      document.getElementById('a-overtake').value=a.url_overtake||'';
+      document.getElementById('a-token').value=a.edit_token||'';
+    });
+  } else {
+    // Generate token
+    document.getElementById('a-token').value=Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+  }
+  document.getElementById('a-save-btn').onclick=saveArtist;
+  document.getElementById('a-delete-btn').onclick=()=>{if(confirm('Delete artist?'))deleteArtist();};
+  document.getElementById('artist-modal').classList.add('open');
+}
+
+async function saveArtist(){
+  const name=document.getElementById('a-name').value.trim();
+  if(!name){toast('Name required','err');return;}
+  const payload={
+    name,
+    discord:document.getElementById('a-discord').value.trim()||null,
+    email:document.getElementById('a-email').value.trim()||null,
+    avatar_url:document.getElementById('a-avatar').value.trim()||null,
+    url_twitter:document.getElementById('a-twitter').value.trim()||null,
+    url_patreon:document.getElementById('a-patreon').value.trim()||null,
+    url_youtube:document.getElementById('a-youtube').value.trim()||null,
+    url_overtake:document.getElementById('a-overtake').value.trim()||null,
+    edit_token:document.getElementById('a-token').value.trim()||null,
+  };
+  let error;
+  if(_editArtistId){({error}=await db.from('artists').update(payload).eq('id',_editArtistId));}
+  else{({error}=await db.from('artists').insert(payload));}
+  if(error){toast('Error: '+error.message,'err');return;}
+  closeModal('artist-modal');toast('Artist saved!');loadArtists();
+}
+async function deleteArtist(){
+  await db.from('artists').delete().eq('id',_editArtistId);
+  closeModal('artist-modal');toast('Artist deleted.');loadArtists();
+}
+
+// ── MODS ADMIN ─────────────────────────────────────────────
+var _editModId=null, _allCats=[];
+async function loadMods(){
+  const [{data:mods},{data:cats},{data:livs}]=await Promise.all([
+    db.from('mods').select('*,categories(name)').order('name'),
+    db.from('categories').select('*').order('name'),
+    db.from('liveries').select('mod_id').eq('approved',true),
+  ]);
+  _allCats=cats||[];
+  const lc={};livs?.forEach(l=>{lc[l.mod_id]=(lc[l.mod_id]||0)+1;});
+  const tbody=document.getElementById('mods-tbody');
+  tbody.innerHTML=(mods||[]).map(m=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px;">
+      ${m.image_url?`<img src="${m.image_url}" style="width:32px;height:32px;object-fit:cover;border-radius:5px;">`:
+        `<div style="width:32px;height:32px;border-radius:5px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);"><i class="ti ti-car"></i></div>`}
+      <span style="font-weight:600;">${m.name}</span>
+    </div></td>
+    <td>${m.brand?`<span class="badge" style="background:${m.brand==='RSS'?'rgba(91,110,247,.15)':m.brand==='VRC'?'rgba(48,209,88,.12)':'rgba(255,159,10,.12)'};color:${m.brand==='RSS'?'#5B6EF7':m.brand==='VRC'?'#30D158':'#FF9F0A'};">${m.brand}</span>`:'—'}</td>
+    <td style="color:var(--t2);">${m.categories?.name||'—'}</td>
+    <td style="color:var(--t2);">${m.version?'v'+m.version:'—'}</td>
+    <td style="color:var(--t2);">${lc[m.id]||0}</td>
+    <td><button class="btn-edit" onclick="openModModal('${m.id}')" style="font-size:11px;height:26px;padding:0 8px;">Edit</button></td>
+  </tr>`).join('');
+}
+
+function openModModal(id=null){
+  _editModId=id;
+  document.getElementById('mod-modal-title').textContent=id?'Edit mod':'Add mod';
+  document.getElementById('mod-delete-btn').style.display=id?'flex':'none';
+  ['mod-name','mod-version','mod-desc','mod-img','mod-url','mod-changelog'].forEach(f=>document.getElementById(f).value='');
+  document.getElementById('mod-brand').value='';
+  // Populate category select
+  const cs=document.getElementById('mod-category');
+  cs.innerHTML='<option value="">— None —</option>'+_allCats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  if(id){
+    db.from('mods').select('*').eq('id',id).single().then(({data:m})=>{
+      if(!m)return;
+      document.getElementById('mod-name').value=m.name||'';
+      document.getElementById('mod-brand').value=m.brand||'';
+      document.getElementById('mod-category').value=m.category_id||'';
+      document.getElementById('mod-version').value=m.version||'';
+      document.getElementById('mod-desc').value=m.description||'';
+      document.getElementById('mod-img').value=m.image_url||'';
+      document.getElementById('mod-url').value=m.official_url||'';
+      document.getElementById('mod-changelog').value=m.changelog||'';
+    });
+  }
+  document.getElementById('mod-save-btn').onclick=saveMod;
+  document.getElementById('mod-delete-btn').onclick=()=>{if(confirm('Delete mod?'))deleteMod();};
+  document.getElementById('mod-modal').classList.add('open');
+}
+
+async function saveMod(){
+  const name=document.getElementById('mod-name').value.trim();
+  if(!name){toast('Name required','err');return;}
+  const payload={
+    name,
+    brand:document.getElementById('mod-brand').value||null,
+    category_id:document.getElementById('mod-category').value||null,
+    version:document.getElementById('mod-version').value.trim()||null,
+    description:document.getElementById('mod-desc').value.trim()||null,
+    image_url:document.getElementById('mod-img').value.trim()||null,
+    official_url:document.getElementById('mod-url').value.trim()||null,
+    changelog:document.getElementById('mod-changelog').value.trim()||null,
+  };
+  let error;
+  if(_editModId){({error}=await db.from('mods').update(payload).eq('id',_editModId));}
+  else{({error}=await db.from('mods').insert(payload));}
+  if(error){toast('Error: '+error.message,'err');return;}
+  closeModal('mod-modal');toast('Mod saved!');loadMods();
+}
+async function deleteMod(){
+  await db.from('mods').delete().eq('id',_editModId);
+  closeModal('mod-modal');toast('Deleted.');loadMods();
+}
+
+// ── CHAMPIONSHIPS ──────────────────────────────────────────
+var _editChampId=null;
+async function loadChampionships(){
+  const [{data:champs},{data:cats},{data:livs},{data:cc}]=await Promise.all([
+    db.from('championships').select('*').order('name'),
+    db.from('categories').select('*').order('name'),
+    db.from('liveries').select('championship_id').eq('approved',true),
+    db.from('championship_categories').select('*'),
+  ]);
+  _allCats=cats||[];
+  const lc={};livs?.forEach(l=>{lc[l.championship_id]=(lc[l.championship_id]||0)+1;});
+  const champCats={};cc?.forEach(x=>{if(!champCats[x.championship_id])champCats[x.championship_id]=[];champCats[x.championship_id].push(x.category_id);});
+  const tbody=document.getElementById('champs-tbody');
+  tbody.innerHTML=(champs||[]).map(ch=>{
+    const catNames=(champCats[ch.id]||[]).map(cid=>cats?.find(c=>c.id===cid)?.name||cid).join(', ');
+    return `<tr>
+      <td style="font-weight:600;">${ch.name}</td>
+      <td style="color:var(--t2);">${ch.short_name||'—'}</td>
+      <td style="color:var(--t2);font-size:11px;">${catNames||'—'}</td>
+      <td style="color:var(--t2);">${lc[ch.id]||0}</td>
+      <td><button class="btn-edit" onclick="openChampModal('${ch.id}')" style="font-size:11px;height:26px;padding:0 8px;">Edit</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function openChampModal(id=null){
+  _editChampId=id;
+  document.getElementById('champ-modal-title').textContent=id?'Edit championship':'Add championship';
+  document.getElementById('ch-delete-btn').style.display=id?'flex':'none';
+  ['ch-name','ch-short','ch-logo'].forEach(f=>document.getElementById(f).value='');
+  const cs=document.getElementById('ch-cats');
+  cs.innerHTML=_allCats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  if(id){
+    Promise.all([
+      db.from('championships').select('*').eq('id',id).single(),
+      db.from('championship_categories').select('category_id').eq('championship_id',id),
+    ]).then(([{data:ch},{data:cc2}])=>{
+      if(!ch)return;
+      document.getElementById('ch-name').value=ch.name||'';
+      document.getElementById('ch-short').value=ch.short_name||'';
+      document.getElementById('ch-logo').value=ch.logo_url||'';
+      const selCats=(cc2||[]).map(x=>x.category_id);
+      Array.from(cs.options).forEach(o=>{o.selected=selCats.includes(o.value);});
+    });
+  }
+  document.getElementById('ch-save-btn').onclick=saveChamp;
+  document.getElementById('ch-delete-btn').onclick=()=>{if(confirm('Delete?'))deleteChamp();};
+  document.getElementById('champ-modal').classList.add('open');
+}
+
+async function saveChamp(){
+  const name=document.getElementById('ch-name').value.trim();
+  const short=document.getElementById('ch-short').value.trim();
+  if(!name||!short){toast('Name and short name required','err');return;}
+  const cats=Array.from(document.getElementById('ch-cats').selectedOptions).map(o=>o.value);
+  const payload={name,short_name:short,logo_url:document.getElementById('ch-logo').value.trim()||null};
+  let champId=_editChampId,error;
+  if(champId){({error}=await db.from('championships').update(payload).eq('id',champId));}
+  else{const res=await db.from('championships').insert(payload).select().single();error=res.error;champId=res.data?.id;}
+  if(error){toast('Error: '+error.message,'err');return;}
+  // Update categories
+  await db.from('championship_categories').delete().eq('championship_id',champId);
+  if(cats.length) await db.from('championship_categories').insert(cats.map(cid=>({championship_id:champId,category_id:cid})));
+  closeModal('champ-modal');toast('Championship saved!');loadChampionships();
+}
+async function deleteChamp(){
+  await db.from('championship_categories').delete().eq('championship_id',_editChampId);
+  await db.from('championships').delete().eq('id',_editChampId);
+  closeModal('champ-modal');toast('Deleted.');loadChampionships();
+}
+
+// ── STATS ──────────────────────────────────────────────────
+async function loadStats(){
+  const [{data:livs},{data:arts},{data:mods},{data:adds}]=await Promise.all([
+    db.from('liveries').select('id,upvotes,approved,category_id,categories(name)').eq('approved',true),
+    db.from('artists').select('id'),
+    db.from('mods').select('id,name,brand'),
+    db.from('addons').select('id').eq('approved',true),
+  ]);
+  const totalVotes=livs?.reduce((s,l)=>s+(l.upvotes||0),0)||0;
+  // By category
+  const byCat={};
+  livs?.forEach(l=>{const n=l.categories?.name||'Other';byCat[n]=(byCat[n]||0)+1;});
+  // By brand
+  const byBrand={RSS:0,VRC:0,URD:0};
+  mods?.forEach(m=>{if(m.brand&&byBrand[m.brand]!==undefined)byBrand[m.brand]++;});
+  document.getElementById('stats-content').innerHTML=`
+    <div style="grid-column:1/-1;background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;">
+      ${[
+        {n:livs?.length||0,l:'Approved liveries',c:'var(--acc)'},
+        {n:arts?.length||0,l:'Confirmed artists',c:'var(--amb)'},
+        {n:mods?.length||0,l:'Mods indexed',c:'var(--grn)'},
+        {n:adds?.length||0,l:'Addons',c:'var(--pur)'},
+        {n:totalVotes.toLocaleString(),l:'Total upvotes',c:'var(--t1)'},
+      ].map((s,i)=>`<div style="padding:12px 16px;${i>0?'border-left:0.5px solid var(--b1);':''}text-align:center;"><div style="font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:${s.c};">${s.n}</div><div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">${s.l}</div></div>`).join('')}
+    </div>
+    <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:16px;">
+      <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">Liveries by category</div>
+      ${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:12px;color:var(--t1);flex:1;">${k}</span>
+          <div style="flex:2;background:var(--s2);border-radius:4px;height:6px;overflow:hidden;">
+            <div style="height:100%;background:var(--acc);width:${Math.round(v/(livs?.length||1)*100)}%;border-radius:4px;"></div>
+          </div>
+          <span style="font-size:11px;color:var(--t2);min-width:24px;text-align:right;">${v}</span>
+        </div>`).join('')}
+    </div>
+    <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:16px;">
+      <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">Mods by publisher</div>
+      ${Object.entries(byBrand).map(([b,v])=>{
+        const c=b==='RSS'?'#5B6EF7':b==='VRC'?'#30D158':'#FF9F0A';
+        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:11px;font-weight:700;color:${c};min-width:28px;">${b}</span>
+          <div style="flex:1;background:var(--s2);border-radius:4px;height:6px;overflow:hidden;">
+            <div style="height:100%;background:${c};width:${Math.round(v/(mods?.length||1)*100)}%;border-radius:4px;"></div>
+          </div>
+          <span style="font-size:11px;color:var(--t2);">${v} mods</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// ── BOOT ───────────────────────────────────────────────────
+function bootAdmin(){
+  nav('queue');
+}
+
+if(sessionStorage.getItem('acl_admin')==='1') bootAdmin();
+</script>
+</body>
+</html>
