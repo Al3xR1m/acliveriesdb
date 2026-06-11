@@ -168,25 +168,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div class="login-wrap" id="login-screen">
-  <div class="login-box">
-    <div class="login-logo"><em>AC</em> Liveries DB</div>
-    <div class="login-sub">Admin Panel</div>
-    <div class="login-badge"><i class="ti ti-shield"></i> Restricted access</div>
-    <div class="field" style="text-align:left;">
-      <label>Password</label>
-      <input type="password" id="login-pw" placeholder="Enter admin password" autofocus>
-    </div>
-    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()">
-      <i class="ti ti-lock-open"></i> Enter Admin Panel
-    </button>
-    <div style="color:var(--red);font-size:12px;margin-top:10px;display:none;" id="login-err">Incorrect password.</div>
-  </div>
-</div>
-
-<!-- ADMIN SHELL (hidden until logged in) -->
-<div class="shell" id="admin-shell" style="display:none;">
+<!-- ADMIN SHELL -->
+<div class="shell" id="admin-shell">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -501,67 +484,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 <script src="supabase.js"></script>
 <script>
-// ── LOGIN — hashed + rate limiting
-document.addEventListener("DOMContentLoaded",function(){
-  var lb=document.getElementById("login-submit-btn");
-  if(lb)lb.addEventListener("click",tryLogin);
-}); ────────────────────────
-const PW_HASH = 'de52cdcbabd75577ceb6922a5d8cf60a752ca5b04cc006d1c13ab6857f3d2b88';
-const SALT = 'acliveriesdb2024';
-var _attempts = parseInt(sessionStorage.getItem('admin_attempts')||'0');
-var _lockUntil = parseInt(sessionStorage.getItem('admin_lock')||'0');
-
-async function hashPw(pw){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(SALT + pw));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-function doLogin(){ tryLogin(); }
-async function tryLogin(){
-  const now = Date.now();
-  if(_lockUntil > now){
-    const secs = Math.ceil((_lockUntil - now)/1000);
-    document.getElementById('login-err').textContent='Too many attempts. Try again in '+secs+'s.';
-    document.getElementById('login-err').style.display='block';
-    return;
-  }
-  const pw = document.getElementById('login-pw').value;
-  if(!pw) return;
-  const hash = await hashPw(pw);
-  if(hash === PW_HASH){
-    _attempts=0;
-    sessionStorage.removeItem('admin_attempts');
-    sessionStorage.removeItem('admin_lock');
-    sessionStorage.setItem('acl_admin','1');
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('admin-shell').style.display='grid';
-    bootAdmin();
-  } else {
-    _attempts++;
-    sessionStorage.setItem('admin_attempts',_attempts);
-    if(_attempts>=5){
-      _lockUntil=Date.now()+60000;
-      sessionStorage.setItem('admin_lock',_lockUntil);
-      document.getElementById('login-err').textContent='Too many attempts. Locked for 60s.';
-    } else {
-      document.getElementById('login-err').textContent='Incorrect password. '+(5-_attempts)+' attempt'+(5-_attempts>1?'s':'')+' remaining.';
-    }
-    document.getElementById('login-err').style.display='block';
-    document.getElementById('login-pw').value='';
-  }
-}
-document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
-
-function logout(){
-  sessionStorage.removeItem('acl_admin');
-  location.reload();
-}
-
-// Check if already logged in
-if(sessionStorage.getItem('acl_admin')==='1'){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('admin-shell').style.display='grid';
-}
+// ── LOGIN — disabled, direct access
+function doLogin(){}
+function tryLogin(){}
+function logout(){ location.reload(); }
 
 // ── NAV ────────────────────────────────────────────────────
 function nav(v){
