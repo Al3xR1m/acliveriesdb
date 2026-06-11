@@ -178,7 +178,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <label>Password</label>
       <input type="password" id="login-pw" placeholder="Enter admin password" autofocus>
     </div>
-    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="tryLogin()">
+    <button class="btn-primary" style="width:100%;justify-content:center;" id="login-submit-btn">
       <i class="ti ti-lock-open"></i> Enter Admin Panel
     </button>
     <div style="color:var(--red);font-size:12px;margin-top:10px;display:none;" id="login-err">Incorrect password.</div>
@@ -501,7 +501,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 <script src="supabase.js"></script>
 <script>
-// ── LOGIN — hashed + rate limiting ────────────────────────
+// ── LOGIN — hashed + rate limiting
+document.addEventListener("DOMContentLoaded",function(){
+  var lb=document.getElementById("login-submit-btn");
+  if(lb)lb.addEventListener("click",tryLogin);
+}); ────────────────────────
 const PW_HASH = 'de52cdcbabd75577ceb6922a5d8cf60a752ca5b04cc006d1c13ab6857f3d2b88';
 const SALT = 'acliveriesdb2024';
 var _attempts = parseInt(sessionStorage.getItem('admin_attempts')||'0');
@@ -545,6 +549,7 @@ async function tryLogin(){
     document.getElementById('login-pw').value='';
   }
 }
+window.tryLogin=tryLogin;
 document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 
 function logout(){
