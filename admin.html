@@ -178,7 +178,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <label>Password</label>
       <input type="password" id="login-pw" placeholder="Enter admin password" autofocus>
     </div>
-    <button class="btn-primary" style="width:100%;justify-content:center;" id="login-submit-btn">
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()">
       <i class="ti ti-lock-open"></i> Enter Admin Panel
     </button>
     <div style="color:var(--red);font-size:12px;margin-top:10px;display:none;" id="login-err">Incorrect password.</div>
@@ -516,6 +516,7 @@ async function hashPw(pw){
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
+function doLogin(){ tryLogin(); }
 async function tryLogin(){
   const now = Date.now();
   if(_lockUntil > now){
@@ -549,7 +550,6 @@ async function tryLogin(){
     document.getElementById('login-pw').value='';
   }
 }
-window.tryLogin=tryLogin;
 document.getElementById('login-pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
 
 function logout(){
