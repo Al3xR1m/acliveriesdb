@@ -486,17 +486,22 @@ function setBadge(id, n) {
 var ADMIN_PW = 'Kx9LpQvT8mZ!';
 
 function tryLogin() {
-  var pw = document.getElementById('login-pw').value;
-  var err = document.getElementById('login-err');
-  if (pw === ADMIN_PW) {
-    sessionStorage.setItem('acl_admin', '1');
-    document.getElementById('login-wrap').classList.remove('on');
-    document.getElementById('admin-shell').classList.add('on');
-    bootAdmin();
-  } else {
-    err.textContent = 'Incorrect password.';
-    err.style.display = 'block';
-    document.getElementById('login-pw').value = '';
+  try {
+    var pw = document.getElementById('login-pw').value;
+    var err = document.getElementById('login-err');
+    if (pw === ADMIN_PW) {
+      sessionStorage.setItem('acl_admin', '1');
+      document.getElementById('login-wrap').classList.remove('on');
+      document.getElementById('admin-shell').classList.add('on');
+      bootAdmin();
+    } else {
+      err.textContent = 'Incorrect password.';
+      err.style.display = 'block';
+      document.getElementById('login-pw').value = '';
+    }
+  } catch(e) {
+    document.getElementById('login-err').textContent = 'Error: ' + e.message;
+    document.getElementById('login-err').style.display = 'block';
   }
 }
 
