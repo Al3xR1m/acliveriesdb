@@ -461,10 +461,6 @@ var _editChampId = null;
 var _editCatId = null;
 var _editLiveryType = 'livery';
 
-var PW_HASH = 'de52cdcbabd75577ceb6922a5d8cf60a752ca5b04cc006d1c13ab6857f3d2b88';
-var PW_SALT = 'acliveriesdb2024';
-var _attempts = parseInt(sessionStorage.getItem('adm_att') || '0');
-var _lockUntil = parseInt(sessionStorage.getItem('adm_lock') || '0');
 
 // ── HELPERS ────────────────────────────────────────────────
 function toast(msg, type) {
@@ -487,45 +483,26 @@ function setBadge(id, n) {
 }
 
 // ── LOGIN ──────────────────────────────────────────────────
-async function hashPw(pw) {
-  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(PW_SALT + pw));
-  return Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
-}
+var ADMIN_PW = 'Kx9LpQvT8mZ!';
 
-document.getElementById('login-btn').addEventListener('click', async function() {
-  var now = Date.now();
-  var err = document.getElementById('login-err');
-  if (_lockUntil > now) {
-    err.textContent = 'Locked. Try in ' + Math.ceil((_lockUntil - now) / 1000) + 's.';
-    err.style.display = 'block'; return;
-  }
+function tryLogin() {
   var pw = document.getElementById('login-pw').value;
-  if (!pw) return;
-  var hash = await hashPw(pw);
-  if (hash === PW_HASH) {
-    sessionStorage.setItem('adm_att', '0');
-    sessionStorage.removeItem('adm_lock');
+  var err = document.getElementById('login-err');
+  if (pw === ADMIN_PW) {
     sessionStorage.setItem('acl_admin', '1');
     document.getElementById('login-wrap').classList.remove('on');
     document.getElementById('admin-shell').classList.add('on');
     bootAdmin();
   } else {
-    _attempts++;
-    sessionStorage.setItem('adm_att', _attempts);
-    if (_attempts >= 5) {
-      _lockUntil = Date.now() + 60000;
-      sessionStorage.setItem('adm_lock', _lockUntil);
-      err.textContent = 'Too many attempts. Locked 60s.';
-    } else {
-      err.textContent = 'Wrong password. ' + (5 - _attempts) + ' left.';
-    }
+    err.textContent = 'Incorrect password.';
     err.style.display = 'block';
     document.getElementById('login-pw').value = '';
   }
-});
+}
 
+document.getElementById('login-btn').addEventListener('click', tryLogin);
 document.getElementById('login-pw').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') document.getElementById('login-btn').click();
+  if (e.key === 'Enter') tryLogin();
 });
 
 // Auto-login if session active
