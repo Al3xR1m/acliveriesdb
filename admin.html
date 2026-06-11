@@ -190,7 +190,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <label>Password</label>
       <input type="password" id="login-pw" placeholder="Enter admin password" autofocus>
     </div>
-    <button id="login-btn" class="btn-primary" style="width:100%;justify-content:center;">
+    <button onclick="(function(){try{var p=document.getElementById('login-pw').value,e=document.getElementById('login-err');if(p==='Kx9LpQvT8mZ!'){sessionStorage.setItem('acl_admin','1');document.getElementById('login-wrap').classList.remove('on');document.getElementById('admin-shell').classList.add('on');nav('queue');}else{e.textContent='Wrong password.';e.style.display='block';}}catch(err){document.getElementById('login-err').textContent='JS Error: '+err.message;document.getElementById('login-err').style.display='block';}})()" class="btn-primary" style="width:100%;justify-content:center;">
       <i class="ti ti-lock-open"></i> Enter
     </button>
     <div style="color:var(--red);font-size:12px;margin-top:10px;display:none;" id="login-err">—</div>
