@@ -190,7 +190,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <label>Password</label>
       <input type="password" id="login-pw" placeholder="Enter admin password" autofocus>
     </div>
-    <button onclick="(function(){try{var p=document.getElementById('login-pw').value,e=document.getElementById('login-err');if(p==='Kx9LpQvT8mZ!'){sessionStorage.setItem('acl_admin','1');document.getElementById('login-wrap').classList.remove('on');document.getElementById('admin-shell').classList.add('on');nav('queue');}else{e.textContent='Wrong password.';e.style.display='block';}}catch(err){document.getElementById('login-err').textContent='JS Error: '+err.message;document.getElementById('login-err').style.display='block';}})()" class="btn-primary" style="width:100%;justify-content:center;">
+    <button onclick="(function(){try{var p=document.getElementById('login-pw').value,e=document.getElementById('login-err');if(p==='Kx9LpQvT8mZ!'){localStorage.setItem('acl_admin','1');document.getElementById('login-wrap').classList.remove('on');document.getElementById('admin-shell').classList.add('on');nav('queue');}else{e.textContent='Wrong password.';e.style.display='block';}}catch(err){document.getElementById('login-err').textContent='JS Error: '+err.message;document.getElementById('login-err').style.display='block';}})()" class="btn-primary" style="width:100%;justify-content:center;">
       <i class="ti ti-lock-open"></i> Enter
     </button>
     <div style="color:var(--red);font-size:12px;margin-top:10px;display:none;" id="login-err">—</div>
@@ -490,7 +490,7 @@ function tryLogin() {
     var pw = document.getElementById('login-pw').value;
     var err = document.getElementById('login-err');
     if (pw === ADMIN_PW) {
-      sessionStorage.setItem('acl_admin', '1');
+      localStorage.setItem('acl_admin', '1');
       document.getElementById('login-wrap').classList.remove('on');
       document.getElementById('admin-shell').classList.add('on');
       bootAdmin();
@@ -505,20 +505,19 @@ function tryLogin() {
   }
 }
 
-document.getElementById('login-btn').addEventListener('click', tryLogin);
 document.getElementById('login-pw').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') tryLogin();
 });
 
 // Auto-login if session active
-if (sessionStorage.getItem('acl_admin') === '1') {
+if (localStorage.getItem('acl_admin') === '1') {
   document.getElementById('login-wrap').classList.remove('on');
   document.getElementById('admin-shell').classList.add('on');
 }
 
 // Logout
 document.getElementById('logout-btn').addEventListener('click', function() {
-  sessionStorage.removeItem('acl_admin');
+  localStorage.removeItem('acl_admin');
   location.reload();
 });
 
@@ -549,10 +548,11 @@ function nav(v) {
 
 // ── BOOT ────────────────────────────────────────────────────
 function bootAdmin() { nav('queue'); }
-if (sessionStorage.getItem('acl_admin') === '1') bootAdmin();
+if (localStorage.getItem('acl_admin') === '1') bootAdmin();
 
 // ── QUEUE ──────────────────────────────────────────────────
 async function loadQueue() {
+  try {
   var res = await Promise.all([
     db.from('liveries').select('id', {count:'exact',head:true}).eq('approved', false),
     db.from('liveries').select('id', {count:'exact',head:true}),
@@ -570,6 +570,9 @@ async function loadQueue() {
   setBadge('cnt-pending', pc); setBadge('cnt-reports', rc); setBadge('cnt-edits', ec);
   renderQueue(res[4].data||[], 'queue-list', 'livery');
   renderQueue(res[5].data||[], 'addon-queue-list', 'addon');
+  } catch(e) {
+    document.getElementById('queue-list').innerHTML='<div class="q-empty" style="color:var(--red);">Error loading: '+e.message+'</div>';
+  }
 }
 
 function renderQueue(items, elId, type) {
