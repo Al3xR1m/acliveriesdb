@@ -708,21 +708,19 @@ ${link}`));
 async function loadChampionships(){
   const t=document.getElementById('champ-table');
   if(!_champs.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No championships yet.</p>';return;}
-  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;">';
+  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">';
   _champs.forEach(function(ch){
     var cats=ch.linked_categories||[];
-    var catBadges=cats.map(function(c){
-      return '<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:'+c.color_bg+';color:'+c.color_text+';">'+c.name+'</span>';
-    }).join('');
-    h+='<div onclick="editChampModal(\''+ch.id+'\');" style="background:var(--bg-s1);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+    var firstCat=cats[0]||null;
+    h+='<div onclick="editChampModal(\''+ch.id+'\');" style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:8px;">';
+    h+='<div style="display:flex;align-items:center;gap:10px;">';
     h+=ch.logo_url
-      ?'<img src="'+ch.logo_url+'" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:var(--bg-s2);flex-shrink:0;">'
-      :'<div style="width:40px;height:40px;border-radius:8px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-trophy" style="font-size:18px;color:var(--text-3);"></i></div>';
-    h+='<div style="flex:1;min-width:0;">';
-    h+='<div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;">'+(ch.short_name||ch.name)+'</div>';
-    h+='<div style="font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px;">'+ch.name+'</div>';
-    h+=(catBadges?'<div style="display:flex;flex-wrap:wrap;gap:3px;">'+catBadges+'</div>':'');
-    h+='</div></div>';
+      ?'<img src="'+ch.logo_url+'" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;">'
+      :'<div style="width:32px;height:32px;border-radius:6px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-trophy" style="font-size:14px;color:var(--text-3);"></i></div>';
+    h+='<div style="font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(ch.short_name||ch.name)+'</div>';
+    h+='</div>';
+    h+=firstCat?'<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:'+firstCat.color_bg+';color:'+firstCat.color_text+';align-self:flex-start;">'+firstCat.name+(cats.length>1?' +'+( cats.length-1):'')+'</span>':'';
+    h+='</div>';
   });
   h+='</div>';
   t.innerHTML=h;
