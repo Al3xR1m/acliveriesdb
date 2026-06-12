@@ -869,23 +869,27 @@ async function loadMods(){
   const t=document.getElementById('mods-table');
   if(!_mods.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No mods yet.</p>';return;}
   var BRC={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.3)'},
-    VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},
-    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
   };
   if(!window._modBrand) window._modBrand='RSS';
   var activeBrand=window._modBrand;
-  var btnHtml='<div style="display:flex;gap:10px;margin-bottom:24px;">';
+
+  // Brand buttons
+  var btnHtml='<div style="display:flex;gap:12px;margin-bottom:28px;">';
   ['RSS','VRC','URD'].forEach(function(b){
     var bm=BRC[b];
     var active=b===activeBrand;
     var count=_mods.filter(function(m){return m.brand===b;}).length;
-    btnHtml+='<button onclick="window._modBrand=\''+b+'\';loadMods();" style="flex:1;padding:14px;border-radius:12px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'var(--bg-s1)')+';cursor:pointer;">';
-    btnHtml+='<div style="font-size:18px;font-weight:900;color:'+(active?bm.c:'var(--text-2)')+';">'+b+'</div>';
-    btnHtml+='<div style="font-size:11px;color:'+(active?bm.c:'var(--text-3)')+';">'+count+' mod'+(count!==1?'s':'')+'</div>';
+    btnHtml+='<button onclick="window._modBrand=\''+b+'\';loadMods();" style="flex:1;padding:16px 12px;border-radius:14px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;text-align:left;transition:all .15s;">';
+    btnHtml+='<div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</div>';
+    btnHtml+='<div style="font-size:11px;color:'+(active?bm.c:'var(--text-3)')+';margin-top:4px;font-weight:600;">'+count+' mod'+(count!==1?'s':'')+'</div>';
     btnHtml+='</button>';
   });
   btnHtml+='</div>';
+
+  // Mods grid grouped by category
   var filtered=_mods.filter(function(m){return m.brand===activeBrand;});
   var groups={};
   filtered.forEach(function(m){
@@ -893,21 +897,34 @@ async function loadMods(){
     if(!groups[key])groups[key]={cat:m.categories||null,items:[]};
     groups[key].items.push(m);
   });
+
   var gridHtml='';
   Object.entries(groups).sort(function(a,b){return a[0].localeCompare(b[0]);}).forEach(function(entry){
     var catName=entry[0],g=entry[1];
-    gridHtml+='<div style="margin-bottom:24px;">';
-    gridHtml+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">';
-    gridHtml+=g.cat?'<span style="padding:2px 9px;border-radius:5px;font-size:10px;font-weight:700;background:'+g.cat.color_bg+';color:'+g.cat.color_text+';">'+catName+'</span>':'<span style="font-size:11px;font-weight:700;color:var(--text-2);">'+catName+'</span>';
+    gridHtml+='<div style="margin-bottom:28px;">';
+    gridHtml+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">';
+    gridHtml+=g.cat
+      ?'<span style="padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.3px;background:'+g.cat.color_bg+';color:'+g.cat.color_text+';">'+catName+'</span>'
+      :'<span style="font-size:11px;font-weight:700;color:var(--text-2);">'+catName+'</span>';
     gridHtml+='<span style="font-size:11px;color:var(--text-3);">'+g.items.length+' mod'+(g.items.length!==1?'s':'')+'</span>';
-    gridHtml+='</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;">';
+    gridHtml+='</div>';
+    gridHtml+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">';
     g.items.forEach(function(m){
-      gridHtml+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;" onclick="editModModal(\''+m.id+'\')"><div style="width:100%;height:56px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;overflow:hidden;">';
-      gridHtml+=m.image_url?'<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-car" style="font-size:20px;color:var(--text-3);"></i>';
-      gridHtml+='</div><div style="padding:8px 10px;"><div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+m.name+'</div>'+(m.version?'<div style="font-size:10px;color:var(--text-3);margin-top:2px;">v'+m.version+'</div>':'')+'</div></div>';
+      gridHtml+='<div onclick="editModModal(\''+m.id+'\');" style="border-radius:12px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:16/9;background:var(--bg-s2);">';
+      if(m.image_url){
+        gridHtml+='<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;display:block;">';
+      } else {
+        gridHtml+='<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:32px;color:var(--text-3);"></i></div>';
+      }
+      gridHtml+='<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%);pointer-events:none;"></div>';
+      gridHtml+='<div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px;">';
+      gridHtml+='<div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+m.name+'</div>';
+      gridHtml+=(m.version?'<div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;">v'+m.version+'</div>':'');
+      gridHtml+='</div></div>';
     });
     gridHtml+='</div></div>';
   });
+
   t.innerHTML=btnHtml+(gridHtml||'<p style="color:var(--text-3);padding:20px 0;">No mods for this publisher.</p>');
 }
 function modModalForm(m={}){
