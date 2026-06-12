@@ -886,12 +886,25 @@ function buildAdminUploadWidget(containerId, currentUrl){
 }
 function champModalForm(ch={}){
   const linkedIds=(ch.linked_categories||[]).map(c=>c.id);
+  // Group cats by brand
+  const brands=['RSS','VRC','URD'];
+  const grouped={};
+  _cats.forEach(function(c){ const b=c.brand||'Other'; if(!grouped[b])grouped[b]=[]; grouped[b].push(c); });
+  const catsByBrand=brands.filter(function(b){return grouped[b]&&grouped[b].length;}).map(function(b){
+    const BRC={RSS:'#5B6EF7',VRC:'#30D158',URD:'#FF9F0A'};
+    return `<div style="margin-bottom:10px;">
+      <div style="font-size:9px;font-weight:700;color:`+BRC[b]+`;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding:2px 8px;background:`+(b==='RSS'?'rgba(91,110,247,.10)':b==='VRC'?'rgba(48,209,88,.08)':'rgba(255,159,10,.08)')+`;border-radius:4px;display:inline-block;">`+b+`</div>
+      <div class="cat-checks">${grouped[b].map(c=>`
+        <label class="cat-check-item${linkedIds.includes(c.id)?' checked':''}" data-cat-id="${c.id}">
+          <input type="checkbox" value="${c.id}" ${linkedIds.includes(c.id)?'checked':''}><span class="dot" style="background:${c.color_text};"></span>${c.name}
+        </label>`).join('')}</div>
+    </div>`;
+  }).join('');
   return `<div style="display:flex;flex-direction:column;gap:12px;">
     <div style="display:flex;gap:12px;align-items:flex-start;">
       <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
         <div class="field" style="margin:0;"><label>Championship name *</label><input id="cf-name" value="${ch.name||''}"></div>
         <div class="field" style="margin:0;"><label>Short name</label><input id="cf-short" value="${ch.short_name||''}" placeholder="e.g. F1 2024"></div>
-        <div class="field" style="margin:0;"><label>Season</label><input id="cf-season" value="${ch.season||''}" placeholder="e.g. 2024"></div>
       </div>
       <div style="flex-shrink:0;width:120px;">
         <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);display:block;margin-bottom:6px;">Logo</label>
@@ -900,10 +913,7 @@ function champModalForm(ch={}){
       </div>
     </div>
     <div class="field"><label>Linked categories</label>
-      <div class="cat-checks" id="cat-checks">${_cats.map(c=>`
-        <label class="cat-check-item${linkedIds.includes(c.id)?' checked':''}" data-cat-id="${c.id}">
-          <input type="checkbox" value="${c.id}" ${linkedIds.includes(c.id)?'checked':''}><span class="dot" style="background:${c.color_text};"></span>${c.name}
-        </label>`).join('')}</div>
+      <div id="cat-checks">${catsByBrand}</div>
     </div>
   </div>`;
 }
@@ -913,7 +923,7 @@ function getCheckedCatIds(){return[...document.querySelectorAll('.cat-check-item
 document.getElementById('addChampBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-trophy"></i> Add championship',champModalForm(),async()=>{
     const name=document.getElementById('cf-name').value.trim();if(!name)return;
-    const ok=await createChampionship({name,short_name:document.getElementById('cf-short').value.trim(),season:document.getElementById('cf-season').value.trim(),logo_url:_getChampLogo()||null},getCheckedCatIds());
+    const ok=await createChampionship({name,short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||null},getCheckedCatIds());
     if(ok){await reloadCache();closeModal();await loadChampionships();}
   });
   bindCatChecks();
@@ -922,7 +932,7 @@ document.getElementById('addChampBtn').addEventListener('click',()=>{
 async function editChampModal(id){
   const ch=_champs.find(c=>c.id===id);if(!ch)return;
   openModal('<i class="ti ti-pencil"></i> Edit championship',champModalForm(ch),async()=>{
-    await updateChampionship(id,{name:document.getElementById('cf-name').value.trim(),short_name:document.getElementById('cf-short').value.trim(),season:document.getElementById('cf-season').value.trim(),logo_url:_getChampLogo()||ch.logo_url||null},getCheckedCatIds());
+    await updateChampionship(id,{name:document.getElementById('cf-name').value.trim(),short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||ch.logo_url||null},getCheckedCatIds());
     await reloadCache();closeModal();await loadChampionships();
   });
   bindCatChecks();
