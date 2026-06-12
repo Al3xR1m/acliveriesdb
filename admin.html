@@ -562,29 +562,45 @@ async function editLiveryModal(id,isApproval){
 async function loadArtists(){
   const stats=await fetchArtistStats();
   const t=document.getElementById('artists-table');
-  if(!_artists.length){t.innerHTML='<tr><td style="color:var(--text-3)">No confirmed artists yet.</td></tr>';return;}
-  t.innerHTML=`<thead><tr><th>Artist</th><th>Discord</th><th>Liveries</th><th>Upvotes</th><th>Edit link</th><th>Actions</th></tr></thead>
-  <tbody>${_artists.map(a=>{
-    const s=stats[a.id]||{count:0,upvotes:0};
-    const avatar=a.avatar_url?`<img src="${a.avatar_url}" alt="${a.name}" class="tbl-avatar">`:`<span class="tbl-avatar-ph"><i class="ti ti-user"></i></span>`;
-    const tokenStatus = a.edit_token
-      ? `<button class="action-btn" onclick="copyArtistLink('${a.edit_token}')" title="Copy edit link"><i class="ti ti-link"></i> Copy link</button>
-         <button class="action-btn danger" onclick="doRevokeToken('${a.id}')" title="Revoke & regenerate"><i class="ti ti-refresh"></i></button>`
-      : `<button class="action-btn success" onclick="doGenerateToken('${a.id}')"><i class="ti ti-key"></i> Generate</button>`;
-    return `<tr>
-      <td><div style="display:inline-flex;align-items:center;gap:8px;">${avatar}<strong>${a.name}</strong></div></td>
-      <td style="color:var(--text-2);">${a.discord||'—'}</td>
-      <td>${s.count}</td>
-      <td>${s.upvotes}</td>
-      <td>${tokenStatus}</td>
-      <td>
-        <button class="action-btn" onclick="editArtistModal('${a.id}')"><i class="ti ti-pencil"></i></button>
-        <button class="action-btn danger" onclick="doDeleteArtist('${a.id}')"><i class="ti ti-trash"></i></button>
-      </td>
-    </tr>`;
-  }).join('')}</tbody>`;
+  if(!_artists.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No confirmed artists yet.</p>';return;}
+  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">';
+  _artists.forEach(function(a){
+    var s=stats[a.id]||{count:0,upvotes:0};
+    var ini=a.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    var avatar=a.avatar_url
+      ?'<img src="'+a.avatar_url+'" style="width:48px;height:48px;object-fit:cover;border-radius:50%;flex-shrink:0;">'
+      :'<div style="width:48px;height:48px;border-radius:50%;background:rgba(91,110,247,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:800;color:#5B6EF7;">'+ini+'</div>';
+    h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;">';
+    // Top row — avatar + name + discord
+    h+='<div style="display:flex;align-items:center;gap:12px;">'+avatar;
+    h+='<div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;">'+a.name+' <span style="color:var(--amber);">👑</span></div>';
+    h+=(a.discord?'<div style="font-size:11px;color:var(--text-3);margin-top:2px;"><i class="ti ti-brand-discord"></i> '+a.discord+'</div>':'');
+    h+='</div></div>';
+    // Stats row
+    h+='<div style="display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;">';
+    h+='<div style="flex:1;padding:10px;text-align:center;border-right:1px solid var(--border);">';
+    h+='<div style="font-size:20px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--text);">'+s.count+'</div>';
+    h+='<div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Liveries</div></div>';
+    h+='<div style="flex:1;padding:10px;text-align:center;">';
+    h+='<div style="font-size:20px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--text);">'+s.upvotes+'</div>';
+    h+='<div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Upvotes</div></div>';
+    h+='</div>';
+    // Actions row
+    h+='<div style="display:flex;gap:6px;">';
+    if(a.edit_token){
+      h+='<button onclick="copyArtistLink(\''+a.edit_token+'\');" style="flex:1;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:5px;"><i class="ti ti-link"></i> Copy link</button>';
+      h+='<button onclick="doRevokeToken(\''+a.id+'\');" style="height:32px;width:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Regenerate token"><i class="ti ti-refresh"></i></button>';
+    } else {
+      h+='<button onclick="doGenerateToken(\''+a.id+'\');" style="flex:1;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:5px;"><i class="ti ti-key"></i> Generate link</button>';
+    }
+    h+='<button onclick="editArtistModal(\''+a.id+'\');" style="height:32px;width:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-pencil"></i></button>';
+    h+='<button onclick="doDeleteArtist(\''+a.id+'\');" style="height:32px;width:32px;border-radius:8px;border:1px solid rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:#FF453A;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-trash"></i></button>';
+    h+='</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  t.innerHTML=h;
 }
-
 function artistModalForm(a={}){
   function lnk(id, icon, color, label, val){
     return '<div style="display:flex;align-items:center;gap:8px;background:var(--bg-s2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;margin-bottom:6px;">'
