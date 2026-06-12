@@ -931,7 +931,10 @@ document.getElementById('addChampBtn').addEventListener('click',()=>{
 });
 async function editChampModal(id){
   const ch=_champs.find(c=>c.id===id);if(!ch)return;
-  openModal('<i class="ti ti-pencil"></i> Edit championship',champModalForm(ch),async()=>{
+  const formHtml=champModalForm(ch)+'<div style="margin-top:4px;padding-top:12px;border-top:1px solid var(--border);">'
+    +'<button type="button" onclick="doDeleteChamp(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete championship</button>'
+    +'</div>';
+  openModal('<i class="ti ti-pencil"></i> Edit championship',formHtml,async()=>{
     await updateChampionship(id,{name:document.getElementById('cf-name').value.trim(),short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||ch.logo_url||null},getCheckedCatIds());
     await reloadCache();closeModal();await loadChampionships();
   });
@@ -1186,16 +1189,48 @@ async function loadCategories(){
   t.innerHTML=btnHtml+gridHtml;
 }
 function catModalForm(c={}){
-  return `<div style="display:flex;flex-direction:column;gap:12px;">
-    <div class="field"><label>Category name *</label><input id="catf-name" value="${c.name||''}" placeholder="e.g. GT4"></div>
-    <div class="field"><label>Badge background color</label><input id="catf-bg" type="color" value="${c.color_bg||'#E6F1FB'}" style="width:60px;height:34px;padding:2px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;"></div>
-    <div class="field"><label>Badge text color</label><input id="catf-text" type="color" value="${c.color_text||'#0C447C'}" style="width:60px;height:34px;padding:2px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;"></div>
-    <div style="font-size:13px;color:var(--text-2);">Preview: <span id="cp-badge" class="cat-badge" style="background:${c.color_bg||'#E6F1FB'};color:${c.color_text||'#0C447C'};">${c.name||'Category'}</span></div>
-  </div>`;
+  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  const activeBrand=c.brand||'RSS';
+  const brandBtns=['RSS','VRC','URD'].map(function(b){
+    const bm=BRC[b]; const active=b===activeBrand;
+    return '<button type="button" id="catf-brand-'+b+'" onclick="selectCatBrand(\''+b+'\');" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
+  }).join('');
+  return '<div style="display:flex;flex-direction:column;gap:12px;">'
+    +'<input type="hidden" id="catf-brand" value="'+activeBrand+'">'
+    +'<div class="field"><label>Publisher</label><div style="display:flex;gap:8px;">'+brandBtns+'</div></div>'
+    +'<div class="field"><label>Category name *</label><input id="catf-name" value="'+(c.name||'')+'" placeholder="e.g. GT4"></div>'
+    +'<div style="display:flex;gap:12px;">'
+    +'<div class="field" style="flex:1;"><label>Background color</label><input id="catf-bg" type="color" value="'+(c.color_bg||'#E6F1FB')+'" style="width:100%;height:36px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;"></div>'
+    +'<div class="field" style="flex:1;"><label>Text color</label><input id="catf-text" type="color" value="'+(c.color_text||'#0C447C')+'" style="width:100%;height:36px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;"></div>'
+    +'</div>'
+    +'<div style="font-size:13px;color:var(--text-2);">Preview: <span id="cp-badge" class="cat-badge" style="background:'+(c.color_bg||'#E6F1FB')+';color:'+(c.color_text||'#0C447C')+';padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;">'+(c.name||'Category')+'</span></div>'
+    +'</div>';
+}
+function selectCatBrand(b){
+  document.getElementById('catf-brand').value=b;
+  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  ['RSS','VRC','URD'].forEach(function(br){
+    const btn=document.getElementById('catf-brand-'+br);
+    if(!btn)return;
+    const bm=BRC[br]; const active=br===b;
+    btn.style.borderColor=active?bm.border:'var(--border)';
+    btn.style.background=active?bm.bg:'transparent';
+    btn.style.color=active?bm.c:'var(--text-3)';
+  });
 }
 function bindCatPreview(){setTimeout(()=>{const update=()=>{const n=document.getElementById('catf-name')?.value||'Category';const bg=document.getElementById('catf-bg')?.value||'#E6F1FB';const tc=document.getElementById('catf-text')?.value||'#0C447C';const b=document.getElementById('cp-badge');if(b){b.textContent=n;b.style.background=bg;b.style.color=tc;}};document.getElementById('catf-name')?.addEventListener('input',update);document.getElementById('catf-bg')?.addEventListener('input',update);document.getElementById('catf-text')?.addEventListener('input',update);},100);}
-document.getElementById('addCatBtn').addEventListener('click',()=>{openModal('<i class="ti ti-category"></i> Add category',catModalForm(),async()=>{const ok=await createCategory({name:document.getElementById('catf-name').value.trim(),color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});if(ok){await reloadCache();closeModal();await loadCategories();}});bindCatPreview();});
-async function editCatModal(id){const c=_cats.find(x=>x.id===id);if(!c)return;openModal('<i class="ti ti-pencil"></i> Edit category',catModalForm(c),async()=>{await updateCategory(id,{name:document.getElementById('catf-name').value.trim(),color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});await reloadCache();closeModal();await loadCategories();});bindCatPreview();}
+document.getElementById('addCatBtn').addEventListener('click',()=>{openModal('<i class="ti ti-category"></i> Add category',catModalForm(),async()=>{const nm=document.getElementById('catf-name').value.trim();if(!nm)return;const ok=await createCategory({name:nm,brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});if(ok){_cats=await fetchCategories();closeModal();await loadCategories();}});bindCatPreview();});
+async function editCatModal(id){
+  const c=_cats.find(x=>x.id===id);if(!c)return;
+  const formHtml=catModalForm(c)+'<div style="margin-top:4px;padding-top:12px;border-top:1px solid var(--border);">'
+    +'<button type="button" onclick="doDeleteCat(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete category</button>'
+    +'</div>';
+  openModal('<i class="ti ti-pencil"></i> Edit category',formHtml,async()=>{
+    await updateCategory(id,{name:document.getElementById('catf-name').value.trim(),brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});
+    _cats=await fetchCategories();closeModal();await loadCategories();
+  });
+  bindCatPreview();
+}
 async function doDeleteCat(id){if(!confirm('Delete this category?'))return;await deleteCategory(id);await reloadCache();await loadCategories();}
 
 // IMAGE UPLOAD + COMPRESSION
