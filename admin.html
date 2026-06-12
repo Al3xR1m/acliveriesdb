@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin \u2014 AC Liveries DB</title>
+  <title>Admin — AC Liveries DB</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -69,7 +69,7 @@
   <div class="card" style="padding:36px; width:100%; max-width:360px; text-align:center;">
     <div style="font-size:36px; color:var(--acc); margin-bottom:12px;"><i class="ti ti-shield-lock"></i></div>
     <h1 style="font-family:var(--font-display); font-size:24px; font-weight:900; font-style:italic; letter-spacing:-1px; margin-bottom:6px;">Admin Panel</h1>
-    <p style="font-size:13px; color:var(--text-2); margin-bottom:24px;">AC Liveries DB \u2014 restricted access</p>
+    <p style="font-size:13px; color:var(--text-2); margin-bottom:24px;">AC Liveries DB — restricted access</p>
     <input type="password" class="form-input" id="pwInput" placeholder="Password" autocomplete="current-password" style="margin-bottom:10px;">
     <button class="btn btn--primary" id="loginBtn" style="width:100%; height:40px; font-size:14px; border-radius:var(--radius-md);">Enter</button>
     <div id="loginErr" style="color:var(--red); font-size:13px; margin-top:8px; display:none;">Incorrect password.</div>
@@ -87,7 +87,7 @@
     </a>
     <div class="nav-divider"></div>
     <div class="nav-links">
-      <a href="index.html" class="nav-link">\u2190 Back to site</a>
+      <a href="index.html" class="nav-link">← Back to site</a>
     </div>
     <div class="nav-end">
       <button class="btn btn--icon btn--ghost" id="themeToggle" aria-label="Toggle theme">
@@ -150,28 +150,28 @@
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <div style="width:28px;height:28px;border-radius:7px;background:var(--acc-2);color:var(--acc);display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo"></i></div>
             </div>
-            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;" id="as-total">\u2014</div>
+            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;" id="as-total">—</div>
             <div class="label" style="margin-top:2px;">Published</div>
           </div>
           <div class="card" style="padding:16px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <div style="width:28px;height:28px;border-radius:7px;background:var(--acc-2);color:var(--acc);display:flex;align-items:center;justify-content:center;"><i class="ti ti-clock"></i></div>
             </div>
-            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--acc);" id="as-pending">\u2014</div>
+            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--acc);" id="as-pending">—</div>
             <div class="label" style="margin-top:2px;">Pending review</div>
           </div>
           <div class="card" style="padding:16px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <div style="width:28px;height:28px;border-radius:7px;background:var(--green-2);color:var(--green);display:flex;align-items:center;justify-content:center;"><i class="ti ti-thumb-up"></i></div>
             </div>
-            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;" id="as-votes">\u2014</div>
+            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;" id="as-votes">—</div>
             <div class="label" style="margin-top:2px;">Total votes</div>
           </div>
           <div class="card" style="padding:16px;border-color:rgba(245,158,11,0.2);">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <div style="width:28px;height:28px;border-radius:7px;background:var(--amber-2);color:var(--amber);display:flex;align-items:center;justify-content:center;"><i class="ti ti-flag"></i></div>
             </div>
-            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--amber);" id="as-reports">\u2014</div>
+            <div style="font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--amber);" id="as-reports">—</div>
             <div class="label" style="margin-top:2px;">Open reports</div>
           </div>
         </div>
@@ -193,7 +193,7 @@
             <i class="ti ti-clock" style="color:var(--acc);"></i> Pending submissions
           </span>
         </div>
-        <div id="pending-list"><div style="color:var(--text-3);font-size:13px;">Loading\u2026</div></div>
+        <div id="pending-list"><div style="color:var(--text-3);font-size:13px;">Loading…</div></div>
       </div>
 
       <!-- REPORTS -->
@@ -203,7 +203,7 @@
             <i class="ti ti-flag" style="color:var(--amber);"></i> Open reports
           </span>
         </div>
-        <div id="reports-list"><div style="color:var(--text-3);font-size:13px;">Loading\u2026</div></div>
+        <div id="reports-list"><div style="color:var(--text-3);font-size:13px;">Loading…</div></div>
       </div>
 
       <!-- EDIT REQUESTS -->
@@ -213,14 +213,14 @@
             <i class="ti ti-edit" style="color:var(--acc);"></i> Edit Requests
           </span>
         </div>
-        <div id="edit-requests-list"><div style="color:var(--text-3);font-size:13px;">Loading\u2026</div></div>
+        <div id="edit-requests-list"><div style="color:var(--text-3);font-size:13px;">Loading…</div></div>
       </div>
 
       <!-- ALL LIVERIES -->
       <div class="panel" id="panel-liveries">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-photo"></i> All Liveries</span>
-          <input type="text" class="form-input" id="livery-search" placeholder="Search\u2026" style="max-width:220px;">
+          <input type="text" class="form-input" id="livery-search" placeholder="Search…" style="max-width:220px;">
         </div>
         <div style="overflow-x:auto;"><table class="data-table" id="liveries-table"></table></div>
       </div>
@@ -229,7 +229,7 @@
       <div class="panel" id="panel-addons">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-puzzle"></i> All Addons</span>
-          <input type="text" class="form-input" id="addon-search" placeholder="Search\u2026" style="max-width:220px;">
+          <input type="text" class="form-input" id="addon-search" placeholder="Search…" style="max-width:220px;">
         </div>
         <div style="overflow-x:auto;"><table class="data-table" id="addons-table"></table></div>
       </div>
@@ -402,12 +402,12 @@ async function loadPending(){
           ${artistBadge}
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;color:var(--text-2);">
-          <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${l.mods?.name||'\u2014'}</div>
-          <div><i class="ti ti-trophy" style="font-size:11px;"></i> <strong>Championship:</strong> ${l.championships?.name||'\u2014'}</div>
-          <div><i class="ti ti-users" style="font-size:11px;"></i> <strong>Drivers:</strong> ${l.driver||'\u2014'}</div>
-          <div><i class="ti ti-flag" style="font-size:11px;"></i> <strong>Team:</strong> ${l.team||'\u2014'}</div>
-          <div><i class="ti ti-calendar" style="font-size:11px;"></i> <strong>Season:</strong> ${l.season||'\u2014'}</div>
-          <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${l.author||l.artists?.name||'\u2014'}</div>
+          <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${l.mods?.name||'—'}</div>
+          <div><i class="ti ti-trophy" style="font-size:11px;"></i> <strong>Championship:</strong> ${l.championships?.name||'—'}</div>
+          <div><i class="ti ti-users" style="font-size:11px;"></i> <strong>Drivers:</strong> ${l.driver||'—'}</div>
+          <div><i class="ti ti-flag" style="font-size:11px;"></i> <strong>Team:</strong> ${l.team||'—'}</div>
+          <div><i class="ti ti-calendar" style="font-size:11px;"></i> <strong>Season:</strong> ${l.season||'—'}</div>
+          <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${l.author||l.artists?.name||'—'}</div>
         </div>
         ${l.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${l.notes}</div>`:''}
         ${l.download_url?`<a href="${l.download_url}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
@@ -438,10 +438,10 @@ async function loadPending(){
             ${paidBadge}${artistBadge}
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;color:var(--text-2);">
-            <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${a.mods?.name||'\u2014'}</div>
-            <div><i class="ti ti-category" style="font-size:11px;"></i> <strong>Category:</strong> ${a.categories?.name||'\u2014'}</div>
-            <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${a.author||a.artists?.name||'\u2014'}</div>
-            <div><i class="ti ti-puzzle" style="font-size:11px;"></i> <strong>Type:</strong> ${a.addon_type||'\u2014'}</div>
+            <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${a.mods?.name||'—'}</div>
+            <div><i class="ti ti-category" style="font-size:11px;"></i> <strong>Category:</strong> ${a.categories?.name||'—'}</div>
+            <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${a.author||a.artists?.name||'—'}</div>
+            <div><i class="ti ti-puzzle" style="font-size:11px;"></i> <strong>Type:</strong> ${a.addon_type||'—'}</div>
           </div>
           ${a.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${a.notes}</div>`:''}
           ${a.download_url?`<a href="${a.download_url}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
@@ -466,7 +466,7 @@ async function loadReports(){
     <div class="card" style="padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
       <div style="flex:1;min-width:200px;">
         <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">${r.liveries?.name||'Unknown livery'}</div>
-        <div style="font-size:12px;color:var(--text-2);"><i class="ti ti-flag" style="font-size:11px;"></i> ${r.reason.replace('_',' ')} &nbsp;\u00b7&nbsp; ${new Date(r.created_at).toLocaleDateString()}</div>
+        <div style="font-size:12px;color:var(--text-2);"><i class="ti ti-flag" style="font-size:11px;"></i> ${r.reason.replace('_',' ')} &nbsp;·&nbsp; ${new Date(r.created_at).toLocaleDateString()}</div>
         ${r.notes?`<div style="font-size:12px;color:var(--text-2);margin-top:6px;padding:6px 10px;background:var(--bg-s2);border-radius:var(--radius-sm);border-left:2px solid var(--acc);font-style:italic;">${r.notes}</div>`:''}
         ${r.liveries?.download_url?`<a href="${r.liveries.download_url}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i class="ti ti-external-link"></i>Check download link</a>`:''}
       </div>
@@ -491,9 +491,9 @@ async function loadLiveries(search=''){
   t.innerHTML=`<thead><tr><th>Name</th><th>Mod</th><th>Championship</th><th>Creator</th><th>Votes</th><th>Status</th><th>Actions</th></tr></thead>
   <tbody>${list.map(l=>`<tr>
     <td><strong>${l.name}</strong></td>
-    <td style="color:var(--text-2);">${l.mods?.name||'\u2014'}</td>
-    <td style="color:var(--text-2);">${l.championships?.short_name||'\u2014'}</td>
-    <td style="color:var(--text-2);">${l.artists?`<span style="color:var(--crown);">\ud83d\udc51</span> ${l.artists.name}`:l.author||'\u2014'}</td>
+    <td style="color:var(--text-2);">${l.mods?.name||'—'}</td>
+    <td style="color:var(--text-2);">${l.championships?.short_name||'—'}</td>
+    <td style="color:var(--text-2);">${l.artists?`<span style="color:var(--crown);">\ud83d\udc51</span> ${l.artists.name}`:l.author||'—'}</td>
     <td>${l.upvotes}</td>
     <td><span class="badge ${l.approved?'badge--approved':'badge--pending'}">${l.approved?'Published':'Pending'}</span></td>
     <td>
@@ -516,15 +516,15 @@ async function editLiveryModal(id,isApproval){
   openModal(`<i class="ti ti-pencil"></i> Edit livery`,`
     <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
       <div class="field full"><label>Name</label><input id="el-name" value="${l.name||''}"></div>
-      <div class="field"><label>Category</label><select id="el-cat"><option value="">\u2014</option>${catOpts}</select></div>
-      <div class="field"><label>Mod</label><select id="el-mod"><option value="">\u2014</option>${modOpts}</select></div>
-      <div class="field full"><label>Championship</label><select id="el-champ"><option value="">\u2014</option>${champOpts}</select></div>
+      <div class="field"><label>Category</label><select id="el-cat"><option value="">—</option>${catOpts}</select></div>
+      <div class="field"><label>Mod</label><select id="el-mod"><option value="">—</option>${modOpts}</select></div>
+      <div class="field full"><label>Championship</label><select id="el-champ"><option value="">—</option>${champOpts}</select></div>
       <div class="field"><label>Team</label><input id="el-team" value="${l.team||''}"></div>
       <div class="field"><label>Drivers</label><input id="el-driver" value="${l.driver||''}"></div>
       <div class="field"><label>Season</label><input id="el-season" value="${l.season||''}"></div>
       <div class="field"><label>Car number</label><input id="el-carnumber" value="${l.car_number||''}" maxlength="4" placeholder="e.g. 63"></div>
       <div class="field"><label>Creator (text)</label><input id="el-author" value="${l.author||''}"></div>
-      <div class="field full"><label>Confirmed Artist</label><select id="el-artist"><option value="">\u2014 None \u2014</option>${artistOpts}</select></div>
+      <div class="field full"><label>Confirmed Artist</label><select id="el-artist"><option value="">— None —</option>${artistOpts}</select></div>
       <div class="field full"><label>Download URL</label><input id="el-url" value="${l.download_url||''}"></div>
       <div class="field full"><label>Livery screenshot</label><div id="el-img-widget"></div></div>
       <div class="field full"><label>Notes</label><textarea id="el-notes">${l.notes||''}</textarea></div>
@@ -573,7 +573,7 @@ async function loadArtists(){
       : `<button class="action-btn success" onclick="doGenerateToken('${a.id}')"><i class="ti ti-key"></i> Generate</button>`;
     return `<tr>
       <td><div style="display:inline-flex;align-items:center;gap:8px;">${avatar}<strong>${a.name}</strong></div></td>
-      <td style="color:var(--text-2);">${a.discord||'\u2014'}</td>
+      <td style="color:var(--text-2);">${a.discord||'—'}</td>
       <td>${s.count}</td>
       <td>${s.upvotes}</td>
       <td>${tokenStatus}</td>
@@ -644,8 +644,8 @@ async function loadEditRequests(){
     const approveVal = encodeURIComponent(newId||newVal);
     return '<div class="card" style="padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">'
       + '<div style="flex:1;min-width:200px;">'
-      + '<div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;">' + (r.liveries&&r.liveries.name||'\u2014') + '</div>'
-      + '<div style="font-size:12px;color:var(--text-2);margin-bottom:4px;">By <strong>' + (r.artists&&r.artists.name||'\u2014') + '</strong></div>'
+      + '<div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;">' + (r.liveries&&r.liveries.name||'—') + '</div>'
+      + '<div style="font-size:12px;color:var(--text-2);margin-bottom:4px;">By <strong>' + (r.artists&&r.artists.name||'—') + '</strong></div>'
       + '<div style="font-size:13px;color:var(--text-2);">Change <strong style="color:var(--text);">' + label + '</strong> to <span style="color:var(--acc);font-weight:500;">' + newVal + '</span></div>'
       + '<div style="font-size:11px;color:var(--text-3);margin-top:4px;">' + new Date(r.created_at).toLocaleDateString() + '</div>'
       + '</div>'
@@ -679,7 +679,7 @@ async function doGenerateToken(id) {
     await reloadCache(); await loadArtists();
     const link = `${getBaseUrl()}artist-edit.html?token=${token}`;
     await navigator.clipboard.writeText(link);
-    alert(`\u2713 Link generated and copied to clipboard!\
+    alert(`✓ Link generated and copied to clipboard!\
 \
 Send this to the artist via Discord:\
 ${link}`);
@@ -692,14 +692,14 @@ async function doRevokeToken(id) {
     await reloadCache(); await loadArtists();
     const link = `${getBaseUrl()}artist-edit.html?token=${token}`;
     await navigator.clipboard.writeText(link);
-    alert(`\u2713 New link generated and copied!\
+    alert(`✓ New link generated and copied!\
 \
 ${link}`);
   }
 }
 function copyArtistLink(token) {
   const link = `${getBaseUrl()}artist-edit.html?token=${token}`;
-  navigator.clipboard.writeText(link).then(() => alert(`\u2713 Link copied to clipboard!\
+  navigator.clipboard.writeText(link).then(() => alert(`✓ Link copied to clipboard!\
 \
 ${link}`));
 }
@@ -707,37 +707,18 @@ ${link}`));
 // CHAMPIONSHIPS
 async function loadChampionships(){
   const t=document.getElementById('champ-table');
-  if(!_champs.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No championships yet.</p>';return;}
-  var groups={};
-  _champs.forEach(function(ch){
-    var cats=ch.linked_categories||[];
-    var key=cats.length?cats[0].name:'Other';
-    var col=cats.length?{bg:cats[0].color_bg,tc:cats[0].color_text}:{bg:'var(--bg-s2)',tc:'var(--text-3)'};
-    if(!groups[key])groups[key]={col:col,items:[]};
-    groups[key].items.push(ch);
-  });
-  var h='';
-  Object.entries(groups).sort(function(a,b){return a[0].localeCompare(b[0]);}).forEach(function(entry){
-    var catName=entry[0],g=entry[1];
-    h+='<div style="margin-bottom:28px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">';
-    h+='<span style="width:8px;height:8px;border-radius:50%;background:'+g.col.tc+';display:inline-block;flex-shrink:0;"></span>';
-    h+='<span style="font-size:11px;font-weight:700;color:var(--text);">&nbsp;'+catName+'</span>';
-    h+='<span style="font-size:11px;color:var(--text-3);">&nbsp;'+g.items.length+' championship'+(g.items.length>1?'s':'')+'</span></div>';
-    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;">';
-    g.items.forEach(function(ch){
-      h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:11px 13px;cursor:pointer;" onclick="editChampModal(''+ch.id+'')">';
-      h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">';
-      h+=ch.logo_url?'<img src="'+ch.logo_url+'" style="width:26px;height:26px;object-fit:contain;border-radius:4px;">':'<div style="width:26px;height:26px;border-radius:5px;background:'+g.col.bg+';display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:12px;color:'+g.col.tc+';"></i></div>';
-      h+='<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(ch.short_name||ch.name)+'</div>';
-      h+='<div style="font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+ch.name+'</div></div></div>';
-      h+='<div style="display:flex;align-items:center;justify-content:space-between;">';
-      h+=(ch.season?'<span style="font-size:10px;color:var(--text-3);">'+ch.season+'</span>':'<span></span>');
-      h+='<button class="action-btn" onclick="event.stopPropagation();editChampModal(''+ch.id+'')" style="padding:3px 8px;font-size:10px;"><i class="ti ti-pencil"></i></button>';
-      h+='</div></div>';
-    });
-    h+='</div></div>';
-  });
-  t.innerHTML=h;
+  if(!_champs.length){t.innerHTML='<tr><td style="color:var(--text-3)">No championships yet.</td></tr>';return;}
+  t.innerHTML=`<thead><tr><th>Name</th><th>Short name</th><th>Season</th><th>Linked categories</th><th>Actions</th></tr></thead>
+  <tbody>${_champs.map(ch=>`<tr>
+    <td><strong>${ch.name}</strong></td>
+    <td style="color:var(--text-2);">${ch.short_name||'—'}</td>
+    <td style="color:var(--text-2);">${ch.season||'—'}</td>
+    <td><div class="linked-cats">${(ch.linked_categories||[]).map(c=>`<span class="cat-badge" style="background:${c.color_bg};color:${c.color_text};">${c.name}</span>`).join('')||'<span style="color:var(--text-3);font-size:12px;">None</span>'}</div></td>
+    <td>
+      <button class="action-btn" onclick="editChampModal('${ch.id}')"><i class="ti ti-pencil"></i></button>
+      <button class="action-btn danger" onclick="doDeleteChamp('${ch.id}')"><i class="ti ti-trash"></i></button>
+    </td>
+  </tr>`).join('')}</tbody>`;
 }
 function buildAdminUploadWidget(containerId, currentUrl){
   const container=document.getElementById(containerId);
@@ -750,14 +731,14 @@ function buildAdminUploadWidget(containerId, currentUrl){
   document.getElementById(containerId+'-input').addEventListener('change',async function(){
     const file=this.files[0];if(!file)return;
     const prog=document.getElementById(containerId+'-prog');
-    prog.textContent='Uploading\u2026';
+    prog.textContent='Uploading…';
     const path='logos/'+Date.now()+'_logo.'+file.name.split('.').pop();
     const {error}=await db.storage.from('images').upload(path,file,{contentType:file.type,upsert:false});
     if(!error){
       const {data}=db.storage.from('images').getPublicUrl(path);
       cur=data?.publicUrl||null;
-      prog.textContent='\u2713 Uploaded';
-    } else { prog.textContent='\u2717 Failed'; }
+      prog.textContent='✓ Uploaded';
+    } else { prog.textContent='✗ Failed'; }
   });
   return ()=>cur;
 }
@@ -818,9 +799,9 @@ async function loadAddons(search=''){
   t.innerHTML=`<thead><tr><th>Name</th><th>Mod</th><th>Type</th><th>Creator</th><th>Votes</th><th>Actions</th></tr></thead>
   <tbody>${list.map(a=>`<tr>
     <td><strong>${a.name}</strong></td>
-    <td style="color:var(--text-2);">${a.mods?.name||'\u2014'}</td>
-    <td><span class="badge badge--3d" style="text-transform:capitalize;">${a.addon_type||'\u2014'}</span></td>
-    <td style="color:var(--text-2);">${a.artists?`<span style="color:var(--crown);">\ud83d\udc51</span> ${a.artists.name}`:a.author||'\u2014'}</td>
+    <td style="color:var(--text-2);">${a.mods?.name||'—'}</td>
+    <td><span class="badge badge--3d" style="text-transform:capitalize;">${a.addon_type||'—'}</span></td>
+    <td style="color:var(--text-2);">${a.artists?`<span style="color:var(--crown);">\ud83d\udc51</span> ${a.artists.name}`:a.author||'—'}</td>
     <td>${a.upvotes||0}</td>
     <td>
       <button class="action-btn" onclick="editAddonModal('${a.id}',false)"><i class="ti ti-pencil"></i></button>
@@ -841,8 +822,8 @@ async function editAddonModal(id, isApproval=false){
   openModal(`<i class="ti ti-puzzle"></i> ${isApproval?'Edit & approve addon':'Edit addon'}`,`
     <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
       <div class="field full"><label>Name</label><input id="ae-name" value="${(a.name||'').replace(/"/g,'&quot;')}"></div>
-      <div class="field"><label>Category</label><select id="ae-cat"><option value="">\u2014</option>${catOpts}</select></div>
-      <div class="field"><label>RSS Mod <span style="font-size:10px;color:var(--text-3);font-weight:400;">(optional)</span></label><select id="ae-mod"><option value="">\u2014 Entire category \u2014</option>${modOpts}</select></div>
+      <div class="field"><label>Category</label><select id="ae-cat"><option value="">—</option>${catOpts}</select></div>
+      <div class="field"><label>RSS Mod <span style="font-size:10px;color:var(--text-3);font-weight:400;">(optional)</span></label><select id="ae-mod"><option value="">— Entire category —</option>${modOpts}</select></div>
       <div class="field"><label>Addon type</label>
         <select id="ae-type">
           <option value="tyre_skin" ${a.addon_type==='tyre_skin'?'selected':''}>Tyre skin</option>
@@ -853,7 +834,7 @@ async function editAddonModal(id, isApproval=false){
         </select>
       </div>
       <div class="field"><label>Creator (text)</label><input id="ae-author" value="${(a.author||'').replace(/"/g,'&quot;')}"></div>
-      <div class="field full"><label>Confirmed Artist</label><select id="ae-artist"><option value="">\u2014 None \u2014</option>${artistOpts}</select></div>
+      <div class="field full"><label>Confirmed Artist</label><select id="ae-artist"><option value="">— None —</option>${artistOpts}</select></div>
       <div class="field full"><label>Download URL</label><input id="ae-url" value="${(a.download_url||'').replace(/"/g,'&quot;')}"></div>
       <div class="field full"><label>Preview image</label><div id="ae-img-widget"></div></div>
       <div class="field full"><label>Notes</label><textarea id="ae-notes">${a.notes||''}</textarea></div>
@@ -886,38 +867,29 @@ async function editAddonModal(id, isApproval=false){
 // MODS
 async function loadMods(){
   const t=document.getElementById('mods-table');
-  if(!_mods.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No mods yet.</p>';return;}
-  var BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)'}};
-  var groups={RSS:[],VRC:[],URD:[],Other:[]};
-  _mods.forEach(function(m){var k=m.brand&&BRC[m.brand]?m.brand:'Other';groups[k].push(m);});
-  var h='';
-  ['RSS','VRC','URD','Other'].filter(function(b){return groups[b].length;}).forEach(function(brand){
-    var bm=BRC[brand];
-    h+='<div style="margin-bottom:28px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">';
-    h+=bm?'<span style="padding:2px 10px;border-radius:5px;background:'+bm.bg+';color:'+bm.c+';font-size:11px;font-weight:700;">'+brand+'</span>':'<span style="font-size:11px;font-weight:700;color:var(--text-2);">'+brand+'</span>';
-    h+='<span style="font-size:11px;color:var(--text-3);">&nbsp;'+groups[brand].length+' mod'+(groups[brand].length>1?'s':'')+'</span></div>';
-    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">';
-    groups[brand].forEach(function(m){
-      var cb=m.categories?'<span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+m.categories.color_bg+';color:'+m.categories.color_text+';">'+m.categories.name+'</span>':'';
-      h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;" onclick="editModModal(''+m.id+'')">';
-      h+='<div style="width:100%;height:60px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;overflow:hidden;">';
-      h+=m.image_url?'<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-car" style="font-size:22px;color:var(--text-3);"></i>';
-      h+='</div><div style="padding:9px 11px;"><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+m.name+'</div>';
-      h+='<div style="display:flex;align-items:center;justify-content:space-between;">'+(cb||'<span></span>')+(m.version?'<span style="font-size:10px;color:var(--text-3);">v'+m.version+'</span>':'')+'</div></div></div>';
-    });
-    h+='</div></div>';
-  });
-  t.innerHTML=h;
+  if(!_mods.length){t.innerHTML='<tr><td style="color:var(--text-3)">No mods yet.</td></tr>';return;}
+  t.innerHTML=`<thead><tr><th>Image</th><th>Name</th><th>Category</th><th>URL</th><th>Actions</th></tr></thead>
+  <tbody>${_mods.map(m=>`<tr>
+    <td>${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:60px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">`:
+    `<div style="width:60px;height:36px;background:var(--bg-s2);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);">—</div>`}</td>
+    <td><strong>${m.name}</strong></td>
+    <td>${m.categories?`<span class="cat-badge" style="background:${m.categories.color_bg};color:${m.categories.color_text};">${m.categories.name}</span>`:'—'}</td>
+    <td>${m.official_url?`<a href="${m.official_url}" target="_blank" style="color:var(--acc);font-size:12px;">Link</a>`:'—'}</td>
+    <td>
+      <button class="action-btn" onclick="editModModal('${m.id}')"><i class="ti ti-pencil"></i></button>
+      <button class="action-btn danger" onclick="doDeleteMod('${m.id}')"><i class="ti ti-trash"></i></button>
+    </td>
+  </tr>`).join('')}</tbody>`;
 }
 function modModalForm(m={}){
   const catOpts=_cats.map(c=>`<option value="${c.id}" ${m.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
   return `<div style="display:flex;flex-direction:column;gap:12px;">
     <div class="field"><label>Mod name *</label><input id="mf-name" value="${m.name||''}" placeholder="e.g. RSS GT3"></div>
-    <div class="field"><label>Category</label><select id="mf-cat"><option value="">\u2014 None \u2014</option>${catOpts}</select></div>
+    <div class="field"><label>Category</label><select id="mf-cat"><option value="">— None —</option>${catOpts}</select></div>
     <div class="field"><label>Version</label><input id="mf-version" value="${m.version||''}" placeholder="e.g. 1.4.2"></div>
     <div class="field"><label>Cover image</label><div id="mf-img-widget"></div></div>
     <div class="field"><label>Official URL</label><input id="mf-url" value="${m.official_url||''}" placeholder="https://racesimstudio.com"></div>
-    <div class="field"><label>Description</label><textarea id="mf-desc" style="min-height:70px;" placeholder="Short description of the mod\u2026">${m.description||''}</textarea></div>
+    <div class="field"><label>Description</label><textarea id="mf-desc" style="min-height:70px;" placeholder="Short description of the mod…">${m.description||''}</textarea></div>
     <div class="field"><label>Patch notes / Changelog <span style="font-size:10px;color:var(--text-3);font-weight:400;">(Markdown supported)</span></label><textarea id="mf-changelog" style="min-height:120px;font-family:var(--font-mono,monospace);font-size:12px;" placeholder="## v1.4.2&#10;- Fixed tyre physics&#10;- New livery templates">${m.changelog||''}</textarea></div>
   </div>`;
 }
@@ -942,17 +914,18 @@ async function doDeleteMod(id){if(!confirm('Delete this mod?'))return;await dele
 // CATEGORIES
 async function loadCategories(){
   const t=document.getElementById('cat-table');
-  if(!_cats.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No categories yet.</p>';return;}
-  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">';
-  _cats.forEach(function(c){
-    h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;" onclick="editCatModal(''+c.id+'')">';
-    h+='<div style="width:32px;height:32px;border-radius:7px;background:'+c.color_bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
-    h+='<span style="font-size:14px;font-weight:900;color:'+c.color_text+';">'+c.name.slice(0,1)+'</span></div>';
-    h+='<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">'+c.name+'</div>';
-    h+='<span class="cat-badge" style="background:'+c.color_bg+';color:'+c.color_text+';font-size:10px;">'+c.name+'</span></div></div>';
-  });
-  h+='</div>';
-  t.innerHTML=h;
+  if(!_cats.length){t.innerHTML='<tr><td style="color:var(--text-3)">No categories yet.</td></tr>';return;}
+  t.innerHTML=`<thead><tr><th>Name</th><th>Badge preview</th><th>BG</th><th>Text</th><th>Actions</th></tr></thead>
+  <tbody>${_cats.map(c=>`<tr>
+    <td><strong>${c.name}</strong></td>
+    <td><span class="cat-badge" style="background:${c.color_bg};color:${c.color_text};">${c.name}</span></td>
+    <td><span class="swatch" style="background:${c.color_bg};border:1px solid #0005;"></span>${c.color_bg}</td>
+    <td><span class="swatch" style="background:${c.color_text};"></span>${c.color_text}</td>
+    <td>
+      <button class="action-btn" onclick="editCatModal('${c.id}')"><i class="ti ti-pencil"></i></button>
+      <button class="action-btn danger" onclick="doDeleteCat('${c.id}')"><i class="ti ti-trash"></i></button>
+    </td>
+  </tr>`).join('')}</tbody>`;
 }
 function catModalForm(c={}){
   return `<div style="display:flex;flex-direction:column;gap:12px;">
@@ -1013,7 +986,7 @@ function buildUploadWidget(containerId, opts = {}) {
   container.innerHTML = `
     <div class="upload-widget">
       <img id="${containerId}-preview" class="${previewClass}" src="${currentUrl}" alt="preview">
-      ${currentUrl ? `<div class="upload-existing"><i class="ti ti-link" style="font-size:12px;"></i> <a href="${currentUrl}" target="_blank">Current image</a> \u2014 upload below to replace</div>` : ''}
+      ${currentUrl ? `<div class="upload-existing"><i class="ti ti-link" style="font-size:12px;"></i> <a href="${currentUrl}" target="_blank">Current image</a> — upload below to replace</div>` : ''}
       <label class="upload-btn" id="${containerId}-btn">
         <i class="ti ti-upload" style="font-size:14px;"></i> ${label}
         <input type="file" accept="image/jpeg,image/png,image/webp" style="display:none;" id="${containerId}-input">
@@ -1028,24 +1001,24 @@ function buildUploadWidget(containerId, opts = {}) {
     const file = input.files[0]; if (!file) return;
     if (file.size > 2 * 1024 * 1024) { alert('File too large. Max 2MB.'); return; }
     btn.classList.add('uploading');
-    btn.innerHTML = `<i class="ti ti-loader" style="font-size:14px;"></i> Compressing\u2026`;
-    progress.textContent = 'Compressing image\u2026'; progress.classList.add('visible');
+    btn.innerHTML = `<i class="ti ti-loader" style="font-size:14px;"></i> Compressing…`;
+    progress.textContent = 'Compressing image…'; progress.classList.add('visible');
     try {
       const blob = await compressImage(file, { isAvatar });
       const sizeBefore = (file.size/1024).toFixed(0);
       const sizeAfter = (blob.size/1024).toFixed(0);
-      progress.textContent = `Compressed: ${sizeBefore}KB \u2192 ${sizeAfter}KB. Uploading\u2026`;
+      progress.textContent = `Compressed: ${sizeBefore}KB → ${sizeAfter}KB. Uploading…`;
       const url = await uploadToStorage(blob, folder, file.name);
       if (url) {
         currentImageUrl = url;
         preview.src = url; preview.classList.add('visible');
-        progress.textContent = `\u2713 Uploaded successfully (${sizeAfter}KB)`;
-        btn.innerHTML = `<i class="ti ti-check" style="font-size:14px;color:var(--green);"></i> Image uploaded \u2014 click to replace`;
+        progress.textContent = `✓ Uploaded successfully (${sizeAfter}KB)`;
+        btn.innerHTML = `<i class="ti ti-check" style="font-size:14px;color:var(--green);"></i> Image uploaded — click to replace`;
       } else {
-        progress.textContent = '\u2717 Upload failed. Check Supabase Storage settings.';
+        progress.textContent = '✗ Upload failed. Check Supabase Storage settings.';
       }
     } catch(e) {
-      progress.textContent = '\u2717 Error processing image.'; console.error(e);
+      progress.textContent = '✗ Error processing image.'; console.error(e);
     }
     btn.classList.remove('uploading');
   });
@@ -1057,7 +1030,7 @@ if(checkLogin())initAdmin();
 </body>
 </html>
 HTMLEOF
-echo "admin.html done \u2014 $(wc -l < /mnt/user-data/outputs/admin.html) lines"",
+echo "admin.html done — $(wc -l < /mnt/user-data/outputs/admin.html) lines"",
       "description": "Generate redesigned admin.html"
     },
     "message": "Generate redesigned admin.html",
