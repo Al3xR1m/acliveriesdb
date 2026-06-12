@@ -707,18 +707,38 @@ ${link}`));
 // CHAMPIONSHIPS
 async function loadChampionships(){
   const t=document.getElementById('champ-table');
-  if(!_champs.length){t.innerHTML='<tr><td style="color:var(--text-3)">No championships yet.</td></tr>';return;}
-  t.innerHTML=`<thead><tr><th>Name</th><th>Short name</th><th>Season</th><th>Linked categories</th><th>Actions</th></tr></thead>
-  <tbody>${_champs.map(ch=>`<tr>
-    <td><strong>${ch.name}</strong></td>
-    <td style="color:var(--text-2);">${ch.short_name||'\u2014'}</td>
-    <td style="color:var(--text-2);">${ch.season||'\u2014'}</td>
-    <td><div class="linked-cats">${(ch.linked_categories||[]).map(c=>`<span class="cat-badge" style="background:${c.color_bg};color:${c.color_text};">${c.name}</span>`).join('')||'<span style="color:var(--text-3);font-size:12px;">None</span>'}</div></td>
-    <td>
-      <button class="action-btn" onclick="editChampModal('${ch.id}')"><i class="ti ti-pencil"></i></button>
-      <button class="action-btn danger" onclick="doDeleteChamp('${ch.id}')"><i class="ti ti-trash"></i></button>
-    </td>
-  </tr>`).join('')}</tbody>`;
+  if(!_champs.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No championships yet.</p>';return;}
+  var groups={};
+  _champs.forEach(function(ch){
+    var cats=ch.linked_categories||[];
+    var key=cats.length?cats[0].name:'Other';
+    var col=cats.length?{bg:cats[0].color_bg,tc:cats[0].color_text}:{bg:'var(--bg-s2)',tc:'var(--text-3)'};
+    if(!groups[key])groups[key]={col:col,items:[]};
+    groups[key].items.push(ch);
+  });
+  var h='';
+  Object.entries(groups).sort(function(a,b){return a[0].localeCompare(b[0]);}).forEach(function(e){
+    var catName=e[0],g=e[1];
+    h+='<div style="margin-bottom:28px;">';
+    h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">';
+    h+='<span style="width:8px;height:8px;border-radius:50%;background:'+g.col.tc+';display:inline-block;flex-shrink:0;"></span>';
+    h+='<span style="font-size:11px;font-weight:700;color:var(--text);">&nbsp;'+catName+'</span>';
+    h+='<span style="font-size:11px;color:var(--text-3);">&nbsp;'+g.items.length+' championship'+(g.items.length>1?'s':'')+'</span></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;">';
+    g.items.forEach(function(ch){
+      h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:11px 13px;cursor:pointer;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--border-md)'" onmouseout="this.style.borderColor='var(--border)'" onclick="editChampModal(''+ch.id+'')">';
+      h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">';
+      h+=ch.logo_url?'<img src="'+ch.logo_url+'" style="width:26px;height:26px;object-fit:contain;border-radius:4px;">':'<div style="width:26px;height:26px;border-radius:5px;background:'+g.col.bg+';display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:12px;color:'+g.col.tc+';"></i></div>';
+      h+='<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(ch.short_name||ch.name)+'</div>';
+      h+='<div style="font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+ch.name+'</div></div></div>';
+      h+='<div style="display:flex;align-items:center;justify-content:space-between;">';
+      h+=(ch.season?'<span style="font-size:10px;color:var(--text-3);">'+ch.season+'</span>':'<span></span>');
+      h+='<button class="action-btn" onclick="event.stopPropagation();editChampModal(''+ch.id+'')" style="padding:3px 8px;font-size:10px;"><i class="ti ti-pencil"></i></button>';
+      h+='</div></div>';
+    });
+    h+='</div></div>';
+  });
+  t.innerHTML=h;
 }
 function buildAdminUploadWidget(containerId, currentUrl){
   const container=document.getElementById(containerId);
@@ -867,19 +887,31 @@ async function editAddonModal(id, isApproval=false){
 // MODS
 async function loadMods(){
   const t=document.getElementById('mods-table');
-  if(!_mods.length){t.innerHTML='<tr><td style="color:var(--text-3)">No mods yet.</td></tr>';return;}
-  t.innerHTML=`<thead><tr><th>Image</th><th>Name</th><th>Category</th><th>URL</th><th>Actions</th></tr></thead>
-  <tbody>${_mods.map(m=>`<tr>
-    <td>${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:60px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">`:
-    `<div style="width:60px;height:36px;background:var(--bg-s2);border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);">\u2014</div>`}</td>
-    <td><strong>${m.name}</strong></td>
-    <td>${m.categories?`<span class="cat-badge" style="background:${m.categories.color_bg};color:${m.categories.color_text};">${m.categories.name}</span>`:'\u2014'}</td>
-    <td>${m.official_url?`<a href="${m.official_url}" target="_blank" style="color:var(--acc);font-size:12px;">Link</a>`:'\u2014'}</td>
-    <td>
-      <button class="action-btn" onclick="editModModal('${m.id}')"><i class="ti ti-pencil"></i></button>
-      <button class="action-btn danger" onclick="doDeleteMod('${m.id}')"><i class="ti ti-trash"></i></button>
-    </td>
-  </tr>`).join('')}</tbody>`;
+  if(!_mods.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No mods yet.</p>';return;}
+  var BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)'}};
+  var groups={RSS:[],VRC:[],URD:[],Other:[]};
+  _mods.forEach(function(m){var k=m.brand&&BRC[m.brand]?m.brand:'Other';groups[k].push(m);});
+  var h='';
+  ['RSS','VRC','URD','Other'].filter(function(b){return groups[b].length;}).forEach(function(brand){
+    var bm=BRC[brand];
+    h+='<div style="margin-bottom:28px;">';
+    h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">';
+    h+=bm?'<span style="padding:2px 10px;border-radius:5px;background:'+bm.bg+';color:'+bm.c+';font-size:11px;font-weight:700;">'+brand+'</span>':'<span style="font-size:11px;font-weight:700;color:var(--text-2);">'+brand+'</span>';
+    h+='<span style="font-size:11px;color:var(--text-3);">&nbsp;'+groups[brand].length+' mod'+(groups[brand].length>1?'s':'')+'</span></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">';
+    groups[brand].forEach(function(m){
+      var cb=m.categories?'<span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+m.categories.color_bg+';color:'+m.categories.color_text+';">'+m.categories.name+'</span>':'';
+      h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--border-md)'" onmouseout="this.style.borderColor='var(--border)'" onclick="editModModal(''+m.id+'')">';
+      h+='<div style="width:100%;height:60px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;overflow:hidden;">';
+      h+=m.image_url?'<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-car" style="font-size:22px;color:var(--text-3);"></i>';
+      h+='</div><div style="padding:9px 11px;">';
+      h+='<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+m.name+'</div>';
+      h+='<div style="display:flex;align-items:center;justify-content:space-between;">'+(cb||'<span></span>')+(m.version?'<span style="font-size:10px;color:var(--text-3);">v'+m.version+'</span>':'')+'</div>';
+      h+='</div></div>';
+    });
+    h+='</div></div>';
+  });
+  t.innerHTML=h;
 }
 function modModalForm(m={}){
   const catOpts=_cats.map(c=>`<option value="${c.id}" ${m.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
@@ -914,18 +946,19 @@ async function doDeleteMod(id){if(!confirm('Delete this mod?'))return;await dele
 // CATEGORIES
 async function loadCategories(){
   const t=document.getElementById('cat-table');
-  if(!_cats.length){t.innerHTML='<tr><td style="color:var(--text-3)">No categories yet.</td></tr>';return;}
-  t.innerHTML=`<thead><tr><th>Name</th><th>Badge preview</th><th>BG</th><th>Text</th><th>Actions</th></tr></thead>
-  <tbody>${_cats.map(c=>`<tr>
-    <td><strong>${c.name}</strong></td>
-    <td><span class="cat-badge" style="background:${c.color_bg};color:${c.color_text};">${c.name}</span></td>
-    <td><span class="swatch" style="background:${c.color_bg};border:1px solid #0005;"></span>${c.color_bg}</td>
-    <td><span class="swatch" style="background:${c.color_text};"></span>${c.color_text}</td>
-    <td>
-      <button class="action-btn" onclick="editCatModal('${c.id}')"><i class="ti ti-pencil"></i></button>
-      <button class="action-btn danger" onclick="doDeleteCat('${c.id}')"><i class="ti ti-trash"></i></button>
-    </td>
-  </tr>`).join('')}</tbody>`;
+  if(!_cats.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No categories yet.</p>';return;}
+  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">';
+  _cats.forEach(function(c){
+    h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--border-md)'" onmouseout="this.style.borderColor='var(--border)'" onclick="editCatModal(''+c.id+'')">';
+    h+='<div style="width:32px;height:32px;border-radius:7px;background:'+c.color_bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+    h+='<span style="font-size:14px;font-weight:900;color:'+c.color_text+';">'+c.name.slice(0,1)+'</span></div>';
+    h+='<div style="flex:1;min-width:0;">';
+    h+='<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">'+c.name+'</div>';
+    h+='<span class="cat-badge" style="background:'+c.color_bg+';color:'+c.color_text+';font-size:10px;">'+c.name+'</span>';
+    h+='</div></div>';
+  });
+  h+='</div>';
+  t.innerHTML=h;
 }
 function catModalForm(c={}){
   return `<div style="display:flex;flex-direction:column;gap:12px;">
