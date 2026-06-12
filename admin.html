@@ -985,18 +985,46 @@ async function doDeleteMod(id){if(!confirm('Delete this mod?'))return;await dele
 // CATEGORIES
 async function loadCategories(){
   const t=document.getElementById('cat-table');
-  if(!_cats.length){t.innerHTML='<tr><td style="color:var(--text-3)">No categories yet.</td></tr>';return;}
-  t.innerHTML=`<thead><tr><th>Name</th><th>Badge preview</th><th>BG</th><th>Text</th><th>Actions</th></tr></thead>
-  <tbody>${_cats.map(c=>`<tr>
-    <td><strong>${c.name}</strong></td>
-    <td><span class="cat-badge" style="background:${c.color_bg};color:${c.color_text};">${c.name}</span></td>
-    <td><span class="swatch" style="background:${c.color_bg};border:1px solid #0005;"></span>${c.color_bg}</td>
-    <td><span class="swatch" style="background:${c.color_text};"></span>${c.color_text}</td>
-    <td>
-      <button class="action-btn" onclick="editCatModal('${c.id}')"><i class="ti ti-pencil"></i></button>
-      <button class="action-btn danger" onclick="doDeleteCat('${c.id}')"><i class="ti ti-trash"></i></button>
-    </td>
-  </tr>`).join('')}</tbody>`;
+  if(!_cats.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No categories yet.</p>';return;}
+  var BRC={
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
+  };
+  if(!window._catBrand) window._catBrand='RSS';
+  var activeBrand=window._catBrand;
+
+  // Brand buttons
+  var btnHtml='<div style="display:flex;gap:12px;margin-bottom:24px;">';
+  ['RSS','VRC','URD'].forEach(function(b){
+    var bm=BRC[b];
+    var active=b===activeBrand;
+    var count=_cats.filter(function(c){return c.brand===b;}).length;
+    btnHtml+='<button onclick="window._catBrand=\''+b+'\';loadCategories();" style="flex:1;padding:16px 12px;border-radius:14px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;text-align:left;">';
+    btnHtml+='<div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</div>';
+    btnHtml+='<div style="font-size:11px;color:'+(active?bm.c:'var(--text-3)')+';margin-top:4px;font-weight:600;">'+count+' categor'+(count!==1?'ies':'y')+'</div>';
+    btnHtml+='</button>';
+  });
+  btnHtml+='</div>';
+
+  var filtered=_cats.filter(function(c){return c.brand===activeBrand;});
+  var gridHtml='';
+  if(filtered.length){
+    gridHtml='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">';
+    filtered.forEach(function(c){
+      gridHtml+='<div onclick="editCatModal(\''+c.id+'\');" style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;" onmouseover="this.style.borderColor=\'var(--border-md)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
+      gridHtml+='<div style="width:32px;height:32px;border-radius:7px;background:'+c.color_bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+      gridHtml+='<span style="font-size:14px;font-weight:900;color:'+c.color_text+';">'+c.name.slice(0,1)+'</span></div>';
+      gridHtml+='<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+c.name+'</div>';
+      gridHtml+='<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:'+c.color_bg+';color:'+c.color_text+';">'+c.name+'</span></div>';
+      gridHtml+='</div>';
+    });
+    gridHtml+='</div>';
+  } else {
+    gridHtml='<p style="color:var(--text-3);padding:20px 0;">No categories for this publisher yet.</p>';
+  }
+
+  t.innerHTML=btnHtml+gridHtml;
 }
 function catModalForm(c={}){
   return `<div style="display:flex;flex-direction:column;gap:12px;">
