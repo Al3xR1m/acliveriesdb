@@ -485,36 +485,99 @@ async function doDeleteFromReport(liveryId,reportId){
 
 // ALL LIVERIES
 async function loadLiveries(search=''){
-  const list=await fetchLiveries({search,sort:'newest',approvedOnly:false});
   const t=document.getElementById('liveries-table');
-  if(!list.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No liveries found.</p>';return;}
-  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;">';
-  list.forEach(function(l){
-    var isApproved=l.approved;
-    var creator=l.artists?'<span style="color:var(--amber);">👑</span> '+l.artists.name:l.author||'—';
-    h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;" onclick="editLiveryModal(\''+l.id+'\',false)">';
-    // Thumbnail
-    h+='<div style="width:100%;aspect-ratio:16/9;background:var(--bg-s2);position:relative;overflow:hidden;">';
-    h+=l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo" style="font-size:28px;color:var(--text-3);"></i></div>';
-    h+='<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 50%);pointer-events:none;"></div>';
-    h+='<div style="position:absolute;top:8px;right:8px;"><span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:700;background:'+(isApproved?'rgba(48,209,88,.2)':'rgba(255,159,10,.2)')+';color:'+(isApproved?'#30D158':'#FF9F0A')+';">'+(isApproved?'Published':'Pending')+'</span></div>';
-    h+='<div style="position:absolute;bottom:8px;left:10px;right:10px;"><div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.2px;">'+l.name+'</div></div>';
-    h+='</div>';
-    // Body
-    h+='<div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;">';
-    h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">';
-    h+='<span style="font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(l.mods?.name||'—')+'</span>';
-    h+='<span style="font-size:11px;color:var(--text-3);flex-shrink:0;">♥ '+l.upvotes+'</span>';
-    h+='</div>';
-    h+='<div style="font-size:11px;color:var(--text-3);">'+creator+'</div>';
-    h+='<div style="display:flex;gap:5px;margin-top:4px;">';
-    h+='<button onclick="event.stopPropagation();editLiveryModal(\''+l.id+'\',false);" style="flex:1;height:28px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);"><i class="ti ti-pencil"></i> Edit</button>';
-    h+='<button onclick="event.stopPropagation();doDeleteLivery(\''+l.id+'\');" style="height:28px;width:28px;border-radius:7px;border:1px solid rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:#FF453A;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-trash"></i></button>';
-    h+='</div>';
-    h+='</div></div>';
+  var BRC={
+    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
+    URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
+  };
+  if(!window._livBrand) window._livBrand='all';
+  if(!window._livStatus) window._livStatus='all';
+  if(!window._livArtist) window._livArtist='all';
+
+  // Brand buttons
+  var btnHtml='<div style="display:flex;gap:10px;margin-bottom:16px;">';
+  // All button
+  var allActive=window._livBrand==='all';
+  btnHtml+='<button onclick="window._livBrand=\'all\';window._livStatus=\'all\';loadLiveries();" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid '+(allActive?'rgba(255,255,255,.2)':'var(--border)')+';background:'+(allActive?'rgba(255,255,255,.06)':'transparent')+';cursor:pointer;text-align:left;">';
+  btnHtml+='<div style="font-size:17px;font-weight:900;font-style:italic;color:'+(allActive?'var(--text)':'var(--text-3)')+';">All</div>';
+  btnHtml+='<div style="font-size:11px;color:'+(allActive?'var(--text-2)':'var(--text-3)')+';margin-top:3px;font-weight:600;">All brands</div>';
+  btnHtml+='</button>';
+  ['RSS','VRC','URD'].forEach(function(b){
+    var bm=BRC[b];
+    var active=window._livBrand===b;
+    btnHtml+='<button onclick="window._livBrand=\''+b+'\';window._livStatus=\'all\';loadLiveries();" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;text-align:left;">';
+    btnHtml+='<div style="font-size:17px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</div>';
+    btnHtml+='<div style="font-size:11px;color:'+(active?bm.c:'var(--text-3)')+';margin-top:3px;font-weight:600;">'+_mods.filter(function(m){return m.brand===b;}).length+' mods</div>';
+    btnHtml+='</button>';
   });
-  h+='</div>';
-  t.innerHTML=h;
+  btnHtml+='</div>';
+
+  // Status + Artist filters
+  var filtersHtml='<div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">';
+  // Status pills
+  ['all','approved','pending'].forEach(function(s){
+    var active=window._livStatus===s;
+    var label=s==='all'?'All':s==='approved'?'Published':'Pending';
+    var col=s==='approved'?'#30D158':s==='pending'?'#FF9F0A':'var(--text-2)';
+    var bg=s==='approved'?'rgba(48,209,88,.12)':s==='pending'?'rgba(255,159,10,.10)':'rgba(255,255,255,.05)';
+    filtersHtml+='<button onclick="window._livStatus=\''+s+'\';loadLiveries();" style="padding:4px 12px;border-radius:20px;border:1px solid '+(active?col:'var(--border)')+';background:'+(active?bg:'transparent')+';color:'+(active?col:'var(--text-2)')+';font-size:11px;font-weight:600;cursor:pointer;">'+label+'</button>';
+  });
+  // Artist filter
+  filtersHtml+='<div style="margin-left:auto;">';
+  filtersHtml+='<select onchange="window._livArtist=this.value;loadLiveries();" style="appearance:none;background:var(--bg-s1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--text-2);font-family:var(--font-body);cursor:pointer;outline:none;">';
+  filtersHtml+='<option value="all">All creators</option>';
+  _artists.forEach(function(a){
+    filtersHtml+='<option value="'+a.id+'" '+(window._livArtist===a.id?'selected':'')+'>👑 '+a.name+'</option>';
+  });
+  filtersHtml+='</select></div>';
+  filtersHtml+='</div>';
+
+  // Fetch
+  var list=await fetchLiveries({search,sort:'newest',approvedOnly:false});
+
+  // Filter client-side
+  list=list.filter(function(l){
+    if(window._livBrand!=='all'){
+      if(l.mods?.brand!==window._livBrand) return false;
+    }
+    if(window._livStatus==='approved'&&!l.approved) return false;
+    if(window._livStatus==='pending'&&l.approved) return false;
+    if(window._livArtist!=='all'&&l.artist_id!==window._livArtist) return false;
+    return true;
+  });
+
+  var gridHtml='';
+  if(list.length){
+    gridHtml='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;">';
+    list.forEach(function(l){
+      var isApproved=l.approved;
+      var creator=l.artists?'<span style="color:var(--amber);">👑</span> '+l.artists.name:l.author||'—';
+      gridHtml+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;" onclick="editLiveryModal(\''+l.id+'\',false)">';
+      gridHtml+='<div style="width:100%;aspect-ratio:16/9;background:var(--bg-s2);position:relative;overflow:hidden;">';
+      gridHtml+=l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo" style="font-size:28px;color:var(--text-3);"></i></div>';
+      gridHtml+='<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 50%);pointer-events:none;"></div>';
+      gridHtml+='<div style="position:absolute;top:8px;right:8px;"><span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:700;background:'+(isApproved?'rgba(48,209,88,.2)':'rgba(255,159,10,.2)')+';color:'+(isApproved?'#30D158':'#FF9F0A')+';">'+(isApproved?'Published':'Pending')+'</span></div>';
+      gridHtml+='<div style="position:absolute;bottom:8px;left:10px;right:10px;"><div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+l.name+'</div></div>';
+      gridHtml+='</div>';
+      gridHtml+='<div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;">';
+      gridHtml+='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">';
+      gridHtml+='<span style="font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(l.mods?.name||'—')+'</span>';
+      gridHtml+='<span style="font-size:11px;color:var(--text-3);flex-shrink:0;">♥ '+l.upvotes+'</span>';
+      gridHtml+='</div>';
+      gridHtml+='<div style="font-size:11px;color:var(--text-3);">'+creator+'</div>';
+      gridHtml+='<div style="display:flex;gap:5px;margin-top:4px;">';
+      gridHtml+='<button onclick="event.stopPropagation();editLiveryModal(\''+l.id+'\',false);" style="flex:1;height:28px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);"><i class="ti ti-pencil"></i> Edit</button>';
+      gridHtml+='<button onclick="event.stopPropagation();doDeleteLivery(\''+l.id+'\');" style="height:28px;width:28px;border-radius:7px;border:1px solid rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:#FF453A;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-trash"></i></button>';
+      gridHtml+='</div>';
+      gridHtml+='</div></div>';
+    });
+    gridHtml+='</div>';
+  } else {
+    gridHtml='<p style="color:var(--text-3);padding:20px 0;">No liveries found.</p>';
+  }
+
+  t.innerHTML=btnHtml+filtersHtml+gridHtml;
 }
 async function doDeleteLivery(id){if(!confirm('Delete this livery permanently?'))return;await deleteLivery(id);await loadLiveries();}
 
