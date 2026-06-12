@@ -716,47 +716,36 @@ async function loadChampionships(){
   };
   if(!window._champBrand) window._champBrand='RSS';
   if(!window._champCatFilter) window._champCatFilter='all';
-  var activeBrand=window._champBrand;
 
-  // Step 1 — Brand buttons
+  // Step 1 — Brand buttons (filter categories)
   var btnHtml='<div style="display:flex;gap:12px;margin-bottom:20px;">';
   ['RSS','VRC','URD'].forEach(function(b){
     var bm=BRC[b];
-    var active=b===activeBrand;
-    // Count champs that have at least one cat with this brand
-    var count=_champs.filter(function(ch){
-      return (ch.linked_categories||[]).some(function(c){return c.brand===b;});
-    }).length;
+    var active=b===window._champBrand;
+    // Count categories of this brand
+    var catCount=_cats.filter(function(c){return c.brand===b;}).length;
     btnHtml+='<button onclick="window._champBrand=\''+b+'\';window._champCatFilter=\'all\';loadChampionships();" style="flex:1;padding:14px 12px;border-radius:14px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;text-align:left;">';
     btnHtml+='<div style="font-size:20px;font-weight:900;font-style:italic;letter-spacing:-1px;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</div>';
-    btnHtml+='<div style="font-size:11px;color:'+(active?bm.c:'var(--text-3)')+';margin-top:3px;font-weight:600;">'+count+' championship'+(count!==1?'s':'')+'</div>';
+    btnHtml+='<div style="font-size:11px;color:'+(active?bm.c:'var(--text-3)')+';margin-top:3px;font-weight:600;">'+catCount+' categor'+(catCount!==1?'ies':'y')+'</div>';
     btnHtml+='</button>';
   });
   btnHtml+='</div>';
 
   // Step 2 — Category pills filtered by brand
-  var brandCats={};
-  _champs.forEach(function(ch){
-    (ch.linked_categories||[]).forEach(function(c){
-      if(c.brand===activeBrand) brandCats[c.name]=c;
-    });
-  });
+  var brandCats=_cats.filter(function(c){return c.brand===window._champBrand;});
   var pillsHtml='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;">';
   var allActive=window._champCatFilter==='all';
   pillsHtml+='<button onclick="window._champCatFilter=\'all\';loadChampionships();" style="padding:4px 12px;border-radius:20px;border:1px solid '+(allActive?'rgba(91,110,247,.5)':'var(--border)')+';background:'+(allActive?'rgba(91,110,247,.12)':'transparent')+';color:'+(allActive?'#5B6EF7':'var(--text-2)')+';font-size:11px;font-weight:600;cursor:pointer;">All</button>';
-  Object.values(brandCats).sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(c){
+  brandCats.sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(c){
     var active=window._champCatFilter===c.name;
     pillsHtml+='<button onclick="window._champCatFilter=\''+c.name+'\';loadChampionships();" style="padding:4px 12px;border-radius:20px;border:1px solid '+(active?c.color_bg:'var(--border)')+';background:'+(active?c.color_bg:'transparent')+';color:'+(active?c.color_text:'var(--text-2)')+';font-size:11px;font-weight:600;cursor:pointer;">'+c.name+'</button>';
   });
   pillsHtml+='</div>';
 
-  // Step 3 — Filter champs by brand + category
+  // Step 3 — Championships filtered by selected category
   var filtered=_champs.filter(function(ch){
-    var cats=ch.linked_categories||[];
-    var hasBrand=cats.some(function(c){return c.brand===activeBrand;});
-    if(!hasBrand) return false;
     if(window._champCatFilter==='all') return true;
-    return cats.some(function(c){return c.name===window._champCatFilter;});
+    return (ch.linked_categories||[]).some(function(c){return c.name===window._champCatFilter;});
   });
 
   var gridHtml='';
