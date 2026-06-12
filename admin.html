@@ -539,7 +539,8 @@ async function loadLiveries(search=''){
   // Filter client-side
   list=list.filter(function(l){
     if(window._livBrand!=='all'){
-      if(l.mods?.brand!==window._livBrand) return false;
+      var mod=_mods.find(function(m){return m.id===l.mod_id;});
+      if(!mod||mod.brand!==window._livBrand) return false;
     }
     if(window._livStatus==='approved'&&!l.approved) return false;
     if(window._livStatus==='pending'&&l.approved) return false;
