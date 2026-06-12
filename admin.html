@@ -1080,21 +1080,49 @@ async function loadMods(){
   t.innerHTML=btnHtml+(gridHtml||'<p style="color:var(--text-3);padding:20px 0;">No mods for this publisher.</p>');
 }
 function modModalForm(m={}){
-  const catOpts=_cats.map(c=>`<option value="${c.id}" ${m.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
-  return `<div style="display:flex;flex-direction:column;gap:12px;">
-    <div class="field"><label>Mod name *</label><input id="mf-name" value="${m.name||''}" placeholder="e.g. RSS GT3"></div>
-    <div class="field"><label>Category</label><select id="mf-cat"><option value="">— None —</option>${catOpts}</select></div>
-    <div class="field"><label>Version</label><input id="mf-version" value="${m.version||''}" placeholder="e.g. 1.4.2"></div>
-    <div class="field"><label>Cover image</label><div id="mf-img-widget"></div></div>
-    <div class="field"><label>Official URL</label><input id="mf-url" value="${m.official_url||''}" placeholder="https://racesimstudio.com"></div>
-    <div class="field"><label>Description</label><textarea id="mf-desc" style="min-height:70px;" placeholder="Short description of the mod…">${m.description||''}</textarea></div>
-    <div class="field"><label>Patch notes / Changelog <span style="font-size:10px;color:var(--text-3);font-weight:400;">(Markdown supported)</span></label><textarea id="mf-changelog" style="min-height:120px;font-family:var(--font-mono,monospace);font-size:12px;" placeholder="## v1.4.2&#10;- Fixed tyre physics&#10;- New livery templates">${m.changelog||''}</textarea></div>
-  </div>`;
+  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  const activeBrand=m.brand||'RSS';
+  const brandBtns=['RSS','VRC','URD'].map(function(b){
+    const bm=BRC[b];
+    const active=b===activeBrand;
+    return '<button type="button" id="mf-brand-'+b+'" onclick="selectModBrand(\''+b+'\');" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
+  }).join('');
+  const catOpts=_cats.filter(function(c){return c.brand===activeBrand;}).map(function(c){return '<option value="'+c.id+'" '+(m.category_id===c.id?'selected':'')+'>'+c.name+'</option>';}).join('');
+  return '<div style="display:flex;flex-direction:column;gap:12px;">'
+    +'<input type="hidden" id="mf-brand" value="'+activeBrand+'">'
+    +'<div class="field"><label>Publisher</label><div style="display:flex;gap:8px;">'+brandBtns+'</div></div>'
+    +'<div class="field"><label>Mod name *</label><input id="mf-name" value="'+(m.name||'')+'" placeholder="e.g. RSS GT3"></div>'
+    +'<div class="field"><label>Category</label><select id="mf-cat"><option value="">— None —</option>'+catOpts+'</select></div>'
+    +'<div class="field"><label>Version</label><input id="mf-version" value="'+(m.version||'')+'" placeholder="e.g. 1.4.2"></div>'
+    +'<div class="field"><label>Cover image</label><div id="mf-img-widget"></div></div>'
+    +'<div class="field"><label>Official URL</label><input id="mf-url" value="'+(m.official_url||'')+'" placeholder="https://racesimstudio.com"></div>'
+    +'<div class="field"><label>Description</label><textarea id="mf-desc" style="min-height:70px;" placeholder="Short description of the mod…">'+(m.description||'')+'</textarea></div>'
+    +'<div class="field"><label>Changelog <span style="font-size:10px;color:var(--text-3);font-weight:400;">(Markdown)</span></label><textarea id="mf-changelog" style="min-height:100px;font-family:var(--font-mono,monospace);font-size:12px;">'+(m.changelog||'')+'</textarea></div>'
+    +'</div>';
+}
+function selectModBrand(b){
+  document.getElementById('mf-brand').value=b;
+  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  ['RSS','VRC','URD'].forEach(function(br){
+    const btn=document.getElementById('mf-brand-'+br);
+    if(!btn)return;
+    const bm=BRC[br];
+    const active=br===b;
+    btn.style.borderColor=active?bm.border:'var(--border)';
+    btn.style.background=active?bm.bg:'transparent';
+    btn.style.color=active?bm.c:'var(--text-3)';
+  });
+  // Update category dropdown
+  const sel=document.getElementById('mf-cat');
+  if(sel){
+    const cats=_cats.filter(function(c){return c.brand===b;});
+    sel.innerHTML='<option value="">— None —</option>'+cats.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>';}).join('');
+  }
 }
 let _getModImg = () => '';
 document.getElementById('addModBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-car"></i> Add mod',modModalForm(),async()=>{
-    const ok=await createMod({name:document.getElementById('mf-name').value.trim(),category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
+    const ok=await createMod({name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
     if(ok){await reloadCache();closeModal();await loadMods();}
   });
   setTimeout(()=>{ _getModImg = buildUploadWidget('mf-img-widget',{folder:'mods',label:'Upload mod cover image'}); },50);
@@ -1102,7 +1130,7 @@ document.getElementById('addModBtn').addEventListener('click',()=>{
 async function editModModal(id){
   const m=_mods.find(x=>x.id===id);if(!m)return;
   openModal('<i class="ti ti-pencil"></i> Edit mod',modModalForm(m),async()=>{
-    await updateMod(id,{name:document.getElementById('mf-name').value.trim(),category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||m.image_url||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
+    await updateMod(id,{name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||m.image_url||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
     await reloadCache();closeModal();await loadMods();
   });
   setTimeout(()=>{ _getModImg = buildUploadWidget('mf-img-widget',{currentUrl:m.image_url||'',folder:'mods',label:'Upload mod cover image'}); },50);
