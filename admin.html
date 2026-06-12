@@ -707,18 +707,25 @@ ${link}`));
 // CHAMPIONSHIPS
 async function loadChampionships(){
   const t=document.getElementById('champ-table');
-  if(!_champs.length){t.innerHTML='<tr><td style="color:var(--text-3)">No championships yet.</td></tr>';return;}
-  t.innerHTML=`<thead><tr><th>Name</th><th>Short name</th><th>Season</th><th>Linked categories</th><th>Actions</th></tr></thead>
-  <tbody>${_champs.map(ch=>`<tr>
-    <td><strong>${ch.name}</strong></td>
-    <td style="color:var(--text-2);">${ch.short_name||'—'}</td>
-    <td style="color:var(--text-2);">${ch.season||'—'}</td>
-    <td><div class="linked-cats">${(ch.linked_categories||[]).map(c=>`<span class="cat-badge" style="background:${c.color_bg};color:${c.color_text};">${c.name}</span>`).join('')||'<span style="color:var(--text-3);font-size:12px;">None</span>'}</div></td>
-    <td>
-      <button class="action-btn" onclick="editChampModal('${ch.id}')"><i class="ti ti-pencil"></i></button>
-      <button class="action-btn danger" onclick="doDeleteChamp('${ch.id}')"><i class="ti ti-trash"></i></button>
-    </td>
-  </tr>`).join('')}</tbody>`;
+  if(!_champs.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No championships yet.</p>';return;}
+  var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;">';
+  _champs.forEach(function(ch){
+    var cats=ch.linked_categories||[];
+    var catBadges=cats.map(function(c){
+      return '<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:'+c.color_bg+';color:'+c.color_text+';">'+c.name+'</span>';
+    }).join('');
+    h+='<div onclick="editChampModal(\''+ch.id+'\');" style="background:var(--bg-s1);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+    h+=ch.logo_url
+      ?'<img src="'+ch.logo_url+'" style="width:40px;height:40px;object-fit:contain;border-radius:6px;background:var(--bg-s2);flex-shrink:0;">'
+      :'<div style="width:40px;height:40px;border-radius:8px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-trophy" style="font-size:18px;color:var(--text-3);"></i></div>';
+    h+='<div style="flex:1;min-width:0;">';
+    h+='<div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;">'+(ch.short_name||ch.name)+'</div>';
+    h+='<div style="font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px;">'+ch.name+'</div>';
+    h+=(catBadges?'<div style="display:flex;flex-wrap:wrap;gap:3px;">'+catBadges+'</div>':'');
+    h+='</div></div>';
+  });
+  h+='</div>';
+  t.innerHTML=h;
 }
 function buildAdminUploadWidget(containerId, currentUrl){
   const container=document.getElementById(containerId);
