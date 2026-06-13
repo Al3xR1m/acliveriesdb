@@ -180,11 +180,20 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .lv-card-crown{position:absolute;top:8px;right:8px;font-size:13px;}
 .lv-card-votes{position:absolute;bottom:7px;right:8px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:2px;}
 .lv-card-body{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1;}
-.lv-card-champ{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
-.lv-card-name{font-size:15px;font-weight:800;font-style:italic;letter-spacing:-.6px;color:var(--t1);line-height:1.15;margin-bottom:3px;}
-.lv-card-driver{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:10px;}
-.lv-card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:0.5px solid var(--b1);margin-top:auto;}
-.lv-card-mod{font-size:11px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-card-bottom{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;}
+.lv-card-num{font-size:30px;font-weight:900;font-style:italic;letter-spacing:-2px;color:#fff;line-height:1;}
+.lv-card-team{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);margin-top:2px;}
+.lv-card-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.lv-card-champ{font-size:11px;font-weight:700;letter-spacing:-.1px;}
+.lv-card-season{font-size:12px;font-weight:700;color:var(--t2);flex-shrink:0;margin-left:6px;}
+.lv-card-name{font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);line-height:1.15;margin-bottom:3px;}
+.lv-card-driver{font-size:12px;color:var(--t2);margin-bottom:8px;}
+.lv-card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:0.5px solid var(--b1);margin-top:auto;}
+.lv-card-creator{display:flex;align-items:center;gap:5px;min-width:0;}
+.lv-card-creator-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.lv-card-creator-name{font-size:11px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-card-mod{font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-card-votes{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:3px;flex-shrink:0;}
 /* FILTER DRAWER */
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none;backdrop-filter:blur(2px);}
 /* Cascade steps */
@@ -927,9 +936,19 @@ function richCard(l){
   const cn=l.categories?.name||'';
   const brand=l.mods?.brand||null;
   const brandCls=brand?brand.toLowerCase():'';
+  const BRC={RSS:'#5B6EF7',VRC:'#30D158',URD:'#FF9F0A'};
+  const brandColor=brand&&BRC[brand]?BRC[brand]:'var(--acc)';
   const brandTag=brand?`<span class="bt bt-${brandCls}">${brand}</span>`:'';
-  const driverTeam=l.driver?`<div class="lv-card-driver">${l.driver}${l.team?' · '+l.team:''}</div>`:(l.team?`<div class="lv-card-driver">${l.team}</div>`:'');
   const isNew2=isNew(l);
+  const champName=l.championships?.short_name||l.championships?.name||'';
+  const driver=l.driver||'';
+  const season=l.season||'';
+  const modName=l.mods?.name||'';
+  // Creator
+  const creatorName=l.artists?.name||(l.author||'');
+  const creatorIni=creatorName?creatorName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():'?';
+  const isArtist=!!l.artists;
+
   return `<div class="lv-card${brandCls?' '+brandCls:''}" onclick="openLivery('${l.id}')">
     <div class="lv-card-thumb">
       ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
@@ -939,18 +958,26 @@ function richCard(l){
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
         ${brandTag}
       </div>
-      ${l.artists?'<span class="lv-card-crown">👑</span>':''}
-      <div class="lv-card-votes"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
+      ${isArtist?'<span class="lv-card-crown">👑</span>':''}
+      <div class="lv-card-bottom">
+        <div class="lv-card-num">${l.car_number?'#'+l.car_number:''}</div>
+        ${l.team?`<div class="lv-card-team">${l.team}</div>`:''}
+      </div>
     </div>
     <div class="lv-card-body">
-      <div class="lv-card-champ">${l.championships?.short_name||cn||'—'}</div>
+      <div class="lv-card-champ-row">
+        <span class="lv-card-champ" style="color:${brandColor};">${champName||cn||'—'}</span>
+        ${season?`<span class="lv-card-season">${season}</span>`:''}
+      </div>
       <div class="lv-card-name">${l.name}</div>
-      ${driverTeam}
+      ${driver?`<div class="lv-card-driver">${driver}</div>`:''}
       <div class="lv-card-foot">
-        <span class="lv-card-mod">${l.mods?.name||'—'}</span>
-        <div style="display:flex;gap:4px;align-items:center;">
-          ${l.artists?`<span style="font-size:10px;color:var(--amb);">👑</span>`:''}
+        <div class="lv-card-creator">
+          <div class="lv-card-creator-av" style="background:${brandColor}22;color:${brandColor};">${isArtist?'👑':creatorIni}</div>
+          <span class="lv-card-creator-name">${creatorName||'—'}</span>
+          ${modName?`<span class="lv-card-mod">· ${modName}</span>`:''}
         </div>
+        <div class="lv-card-votes"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
       </div>
     </div>
   </div>`;
