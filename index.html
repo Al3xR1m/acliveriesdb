@@ -718,6 +718,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     <div id="a-grid" style="padding:24px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;"></div>
   </div>
 
+  <!-- ARTIST PROFILE -->
+  <div class="view" id="view-artist-profile">
+    <div id="ap-content"></div>
+  </div>
+
   <!-- ADDONS -->
   <div class="view" id="view-addons">
     <div class="add-top"><h2 class="add-title">Addons</h2></div>
@@ -1064,6 +1069,7 @@ function nav(v){
   if(v==='liveries')loadLiveries();
   if(v==='mods')loadMods();
   if(v==='artists')loadArtists();
+  if(v==='artist-profile'){}  // loaded via openArtistProfile
   if(v==='addons')loadAddons();
   if(v==='submit')initSubmit();
 }
@@ -1678,7 +1684,7 @@ async function loadArtists(){
       a.url_youtube?`<a href="${a.url_youtube}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-youtube"></i></a>`:'',
       a.url_overtake?`<a href="${a.url_overtake}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-external-link"></i></a>`:'',
     ].filter(Boolean).join('');
-    return `<div class="av-card">
+    return `<div class="av-card" onclick="openArtistProfile('${a.id}')" style="cursor:pointer;">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
         ${avatar}
         <div style="flex:1;min-width:0;">
@@ -1700,6 +1706,121 @@ async function loadArtists(){
     </div>`;
   }).join(''):`<div style="padding:40px;text-align:center;color:var(--t2);grid-column:1/-1;">No confirmed artists yet.</div>`;
 }
+// ── ARTIST PROFILE ──
+var _apId=null, _apTab='liveries';
+async function openArtistProfile(id){
+  _apId=id; _apTab='liveries';
+  nav('artist-profile');
+  renderArtistProfile(id);
+}
+
+async function renderArtistProfile(id){
+  const el=document.getElementById('ap-content');
+  el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
+  const artist=_artists.find(a=>a.id===id);
+  if(!artist){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Artist not found.</div>';return;}
+  const [allLivs, allAdds] = await Promise.all([
+    fetchLiveries({sort:'votes',pageSize:1000}),
+    fetchAddons({}),
+  ]);
+  const livs=allLivs.filter(l=>l.artist_id===id);
+  const adds=allAdds.filter(a=>a.artist_id===id);
+  _apLivs=livs; _apAdds=adds;
+  const totalVotes=livs.reduce((s,l)=>s+(l.upvotes||0),0);
+  const ini=artist.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
+  const brands=(artist.brands||[]);
+  const brandPills=brands.length?brands.map(b=>{const bm=BRC[b]||{c:'var(--t2)',bg:'var(--s2)',border:'var(--b1)'};return `<span style="padding:3px 10px;border-radius:20px;border:1px solid ${bm.border};background:${bm.bg};color:${bm.c};font-size:10px;font-weight:700;">${b}</span>`;}).join(''):'';
+  const socials=[
+    artist.url_twitter?`<a href="${artist.url_twitter}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-x"></i></a>`:'',
+    artist.url_patreon?`<a href="${artist.url_patreon}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-patreon"></i></a>`:'',
+    artist.url_youtube?`<a href="${artist.url_youtube}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-youtube"></i></a>`:'',
+    artist.url_overtake?`<a href="${artist.url_overtake}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-external-link"></i></a>`:'',
+  ].filter(Boolean).join('');
+
+  el.innerHTML=`
+    <!-- BACK -->
+    <div style="padding:16px 28px;border-bottom:0.5px solid var(--b1);">
+      <button onclick="nav('artists')" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;font-family:inherit;display:flex;align-items:center;gap:6px;">
+        <i class="ti ti-arrow-left"></i> All artists
+      </button>
+    </div>
+
+    <!-- HEADER -->
+    <div style="padding:32px 28px 24px;border-bottom:0.5px solid var(--b1);display:flex;align-items:flex-start;gap:24px;">
+      ${artist.avatar_url
+        ?`<img src="${artist.avatar_url}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;flex-shrink:0;">`
+        :`<div style="width:80px;height:80px;border-radius:50%;background:rgba(91,110,247,.15);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#5B6EF7;flex-shrink:0;">${ini}</div>`
+      }
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+          <h2 style="font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">👑 ${artist.name}</h2>
+          ${brandPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;">${brandPills}</div>`:''}
+        </div>
+        ${artist.discord?`<div style="font-size:12px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-brand-discord"></i> ${artist.discord}</div>`:''}
+        ${socials?`<div style="display:flex;gap:12px;">${socials}</div>`:''}
+      </div>
+      <!-- STATS -->
+      <div style="display:flex;gap:0;border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;flex-shrink:0;">
+        <div style="padding:14px 20px;text-align:center;border-right:0.5px solid var(--b1);">
+          <div style="font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">${livs.length}</div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Liveries</div>
+        </div>
+        <div style="padding:14px 20px;text-align:center;border-right:0.5px solid var(--b1);">
+          <div style="font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">${adds.length}</div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Addons</div>
+        </div>
+        <div style="padding:14px 20px;text-align:center;">
+          <div style="font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">${totalVotes}</div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Upvotes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div style="padding:0 28px;border-bottom:0.5px solid var(--b1);display:flex;gap:0;">
+      <button id="ap-tab-liveries" onclick="setArtistTab('liveries')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid var(--acc);cursor:pointer;font-size:13px;font-weight:600;color:var(--t1);font-family:inherit;display:flex;align-items:center;gap:6px;">
+        <i class="ti ti-photo"></i> Liveries <span style="background:var(--s2);color:var(--t2);font-size:10px;padding:1px 6px;border-radius:4px;">${livs.length}</span>
+      </button>
+      <button id="ap-tab-addons" onclick="setArtistTab('addons')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--t2);font-family:inherit;display:flex;align-items:center;gap:6px;">
+        <i class="ti ti-puzzle"></i> Addons <span style="background:var(--s2);color:var(--t2);font-size:10px;padding:1px 6px;border-radius:4px;">${adds.length}</span>
+      </button>
+    </div>
+
+    <!-- CONTENT -->
+    <div id="ap-tab-content" style="padding:20px 28px 40px;"></div>
+  `;
+
+  renderArtistTab(livs, adds, _apTab);
+}
+
+
+var _apLivs=[], _apAdds=[];
+function setArtistTab(tab){
+  _apTab=tab;
+  var tl=document.getElementById('ap-tab-liveries');
+  var ta=document.getElementById('ap-tab-addons');
+  if(tl){tl.style.borderBottomColor=tab==='liveries'?'var(--acc)':'transparent';tl.style.color=tab==='liveries'?'var(--t1)':'var(--t2)';}
+  if(ta){ta.style.borderBottomColor=tab==='addons'?'var(--acc)':'transparent';ta.style.color=tab==='addons'?'var(--t1)':'var(--t2)';}
+  renderArtistTab(_apLivs, _apAdds, tab);
+}
+
+function renderArtistTab(livs, adds, tab){
+  const el=document.getElementById('ap-tab-content');
+  if(!el)return;
+  if(tab==='liveries'){
+    if(!livs.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">No liveries yet.</div>';return;}
+    el.innerHTML=`<div class="lv-cards">${livs.map(l=>richCard(l)).join('')}</div>`;
+  } else {
+    if(!adds.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">No addons yet.</div>';return;}
+    el.innerHTML=`<div class="lv-list">${adds.map(a=>`<div class="lv-row" onclick="openLivery('${a.id}')">
+      <div class="lv-thumb">${a.image_url?`<img src="${a.image_url}" loading="lazy">`:'<i class="ti ti-puzzle" style="font-size:14px;color:var(--t3);"></i>'}</div>
+      <div><div class="lv-name">${a.name}</div><div class="lv-meta">${a.mods?.name||'—'} · ${a.categories?.name||'—'}</div></div>
+      <div class="lv-right"><span class="badge b-${a.is_paid?'p':'f'}">${a.is_paid?'Paid':'Free'}</span><span class="lv-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${a.upvotes||0}</span></div>
+    </div>`).join('')}</div>`;
+  }
+}
+
 // ── ADDONS ──
 async function loadAddons(){
   const adds=await fetchAddons({});
