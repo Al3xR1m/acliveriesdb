@@ -727,7 +727,8 @@ function artistModalForm(a={}){
     + lnk('af-url-discord',  'ti-brand-discord',  '#5865F2', 'https://discord.gg/...',      a.url_discord||'')
     + lnk('af-url-patreon',  'ti-brand-patreon',  '#FF424D', 'https://patreon.com/...',     a.url_patreon||'')
     + lnk('af-url-youtube',  'ti-brand-youtube',  '#FF0000', 'https://youtube.com/...',     a.url_youtube||'')
-    + lnk('af-url-overtake', 'ti-flag',           '#00D4AA', 'https://www.overtake.gg/...', a.url_overtake||'');
+    + lnk('af-url-overtake', 'ti-flag',           '#00D4AA', 'https://www.overtake.gg/...', a.url_overtake||'')
+    + brandSection;
 }
 function toggleArtistBrand(b){
   const inp=document.getElementById('af-brands');
