@@ -159,15 +159,15 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .f-chip i{font-size:10px;opacity:.6;}
 /* ── BRAND TAG ── */
 .bt{font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px;}
-.bt-rss{background:rgba(91,110,247,.18);color:#5B6EF7;}
+.bt-rss{background:rgba(232,49,42,.15);color:#E8312A;}
 .bt-vrc{background:rgba(48,209,88,.14);color:#30D158;}
 .bt-urd{background:rgba(255,159,10,.14);color:#FF9F0A;}
 /* ── LIVERY CARDS (new rich style) ── */
 .lv-cards{padding:16px 28px 32px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
 .lv-card{background:var(--s1);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;border:0.5px solid var(--b1);display:flex;flex-direction:column;}
 .lv-card:hover{transform:translateY(-2px);}
-.lv-card.rss{border-color:rgba(91,110,247,.18);}
-.lv-card.rss:hover{border-color:var(--acc);}
+.lv-card.rss{border-color:rgba(232,49,42,.2);}
+.lv-card.rss:hover{border-color:#E8312A;}
 .lv-card.vrc{border-color:rgba(48,209,88,.18);}
 .lv-card.vrc:hover{border-color:var(--grn);}
 .lv-card.urd{border-color:rgba(255,159,10,.18);}
@@ -499,7 +499,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .sub-step-label{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .sub-step-n{width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .brand-btn{padding:14px 16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:inherit;color:var(--t3);width:100%;transition:all .15s;}
-.brand-btn-active[data-brand="RSS"]{border-color:rgba(91,110,247,.4);background:rgba(91,110,247,.10);color:#5B6EF7;}
+.brand-btn-active[data-brand="RSS"]{border-color:rgba(232,49,42,.4);background:rgba(232,49,42,.10);color:#E8312A;}
 .brand-btn-active[data-brand="VRC"]{border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.08);color:#30D158;}
 .brand-btn-active[data-brand="URD"]{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.08);color:#FF9F0A;}
 .sub-cta:hover{opacity:.88;}
@@ -1713,7 +1713,7 @@ function selectArtist(el){
 }
 function selectSubmitBrand(b){
   document.getElementById('s-brand').value=b;
-  var BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.4)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}};
+  var BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.4)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}};
   ['RSS','VRC','URD'].forEach(function(br){
     var btn=document.getElementById('s-brand-'+br);if(!btn)return;
     var bm=BRC[br];var active=br===b;

@@ -507,7 +507,7 @@ async function doDeleteFromReport(liveryId,reportId){
 async function loadLiveries(search=''){
   const t=document.getElementById('liveries-table');
   var BRC={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.35)'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
   };
@@ -823,7 +823,7 @@ async function loadChampionships(){
   if(!_champs.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No championships yet.</p>';return;}
 
   var BRC={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.35)'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
   };
@@ -913,7 +913,7 @@ function champModalForm(ch={}){
   const catsByBrand=brands.filter(function(b){return grouped[b]&&grouped[b].length;}).map(function(b){
     const BRC={RSS:'#5B6EF7',VRC:'#30D158',URD:'#FF9F0A'};
     return `<div style="margin-bottom:10px;">
-      <div style="font-size:9px;font-weight:700;color:`+BRC[b]+`;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding:2px 8px;background:`+(b==='RSS'?'rgba(91,110,247,.10)':b==='VRC'?'rgba(48,209,88,.08)':'rgba(255,159,10,.08)')+`;border-radius:4px;display:inline-block;">`+b+`</div>
+      <div style="font-size:9px;font-weight:700;color:`+BRC[b]+`;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding:2px 8px;background:`+(b==='RSS'?'rgba(232,49,42,.10)':b==='VRC'?'rgba(48,209,88,.08)':'rgba(255,159,10,.08)')+`;border-radius:4px;display:inline-block;">`+b+`</div>
       <div class="cat-checks">${grouped[b].map(c=>`
         <label class="cat-check-item${linkedIds.includes(c.id)?' checked':''}" data-cat-id="${c.id}">
           <input type="checkbox" value="${c.id}" ${linkedIds.includes(c.id)?'checked':''}><span class="dot" style="background:${c.color_text};"></span>${c.name}
@@ -1045,7 +1045,7 @@ async function loadMods(){
   if(!_mods.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No mods yet.</p>';return;}
   // Use cached data only — no extra fetches for speed
   var BRC={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.35)'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
   };
@@ -1104,7 +1104,7 @@ async function loadMods(){
   t.innerHTML=btnHtml+(gridHtml||'<p style="color:var(--text-3);padding:20px 0;">No mods for this publisher.</p>');
 }
 function modModalForm(m={}){
-  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
   const activeBrand=m.brand||'RSS';
   const brandBtns=['RSS','VRC','URD'].map(function(b){
     const bm=BRC[b];
@@ -1126,7 +1126,7 @@ function modModalForm(m={}){
 }
 function selectModBrand(b){
   document.getElementById('mf-brand').value=b;
-  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
   ['RSS','VRC','URD'].forEach(function(br){
     const btn=document.getElementById('mf-brand-'+br);
     if(!btn)return;
@@ -1169,7 +1169,7 @@ async function loadCategories(){
   const t=document.getElementById('cat-table');
   if(!_cats.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No categories yet.</p>';return;}
   var BRC={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.10)',border:'rgba(91,110,247,.35)'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.35)'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}
   };
@@ -1209,7 +1209,7 @@ async function loadCategories(){
   t.innerHTML=btnHtml+gridHtml;
 }
 function catModalForm(c={}){
-  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
   const activeBrand=c.brand||'RSS';
   const brandBtns=['RSS','VRC','URD'].map(function(b){
     const bm=BRC[b]; const active=b===activeBrand;
@@ -1228,7 +1228,7 @@ function catModalForm(c={}){
 }
 function selectCatBrand(b){
   document.getElementById('catf-brand').value=b;
-  const BRC={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',border:'rgba(91,110,247,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
+  const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.35)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.3)'}};
   ['RSS','VRC','URD'].forEach(function(br){
     const btn=document.getElementById('catf-brand-'+br);
     if(!btn)return;
