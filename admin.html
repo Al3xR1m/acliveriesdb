@@ -708,9 +708,9 @@ function artistModalForm(a={}){
   // Brand selector
   const activeBrands=a.brands||[];
   const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.25)'}};
-  const brandBtns='<div style="display:flex;gap:8px;margin-top:4px;">'+['RSS','VRC','URD'].map(b=>{
-    const bm=BRC[b]; const active=activeBrands.includes(b);
-    return '<button type="button" id="af-brand-'+b+'" onclick="toggleArtistBrand(\''+b+'\');" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
+  const brandBtns='<div style="display:flex;gap:8px;margin-top:4px;">'+ ['RSS','VRC','URD'].map(function(b){
+    var bm=BRC[b]; var active=activeBrands.includes(b);
+    return '<button type="button" id="af-brand-'+b+'" onclick="toggleArtistBrand(this,\''+b+'\')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
   }).join('')+'</div>';
   const brandSection='<div class="field"><label>Publisher brands</label>'+brandBtns+'<input type="hidden" id="af-brands" value="'+activeBrands.join(',')+'"></div>';
   return ''
@@ -730,7 +730,7 @@ function artistModalForm(a={}){
     + lnk('af-url-overtake', 'ti-flag',           '#00D4AA', 'https://www.overtake.gg/...', a.url_overtake||'')
     + brandSection;
 }
-function toggleArtistBrand(b){
+function toggleArtistBrand(el,b){
   const inp=document.getElementById('af-brands');
   if(!inp)return;
   const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.25)'}};
