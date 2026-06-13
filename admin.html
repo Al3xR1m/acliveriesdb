@@ -339,7 +339,27 @@ document.getElementById('modal-cancel').addEventListener('click',closeModal);
 document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
 document.getElementById('modal-save').addEventListener('click',async()=>{if(modalSaveFn)await modalSaveFn();});
 
+// Override createCategory and updateCategory to pass brand via RPC
+async function createCategory(data){
+  const {data:d}=await db.rpc('admin_create_category',{p_name:data.name,p_color_bg:data.color_bg,p_color_text:data.color_text,p_brand:data.brand||null});
+  return !!d;
+}
+async function updateCategory(id,data){
+  await db.rpc('admin_update_category',{p_id:id,p_name:data.name,p_color_bg:data.color_bg,p_color_text:data.color_text,p_brand:data.brand||null});
+  return true;
+}
+
 // Cache
+// Override createCategory and updateCategory to pass brand via RPC
+async function createCategory(data){
+  const {data:d}=await db.rpc('admin_create_category',{p_name:data.name,p_color_bg:data.color_bg,p_color_text:data.color_text,p_brand:data.brand||null});
+  return !!d;
+}
+async function updateCategory(id,data){
+  await db.rpc('admin_update_category',{p_id:id,p_name:data.name,p_color_bg:data.color_bg,p_color_text:data.color_text,p_brand:data.brand||null});
+  return true;
+}
+
 let _cats=[],_mods=[],_champs=[],_artists=[];
 async function reloadCache(){
   [_cats,_mods,_champs,_artists]=await Promise.all([fetchCategories(),fetchMods(),fetchChampionships(),fetchArtists()]);
