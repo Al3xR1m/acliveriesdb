@@ -1678,6 +1678,8 @@ async function loadArtists(){
     const avatar=a.avatar_url
       ?`<div class="av-av"><img class="av-avatar-img" src="${a.avatar_url}" alt="${a.name}"></div>`
       :`<div class="av-av" style="background:${abg};color:${ac};">${ini}</div>`;
+    const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
+    const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:2px 8px;border-radius:12px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-size:9px;font-weight:700;">${b}</span>`;}).join('');
     const socials=[
       a.url_twitter?`<a href="${a.url_twitter}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-x"></i></a>`:'',
       a.url_patreon?`<a href="${a.url_patreon}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-patreon"></i></a>`:'',
@@ -1693,6 +1695,7 @@ async function loadArtists(){
           ${socials?`<div style="display:flex;gap:10px;margin-top:6px;">${socials}</div>`:''}
         </div>
       </div>
+      ${brandPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${brandPills}</div>`:''}
       <div class="av-stats">
         <div class="av-stat">
           <div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);">${s.c}</div>
