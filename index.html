@@ -923,7 +923,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 // ── CONSTANTS ──
 const CB={Formula:['#E82020','#003087','#006400','#FF8000'],GT:['#C8A800','#E82020','#003087'],Hillclimb:['#E87000','#E82020'],Touring:['#534AB7','#E82020']};
 const BG={Formula:'#0d0d1f',GT:'#0d1a0d',Hillclimb:'#1a0d00',Touring:'#1a001a'};
-const BR={RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',l:'Race Sim Studio'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',l:'Virtual Racing Cars'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',l:'United Racing Design'}};
+const BR={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',l:'Race Sim Studio'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',l:'Virtual Racing Cars'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',l:'United Racing Design'}};
 const AVC=[['rgba(91,110,247,.14)','#5B6EF7'],['rgba(255,159,10,.12)','#FF9F0A'],['rgba(48,209,88,.10)','#30D158'],['rgba(191,90,242,.10)','#BF5AF2']];
 
 function svg(cat,seed){
@@ -936,7 +936,7 @@ function richCard(l){
   const cn=l.categories?.name||'';
   const brand=l.mods?.brand||null;
   const brandCls=brand?brand.toLowerCase():'';
-  const BRC={RSS:'#5B6EF7',VRC:'#30D158',URD:'#FF9F0A'};
+  const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
   const brandColor=brand&&BRC[brand]?BRC[brand]:'var(--acc)';
   const brandTag=brand?`<span class="bt bt-${brandCls}">${brand}</span>`:'';
   const isNew2=isNew(l);
@@ -1238,7 +1238,7 @@ async function loadHome(){
   livCount.forEach(l=>{ if(l.mod_id) lc[l.mod_id]=(lc[l.mod_id]||0)+1; });
 
   const brandMeta = {
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',label:'Race Sim Studio'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',label:'Race Sim Studio'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',label:'Virtual Racing Cars'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',label:'United Racing Design'},
   };
@@ -1401,7 +1401,7 @@ async function loadMods(){
 
   const BRAND_ORDER = ['RSS','VRC','URD'];
   const brandMeta = {
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(140deg,#0d1240,#0d0514)',label:'Race Sim Studio'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',gbg:'linear-gradient(140deg,#200808,#150303)',label:'Race Sim Studio'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(140deg,#002010,#001a10)',label:'Virtual Racing Cars'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(140deg,#1a0d00,#0d0800)',label:'United Racing Design'},
   };
@@ -1418,7 +1418,7 @@ async function loadMods(){
     const totalLivs = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
     const cats = [...new Set(mods.map(m=>m.categories?.name).filter(Boolean))];
     const modPills = mods.slice(0,4).map(m=>`<span style="padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);border:0.5px solid rgba(255,255,255,.08);">${m.name}</span>`).join('');
-    secA += `<div style="background:${brand==='RSS'?'linear-gradient(140deg,#0d1240,#0d0514)':brand==='VRC'?'linear-gradient(140deg,#002010,#001a10)':'linear-gradient(140deg,#1a0d00,#0d0800)'};border:0.5px solid ${brand==='RSS'?'rgba(91,110,247,.3)':brand==='VRC'?'rgba(48,209,88,.25)':'rgba(255,159,10,.25)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;" onclick="openBrandDetail('${brand}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+    secA += `<div style="background:${brand==='RSS'?'linear-gradient(140deg,#200808,#150303)':brand==='VRC'?'linear-gradient(140deg,#002010,#001a10)':'linear-gradient(140deg,#1a0d00,#0d0800)'};border:0.5px solid ${brand==='RSS'?'rgba(91,110,247,.3)':brand==='VRC'?'rgba(48,209,88,.25)':'rgba(255,159,10,.25)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;" onclick="openBrandDetail('${brand}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:90px;font-weight:900;font-style:italic;letter-spacing:-5px;color:rgba(255,255,255,.04);pointer-events:none;overflow:hidden;">${brand}</div>
       <div style="position:relative;padding:20px 22px;">
         <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:${bm.c};margin-bottom:8px;">${brand} · ${bm.label}</div>
@@ -1484,7 +1484,7 @@ async function loadMods(){
     const cnt = lc[m.id]||0;
     const pct = Math.round((cnt/maxLivs)*100);
     const champs = [...((modChamps[m.id]||new Map()).values())].slice(0,3);
-    secC += `<div style="background:var(--s1);border:0.5px solid ${bm?`rgba(${brand==='RSS'?'91,110,247':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+    secC += `<div style="background:var(--s1);border:0.5px solid ${bm?`rgba(${brand==='RSS'?'232,49,42':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
       <div style="padding:14px 15px 0;display:flex;align-items:center;gap:10px;margin-bottom:11px;">
         <div style="width:38px;height:38px;border-radius:10px;flex-shrink:0;overflow:hidden;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
           ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
@@ -1506,7 +1506,7 @@ async function loadMods(){
       </div>
       ${champs.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 15px 12px;">${champs.map(c=>`<span style="padding:2px 7px;border-radius:5px;font-size:10px;font-weight:600;background:var(--s2);color:var(--t2);border:0.5px solid var(--b1);">${c}</span>`).join('')}</div>`:''}
       <div style="padding:8px 15px 12px;border-top:0.5px solid var(--b1);display:flex;justify-content:flex-end;">
-        <button style="height:24px;padding:0 10px;background:${bm?.bg||'var(--s2)'};color:${bm?.c||'var(--t2)'};border:0.5px solid ${bm?`rgba(${brand==='RSS'?'91,110,247':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid" style="font-size:11px;"></i> Browse</button>
+        <button style="height:24px;padding:0 10px;background:${bm?.bg||'var(--s2)'};color:${bm?.c||'var(--t2)'};border:0.5px solid ${bm?`rgba(${brand==='RSS'?'232,49,42':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid" style="font-size:11px;"></i> Browse</button>
       </div>
     </div>`;
   });
@@ -1526,7 +1526,7 @@ async function openBrandDetail(brand){
   _prevView='mods';
 
   const brandMeta={
-    RSS:{c:'#5B6EF7',bg:'rgba(91,110,247,.12)',gbg:'linear-gradient(135deg,#0d1240,#0d0514)',label:'Race Sim Studio'},
+    RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',gbg:'linear-gradient(135deg,#200808,#150303)',label:'Race Sim Studio'},
     VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',gbg:'linear-gradient(135deg,#002010,#001a10)',label:'Virtual Racing Cars'},
     URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',gbg:'linear-gradient(135deg,#1a0d00,#0d0800)',label:'United Racing Design'},
   };
@@ -1557,7 +1557,7 @@ async function openBrandDetail(brand){
   // Brand header
   const totalLivs=mods.reduce((s,m)=>s+(lc[m.id]||0),0);
   let html=`<div style="padding:20px 20px 0;">
-    <div style="background:${bm.bg};border:0.5px solid;border-color:${brand==='RSS'?'rgba(91,110,247,.25)':brand==='VRC'?'rgba(48,209,88,.2)':'rgba(255,159,10,.2)'};border-radius:14px;padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;">
+    <div style="background:${bm.bg};border:0.5px solid;border-color:${brand==='RSS'?'rgba(232,49,42,.25)':brand==='VRC'?'rgba(48,209,88,.2)':'rgba(255,159,10,.2)'};border-radius:14px;padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;">
       <div style="width:44px;height:44px;border-radius:12px;background:${bm.bg};border:0.5px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;font-style:italic;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
       <div style="flex:1;">
         <div style="font-size:18px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);">${bm.label}</div>
