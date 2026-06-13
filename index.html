@@ -702,75 +702,130 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
   <!-- SUBMIT -->
   <div class="view" id="view-submit">
-    <div class="sub-top"><h2 class="sub-title">Submit a <em>livery</em></h2></div>
-    <div class="sub-body" id="submit-form-wrap">
-      <div class="sub-toggle">
-        <button class="sub-toggle-btn on" id="stg-livery" onclick="setSubMode('livery')"><i class="ti ti-photo"></i> Livery</button>
-        <button class="sub-toggle-btn" id="stg-addon" onclick="setSubMode('addon')"><i class="ti ti-puzzle"></i> Addon</button>
+
+    <!-- HEADER -->
+    <div style="padding:36px 40px 28px;border-bottom:0.5px solid var(--b1);">
+      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><span style="width:18px;height:1px;background:var(--acc);display:inline-block;"></span>Assetto Corsa · Community</div>
+      <h2 style="font-size:48px;font-weight:900;font-style:italic;letter-spacing:-3px;line-height:.88;color:var(--t1);">Submit a <em style="color:var(--acc);">livery</em></h2>
+    </div>
+
+    <!-- LIVERY / ADDON TOGGLE -->
+    <div style="padding:24px 40px 0;">
+      <div style="display:flex;gap:8px;margin-bottom:28px;">
+        <button class="sub-toggle-btn on" id="stg-livery" onclick="setSubMode('livery')" style="flex:1;height:42px;border-radius:10px;border:1px solid rgba(91,110,247,.3);background:rgba(91,110,247,.10);color:#5B6EF7;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;"><i class="ti ti-photo"></i> Livery</button>
+        <button class="sub-toggle-btn" id="stg-addon" onclick="setSubMode('addon')" style="flex:1;height:42px;border-radius:10px;border:0.5px solid var(--b1);background:transparent;color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;"><i class="ti ti-puzzle"></i> Addon</button>
       </div>
-      <div class="form-grid">
-        <div class="field">
-          <label>Category *</label>
-          <select class="form-select" id="s-cat"><option value="">Select…</option></select>
-          <span class="hint" id="s-cat-hint">Choose category first.</span>
-        </div>
-        <div class="field">
-          <label id="s-mod-label">Mod *</label>
-          <button type="button" class="picker-btn" id="s-mod-btn" disabled onclick="openModPicker()">
-            <div class="picker-ph" id="s-mod-ph"><i class="ti ti-car"></i></div>
-            <span id="s-mod-text">— Select category first —</span>
+
+      <!-- STEP 1 — PUBLISHER -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">1</span> Publisher</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <button type="button" id="s-brand-RSS" onclick="selectSubmitBrand('RSS')" style="padding:16px;border-radius:12px;border:1.5px solid rgba(91,110,247,.35);background:rgba(91,110,247,.10);cursor:pointer;text-align:left;">
+            <div style="font-size:20px;font-weight:900;font-style:italic;color:#5B6EF7;">RSS</div>
+            <div style="font-size:11px;color:#5B6EF7;margin-top:3px;">Race Sim Studio</div>
           </button>
-          <input type="hidden" id="s-mod">
-        </div>
-        <div class="field full" id="s-champ-wrap">
-          <label>Championship</label>
-          <button type="button" class="picker-btn" id="s-champ-btn" disabled onclick="openChampPicker()">
-            <div class="picker-ph" id="s-champ-ph"><i class="ti ti-trophy"></i></div>
-            <span id="s-champ-text">— Select category first —</span>
+          <button type="button" id="s-brand-VRC" onclick="selectSubmitBrand('VRC')" style="padding:16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;">
+            <div style="font-size:20px;font-weight:900;font-style:italic;color:var(--t3);">VRC</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:3px;">Virtual Racing Cars</div>
           </button>
-          <input type="hidden" id="s-champ">
+          <button type="button" id="s-brand-URD" onclick="selectSubmitBrand('URD')" style="padding:16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;">
+            <div style="font-size:20px;font-weight:900;font-style:italic;color:var(--t3);">URD</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:3px;">United Racing Design</div>
+          </button>
         </div>
-        <div class="field full" id="s-addon-type-wrap" style="display:none;">
-          <label>Addon type *</label>
-          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;">
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="tyre_skin"> Tyre skin</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="3d_asset"> 3D asset</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="shader"> Shader / Visual</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="ui"> UI element</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="other"> Other</label>
+        <input type="hidden" id="s-brand" value="RSS">
+      </div>
+
+      <!-- STEP 2 — CATEGORY + MOD -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">2</span> Category & Mod</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="field" style="margin:0;">
+            <label>Category *</label>
+            <select class="form-select" id="s-cat"><option value="">Select…</option></select>
+            <span class="hint" id="s-cat-hint">Choose category first.</span>
+          </div>
+          <div class="field" style="margin:0;">
+            <label id="s-mod-label">Mod *</label>
+            <button type="button" class="picker-btn" id="s-mod-btn" disabled onclick="openModPicker()">
+              <div class="picker-ph" id="s-mod-ph"><i class="ti ti-car"></i></div>
+              <span id="s-mod-text">— Select category first —</span>
+            </button>
+            <input type="hidden" id="s-mod">
+          </div>
+          <div class="field" style="margin:0;grid-column:1/-1;" id="s-champ-wrap">
+            <label>Championship</label>
+            <button type="button" class="picker-btn" id="s-champ-btn" disabled onclick="openChampPicker()">
+              <div class="picker-ph" id="s-champ-ph"><i class="ti ti-trophy"></i></div>
+              <span id="s-champ-text">— Select category first —</span>
+            </button>
+            <input type="hidden" id="s-champ">
+          </div>
+          <div class="field" style="margin:0;grid-column:1/-1;" id="s-addon-type-wrap" style="display:none;">
+            <label>Addon type *</label>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="tyre_skin"> Tyre skin</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="3d_asset"> 3D asset</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="shader"> Shader / Visual</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="ui"> UI element</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="other"> Other</label>
+            </div>
           </div>
         </div>
-        <div class="field full"><label id="s-name-label">Livery name *</label><input type="text" id="s-name" placeholder="e.g. #16 Ferrari SF-24"></div>
-        <div class="field livery-only"><label>Team *</label><input type="text" id="s-team" placeholder="e.g. Scuderia Ferrari"></div>
-        <div class="field livery-only"><label>Driver(s)</label><input type="text" id="s-driver" placeholder="e.g. Charles Leclerc"></div>
-        <div class="field livery-only"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024"></div>
-        <div class="field livery-only"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
-        <div class="field full">
-          <label>Pricing</label>
-          <div style="display:flex;gap:10px;margin-top:4px;">
-            <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
-            <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
+      </div>
+
+      <!-- STEP 3 — LIVERY DETAILS -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">3</span> Livery details</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="field" style="margin:0;grid-column:1/-1;"><label id="s-name-label">Livery name *</label><input type="text" id="s-name" placeholder="e.g. #16 Ferrari SF-24"></div>
+          <div class="field livery-only" style="margin:0;"><label>Team *</label><input type="text" id="s-team" placeholder="e.g. Scuderia Ferrari"></div>
+          <div class="field livery-only" style="margin:0;"><label>Driver(s)</label><input type="text" id="s-driver" placeholder="e.g. Charles Leclerc"></div>
+          <div class="field livery-only" style="margin:0;"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024"></div>
+          <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
+          <div class="field" style="margin:0;grid-column:1/-1;">
+            <label>Pricing</label>
+            <div style="display:flex;gap:10px;margin-top:6px;">
+              <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
+              <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
+            </div>
           </div>
         </div>
-        <div class="field full">
+      </div>
+
+      <!-- STEP 4 — CREATOR -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">4</span> Creator</div>
+        <div class="field" style="margin:0 0 10px;">
           <label>Confirmed artist</label>
           <div class="artist-picker" id="s-artist-picker"></div>
-          <div style="display:flex;align-items:center;gap:8px;margin:8px 0;"><div style="flex:1;height:0.5px;background:var(--b1);"></div><span style="font-size:10px;color:var(--t3);">or</span><div style="flex:1;height:0.5px;background:var(--b1);"></div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin:10px 0;"><div style="flex:1;height:0.5px;background:var(--b1);"></div><span style="font-size:10px;color:var(--t3);">or enter manually</span><div style="flex:1;height:0.5px;background:var(--b1);"></div></div>
+        <div class="field" style="margin:0;">
           <input type="text" id="s-author" placeholder="Your creator name / alias">
           <span class="hint" id="s-author-hint">Leave empty if you selected an artist above.</span>
         </div>
-        <div class="field full"><label>Download URL *</label><input type="url" id="s-url" placeholder="https://www.racedepartment.com/…"><span class="hint">Official link only.</span></div>
-        <div class="field full">
-          <label>Preview image *</label>
-          <div class="upload-widget" id="s-img-widget"></div>
+      </div>
+
+      <!-- STEP 5 — FILES -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;">5</span> Files & links</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="field" style="margin:0;grid-column:1/-1;"><label>Download URL *</label><input type="url" id="s-url" placeholder="https://www.racedepartment.com/…"><span class="hint">Official link only.</span></div>
+          <div class="field" style="margin:0;grid-column:1/-1;">
+            <label>Preview image *</label>
+            <div class="upload-widget" id="s-img-widget"></div>
+          </div>
+          <div class="field" style="margin:0;grid-column:1/-1;"><label>Notes</label><textarea id="s-notes" placeholder="Any extra info…"></textarea></div>
         </div>
-        <div class="field full"><label>Notes</label><textarea id="s-notes" placeholder="Any extra info…"></textarea></div>
       </div>
-      <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+
+      <!-- CHECKLIST + SUBMIT -->
+      <div style="background:var(--s1);border:0.5px solid var(--b1);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
         <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Required fields</div>
-        <div id="s-checklist" style="display:flex;flex-direction:column;gap:3px;"></div>
+        <div id="s-checklist" style="display:grid;grid-template-columns:1fr 1fr;gap:4px;"></div>
       </div>
-      <button class="sub-cta" id="s-submit-btn"><i class="ti ti-send"></i> Submit for review</button>
+      <button class="sub-cta" id="s-submit-btn" style="max-width:280px;"><i class="ti ti-send"></i> Submit for review</button>
       <div class="sub-error" id="s-error"></div>
     </div>
   </div>
@@ -1565,8 +1620,9 @@ async function loadAddons(){
 // ── SUBMIT ──
 let _sAvailMods2=[],_sAvailChamps2=[];
 function initSubmit(){
+  // Init brand selector — RSS by default
+  selectSubmitBrand('RSS');
   const catSel=document.getElementById('s-cat');
-  catSel.innerHTML='<option value="">Select category…</option>'+_cats.map(c=>`<option value="${c.id}" data-bg="${c.color_bg}" data-tc="${c.color_text}">${c.name}</option>`).join('');
   catSel.onchange=function(){
     const id=this.value;const opt=this.selectedOptions[0];
     _sAvailMods2=_mods.filter(m=>m.category_id===id);
