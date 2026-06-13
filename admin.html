@@ -708,7 +708,6 @@ function artistModalForm(a={}){
   // Brand selector
   const activeBrands=a.brands||[];
   const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.25)'}};
-  const activeBrands=a.brands||[];
   const brandSection='<div class="field"><label>Publisher brands</label><div style="display:flex;gap:12px;margin-top:6px;">'
     +['RSS','VRC','URD'].map(function(b){
       var checked=activeBrands.includes(b)?'checked':'';
