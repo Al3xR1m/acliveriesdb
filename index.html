@@ -469,15 +469,15 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .checker.done{color:var(--grn);}
 .checker.done i{color:var(--grn);}
 .checker i{font-size:13px;width:15px;flex-shrink:0;}
-.artist-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:7px;margin-top:6px;}
-.ap-item{border:0.5px solid var(--b1);border-radius:9px;padding:7px 5px;text-align:center;cursor:pointer;transition:all .12s;background:var(--s1);}
+.artist-picker{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.ap-item{border:0.5px solid var(--b1);border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .12s;background:var(--s1);display:flex;align-items:center;gap:10px;min-width:160px;}
 .ap-item:hover{border-color:var(--b2);}
 .ap-item.selected{border-color:var(--crown);background:rgba(255,159,10,.06);}
-.ap-av{width:32px;height:32px;border-radius:8px;margin:0 auto 4px;overflow:hidden;}
+.ap-av{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;}
 .ap-av img{width:100%;height:100%;object-fit:cover;}
-.ap-av-ph{width:32px;height:32px;border-radius:8px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;}
-.ap-name{font-size:10px;font-weight:500;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ap-crown{font-size:9px;color:var(--crown);}
+.ap-av-ph{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
+.ap-name{font-size:13px;font-weight:700;color:var(--t1);}
+.ap-crown{font-size:12px;color:var(--crown);}
 .upload-widget{display:flex;flex-direction:column;gap:5px;}
 .upload-btn-label{display:flex;align-items:center;gap:6px;padding:8px 11px;border:0.5px dashed var(--b2);border-radius:9px;background:transparent;color:var(--t2);font-size:12px;cursor:pointer;width:100%;justify-content:center;font-family:inherit;transition:all .12s;}
 .upload-btn-label:hover{border-color:var(--acc);color:var(--acc);}
@@ -820,11 +820,40 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
         <div class="sub-error" id="s-error"></div>
       </div>
 
-      <!-- RIGHT — STICKY CHECKLIST + SUBMIT -->
-      <div style="border-left:0.5px solid var(--b1);padding:36px 24px;display:flex;flex-direction:column;gap:16px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
-        <div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:4px;">Required fields</div>
-        <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;flex:1;"></div>
-        <button class="sub-cta" id="s-submit-btn" style="width:100%;"><i class="ti ti-send"></i> Submit for review</button>
+      <!-- RIGHT — STICKY PANEL -->
+      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
+
+        <!-- LIVE PREVIEW CARD -->
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
+          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
+            </div>
+            <div style="padding:10px 12px 12px;">
+              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
+              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
+              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div style="flex:1;">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Required fields</div>
+          <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+
+        <!-- TIPS -->
+        <div style="background:var(--bg);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
+          <div style="font-size:11px;color:var(--t3);line-height:1.6;">
+            Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
+            Preview image should be <strong style="color:var(--t2);">16:9</strong>, min 800px wide.
+          </div>
+        </div>
+
+        <button class="sub-cta" id="s-submit-btn"><i class="ti ti-send"></i> Submit for review</button>
       </div>
 
     </div>
@@ -1635,11 +1664,18 @@ function initSubmit(){
   };
   // Artist picker
   const ap=document.getElementById('s-artist-picker');
-  ap.innerHTML=_artists.map((a,i)=>{const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();const[abg,ac]=AVC[i%AVC.length];return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)"><div class="ap-av-ph" style="background:${abg};color:${ac};">${ini}</div><div class="ap-crown">👑</div><div class="ap-name">${a.name}</div></div>`;}).join('');
+  ap.innerHTML=_artists.map((a,i)=>{
+  const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const[abg,ac]=AVC[i%AVC.length];
+  const avatar=a.avatar_url
+    ?`<div class="ap-av"><img src="${a.avatar_url}" alt="${a.name}"></div>`
+    :`<div class="ap-av-ph" style="background:${abg};color:${ac};">${ini}</div>`;
+  return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)">${avatar}<div><div class="ap-crown">👑</div><div class="ap-name">${a.name}</div></div></div>`;
+}).join('');
   // Upload widget
   _getSubmitImg=buildSubmitUpload();
   updateChecklist();
-  ['s-name','s-team','s-season','s-carnumber','s-url','s-author'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updateChecklist);});
+  ['s-name','s-team','s-season','s-carnumber','s-url','s-author'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',updateChecklist);el.addEventListener('input',updateSubmitPreview);}});
   document.querySelectorAll('input[name="s-pricing"]').forEach(r=>r.addEventListener('change',updateChecklist));
 }
 function selectArtist(el){
@@ -1685,6 +1721,26 @@ function setSubMode(m){
   var nl=document.getElementById('s-name-label');if(nl)nl.textContent=isLivery?'Livery name *':'Addon name *';
   var ml=document.getElementById('s-mod-label');if(ml)ml.textContent=isLivery?'Mod *':'Mod (optional)';
   updateChecklist();
+}
+function updateSubmitPreview(){
+  // Thumb
+  const img=document.getElementById('s-preview-thumb');
+  const imgUrl=typeof _getSubmitImg==='function'?null:null; // image set via upload widget
+  // Name
+  const name=document.getElementById('s-name')?.value||'Livery name';
+  document.getElementById('s-preview-name').textContent=name;
+  // Champ
+  const champText=document.getElementById('s-champ-text')?.textContent||'';
+  const champEl=document.getElementById('s-preview-champ');
+  if(champEl) champEl.textContent=champText.startsWith('—')?'— Championship —':champText;
+  // Meta
+  const modText=document.getElementById('s-mod-text')?.textContent||'';
+  const author=document.getElementById('s-author')?.value||'';
+  const artistEl=document.querySelector('.ap-item.selected');
+  const creator=artistEl?artistEl.dataset.name:author||'Creator';
+  const mod=modText.startsWith('—')?'Mod':modText;
+  const metaEl=document.getElementById('s-preview-meta');
+  if(metaEl) metaEl.textContent=mod+' · '+creator;
 }
 function updateChecklist(){
   const isAddon=_sMode==='addon';
@@ -1742,7 +1798,7 @@ function renderModPicker(list){
   const g=document.getElementById('mod-pg');
   g.innerHTML=list.length?list.map(m=>`<div class="pi${m.id===_sSelMod?' selected':''}" onclick="selectMod('${m.id}','${m.name.replace(/'/g,"\\'")}')">${m.image_url?`<img src="${m.image_url}" class="pi-logo" alt="${m.name}">`:`<div class="pi-logo-ph"><i class="ti ti-car"></i></div>`}<div class="pi-name">${m.name}</div></div>`).join(''):`<div class="pi-none">No mods found</div>`;
 }
-function selectMod(id,name){_sSelMod=id;document.getElementById('s-mod').value=id;document.getElementById('s-mod-text').textContent=name;document.getElementById('mod-picker').style.display='none';document.getElementById('s-champ-btn').disabled=!_sAvailChamps2.length;updateChecklist();}
+function selectMod(id,name){_sSelMod=id;document.getElementById('s-mod').value=id;document.getElementById('s-mod-text').textContent=name;document.getElementById('mod-picker').style.display='none';document.getElementById('s-champ-btn').disabled=!_sAvailChamps2.length;updateChecklist();updateSubmitPreview();}
 // Champ picker
 function openChampPicker(){renderChampPicker(_sAvailChamps2);document.getElementById('champ-picker').style.display='flex';setTimeout(()=>document.getElementById('champ-ps').focus(),50);}
 function filterChampPicker(q){renderChampPicker(_sAvailChamps2.filter(c=>(c.name+' '+(c.short_name||'')).toLowerCase().includes(q.toLowerCase())));}
@@ -1751,7 +1807,7 @@ function renderChampPicker(list){
   const none=`<div class="pi${!_sSelChamp?' selected':''}" onclick="selectChamp('','No championship')"><div class="pi-logo-ph"><i class="ti ti-x"></i></div><div class="pi-name">No championship</div></div>`;
   g.innerHTML=none+list.map(c=>`<div class="pi${c.id===_sSelChamp?' selected':''}" onclick="selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')">${c.logo_url?`<img src="${c.logo_url}" class="pi-logo" alt="${c.name}">`:`<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>`}<div class="pi-name">${c.short_name||c.name}</div></div>`).join('');
 }
-function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';}
+function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';updateSubmitPreview();}
 
 document.getElementById('s-submit-btn').addEventListener('click',async()=>{
   const name=document.getElementById('s-name').value.trim();
