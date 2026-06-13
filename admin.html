@@ -708,11 +708,13 @@ function artistModalForm(a={}){
   // Brand selector
   const activeBrands=a.brands||[];
   const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.25)'}};
-  const brandBtns='<div style="display:flex;gap:8px;margin-top:4px;">'+ ['RSS','VRC','URD'].map(function(b){
-    var bm=BRC[b]; var active=activeBrands.includes(b);
-    return '<button type="button" id="af-brand-'+b+'" onclick="toggleArtistBrand(this,\''+b+'\')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
-  }).join('')+'</div>';
-  const brandSection='<div class="field"><label>Publisher brands</label>'+brandBtns+'<input type="hidden" id="af-brands" value="'+activeBrands.join(',')+'"></div>';
+  const activeBrands=a.brands||[];
+  const brandSection='<div class="field"><label>Publisher brands</label><div style="display:flex;gap:12px;margin-top:6px;">'
+    +['RSS','VRC','URD'].map(function(b){
+      var checked=activeBrands.includes(b)?'checked':'';
+      return '<label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;cursor:pointer;"><input type="checkbox" name="af-brand" value="'+b+'" '+checked+' style="width:15px;height:15px;cursor:pointer;"> '+b+'</label>';
+    }).join('')
+    +'</div></div>';
   return ''
     + '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">'
     +   '<div id="af-avatar-widget" style="flex-shrink:0;"></div>'
@@ -730,22 +732,7 @@ function artistModalForm(a={}){
     + lnk('af-url-overtake', 'ti-flag',           '#00D4AA', 'https://www.overtake.gg/...', a.url_overtake||'')
     + brandSection;
 }
-function toggleArtistBrand(el,b){
-  const inp=document.getElementById('af-brands');
-  if(!inp)return;
-  const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.25)'}};
-  var brands=inp.value?inp.value.split(',').filter(Boolean):[];
-  var idx=brands.indexOf(b);
-  if(idx>-1) brands.splice(idx,1); else brands.push(b);
-  inp.value=brands.join(',');
-  var btn=document.getElementById('af-brand-'+b);
-  if(btn){
-    var bm=BRC[b];var active=brands.includes(b);
-    btn.style.borderColor=active?bm.border:'var(--border)';
-    btn.style.background=active?bm.bg:'transparent';
-    btn.style.color=active?bm.c:'var(--text-3)';
-  }
-}
+
 function getArtistUrls(){
   return {
     url_twitter:  document.getElementById('af-url-twitter').value.trim()||null,
@@ -757,7 +744,7 @@ function getArtistUrls(){
 }
 document.getElementById('addArtistBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-crown"></i> Add confirmed artist',artistModalForm(),async()=>{
-    const _bv=document.getElementById('af-brands')?.value||'';const ok=await createArtist({name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv?_bv.split(',').filter(Boolean):[],...getArtistUrls()});
+    const _bv=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});const ok=await createArtist({name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv,...getArtistUrls()});
     if(ok){await reloadCache();closeModal();await loadArtists();}
   });
   setTimeout(()=>{ _getArtistAvatar = buildUploadWidget('af-avatar-widget',{folder:'artists',isAvatar:true,label:'Upload profile picture'}); },50);
@@ -765,7 +752,7 @@ document.getElementById('addArtistBtn').addEventListener('click',()=>{
 async function editArtistModal(id){
   const a=_artists.find(x=>x.id===id);if(!a)return;
   openModal('<i class="ti ti-pencil"></i> Edit artist',artistModalForm(a),async()=>{
-    const _bv2=document.getElementById('af-brands')?.value||'';await updateArtist(id,{name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||a.avatar_url||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv2?_bv2.split(',').filter(Boolean):[],...getArtistUrls()});
+    const _bv2=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});await updateArtist(id,{name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||a.avatar_url||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv2,...getArtistUrls()});
     await reloadCache();closeModal();await loadArtists();
   });
   setTimeout(()=>{ _getArtistAvatar = buildUploadWidget('af-avatar-widget',{currentUrl:a.avatar_url||'',folder:'artists',isAvatar:true,label:'Upload profile picture'}); },50);
