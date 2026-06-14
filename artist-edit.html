@@ -387,122 +387,396 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 </div>
 
 <!-- REPORT MODAL -->
-<div class="report-modal" id="report-modal">
-  <div class="report-box">
-    <div class="report-title"><i class="ti ti-flag" style="color:var(--acc);"></i> Report a problem</div>
-    <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">What's wrong with this livery?</p>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="broken_link" checked> Broken download link</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="wrong_info"> Wrong information</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="duplicate"> Duplicate entry</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="other"> Other</label>
+
+<div class="toast" id="ae-toast"></div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+});
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,700;0,14..32,900;1,14..32,700;1,14..32,900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#07070A;--s1:#0E0E13;--s2:#141419;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);
+  --t1:#F5F5F7;--t2:#6E6E73;--t3:#38383D;
+  --acc:#5B6EF7;--acc2:rgba(91,110,247,0.12);
+  --grn:#30D158;--grn2:rgba(48,209,88,0.10);
+  --amb:#FF9F0A;--amb2:rgba(255,159,10,0.10);
+  --red:#FF453A;--red2:rgba(255,69,58,0.10);
+}
+html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+/* GATE */
+.gate{display:flex;align-items:center;justify-content:center;height:100vh;}
+.gate-box{background:var(--s1);border:0.5px solid var(--b1);border-radius:18px;padding:40px;width:100%;max-width:400px;text-align:center;}
+
+/* SHELL */
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{background:var(--s1);border-right:0.5px solid var(--b1);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;}
+.sb-logo{padding:20px;border-bottom:0.5px solid var(--b1);}
+.sb-artist{padding:14px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:10px;}
+.sb-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;overflow:hidden;background:var(--acc2);color:var(--acc);}
+.sb-av img{width:100%;height:100%;object-fit:cover;}
+.sb-nav{padding:10px;flex:1;}
+.sb-sec{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:10px 10px 4px;}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:all .12s;border:none;background:none;font-family:inherit;width:100%;text-align:left;}
+.sb-link:hover{color:var(--t1);background:var(--b1);}
+.sb-link.on{color:var(--t1);background:var(--acc2);}
+.sb-link.on i{color:var(--acc);}
+.sb-link i{font-size:16px;flex-shrink:0;color:var(--t3);}
+.sb-back{display:flex;align-items:center;gap:7px;margin:10px;padding:10px;border:0.5px solid var(--b1);border-radius:10px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;text-decoration:none;font-family:inherit;background:transparent;}
+.sb-back:hover{color:var(--t1);}
+
+/* MAIN */
+.main{min-height:100vh;overflow-y:auto;}
+.view{display:none;}
+.view.on{display:block;}
+.page-top{padding:28px 28px 20px;border-bottom:0.5px solid var(--b1);}
+.page-ey{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.page-ey span{width:18px;height:1px;background:var(--acc);display:inline-block;}
+.page-h1{font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2px;color:var(--t1);}
+.page-h1 em{color:var(--acc);}
+
+/* CARDS GRID */
+.lv-grid{padding:20px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.lv-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:14px;overflow:hidden;transition:all .2s;}
+.lv-card:hover{transform:translateY(-2px);border-color:var(--b2);}
+.lv-thumb{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;}
+.lv-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.lv-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7),transparent 55%);pointer-events:none;}
+.lv-badges{position:absolute;top:8px;left:8px;display:flex;gap:4px;}
+.lv-num{position:absolute;bottom:8px;left:10px;font-size:26px;font-weight:900;font-style:italic;color:#fff;letter-spacing:-1.5px;line-height:1;}
+.lv-body{padding:10px 12px 12px;}
+.lv-name{font-size:13px;font-weight:700;font-style:italic;letter-spacing:-.3px;color:var(--t1);margin-bottom:6px;}
+.lv-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:0.5px solid var(--b1);}
+.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.3px;text-transform:uppercase;}
+.b-f{background:var(--grn2);color:var(--grn);}
+.b-p{background:var(--amb2);color:var(--amb);}
+.b-n{background:rgba(191,90,242,.12);color:#BF5AF2;}
+
+/* FORM */
+.form-wrap{padding:24px 28px 60px;max-width:700px;}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.field label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.field input,.field select,.field textarea{background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;transition:border-color .12s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
+.field select{appearance:none;cursor:pointer;}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field.full{grid-column:1/-1;}
+.btn-primary{height:40px;padding:0 20px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;}
+.btn-primary:hover{opacity:.88;}
+.btn-ghost{height:36px;padding:0 14px;background:transparent;color:var(--t2);border:0.5px solid var(--b1);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
+.btn-ghost:hover{color:var(--t1);}
+.btn-danger{height:36px;padding:0 14px;background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.25);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-ov.open{display:flex;}
+.modal{background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;}
+.modal-title{font-size:17px;font-weight:700;font-style:italic;letter-spacing:-.5px;margin-bottom:18px;}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--b1);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:300;display:none;align-items:center;gap:8px;}
+.toast.ok{background:var(--grn2);color:var(--grn);border:0.5px solid rgba(48,209,88,.3);}
+.toast.err{background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.3);}
+
+/* BRAND BUTTONS */
+.brand-btn{padding:14px 16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:inherit;color:var(--t3);width:100%;}
+.brand-btn.rss.on{border-color:rgba(232,49,42,.4);background:rgba(232,49,42,.10);color:#E8312A;}
+.brand-btn.vrc.on{border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.08);color:#30D158;}
+.brand-btn.urd.on{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.08);color:#FF9F0A;}
+</style>
+</head>
+<body>
+
+<div class="gate" id="ae-gate">
+  <div class="gate-box">
+    <i class="ti ti-lock" style="font-size:32px;color:var(--t3);display:block;margin-bottom:16px;"></i>
+    <div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;margin-bottom:8px;"><em style="color:var(--acc);">AC</em> Liveries DB</div>
+    <p style="font-size:13px;color:var(--t2);line-height:1.6;">Access via your personal link.<br>Ask the admin on Discord.</p>
+  </div>
+</div>
+
+<div class="shell" id="ae-shell" style="display:none;">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <span style="font-size:15px;font-weight:900;font-style:italic;color:var(--acc);">AC</span>
+      <span style="font-size:15px;font-weight:900;font-style:italic;color:var(--t1);"> Liveries</span>
+      <span style="font-size:8px;font-weight:700;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-left:4px;">DB</span>
     </div>
-    <div class="field"><label>Notes (optional)</label><textarea id="report-notes" placeholder="Describe the issue…" style="min-height:56px;"></textarea></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
-      <button onclick="closeReport()" style="height:34px;padding:0 12px;background:transparent;color:var(--t2);border:0.5px solid var(--b2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Cancel</button>
-      <button onclick="submitReport()" style="height:34px;padding:0 12px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Send report</button>
+    <div class="sb-artist">
+      <div class="sb-av" id="ae-av">?</div>
+      <div style="min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="ae-name">…</div>
+        <div style="font-size:10px;color:var(--t3);">👑 Confirmed artist</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-sec">My content</div>
+      <button class="sb-link on" id="nl-liveries"><i class="ti ti-photo"></i> My liveries</button>
+      <button class="sb-link" id="nl-addons"><i class="ti ti-puzzle"></i> My addons</button>
+      <button class="sb-link" id="nl-submit"><i class="ti ti-plus"></i> Add livery</button>
+      <button class="sb-link" id="nl-profile"><i class="ti ti-user"></i> My profile</button>
+    </nav>
+    <a href="index.html" class="sb-back"><i class="ti ti-arrow-left"></i> Back to site</a>
+  </aside>
+
+  <div class="main">
+
+    <!-- MY LIVERIES -->
+    <div class="view on" id="ae-view-liveries">
+      <div class="page-top">
+        <div class="page-ey"><span></span>Creator Dashboard</div>
+        <h2 class="page-h1">My <em>liveries</em></h2>
+      </div>
+      <div class="lv-grid" id="ae-liveries-grid"></div>
+    </div>
+
+    <!-- MY ADDONS -->
+    <div class="view" id="ae-view-addons">
+      <div class="page-top">
+        <div class="page-ey"><span></span>Creator Dashboard</div>
+        <h2 class="page-h1">My <em>addons</em></h2>
+      </div>
+      <div class="lv-grid" id="ae-addons-grid"></div>
+    </div>
+
+    <!-- ADD LIVERY -->
+    <div class="view" id="ae-view-submit">
+      <div style="display:grid;grid-template-columns:1fr 320px;min-height:100vh;">
+        <!-- LEFT -->
+        <div style="border-right:0.5px solid var(--b1);overflow-y:auto;">
+          <div class="page-top">
+            <div class="page-ey"><span></span>Creator Dashboard</div>
+            <h2 class="page-h1">Add a <em>livery</em></h2>
+          </div>
+          <div style="padding:24px 28px 60px;">
+        <!-- STEP 1 — PUBLISHER -->
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">1</span> Publisher</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+            <button type="button" id="s-brand-RSS" onclick="selectSubmitBrand('RSS')" class="brand-btn brand-btn-active" data-brand="RSS">
+              <div style="font-size:20px;font-weight:900;font-style:italic;">RSS</div>
+              <div style="font-size:11px;margin-top:3px;">Race Sim Studio</div>
+            </button>
+            <button type="button" id="s-brand-VRC" onclick="selectSubmitBrand('VRC')" class="brand-btn" data-brand="VRC">
+              <div style="font-size:20px;font-weight:900;font-style:italic;">VRC</div>
+              <div style="font-size:11px;margin-top:3px;">Virtual Racing Cars</div>
+            </button>
+            <button type="button" id="s-brand-URD" onclick="selectSubmitBrand('URD')" class="brand-btn" data-brand="URD">
+              <div style="font-size:20px;font-weight:900;font-style:italic;">URD</div>
+              <div style="font-size:11px;margin-top:3px;">United Racing Design</div>
+            </button>
+          </div>
+          <input type="hidden" id="s-brand" value="RSS">
+        </div>
+
+        <!-- STEP 2 — CATEGORY & MOD -->
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">2</span> Category & Mod</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="field" style="margin:0;">
+              <label>Category *</label>
+              <select class="form-select" id="s-cat"><option value="">Select…</option></select>
+            </div>
+            <div class="field" style="margin:0;">
+              <label id="s-mod-label">Mod *</label>
+              <button type="button" class="picker-btn" id="s-mod-btn" disabled onclick="openModPicker()">
+                <div class="picker-ph" id="s-mod-ph"><i class="ti ti-car"></i></div>
+                <span id="s-mod-text">— Select category first —</span>
+              </button>
+              <input type="hidden" id="s-mod">
+            </div>
+            <div class="field" id="s-champ-wrap" style="margin:0;grid-column:1/-1;">
+              <label>Championship</label>
+              <button type="button" class="picker-btn" id="s-champ-btn" disabled onclick="openChampPicker()">
+                <div class="picker-ph" id="s-champ-ph"><i class="ti ti-trophy"></i></div>
+                <span id="s-champ-text">— Select category first —</span>
+              </button>
+              <input type="hidden" id="s-champ">
+            </div>
+            <div class="field" id="s-addon-type-wrap" style="display:none;margin:0;grid-column:1/-1;">
+              <label>Addon type *</label>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;">
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="tyre_skin"> Tyre skin</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="3d_asset"> 3D asset</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="shader"> Shader</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="ui"> UI element</label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="other"> Other</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 — LIVERY DETAILS -->
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">3</span> Livery details</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="field" style="margin:0;grid-column:1/-1;"><label id="s-name-label">Livery name *</label><input type="text" id="s-name" placeholder="e.g. #16 Ferrari SF-24"></div>
+            <div class="field livery-only" style="margin:0;"><label>Team *</label><input type="text" id="s-team" placeholder="e.g. Scuderia Ferrari"></div>
+            <div class="field livery-only" style="margin:0;"><label>Driver(s)</label><input type="text" id="s-driver" placeholder="e.g. Charles Leclerc"></div>
+            <div class="field livery-only" style="margin:0;"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024"></div>
+            <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
+            <div class="field" style="margin:0;grid-column:1/-1;">
+              <label>Pricing</label>
+              <div style="display:flex;gap:10px;margin-top:6px;">
+                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
+                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 — CREATOR -->
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">4</span> Creator</div>
+          <div class="field" style="margin:0 0 10px;"><label>Confirmed artist</label><div class="artist-picker" id="s-artist-picker"></div></div>
+          <div style="display:flex;align-items:center;gap:8px;margin:10px 0;"><div style="flex:1;height:0.5px;background:var(--b1);"></div><span style="font-size:10px;color:var(--t3);">or enter manually</span><div style="flex:1;height:0.5px;background:var(--b1);"></div></div>
+          <div class="field" style="margin:0;"><input type="text" id="s-author" placeholder="Your creator name / alias"><span class="hint" id="s-author-hint">Leave empty if you selected an artist above.</span></div>
+        </div>
+
+        <!-- STEP 5 — FILES -->
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">5</span> Files & links</div>
+          <div style="display:grid;gap:12px;">
+            <div class="field" style="margin:0;"><label>Download URL *</label><input type="url" id="s-url" placeholder="https://www.racedepartment.com/…"><span class="hint">Official link only.</span></div>
+            <div class="field" style="margin:0;"><label>Preview image *</label><div class="upload-widget" id="s-img-widget"></div></div>
+            <div class="field" style="margin:0;"><label>Notes</label><textarea id="s-notes" placeholder="Any extra info…"></textarea></div>
+          </div>
+        </div>
+
+        <div class="sub-error" id="s-error"></div>
+      </div>
+
+      <!-- RIGHT — STICKY PANEL -->
+      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
+
+        <!-- LIVE PREVIEW CARD -->
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
+          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
+            </div>
+            <div style="padding:10px 12px 12px;">
+              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
+              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
+              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
+            </div>
+          </div>
+        </div>
+
+
+            <!-- SUBMIT ERROR -->
+            <div id="ae-submit-err" style="color:var(--red);font-size:12px;margin-top:8px;display:none;"></div>
+          </div>
+        </div>
+        <!-- RIGHT -->
+        <!-- RIGHT — STICKY PANEL -->
+      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
+
+        <!-- LIVE PREVIEW CARD -->
+        <div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
+          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
+            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
+            </div>
+            <div style="padding:10px 12px 12px;">
+              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
+              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
+              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div style="flex:1;">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Required fields</div>
+          <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+
+        <!-- TIPS -->
+        <div style="background:var(--bg);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
+          <div style="font-size:11px;color:var(--t3);line-height:1.6;">
+            Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
+            Preview image should be <strong style="color:var(--t2);">16:9</strong>, min 800px wide.
+          </div>
+        </div>
+
+        <button class="sub-cta" id="s-submit-btn"><i class="ti ti-send"></i> Publish livery</button>
+      </div>
+      </div>
+    </div>
+
+    <!-- MY PROFILE -->
+    <div class="view" id="ae-view-profile">
+      <div class="page-top">
+        <div class="page-ey"><span></span>Creator Dashboard</div>
+        <h2 class="page-h1">My <em>profile</em></h2>
+      </div>
+      <div class="form-wrap">
+        <div class="field"><label>Name *</label><input id="pf-name" type="text"></div>
+        <div class="field"><label>Discord</label><input id="pf-discord" type="text" placeholder="@username"></div>
+        <div class="field"><label>Bio</label><textarea id="pf-bio" placeholder="Tell the community about yourself…"></textarea></div>
+        <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Social links</div>
+        <div class="field"><label>Twitter/X</label><input id="pf-twitter" type="url" placeholder="https://x.com/…"></div>
+        <div class="field"><label>Patreon</label><input id="pf-patreon" type="url" placeholder="https://patreon.com/…"></div>
+        <div class="field"><label>YouTube</label><input id="pf-youtube" type="url" placeholder="https://youtube.com/…"></div>
+        <div class="field"><label>Overtake</label><input id="pf-overtake" type="url" placeholder="https://www.overtake.gg/…"></div>
+        <button class="btn-primary" id="pf-save"><i class="ti ti-check"></i> Save profile</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EDIT LIVERY MODAL -->
+<div class="modal-ov" id="ae-lm-ov">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-pencil" style="color:var(--acc);"></i> Edit livery</div>
+    <div class="form-grid">
+      <div class="field full"><label>Name *</label><input id="ae-lm-name"></div>
+      <div class="field"><label>Team</label><input id="ae-lm-team"></div>
+      <div class="field"><label>Driver(s)</label><input id="ae-lm-driver"></div>
+      <div class="field"><label>Season</label><input id="ae-lm-season"></div>
+      <div class="field"><label>Car #</label><input id="ae-lm-car" maxlength="4"></div>
+      <div class="field"><label>Pricing</label><select id="ae-lm-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
+      <div class="field full"><label>Notes</label><textarea id="ae-lm-notes"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-ghost" id="ae-lm-cancel">Cancel</button>
+      <button class="btn-danger" id="ae-lm-delete"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn-primary" id="ae-lm-save"><i class="ti ti-check"></i> Save</button>
     </div>
   </div>
 </div>
 
-
-
-<!-- DRAWER OVERLAY -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="filter-drawer">
-  <div class="drawer-head">
-    <span class="drawer-title">Filters</span>
-    <button class="drawer-close" onclick="closeDrawer()">×</button>
+<!-- PICKER MODALS -->
+<div class="picker-modal" id="mod-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('mod-picker').style.display='none'">
+  <div class="picker-box">
+    <div class="picker-head"><input class="picker-search" id="mod-ps" placeholder="Search mods…" oninput="filterModPicker(this.value)"><button class="picker-close" onclick="document.getElementById('mod-picker').style.display='none'">×</button></div>
+    <div class="picker-grid" id="mod-pg"></div>
   </div>
-  <!-- BREADCRUMB -->
-  <div id="dr-breadcrumb" style="padding:10px 16px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:38px;"></div>
-  <!-- STEPS CONTAINER -->
-  <div class="drawer-body" id="dr-steps">
-    <!-- Step 1: Publisher -->
-    <div class="dr-step" id="dr-step-1">
-      <div class="dr-step-header">
-        <span class="dr-step-num">1</span>
-        <span class="dr-step-title">Publisher</span>
-        <span class="dr-step-hint">Choose a mod publisher</span>
-      </div>
-      <div class="dr-step-body">
-        <button class="di on" data-step="1" data-type="brand" data-val="all" data-label="All publishers">
-          <span style="font-size:15px;">🏁</span><span style="flex:1;">All publishers</span>
-          <span class="di-count" id="dr-cnt-all-brand"></span>
-        </button>
-        <button class="di" data-step="1" data-type="brand" data-val="RSS" data-label="RSS">
-          <div class="di-icon" style="background:rgba(91,110,247,.14);color:#5B6EF7;">R</div>
-          <span style="flex:1;">RSS — Race Sim Studio</span>
-          <span class="di-count" id="dr-cnt-RSS">—</span>
-        </button>
-        <button class="di" data-step="1" data-type="brand" data-val="VRC" data-label="VRC">
-          <div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div>
-          <span style="flex:1;">VRC — Virtual Racing Cars</span>
-          <span class="di-count" id="dr-cnt-VRC">—</span>
-        </button>
-        <button class="di" data-step="1" data-type="brand" data-val="URD" data-label="URD">
-          <div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div>
-          <span style="flex:1;">URD — United Racing Design</span>
-          <span class="di-count" id="dr-cnt-URD">—</span>
-        </button>
-      </div>
-    </div>
-    <!-- Step 2: Category (unlocks after step 1) -->
-    <div class="dr-step locked" id="dr-step-2">
-      <div class="dr-step-header">
-        <span class="dr-step-num">2</span>
-        <span class="dr-step-title">Category</span>
-        <span class="dr-step-hint" id="dr-step-2-hint">Choose publisher first</span>
-      </div>
-      <div class="dr-step-body" id="dr-categories"></div>
-    </div>
-    <!-- Step 3: Championship (unlocks after step 2) -->
-    <div class="dr-step locked" id="dr-step-3">
-      <div class="dr-step-header">
-        <span class="dr-step-num">3</span>
-        <span class="dr-step-title">Championship</span>
-        <span class="dr-step-hint" id="dr-step-3-hint">Choose category first</span>
-      </div>
-      <div class="dr-step-body" id="dr-championships"></div>
-    </div>
-    <!-- Step 4: Pricing + Creator (always visible) -->
-    <div class="dr-step" id="dr-step-4">
-      <div class="dr-step-header">
-        <span class="dr-step-num">4</span>
-        <span class="dr-step-title">Pricing & Creator</span>
-      </div>
-      <div class="dr-step-body">
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:0 9px 6px;">Pricing</div>
-        <button class="di on" data-step="4" data-type="price" data-val="all" data-label="">
-          <span style="font-size:13px;">💰</span><span style="flex:1;">All pricing</span>
-        </button>
-        <button class="di" data-step="4" data-type="price" data-val="free" data-label="Free">
-          <span style="font-size:13px;color:#30D158;">🔓</span><span style="flex:1;">Free only</span>
-        </button>
-        <button class="di" data-step="4" data-type="price" data-val="paid" data-label="Paid">
-          <span style="font-size:13px;color:#FF9F0A;">🔒</span><span style="flex:1;">Paid only</span>
-        </button>
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:12px 9px 6px;">Creator</div>
-        <button class="di on" data-step="4" data-type="artist" data-val="all" data-label="">
-          <span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span>
-        </button>
-        <button class="di" data-step="4" data-type="artist" data-val="confirmed" data-label="👑 Confirmed">
-          <span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span>
-        </button>
-        <button class="di" data-step="4" data-type="artist" data-val="community" data-label="Community">
-          <span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <div class="drawer-foot">
-    <button class="drawer-reset" onclick="resetFilters()">Reset all</button>
-    <button class="drawer-apply" onclick="closeDrawer()">Show results</button>
+</div>
+<div class="picker-modal" id="champ-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('champ-picker').style.display='none'">
+  <div class="picker-box">
+    <div class="picker-head"><input class="picker-search" id="champ-ps" placeholder="Search championships…" oninput="filterChampPicker(this.value)"><button class="picker-close" onclick="document.getElementById('champ-picker').style.display='none'">×</button></div>
+    <div class="picker-grid" id="champ-pg"></div>
   </div>
 </div>
 
-</body>
-</html
+<!-- REPORT MODAL -->
+
 <div class="toast" id="ae-toast"></div>
 
 <script>
