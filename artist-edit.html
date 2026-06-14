@@ -323,11 +323,17 @@ function aeOpenModPicker() {
 
 function aeRenderModGrid(list) {
   var g = document.getElementById('ae-mod-grid');
-  g.innerHTML = list.length ? list.map(function(m){
-    return '<div onclick="aeSelectMod(''+m.id+'',''+m.name.replace(/'/g,"\'")+'')" style="border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--acc)'" onmouseout="this.style.borderColor='var(--b1)'">'
-      +(m.image_url?'<img src="'+m.image_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">':'<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i></div>')
-      +'<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+m.name+'</div></div>';
-  }).join('') : '<div style="padding:20px;text-align:center;color:var(--t2);grid-column:1/-1;">No mods for this category.</div>';
+  if (!list.length) { g.innerHTML = '<div style="padding:20px;text-align:center;color:var(--t2);grid-column:1/-1;">No mods.</div>'; return; }
+  g.innerHTML = '';
+  list.forEach(function(m) {
+    var d = document.createElement('div');
+    d.style.cssText = 'border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;';
+    d.onmouseover = function(){ this.style.borderColor='var(--acc)'; };
+    d.onmouseout = function(){ this.style.borderColor='var(--b1)'; };
+    d.onclick = function(){ aeSelectMod(m.id, m.name); };
+    d.innerHTML = (m.image_url ? '<img src="'+m.image_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">' : '<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i></div>') + '<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+m.name+'</div>';
+    g.appendChild(d);
+  });
 }
 
 function aeFilterModPicker(q) {
@@ -352,11 +358,18 @@ function aeOpenChampPicker() {
 
 function aeRenderChampGrid(list) {
   var g = document.getElementById('ae-champ-grid');
-  g.innerHTML = list.length ? list.map(function(c){
-    return '<div onclick="aeSelectChamp(''+c.id+'',''+(c.short_name||c.name).replace(/'/g,"\'")+'')" style="border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--acc)'" onmouseout="this.style.borderColor='var(--b1)'">'
-      +(c.logo_url?'<img src="'+c.logo_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">':'<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i></div>')
-      +'<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+(c.short_name||c.name)+'</div></div>';
-  }).join('') : '<div style="padding:20px;text-align:center;color:var(--t2);grid-column:1/-1;">No championships.</div>';
+  if (!list.length) { g.innerHTML = '<div style="padding:20px;text-align:center;color:var(--t2);grid-column:1/-1;">No championships.</div>'; return; }
+  g.innerHTML = '';
+  list.forEach(function(c) {
+    var name = c.short_name || c.name;
+    var d = document.createElement('div');
+    d.style.cssText = 'border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;';
+    d.onmouseover = function(){ this.style.borderColor='var(--acc)'; };
+    d.onmouseout = function(){ this.style.borderColor='var(--b1)'; };
+    d.onclick = function(){ aeSelectChamp(c.id, name); };
+    d.innerHTML = (c.logo_url ? '<img src="'+c.logo_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">' : '<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i></div>') + '<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+name+'</div>';
+    g.appendChild(d);
+  });
 }
 
 function aeFilterChampPicker(q) {
