@@ -242,7 +242,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <input id="ae-mod-search" type="text" placeholder="Search mod…" oninput="aeFilterModPicker(this.value)" style="flex:1;background:var(--s2);border:0.5px solid var(--b1);border-radius:9px;padding:8px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;">
       <button onclick="document.getElementById('ae-mod-picker').style.display='none'" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:0 4px;">&times;</button>
     </div>
-    <div id="ae-mod-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:16px;overflow-y:auto;"></div>
+    <div id="ae-mod-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding:16px;overflow-y:auto;"></div>
   </div>
 </div>
 
@@ -253,7 +253,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <input id="ae-champ-search" type="text" placeholder="Search championship…" oninput="aeFilterChampPicker(this.value)" style="flex:1;background:var(--s2);border:0.5px solid var(--b1);border-radius:9px;padding:8px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;">
       <button onclick="document.getElementById('ae-champ-picker').style.display='none'" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:0 4px;">&times;</button>
     </div>
-    <div id="ae-champ-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:16px;overflow-y:auto;"></div>
+    <div id="ae-champ-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;padding:16px;overflow-y:auto;"></div>
   </div>
 </div>
 <div class="toast" id="ae-toast"></div>
@@ -331,7 +331,7 @@ function aeRenderModGrid(list) {
     d.onmouseover = function(){ this.style.borderColor='var(--acc)'; };
     d.onmouseout = function(){ this.style.borderColor='var(--b1)'; };
     d.onclick = function(){ aeSelectMod(m.id, m.name); };
-    d.innerHTML = (m.image_url ? '<img src="'+m.image_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">' : '<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i></div>') + '<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+m.name+'</div>';
+    d.innerHTML = '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;">' + (m.image_url ? '<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;">' : '<i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i>') + '</div><div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);line-height:1.3;">'+m.name+'</div>';
     g.appendChild(d);
   });
 }
@@ -367,7 +367,7 @@ function aeRenderChampGrid(list) {
     d.onmouseover = function(){ this.style.borderColor='var(--acc)'; };
     d.onmouseout = function(){ this.style.borderColor='var(--b1)'; };
     d.onclick = function(){ aeSelectChamp(c.id, name); };
-    d.innerHTML = (c.logo_url ? '<img src="'+c.logo_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">' : '<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i></div>') + '<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+name+'</div>';
+    d.innerHTML = '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;">' + (c.logo_url ? '<img src="'+c.logo_url+'" style="width:100%;height:100%;object-fit:cover;">' : '<i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i>') + '</div><div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);line-height:1.3;">'+name+'</div>';
     g.appendChild(d);
   });
 }
