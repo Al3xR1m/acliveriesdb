@@ -331,7 +331,7 @@ function aeRenderModGrid(list) {
     d.onmouseover = function(){ this.style.borderColor='var(--acc)'; };
     d.onmouseout = function(){ this.style.borderColor='var(--b1)'; };
     d.onclick = function(){ aeSelectMod(m.id, m.name); };
-    d.innerHTML = '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;">' + (m.image_url ? '<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;">' : '<i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i>') + '</div><div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);line-height:1.3;">'+m.name+'</div>';
+    d.innerHTML = '<div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--s2);">' + (m.image_url ? '<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;display:block;">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i></div>') + '<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.8));padding:16px 8px 6px;font-size:11px;font-weight:700;color:#fff;">'+m.name+'</div></div>';
     g.appendChild(d);
   });
 }
@@ -350,7 +350,7 @@ function aeSelectMod(id, name) {
 function aeOpenChampPicker() {
   var catId = document.getElementById('ae-cat').value;
   _ae_avail_champs = catId
-    ? _champs.filter(function(c){ return c.category_id === catId; })
+    ? _champs.filter(function(c){ return c.championship_categories && c.championship_categories.some(function(cc){ return cc.category_id === catId; }); })
     : _champs;
   aeRenderChampGrid(_ae_avail_champs);
   document.getElementById('ae-champ-picker').style.display = 'flex';
@@ -369,7 +369,7 @@ function aeRenderChampGrid(list) {
     d.onmouseover = function(){ this.style.borderColor='var(--acc)'; };
     d.onmouseout = function(){ this.style.borderColor='var(--b1)'; };
     d.onclick = function(){ aeSelectChamp(c.id, name); };
-    d.innerHTML = '<div style="width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;padding:8px;">' + (c.logo_url ? '<img src="'+c.logo_url+'" style="max-width:100%;max-height:100%;object-fit:contain;">' : '<i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i>') + '</div><div style="padding:8px 10px;font-size:11px;font-weight:600;color:var(--t1);line-height:1.3;">'+name+'</div>';
+    d.innerHTML = '<div style="width:100%;aspect-ratio:2/1;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;padding:12px;">' + (c.logo_url ? '<img src="'+c.logo_url+'" style="max-width:100%;max-height:100%;object-fit:contain;">' : '<i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i>') + '</div><div style="padding:6px 10px 8px;font-size:11px;font-weight:600;color:var(--t1);line-height:1.3;">'+name+'</div>';
     g.appendChild(d);
   });
 }
@@ -420,7 +420,7 @@ async function aeBoot() {
   var r = await Promise.all([
     db.from('categories').select('*').order('name'),
     db.from('mods').select('*').order('name'),
-    db.from('championships').select('*').order('name'),
+    db.from('championships').select('*,championship_categories(category_id)').order('name'),
   ]);
   _cats = r[0].data||[]; _mods = r[1].data||[]; _champs = r[2].data||[];
   aeFilterCats();
