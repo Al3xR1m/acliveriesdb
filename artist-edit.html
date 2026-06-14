@@ -20,15 +20,9 @@
   --red:#FF453A;--red2:rgba(255,69,58,0.10);
 }
 html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
-
-/* GATE */
 .gate{display:flex;align-items:center;justify-content:center;height:100vh;}
 .gate-box{background:var(--s1);border:0.5px solid var(--b1);border-radius:18px;padding:40px;width:100%;max-width:400px;text-align:center;}
-
-/* SHELL */
 .shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
-
-/* SIDEBAR */
 .sidebar{background:var(--s1);border-right:0.5px solid var(--b1);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;}
 .sb-logo{padding:20px;border-bottom:0.5px solid var(--b1);}
 .sb-artist{padding:14px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:10px;}
@@ -43,8 +37,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .sb-link i{font-size:16px;flex-shrink:0;color:var(--t3);}
 .sb-back{display:flex;align-items:center;gap:7px;margin:10px;padding:10px;border:0.5px solid var(--b1);border-radius:10px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;text-decoration:none;font-family:inherit;background:transparent;}
 .sb-back:hover{color:var(--t1);}
-
-/* MAIN */
 .main{min-height:100vh;overflow-y:auto;}
 .view{display:none;}
 .view.on{display:block;}
@@ -53,8 +45,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .page-ey span{width:18px;height:1px;background:var(--acc);display:inline-block;}
 .page-h1{font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2px;color:var(--t1);}
 .page-h1 em{color:var(--acc);}
-
-/* CARDS GRID */
 .lv-grid{padding:20px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
 .lv-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:14px;overflow:hidden;transition:all .2s;}
 .lv-card:hover{transform:translateY(-2px);border-color:var(--b2);}
@@ -70,8 +60,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .b-f{background:var(--grn2);color:var(--grn);}
 .b-p{background:var(--amb2);color:var(--amb);}
 .b-n{background:rgba(191,90,242,.12);color:#BF5AF2;}
-
-/* FORM */
 .form-wrap{padding:24px 28px 60px;max-width:700px;}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
 .field label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
@@ -86,20 +74,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .btn-ghost{height:36px;padding:0 14px;background:transparent;color:var(--t2);border:0.5px solid var(--b1);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
 .btn-ghost:hover{color:var(--t1);}
 .btn-danger{height:36px;padding:0 14px;background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.25);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
-
-/* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-ov.open{display:flex;}
 .modal{background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;}
 .modal-title{font-size:17px;font-weight:700;font-style:italic;letter-spacing:-.5px;margin-bottom:18px;}
 .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--b1);}
-
-/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:300;display:none;align-items:center;gap:8px;}
 .toast.ok{background:var(--grn2);color:var(--grn);border:0.5px solid rgba(48,209,88,.3);}
 .toast.err{background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.3);}
-
-/* BRAND BUTTONS */
 .brand-btn{padding:14px 16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:inherit;color:var(--t3);width:100%;}
 .brand-btn.rss.on{border-color:rgba(232,49,42,.4);background:rgba(232,49,42,.10);color:#E8312A;}
 .brand-btn.vrc.on{border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.08);color:#30D158;}
@@ -142,7 +124,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
   <div class="main">
 
-    <!-- MY LIVERIES -->
     <div class="view on" id="ae-view-liveries">
       <div class="page-top">
         <div class="page-ey"><span></span>Creator Dashboard</div>
@@ -151,7 +132,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <div class="lv-grid" id="ae-liveries-grid"></div>
     </div>
 
-    <!-- MY ADDONS -->
     <div class="view" id="ae-view-addons">
       <div class="page-top">
         <div class="page-ey"><span></span>Creator Dashboard</div>
@@ -160,176 +140,40 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <div class="lv-grid" id="ae-addons-grid"></div>
     </div>
 
-    <!-- ADD LIVERY -->
     <div class="view" id="ae-view-submit">
-      <div style="display:grid;grid-template-columns:1fr 320px;min-height:100vh;">
-        <!-- LEFT -->
-        <div style="border-right:0.5px solid var(--b1);overflow-y:auto;">
-          <div class="page-top">
-            <div class="page-ey"><span></span>Creator Dashboard</div>
-            <h2 class="page-h1">Add a <em>livery</em></h2>
-          </div>
-          <div style="padding:24px 28px 60px;">
-        <!-- STEP 1 — PUBLISHER -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">1</span> Publisher</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-            <button type="button" id="s-brand-RSS" onclick="selectSubmitBrand('RSS')" class="brand-btn brand-btn-active" data-brand="RSS">
-              <div style="font-size:20px;font-weight:900;font-style:italic;">RSS</div>
-              <div style="font-size:11px;margin-top:3px;">Race Sim Studio</div>
-            </button>
-            <button type="button" id="s-brand-VRC" onclick="selectSubmitBrand('VRC')" class="brand-btn" data-brand="VRC">
-              <div style="font-size:20px;font-weight:900;font-style:italic;">VRC</div>
-              <div style="font-size:11px;margin-top:3px;">Virtual Racing Cars</div>
-            </button>
-            <button type="button" id="s-brand-URD" onclick="selectSubmitBrand('URD')" class="brand-btn" data-brand="URD">
-              <div style="font-size:20px;font-weight:900;font-style:italic;">URD</div>
-              <div style="font-size:11px;margin-top:3px;">United Racing Design</div>
-            </button>
-          </div>
-          <input type="hidden" id="s-brand" value="RSS">
-        </div>
-
-        <!-- STEP 2 — CATEGORY & MOD -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">2</span> Category & Mod</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="field" style="margin:0;">
-              <label>Category *</label>
-              <select class="form-select" id="s-cat"><option value="">Select…</option></select>
-            </div>
-            <div class="field" style="margin:0;">
-              <label id="s-mod-label">Mod *</label>
-              <button type="button" class="picker-btn" id="s-mod-btn" disabled onclick="openModPicker()">
-                <div class="picker-ph" id="s-mod-ph"><i class="ti ti-car"></i></div>
-                <span id="s-mod-text">— Select category first —</span>
-              </button>
-              <input type="hidden" id="s-mod">
-            </div>
-            <div class="field" id="s-champ-wrap" style="margin:0;grid-column:1/-1;">
-              <label>Championship</label>
-              <button type="button" class="picker-btn" id="s-champ-btn" disabled onclick="openChampPicker()">
-                <div class="picker-ph" id="s-champ-ph"><i class="ti ti-trophy"></i></div>
-                <span id="s-champ-text">— Select category first —</span>
-              </button>
-              <input type="hidden" id="s-champ">
-            </div>
-            <div class="field" id="s-addon-type-wrap" style="display:none;margin:0;grid-column:1/-1;">
-              <label>Addon type *</label>
-              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;">
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="tyre_skin"> Tyre skin</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="3d_asset"> 3D asset</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="shader"> Shader</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="ui"> UI element</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="other"> Other</label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 3 — LIVERY DETAILS -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">3</span> Livery details</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="field" style="margin:0;grid-column:1/-1;"><label id="s-name-label">Livery name *</label><input type="text" id="s-name" placeholder="e.g. #16 Ferrari SF-24"></div>
-            <div class="field livery-only" style="margin:0;"><label>Team *</label><input type="text" id="s-team" placeholder="e.g. Scuderia Ferrari"></div>
-            <div class="field livery-only" style="margin:0;"><label>Driver(s)</label><input type="text" id="s-driver" placeholder="e.g. Charles Leclerc"></div>
-            <div class="field livery-only" style="margin:0;"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024"></div>
-            <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
-            <div class="field" style="margin:0;grid-column:1/-1;">
-              <label>Pricing</label>
-              <div style="display:flex;gap:10px;margin-top:6px;">
-                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
-                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 4 — CREATOR -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">4</span> Creator</div>
-          <div class="field" style="margin:0 0 10px;"><label>Confirmed artist</label><div class="artist-picker" id="s-artist-picker"></div></div>
-          <div style="display:flex;align-items:center;gap:8px;margin:10px 0;"><div style="flex:1;height:0.5px;background:var(--b1);"></div><span style="font-size:10px;color:var(--t3);">or enter manually</span><div style="flex:1;height:0.5px;background:var(--b1);"></div></div>
-          <div class="field" style="margin:0;"><input type="text" id="s-author" placeholder="Your creator name / alias"><span class="hint" id="s-author-hint">Leave empty if you selected an artist above.</span></div>
-        </div>
-
-        <!-- STEP 5 — FILES -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">5</span> Files & links</div>
-          <div style="display:grid;gap:12px;">
-            <div class="field" style="margin:0;"><label>Download URL *</label><input type="url" id="s-url" placeholder="https://www.racedepartment.com/…"><span class="hint">Official link only.</span></div>
-            <div class="field" style="margin:0;"><label>Preview image *</label><div class="upload-widget" id="s-img-widget"></div></div>
-            <div class="field" style="margin:0;"><label>Notes</label><textarea id="s-notes" placeholder="Any extra info…"></textarea></div>
-          </div>
-        </div>
-
-        <div class="sub-error" id="s-error"></div>
+      <div class="page-top">
+        <div class="page-ey"><span></span>Creator Dashboard</div>
+        <h2 class="page-h1">Add a <em>livery</em></h2>
       </div>
-
-      <!-- RIGHT — STICKY PANEL -->
-      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
-
-        <!-- LIVE PREVIEW CARD -->
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
-          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
-            </div>
-            <div style="padding:10px 12px 12px;">
-              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
-              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
-              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
-            </div>
+      <div class="form-wrap">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Publisher</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="ae-brand-btns">
+            <button class="brand-btn rss on" data-brand="RSS"><div style="font-size:16px;font-weight:900;font-style:italic;">RSS</div><div style="font-size:10px;margin-top:2px;">Race Sim Studio</div></button>
+            <button class="brand-btn vrc" data-brand="VRC"><div style="font-size:16px;font-weight:900;font-style:italic;">VRC</div><div style="font-size:10px;margin-top:2px;">Virtual Racing Cars</div></button>
+            <button class="brand-btn urd" data-brand="URD"><div style="font-size:16px;font-weight:900;font-style:italic;">URD</div><div style="font-size:10px;margin-top:2px;">United Racing Design</div></button>
           </div>
+          <input type="hidden" id="ae-brand" value="RSS">
         </div>
-
-
-            <!-- SUBMIT ERROR -->
-            <div id="ae-submit-err" style="color:var(--red);font-size:12px;margin-top:8px;display:none;"></div>
-          </div>
+        <div class="form-grid">
+          <div class="field full"><label>Livery name *</label><input id="ae-lname" type="text" placeholder="e.g. Ferrari SF-24 2024"></div>
+          <div class="field"><label>Category</label><select id="ae-cat"><option value="">Select…</option></select></div>
+          <div class="field"><label>Mod</label><select id="ae-mod"><option value="">Select…</option></select></div>
+          <div class="field full"><label>Championship</label><select id="ae-champ"><option value="">None</option></select></div>
+          <div class="field"><label>Team</label><input id="ae-team" type="text" placeholder="e.g. Scuderia Ferrari"></div>
+          <div class="field"><label>Driver(s)</label><input id="ae-driver" type="text" placeholder="e.g. Charles Leclerc"></div>
+          <div class="field"><label>Season</label><input id="ae-season" type="text" placeholder="e.g. 2024"></div>
+          <div class="field"><label>Car number</label><input id="ae-carnumber" type="text" placeholder="e.g. 16" maxlength="4"></div>
+          <div class="field full"><label>Download URL *</label><input id="ae-url" type="url" placeholder="https://www.racedepartment.com/…"></div>
+          <div class="field full"><label>Preview image URL</label><input id="ae-img" type="url" placeholder="https://…"></div>
+          <div class="field"><label>Pricing</label><select id="ae-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
+          <div class="field"><label>Notes</label><input id="ae-notes" type="text" placeholder="Optional"></div>
         </div>
-        <!-- RIGHT -->
-        <!-- RIGHT — STICKY PANEL -->
-      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
-
-        <!-- LIVE PREVIEW CARD -->
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
-          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
-            </div>
-            <div style="padding:10px 12px 12px;">
-              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
-              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
-              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- CHECKLIST -->
-        <div style="flex:1;">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Required fields</div>
-          <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
-        </div>
-
-        <!-- TIPS -->
-        <div style="background:var(--bg);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
-          <div style="font-size:11px;color:var(--t3);line-height:1.6;">
-            Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
-            Preview image should be <strong style="color:var(--t2);">16:9</strong>, min 800px wide.
-          </div>
-        </div>
-
-        <button class="sub-cta" id="s-submit-btn"><i class="ti ti-send"></i> Publish livery</button>
-      </div>
+        <button class="btn-primary" id="ae-submit-btn"><i class="ti ti-send"></i> Publish livery</button>
+        <div id="ae-submit-err" style="color:var(--red);font-size:12px;margin-top:8px;display:none;"></div>
       </div>
     </div>
 
-    <!-- MY PROFILE -->
     <div class="view" id="ae-view-profile">
       <div class="page-top">
         <div class="page-ey"><span></span>Creator Dashboard</div>
@@ -351,7 +195,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   </div>
 </div>
 
-<!-- EDIT LIVERY MODAL -->
 <div class="modal-ov" id="ae-lm-ov">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-pencil" style="color:var(--acc);"></i> Edit livery</div>
@@ -371,411 +214,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     </div>
   </div>
 </div>
-
-<!-- PICKER MODALS -->
-<div class="picker-modal" id="mod-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('mod-picker').style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head"><input class="picker-search" id="mod-ps" placeholder="Search mods…" oninput="filterModPicker(this.value)"><button class="picker-close" onclick="document.getElementById('mod-picker').style.display='none'">×</button></div>
-    <div class="picker-grid" id="mod-pg"></div>
-  </div>
-</div>
-<div class="picker-modal" id="champ-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('champ-picker').style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head"><input class="picker-search" id="champ-ps" placeholder="Search championships…" oninput="filterChampPicker(this.value)"><button class="picker-close" onclick="document.getElementById('champ-picker').style.display='none'">×</button></div>
-    <div class="picker-grid" id="champ-pg"></div>
-  </div>
-</div>
-
-<!-- REPORT MODAL -->
-
-<div class="toast" id="ae-toast"></div>
-
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-
-});
-</script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,700;0,14..32,900;1,14..32,700;1,14..32,900&display=swap');
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --bg:#07070A;--s1:#0E0E13;--s2:#141419;
-  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);
-  --t1:#F5F5F7;--t2:#6E6E73;--t3:#38383D;
-  --acc:#5B6EF7;--acc2:rgba(91,110,247,0.12);
-  --grn:#30D158;--grn2:rgba(48,209,88,0.10);
-  --amb:#FF9F0A;--amb2:rgba(255,159,10,0.10);
-  --red:#FF453A;--red2:rgba(255,69,58,0.10);
-}
-html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
-
-/* GATE */
-.gate{display:flex;align-items:center;justify-content:center;height:100vh;}
-.gate-box{background:var(--s1);border:0.5px solid var(--b1);border-radius:18px;padding:40px;width:100%;max-width:400px;text-align:center;}
-
-/* SHELL */
-.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
-
-/* SIDEBAR */
-.sidebar{background:var(--s1);border-right:0.5px solid var(--b1);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;}
-.sb-logo{padding:20px;border-bottom:0.5px solid var(--b1);}
-.sb-artist{padding:14px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:10px;}
-.sb-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;overflow:hidden;background:var(--acc2);color:var(--acc);}
-.sb-av img{width:100%;height:100%;object-fit:cover;}
-.sb-nav{padding:10px;flex:1;}
-.sb-sec{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:10px 10px 4px;}
-.sb-link{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:all .12s;border:none;background:none;font-family:inherit;width:100%;text-align:left;}
-.sb-link:hover{color:var(--t1);background:var(--b1);}
-.sb-link.on{color:var(--t1);background:var(--acc2);}
-.sb-link.on i{color:var(--acc);}
-.sb-link i{font-size:16px;flex-shrink:0;color:var(--t3);}
-.sb-back{display:flex;align-items:center;gap:7px;margin:10px;padding:10px;border:0.5px solid var(--b1);border-radius:10px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;text-decoration:none;font-family:inherit;background:transparent;}
-.sb-back:hover{color:var(--t1);}
-
-/* MAIN */
-.main{min-height:100vh;overflow-y:auto;}
-.view{display:none;}
-.view.on{display:block;}
-.page-top{padding:28px 28px 20px;border-bottom:0.5px solid var(--b1);}
-.page-ey{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.page-ey span{width:18px;height:1px;background:var(--acc);display:inline-block;}
-.page-h1{font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2px;color:var(--t1);}
-.page-h1 em{color:var(--acc);}
-
-/* CARDS GRID */
-.lv-grid{padding:20px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
-.lv-card{background:var(--s1);border:0.5px solid var(--b1);border-radius:14px;overflow:hidden;transition:all .2s;}
-.lv-card:hover{transform:translateY(-2px);border-color:var(--b2);}
-.lv-thumb{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;}
-.lv-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
-.lv-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7),transparent 55%);pointer-events:none;}
-.lv-badges{position:absolute;top:8px;left:8px;display:flex;gap:4px;}
-.lv-num{position:absolute;bottom:8px;left:10px;font-size:26px;font-weight:900;font-style:italic;color:#fff;letter-spacing:-1.5px;line-height:1;}
-.lv-body{padding:10px 12px 12px;}
-.lv-name{font-size:13px;font-weight:700;font-style:italic;letter-spacing:-.3px;color:var(--t1);margin-bottom:6px;}
-.lv-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:0.5px solid var(--b1);}
-.badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.3px;text-transform:uppercase;}
-.b-f{background:var(--grn2);color:var(--grn);}
-.b-p{background:var(--amb2);color:var(--amb);}
-.b-n{background:rgba(191,90,242,.12);color:#BF5AF2;}
-
-/* FORM */
-.form-wrap{padding:24px 28px 60px;max-width:700px;}
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
-.field label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
-.field input,.field select,.field textarea{background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;transition:border-color .12s;}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
-.field select{appearance:none;cursor:pointer;}
-.field textarea{resize:vertical;min-height:72px;line-height:1.5;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.field.full{grid-column:1/-1;}
-.btn-primary{height:40px;padding:0 20px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;}
-.btn-primary:hover{opacity:.88;}
-.btn-ghost{height:36px;padding:0 14px;background:transparent;color:var(--t2);border:0.5px solid var(--b1);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
-.btn-ghost:hover{color:var(--t1);}
-.btn-danger{height:36px;padding:0 14px;background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.25);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;}
-
-/* MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
-.modal-ov.open{display:flex;}
-.modal{background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;}
-.modal-title{font-size:17px;font-weight:700;font-style:italic;letter-spacing:-.5px;margin-bottom:18px;}
-.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--b1);}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:300;display:none;align-items:center;gap:8px;}
-.toast.ok{background:var(--grn2);color:var(--grn);border:0.5px solid rgba(48,209,88,.3);}
-.toast.err{background:var(--red2);color:var(--red);border:0.5px solid rgba(255,69,58,.3);}
-
-/* BRAND BUTTONS */
-.brand-btn{padding:14px 16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:inherit;color:var(--t3);width:100%;}
-.brand-btn.rss.on{border-color:rgba(232,49,42,.4);background:rgba(232,49,42,.10);color:#E8312A;}
-.brand-btn.vrc.on{border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.08);color:#30D158;}
-.brand-btn.urd.on{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.08);color:#FF9F0A;}
-</style>
-</head>
-<body>
-
-<div class="gate" id="ae-gate">
-  <div class="gate-box">
-    <i class="ti ti-lock" style="font-size:32px;color:var(--t3);display:block;margin-bottom:16px;"></i>
-    <div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;margin-bottom:8px;"><em style="color:var(--acc);">AC</em> Liveries DB</div>
-    <p style="font-size:13px;color:var(--t2);line-height:1.6;">Access via your personal link.<br>Ask the admin on Discord.</p>
-  </div>
-</div>
-
-<div class="shell" id="ae-shell" style="display:none;">
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <span style="font-size:15px;font-weight:900;font-style:italic;color:var(--acc);">AC</span>
-      <span style="font-size:15px;font-weight:900;font-style:italic;color:var(--t1);"> Liveries</span>
-      <span style="font-size:8px;font-weight:700;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-left:4px;">DB</span>
-    </div>
-    <div class="sb-artist">
-      <div class="sb-av" id="ae-av">?</div>
-      <div style="min-width:0;">
-        <div style="font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="ae-name">…</div>
-        <div style="font-size:10px;color:var(--t3);">👑 Confirmed artist</div>
-      </div>
-    </div>
-    <nav class="sb-nav">
-      <div class="sb-sec">My content</div>
-      <button class="sb-link on" id="nl-liveries"><i class="ti ti-photo"></i> My liveries</button>
-      <button class="sb-link" id="nl-addons"><i class="ti ti-puzzle"></i> My addons</button>
-      <button class="sb-link" id="nl-submit"><i class="ti ti-plus"></i> Add livery</button>
-      <button class="sb-link" id="nl-profile"><i class="ti ti-user"></i> My profile</button>
-    </nav>
-    <a href="index.html" class="sb-back"><i class="ti ti-arrow-left"></i> Back to site</a>
-  </aside>
-
-  <div class="main">
-
-    <!-- MY LIVERIES -->
-    <div class="view on" id="ae-view-liveries">
-      <div class="page-top">
-        <div class="page-ey"><span></span>Creator Dashboard</div>
-        <h2 class="page-h1">My <em>liveries</em></h2>
-      </div>
-      <div class="lv-grid" id="ae-liveries-grid"></div>
-    </div>
-
-    <!-- MY ADDONS -->
-    <div class="view" id="ae-view-addons">
-      <div class="page-top">
-        <div class="page-ey"><span></span>Creator Dashboard</div>
-        <h2 class="page-h1">My <em>addons</em></h2>
-      </div>
-      <div class="lv-grid" id="ae-addons-grid"></div>
-    </div>
-
-    <!-- ADD LIVERY -->
-    <div class="view" id="ae-view-submit">
-      <div style="display:grid;grid-template-columns:1fr 320px;min-height:100vh;">
-        <!-- LEFT -->
-        <div style="border-right:0.5px solid var(--b1);overflow-y:auto;">
-          <div class="page-top">
-            <div class="page-ey"><span></span>Creator Dashboard</div>
-            <h2 class="page-h1">Add a <em>livery</em></h2>
-          </div>
-          <div style="padding:24px 28px 60px;">
-        <!-- STEP 1 — PUBLISHER -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">1</span> Publisher</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-            <button type="button" id="s-brand-RSS" onclick="selectSubmitBrand('RSS')" class="brand-btn brand-btn-active" data-brand="RSS">
-              <div style="font-size:20px;font-weight:900;font-style:italic;">RSS</div>
-              <div style="font-size:11px;margin-top:3px;">Race Sim Studio</div>
-            </button>
-            <button type="button" id="s-brand-VRC" onclick="selectSubmitBrand('VRC')" class="brand-btn" data-brand="VRC">
-              <div style="font-size:20px;font-weight:900;font-style:italic;">VRC</div>
-              <div style="font-size:11px;margin-top:3px;">Virtual Racing Cars</div>
-            </button>
-            <button type="button" id="s-brand-URD" onclick="selectSubmitBrand('URD')" class="brand-btn" data-brand="URD">
-              <div style="font-size:20px;font-weight:900;font-style:italic;">URD</div>
-              <div style="font-size:11px;margin-top:3px;">United Racing Design</div>
-            </button>
-          </div>
-          <input type="hidden" id="s-brand" value="RSS">
-        </div>
-
-        <!-- STEP 2 — CATEGORY & MOD -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">2</span> Category & Mod</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="field" style="margin:0;">
-              <label>Category *</label>
-              <select class="form-select" id="s-cat"><option value="">Select…</option></select>
-            </div>
-            <div class="field" style="margin:0;">
-              <label id="s-mod-label">Mod *</label>
-              <button type="button" class="picker-btn" id="s-mod-btn" disabled onclick="openModPicker()">
-                <div class="picker-ph" id="s-mod-ph"><i class="ti ti-car"></i></div>
-                <span id="s-mod-text">— Select category first —</span>
-              </button>
-              <input type="hidden" id="s-mod">
-            </div>
-            <div class="field" id="s-champ-wrap" style="margin:0;grid-column:1/-1;">
-              <label>Championship</label>
-              <button type="button" class="picker-btn" id="s-champ-btn" disabled onclick="openChampPicker()">
-                <div class="picker-ph" id="s-champ-ph"><i class="ti ti-trophy"></i></div>
-                <span id="s-champ-text">— Select category first —</span>
-              </button>
-              <input type="hidden" id="s-champ">
-            </div>
-            <div class="field" id="s-addon-type-wrap" style="display:none;margin:0;grid-column:1/-1;">
-              <label>Addon type *</label>
-              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;">
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="tyre_skin"> Tyre skin</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="3d_asset"> 3D asset</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="shader"> Shader</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="ui"> UI element</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="other"> Other</label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 3 — LIVERY DETAILS -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">3</span> Livery details</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="field" style="margin:0;grid-column:1/-1;"><label id="s-name-label">Livery name *</label><input type="text" id="s-name" placeholder="e.g. #16 Ferrari SF-24"></div>
-            <div class="field livery-only" style="margin:0;"><label>Team *</label><input type="text" id="s-team" placeholder="e.g. Scuderia Ferrari"></div>
-            <div class="field livery-only" style="margin:0;"><label>Driver(s)</label><input type="text" id="s-driver" placeholder="e.g. Charles Leclerc"></div>
-            <div class="field livery-only" style="margin:0;"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024"></div>
-            <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
-            <div class="field" style="margin:0;grid-column:1/-1;">
-              <label>Pricing</label>
-              <div style="display:flex;gap:10px;margin-top:6px;">
-                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
-                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 4 — CREATOR -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">4</span> Creator</div>
-          <div class="field" style="margin:0 0 10px;"><label>Confirmed artist</label><div class="artist-picker" id="s-artist-picker"></div></div>
-          <div style="display:flex;align-items:center;gap:8px;margin:10px 0;"><div style="flex:1;height:0.5px;background:var(--b1);"></div><span style="font-size:10px;color:var(--t3);">or enter manually</span><div style="flex:1;height:0.5px;background:var(--b1);"></div></div>
-          <div class="field" style="margin:0;"><input type="text" id="s-author" placeholder="Your creator name / alias"><span class="hint" id="s-author-hint">Leave empty if you selected an artist above.</span></div>
-        </div>
-
-        <!-- STEP 5 — FILES -->
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n">5</span> Files & links</div>
-          <div style="display:grid;gap:12px;">
-            <div class="field" style="margin:0;"><label>Download URL *</label><input type="url" id="s-url" placeholder="https://www.racedepartment.com/…"><span class="hint">Official link only.</span></div>
-            <div class="field" style="margin:0;"><label>Preview image *</label><div class="upload-widget" id="s-img-widget"></div></div>
-            <div class="field" style="margin:0;"><label>Notes</label><textarea id="s-notes" placeholder="Any extra info…"></textarea></div>
-          </div>
-        </div>
-
-        <div class="sub-error" id="s-error"></div>
-      </div>
-
-      <!-- RIGHT — STICKY PANEL -->
-      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
-
-        <!-- LIVE PREVIEW CARD -->
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
-          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
-            </div>
-            <div style="padding:10px 12px 12px;">
-              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
-              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
-              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
-            </div>
-          </div>
-        </div>
-
-
-            <!-- SUBMIT ERROR -->
-            <div id="ae-submit-err" style="color:var(--red);font-size:12px;margin-top:8px;display:none;"></div>
-          </div>
-        </div>
-        <!-- RIGHT -->
-        <!-- RIGHT — STICKY PANEL -->
-      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
-
-        <!-- LIVE PREVIEW CARD -->
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
-          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
-            </div>
-            <div style="padding:10px 12px 12px;">
-              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
-              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
-              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- CHECKLIST -->
-        <div style="flex:1;">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Required fields</div>
-          <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
-        </div>
-
-        <!-- TIPS -->
-        <div style="background:var(--bg);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
-          <div style="font-size:11px;color:var(--t3);line-height:1.6;">
-            Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
-            Preview image should be <strong style="color:var(--t2);">16:9</strong>, min 800px wide.
-          </div>
-        </div>
-
-        <button class="sub-cta" id="s-submit-btn"><i class="ti ti-send"></i> Publish livery</button>
-      </div>
-      </div>
-    </div>
-
-    <!-- MY PROFILE -->
-    <div class="view" id="ae-view-profile">
-      <div class="page-top">
-        <div class="page-ey"><span></span>Creator Dashboard</div>
-        <h2 class="page-h1">My <em>profile</em></h2>
-      </div>
-      <div class="form-wrap">
-        <div class="field"><label>Name *</label><input id="pf-name" type="text"></div>
-        <div class="field"><label>Discord</label><input id="pf-discord" type="text" placeholder="@username"></div>
-        <div class="field"><label>Bio</label><textarea id="pf-bio" placeholder="Tell the community about yourself…"></textarea></div>
-        <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Social links</div>
-        <div class="field"><label>Twitter/X</label><input id="pf-twitter" type="url" placeholder="https://x.com/…"></div>
-        <div class="field"><label>Patreon</label><input id="pf-patreon" type="url" placeholder="https://patreon.com/…"></div>
-        <div class="field"><label>YouTube</label><input id="pf-youtube" type="url" placeholder="https://youtube.com/…"></div>
-        <div class="field"><label>Overtake</label><input id="pf-overtake" type="url" placeholder="https://www.overtake.gg/…"></div>
-        <button class="btn-primary" id="pf-save"><i class="ti ti-check"></i> Save profile</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- EDIT LIVERY MODAL -->
-<div class="modal-ov" id="ae-lm-ov">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-pencil" style="color:var(--acc);"></i> Edit livery</div>
-    <div class="form-grid">
-      <div class="field full"><label>Name *</label><input id="ae-lm-name"></div>
-      <div class="field"><label>Team</label><input id="ae-lm-team"></div>
-      <div class="field"><label>Driver(s)</label><input id="ae-lm-driver"></div>
-      <div class="field"><label>Season</label><input id="ae-lm-season"></div>
-      <div class="field"><label>Car #</label><input id="ae-lm-car" maxlength="4"></div>
-      <div class="field"><label>Pricing</label><select id="ae-lm-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
-      <div class="field full"><label>Notes</label><textarea id="ae-lm-notes"></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-ghost" id="ae-lm-cancel">Cancel</button>
-      <button class="btn-danger" id="ae-lm-delete"><i class="ti ti-trash"></i> Delete</button>
-      <button class="btn-primary" id="ae-lm-save"><i class="ti ti-check"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- PICKER MODALS -->
-<div class="picker-modal" id="mod-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('mod-picker').style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head"><input class="picker-search" id="mod-ps" placeholder="Search mods…" oninput="filterModPicker(this.value)"><button class="picker-close" onclick="document.getElementById('mod-picker').style.display='none'">×</button></div>
-    <div class="picker-grid" id="mod-pg"></div>
-  </div>
-</div>
-<div class="picker-modal" id="champ-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('champ-picker').style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head"><input class="picker-search" id="champ-ps" placeholder="Search championships…" oninput="filterChampPicker(this.value)"><button class="picker-close" onclick="document.getElementById('champ-picker').style.display='none'">×</button></div>
-    <div class="picker-grid" id="champ-pg"></div>
-  </div>
-</div>
-
-<!-- REPORT MODAL -->
 
 <div class="toast" id="ae-toast"></div>
 
@@ -784,7 +222,7 @@ var _ae_token = new URLSearchParams(location.search).get('token');
 var _ae_artist = null;
 var _ae_edit_id = null;
 var _ae_brand = 'RSS';
-var _cats = [], _mods = [], _champs = [], _artists_list = [];
+var _cats = [], _mods = [], _champs = [];
 
 function aeToast(msg, type) {
   var t = document.getElementById('ae-toast');
@@ -800,7 +238,6 @@ function aeNav(v) {
   if (v==='liveries') aeLiveries();
   if (v==='addons') aeAddons();
   if (v==='profile') aeProfile();
-  if (v==='submit') { aeInitSubmit(); }
 }
 
 document.getElementById('nl-liveries').addEventListener('click', function(){ aeNav('liveries'); });
@@ -808,7 +245,6 @@ document.getElementById('nl-addons').addEventListener('click', function(){ aeNav
 document.getElementById('nl-submit').addEventListener('click', function(){ aeNav('submit'); });
 document.getElementById('nl-profile').addEventListener('click', function(){ aeNav('profile'); });
 
-// Brand selector
 document.getElementById('ae-brand-btns').addEventListener('click', function(e) {
   var btn = e.target.closest('.brand-btn');
   if (!btn) return;
@@ -820,16 +256,15 @@ document.getElementById('ae-brand-btns').addEventListener('click', function(e) {
 });
 
 function aeFilterCats() {
-  var sel = document.getElementById('ae-cat');
-  sel.innerHTML = '<option value="">Select…</option>';
+  var catSel = document.getElementById('ae-cat');
+  catSel.innerHTML = '<option value="">Select…</option>';
   _cats.filter(function(c){ return c.brand === _ae_brand; }).forEach(function(c){
-    var o = document.createElement('option'); o.value = c.id; o.textContent = c.name; sel.appendChild(o);
+    var o = document.createElement('option'); o.value = c.id; o.textContent = c.name; catSel.appendChild(o);
   });
-  // Reset mod/champ
-  var ms = document.getElementById('ae-mod');
-  ms.innerHTML = '<option value="">Select…</option>';
+  var modSel = document.getElementById('ae-mod');
+  modSel.innerHTML = '<option value="">Select…</option>';
   _mods.filter(function(m){ return m.brand === _ae_brand; }).forEach(function(m){
-    var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; ms.appendChild(o);
+    var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; modSel.appendChild(o);
   });
 }
 
@@ -843,17 +278,14 @@ async function aeBoot() {
     db.from('categories').select('*').order('name'),
     db.from('mods').select('*').order('name'),
     db.from('championships').select('*').order('name'),
-    db.from('artists').select('id,name,avatar_url').order('name'),
   ]);
-  _cats = r[0].data||[]; _mods = r[1].data||[]; _champs = r[2].data||[]; _artists_list = r[3].data||[];
+  _cats = r[0].data||[]; _mods = r[1].data||[]; _champs = r[2].data||[];
 
-  // Populate championship select
   var cs = document.getElementById('ae-champ');
   _champs.forEach(function(c){
     var o = document.createElement('option'); o.value = c.id; o.textContent = c.short_name||c.name; cs.appendChild(o);
   });
 
-  // Init brand filter
   aeFilterCats();
 
   document.getElementById('ae-gate').style.display = 'none';
@@ -868,14 +300,13 @@ async function aeBoot() {
   aeNav('liveries');
 }
 
-// LIVERIES
 async function aeLiveries() {
   var el = document.getElementById('ae-liveries-grid');
   el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
   var res = await db.from('liveries').select('*,categories(name),mods(name),championships(short_name)').eq('artist_id',_ae_artist.id).order('created_at',{ascending:false});
   var data = res.data||[];
   if (!data.length) {
-    el.innerHTML = '<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-photo" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No liveries yet.<br><br><button onclick="aeNav(\'submit\')" style="margin-top:8px;height:38px;padding:0 18px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;"><i class="ti ti-plus"></i> Add your first livery</button></div>';
+    el.innerHTML = '<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-photo" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No liveries yet.<br><br><button onclick="aeNav(\'submit\')" style="margin-top:8px;height:38px;padding:0 18px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Add your first livery</button></div>';
     return;
   }
   el.innerHTML = data.map(function(l){
@@ -894,7 +325,6 @@ async function aeLiveries() {
   }).join('');
 }
 
-// EDIT LIVERY MODAL
 async function aeEditLivery(id) {
   _ae_edit_id = id;
   var res = await db.from('liveries').select('*').eq('id',id).single();
@@ -914,15 +344,7 @@ document.getElementById('ae-lm-ov').addEventListener('click', function(e){ if(e.
 document.getElementById('ae-lm-save').addEventListener('click', async function(){
   var name = document.getElementById('ae-lm-name').value.trim();
   if (!name){ aeToast('Name required','err'); return; }
-  var payload = {
-    name: name,
-    team: document.getElementById('ae-lm-team').value.trim()||null,
-    driver: document.getElementById('ae-lm-driver').value.trim()||null,
-    season: document.getElementById('ae-lm-season').value.trim()||null,
-    car_number: document.getElementById('ae-lm-car').value.trim()||null,
-    is_paid: document.getElementById('ae-lm-paid').value==='true',
-    notes: document.getElementById('ae-lm-notes').value.trim()||null,
-  };
+  var payload = {name:name, team:document.getElementById('ae-lm-team').value.trim()||null, driver:document.getElementById('ae-lm-driver').value.trim()||null, season:document.getElementById('ae-lm-season').value.trim()||null, car_number:document.getElementById('ae-lm-car').value.trim()||null, is_paid:document.getElementById('ae-lm-paid').value==='true', notes:document.getElementById('ae-lm-notes').value.trim()||null};
   var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:_ae_edit_id,p_data:payload});
   if (res.error){ aeToast('Error: '+res.error.message,'err'); return; }
   document.getElementById('ae-lm-ov').classList.remove('open');
@@ -935,7 +357,6 @@ document.getElementById('ae-lm-delete').addEventListener('click', async function
   aeToast('Deleted.'); aeLiveries();
 });
 
-// ADDONS
 async function aeAddons() {
   var el = document.getElementById('ae-addons-grid');
   el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
@@ -952,53 +373,18 @@ async function aeAddons() {
   }).join('');
 }
 
-// SUBMIT
-function aeInitSubmit() {
-  // Already populated on boot — just clear form
-  document.getElementById('ae-lname').value = '';
-  document.getElementById('ae-team').value = '';
-  document.getElementById('ae-driver').value = '';
-  document.getElementById('ae-season').value = '';
-  document.getElementById('ae-carnumber').value = '';
-  document.getElementById('ae-url').value = '';
-  document.getElementById('ae-img').value = '';
-  document.getElementById('ae-notes').value = '';
-  document.getElementById('ae-paid').value = 'false';
-  document.getElementById('ae-cat').value = '';
-  document.getElementById('ae-mod').value = '';
-  document.getElementById('ae-champ').value = '';
-  document.getElementById('ae-submit-err').style.display = 'none';
-}
-
 document.getElementById('ae-submit-btn').addEventListener('click', async function(){
   var name = document.getElementById('ae-lname').value.trim();
   var url = document.getElementById('ae-url').value.trim();
   if (!name){ document.getElementById('ae-submit-err').textContent='Livery name required.'; document.getElementById('ae-submit-err').style.display='block'; return; }
   if (!url){ document.getElementById('ae-submit-err').textContent='Download URL required.'; document.getElementById('ae-submit-err').style.display='block'; return; }
-  var payload = {
-    name: name,
-    team: document.getElementById('ae-team').value.trim()||null,
-    driver: document.getElementById('ae-driver').value.trim()||null,
-    season: document.getElementById('ae-season').value.trim()||null,
-    car_number: document.getElementById('ae-carnumber').value.trim()||null,
-    category_id: document.getElementById('ae-cat').value||null,
-    mod_id: document.getElementById('ae-mod').value||null,
-    championship_id: document.getElementById('ae-champ').value||null,
-    download_url: url,
-    image_url: document.getElementById('ae-img').value.trim()||null,
-    is_paid: document.getElementById('ae-paid').value==='true',
-    notes: document.getElementById('ae-notes').value.trim()||null,
-    artist_id: _ae_artist.id,
-    author: _ae_artist.name,
-    approved: true,
-  };
+  var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:document.getElementById('ae-img').value.trim()||null, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
   var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
   if (res.error){ document.getElementById('ae-submit-err').textContent='Error: '+res.error.message; document.getElementById('ae-submit-err').style.display='block'; return; }
   aeToast('Livery published!');
   aeNav('liveries');
 });
 
-// PROFILE
 function aeProfile() {
   if (!_ae_artist) return;
   document.getElementById('pf-name').value = _ae_artist.name||'';
@@ -1013,15 +399,7 @@ function aeProfile() {
 document.getElementById('pf-save').addEventListener('click', async function(){
   var name = document.getElementById('pf-name').value.trim();
   if (!name){ aeToast('Name required','err'); return; }
-  var payload = {
-    name: name,
-    discord: document.getElementById('pf-discord').value.trim()||null,
-    bio: document.getElementById('pf-bio').value.trim()||null,
-    url_twitter: document.getElementById('pf-twitter').value.trim()||null,
-    url_patreon: document.getElementById('pf-patreon').value.trim()||null,
-    url_youtube: document.getElementById('pf-youtube').value.trim()||null,
-    url_overtake: document.getElementById('pf-overtake').value.trim()||null,
-  };
+  var payload = {name:name, discord:document.getElementById('pf-discord').value.trim()||null, bio:document.getElementById('pf-bio').value.trim()||null, url_twitter:document.getElementById('pf-twitter').value.trim()||null, url_patreon:document.getElementById('pf-patreon').value.trim()||null, url_youtube:document.getElementById('pf-youtube').value.trim()||null, url_overtake:document.getElementById('pf-overtake').value.trim()||null};
   var res = await db.rpc('artist_update_profile',{p_token:_ae_token,p_data:payload});
   if (res.error){ aeToast('Error: '+res.error.message,'err'); return; }
   Object.assign(_ae_artist, payload);
@@ -1029,202 +407,7 @@ document.getElementById('pf-save').addEventListener('click', async function(){
   aeToast('Profile saved!');
 });
 
-
-// ── SUBMIT FUNCTIONS (from index.html) ──────────────────
-var _sMode='livery', _sSelMod='', _sSelChamp='', _sArtistId=null;
-var _sAvailMods2=[], _sAvailChamps2=[];
-var AVC=[['rgba(232,49,42,.15)','#E8312A'],['rgba(48,209,88,.12)','#30D158'],['rgba(255,159,10,.10)','#FF9F0A'],['rgba(191,90,242,.12)','#BF5AF2']];
-
-function selectSubmitBrand(b){
-  document.getElementById('s-brand').value=b;
-  var BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.4)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}};
-  ['RSS','VRC','URD'].forEach(function(br){
-    var btn=document.getElementById('s-brand-'+br);if(!btn)return;
-    var bm=BRC[br];var active=br===b;
-    btn.style.borderColor=active?bm.border:'var(--b1)';
-    btn.style.background=active?bm.bg:'transparent';
-    btn.style.color=active?bm.c:'var(--t3)';
-  });
-  var sel=document.getElementById('s-cat');
-  if(sel){
-    sel.innerHTML='<option value="">Select…</option>';
-    _cats.filter(function(c){return c.brand===b;}).forEach(function(c){
-      var o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);
-    });
-    document.getElementById('s-mod').value='';
-    document.getElementById('s-mod-text').textContent='— Select category first —';
-    document.getElementById('s-mod-btn').disabled=true;
-    document.getElementById('s-champ').value='';
-    document.getElementById('s-champ-text').textContent='— Select category first —';
-    document.getElementById('s-champ-btn').disabled=true;
-  }
-}
-
-function setSubMode(m){
-  _sMode=m;
-  var isLivery=m==='livery';
-  // Toggle buttons style
-  var lb=document.getElementById('stg-livery');var ab=document.getElementById('stg-addon');
-  if(lb){lb.style.borderColor=isLivery?'rgba(91,110,247,.4)':'var(--b1)';lb.style.background=isLivery?'rgba(91,110,247,.10)':'transparent';lb.style.color=isLivery?'#5B6EF7':'var(--t2)';}
-  if(ab){ab.style.borderColor=!isLivery?'rgba(91,110,247,.4)':'var(--b1)';ab.style.background=!isLivery?'rgba(91,110,247,.10)':'transparent';ab.style.color=!isLivery?'#5B6EF7':'var(--t2)';}
-  var addonWrap=document.getElementById('s-addon-type-wrap');if(addonWrap)addonWrap.style.display=isLivery?'none':'block';
-  var champWrap=document.getElementById('s-champ-wrap');if(champWrap)champWrap.style.display=isLivery?'block':'none';
-  document.querySelectorAll('.livery-only').forEach(function(el){el.style.display=isLivery?'':'none';});
-  var nl=document.getElementById('s-name-label');if(nl)nl.textContent=isLivery?'Livery name *':'Addon name *';
-  var ml=document.getElementById('s-mod-label');if(ml)ml.textContent=isLivery?'Mod *':'Mod (optional)';
-  updateChecklist();
-}
-
-function openModPicker(){if(!_sAvailMods2.length)return;renderModPicker(_sAvailMods2);document.getElementById('mod-picker').style.display='flex';setTimeout(()=>document.getElementById('mod-ps').focus(),50);}
-
-function openChampPicker(){renderChampPicker(_sAvailChamps2);document.getElementById('champ-picker').style.display='flex';setTimeout(()=>document.getElementById('champ-ps').focus(),50);}
-
-function renderModPicker(list){
-  const g=document.getElementById('mod-pg');
-  g.innerHTML=list.length?list.map(m=>`<div class="pi${m.id===_sSelMod?' selected':''}" onclick="selectMod('${m.id}','${m.name.replace(/'/g,"\\'")}')">${m.image_url?`<img src="${m.image_url}" class="pi-logo" alt="${m.name}">`:`<div class="pi-logo-ph"><i class="ti ti-car"></i></div>`}<div class="pi-name">${m.name}</div></div>`).join(''):`<div class="pi-none">No mods found</div>`;
-}
-
-function renderChampPicker(list){
-  const g=document.getElementById('champ-pg');
-  const none=`<div class="pi${!_sSelChamp?' selected':''}" onclick="selectChamp('','No championship')"><div class="pi-logo-ph"><i class="ti ti-x"></i></div><div class="pi-name">No championship</div></div>`;
-  g.innerHTML=none+list.map(c=>`<div class="pi${c.id===_sSelChamp?' selected':''}" onclick="selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')">${c.logo_url?`<img src="${c.logo_url}" class="pi-logo" alt="${c.name}">`:`<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>`}<div class="pi-name">${c.short_name||c.name}</div></div>`).join('');
-}
-
-function filterModPicker(q){renderModPicker(_sAvailMods2.filter(m=>m.name.toLowerCase().includes(q.toLowerCase())));}
-
-function filterChampPicker(q){renderChampPicker(_sAvailChamps2.filter(c=>(c.name+' '+(c.short_name||'')).toLowerCase().includes(q.toLowerCase())));}
-
-function selectMod(id,name){_sSelMod=id;document.getElementById('s-mod').value=id;document.getElementById('s-mod-text').textContent=name;document.getElementById('mod-picker').style.display='none';document.getElementById('s-champ-btn').disabled=!_sAvailChamps2.length;updateChecklist();updateSubmitPreview();}
-
-function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';updateSubmitPreview();}
-
-function updateChecklist(){
-  const isAddon=_sMode==='addon';
-  const checks=[
-    {id:'chk-name',label:isAddon?'Addon name':'Livery name',done:!!document.getElementById('s-name')?.value.trim()},
-    {id:'chk-cat',label:'Category',done:!!document.getElementById('s-cat')?.value},
-    {id:'chk-mod',label:'Mod',done:!isAddon?!!document.getElementById('s-mod')?.value:true},
-    ...(isAddon?[]:[
-      {id:'chk-team',label:'Team',done:!!document.getElementById('s-team')?.value.trim()},
-      {id:'chk-season',label:'Season',done:!!document.getElementById('s-season')?.value.trim()},
-      {id:'chk-carnumber',label:'Car number',done:!!document.getElementById('s-carnumber')?.value.trim()},
-    ]),
-    {id:'chk-creator',label:'Creator',done:!!(document.getElementById('s-author')?.value.trim()||_sArtistId)},
-    {id:'chk-url',label:'Download URL',done:!!document.getElementById('s-url')?.value.trim()},
-    {id:'chk-img',label:'Preview image',done:!!_getSubmitImg()},
-  ];
-  document.getElementById('s-checklist').innerHTML=checks.map(c=>`<div class="checker${c.done?' done':''}"><i class="ti ${c.done?'ti-circle-check':'ti-circle'}"></i>${c.label}</div>`).join('');
-}
-
-function updateSubmitPreview(){
-  // Thumb
-  const img=document.getElementById('s-preview-thumb');
-  const imgUrl=typeof _getSubmitImg==='function'?null:null; // image set via upload widget
-  // Name
-  const name=document.getElementById('s-name')?.value||'Livery name';
-  document.getElementById('s-preview-name').textContent=name;
-  // Champ
-  const champText=document.getElementById('s-champ-text')?.textContent||'';
-  const champEl=document.getElementById('s-preview-champ');
-  if(champEl) champEl.textContent=champText.startsWith('—')?'— Championship —':champText;
-  // Meta
-  const modText=document.getElementById('s-mod-text')?.textContent||'';
-  const author=document.getElementById('s-author')?.value||'';
-  const artistEl=document.querySelector('.ap-item.selected');
-  const creator=artistEl?artistEl.dataset.name:author||'Creator';
-  const mod=modText.startsWith('—')?'Mod':modText;
-  const metaEl=document.getElementById('s-preview-meta');
-  if(metaEl) metaEl.textContent=mod+' · '+creator;
-}
-
-function buildSubmitUpload(){
-  const w=document.getElementById('s-img-widget');
-  if(!w)return()=>null;
-  let cur=null;
-  w.innerHTML=`<img id="sub-prev" class="upload-preview" alt="preview"><label class="upload-btn-label"><i class="ti ti-upload"></i> Upload preview image<input type="file" accept="image/*" style="display:none;" id="sub-img-input"></label><div class="upload-prog" id="sub-prog"></div>`;
-  document.getElementById('sub-img-input').addEventListener('change',async function(){
-    const file=this.files[0];if(!file)return;
-    if(file.size>2*1024*1024){alert('Max 2MB.');return;}
-    const lbl=this.parentElement;lbl.style.opacity='.6';lbl.style.pointerEvents='none';
-    const prog=document.getElementById('sub-prog');prog.textContent='Compressing…';
-    try{
-      const blob=await compressImg(file);
-      prog.textContent=`Uploading… (${(blob.size/1024).toFixed(0)}KB)`;
-      const url=await uploadImg(blob,'liveries');
-      if(url){cur=url;_sPreviewImg=url;const prev=document.getElementById('sub-prev');prev.src=url;prev.classList.add('visible');prog.textContent='✓ Uploaded';lbl.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="sub-img-input">';document.getElementById('sub-img-input').addEventListener('change',arguments.callee.bind(document.getElementById('sub-img-input')));}
-      else prog.textContent='✗ Failed.';
-    }catch(e){prog.textContent='✗ Error.';}
-    lbl.style.opacity='1';lbl.style.pointerEvents='auto';
-    updateChecklist();
-  });
-  return()=>cur;
-}
-
-function selectArtist(el){
-  const id=el.dataset.id;
-  if(_sArtistId===id){_sArtistId=null;el.classList.remove('selected');document.getElementById('s-author').disabled=false;document.getElementById('s-author-hint').textContent='Leave empty if you selected an artist above.';document.getElementById('s-author-hint').className='hint';}
-  else{document.querySelectorAll('.ap-item').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');_sArtistId=id;document.getElementById('s-author').value='';document.getElementById('s-author').disabled=true;document.getElementById('s-author-hint').textContent=`✓ ${el.dataset.name} selected.`;document.getElementById('s-author-hint').className='hint ok';}
-  updateChecklist();
-}
-
-function aeInitSubmit() {
-  // Populate artists picker
-  var ap = document.getElementById('s-artist-picker');
-  if (ap && !ap.children.length) {
-    ap.innerHTML = _artists_list.map(function(a,i){
-      var ini=a.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
-      var abg=AVC[i%AVC.length][0], ac=AVC[i%AVC.length][1];
-      var sel=a.id===_ae_artist.id;
-      return '<div class="ap-item'+(sel?' selected':'')+'" data-id="'+a.id+'" data-name="'+a.name+'" onclick="selectArtist(this)" style="'+(sel?'border-color:var(--acc);background:var(--acc2);':'')+'">'+
-        (a.avatar_url?'<div class="ap-av"><img src="'+a.avatar_url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>':'<div class="ap-av-ph" style="background:'+abg+';color:'+ac+';">'+ini+'</div>')+
-        '<div><div class="ap-crown">👑</div><div class="ap-name">'+a.name+'</div></div></div>';
-    }).join('');
-    // Pre-select current artist
-    var selfEl = ap.querySelector('[data-id="'+_ae_artist.id+'"]');
-    if (selfEl) selectArtist(selfEl);
-  }
-  selectSubmitBrand(document.getElementById('s-brand')?.value||'RSS');
-  setSubMode('livery');
-  updateChecklist();
-  updateSubmitPreview();
-}
-
-// Override submit button — auto-approve for artists
-document.addEventListener('click', function(e) {
-  var btn = e.target.closest('#s-submit-btn');
-  if (!btn) return;
-  e.preventDefault(); e.stopImmediatePropagation();
-  aeDoSubmit();
-}, true);
-
-async function aeDoSubmit() {
-  var name = (document.getElementById('s-name')||{}).value||'';
-  if (!name.trim()) { aeToast('Livery name required','err'); return; }
-  var url = (document.getElementById('s-url')||{}).value||'';
-  if (!url.trim()) { aeToast('Download URL required','err'); return; }
-  var payload = {
-    name: name.trim(),
-    team: document.getElementById('s-team')?.value?.trim()||null,
-    driver: document.getElementById('s-driver')?.value?.trim()||null,
-    season: document.getElementById('s-season')?.value?.trim()||null,
-    car_number: document.getElementById('s-carnumber')?.value?.trim()||null,
-    category_id: document.getElementById('s-cat')?.value||null,
-    mod_id: document.getElementById('s-mod')?.value||null,
-    championship_id: document.getElementById('s-champ')?.value||null,
-    download_url: url.trim(),
-    image_url: document.getElementById('s-img')?.value?.trim()||null,
-    is_paid: document.getElementById('s-paid')?.checked||false,
-    notes: document.getElementById('s-notes')?.value?.trim()||null,
-    artist_id: _ae_artist.id,
-    author: _ae_artist.name,
-    approved: true,
-  };
-  if (_sArtistId) payload.artist_id = _sArtistId;
-  var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
-  if (res.error) { aeToast('Error: '+res.error.message,'err'); return; }
-  aeToast('Livery published!');
-  aeNav('liveries');
-}
-
-// START
 if (_ae_token) aeBoot();
+</script>
+</body>
+</html>
