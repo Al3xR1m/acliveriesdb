@@ -156,8 +156,20 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
         <div class="form-grid">
           <div class="field full"><label id="ae-name-label">Livery name *</label><input id="ae-lname" type="text"></div>
           <div class="field"><label>Category</label><select id="ae-cat" onchange="aeOnCatChange()"><option value="">Select…</option></select></div>
-          <div class="field"><label>Mod</label><select id="ae-mod"><option value="">Select…</option></select></div>
-          <div class="field full livery-only" id="ae-champ-wrap"><label>Championship</label><select id="ae-champ"><option value="">None</option></select></div>
+          <div class="field"><label>Mod</label>
+            <button type="button" onclick="aeOpenModPicker()" id="ae-mod-btn" style="height:38px;padding:0 12px;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;color:var(--t2);font-size:13px;font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;width:100%;">
+              <span id="ae-mod-text">— Select category first —</span>
+              <i class="ti ti-chevron-right" style="font-size:12px;"></i>
+            </button>
+            <input type="hidden" id="ae-mod">
+          </div>
+          <div class="field full livery-only" id="ae-champ-wrap"><label>Championship</label>
+            <button type="button" onclick="aeOpenChampPicker()" id="ae-champ-btn" style="height:38px;padding:0 12px;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;color:var(--t2);font-size:13px;font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;width:100%;">
+              <span id="ae-champ-text">— None —</span>
+              <i class="ti ti-chevron-right" style="font-size:12px;"></i>
+            </button>
+            <input type="hidden" id="ae-champ">
+          </div>
           <div class="field livery-only"><label>Team</label><input id="ae-team" type="text"></div>
           <div class="field livery-only"><label>Driver(s)</label><input id="ae-driver" type="text"></div>
           <div class="field livery-only"><label>Season</label><input id="ae-season" type="text"></div>
@@ -222,6 +234,28 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   </div>
 </div>
 
+
+<!-- MOD PICKER -->
+<div id="ae-mod-picker" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:12px;">
+      <input id="ae-mod-search" type="text" placeholder="Search mod…" oninput="aeFilterModPicker(this.value)" style="flex:1;background:var(--s2);border:0.5px solid var(--b1);border-radius:9px;padding:8px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;">
+      <button onclick="document.getElementById('ae-mod-picker').style.display='none'" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:0 4px;">&times;</button>
+    </div>
+    <div id="ae-mod-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:16px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<!-- CHAMP PICKER -->
+<div id="ae-champ-picker" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:12px;">
+      <input id="ae-champ-search" type="text" placeholder="Search championship…" oninput="aeFilterChampPicker(this.value)" style="flex:1;background:var(--s2);border:0.5px solid var(--b1);border-radius:9px;padding:8px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;">
+      <button onclick="document.getElementById('ae-champ-picker').style.display='none'" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:0 4px;">&times;</button>
+    </div>
+    <div id="ae-champ-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:16px;overflow-y:auto;"></div>
+  </div>
+</div>
 <div class="toast" id="ae-toast"></div>
 
 <script>
@@ -266,8 +300,74 @@ function aeFilterCats() {
 }
 
 function aeOnCatChange() {
-  aeFilterMods(document.getElementById('ae-cat').value);
-  aeFilterChamps(document.getElementById('ae-cat').value);
+  var catId = document.getElementById('ae-cat').value;
+  aeFilterMods(catId);
+  aeFilterChamps(catId);
+  var hasMods = _mods.filter(function(m){ return !catId || m.category_id === catId; }).length > 0;
+  document.getElementById('ae-mod-text').textContent = catId ? '— Select mod —' : '— Select category first —';
+  document.getElementById('ae-mod').value = '';
+  document.getElementById('ae-champ').value = '';
+  document.getElementById('ae-champ-text').textContent = '— None —';
+}
+
+var _ae_avail_mods = [], _ae_avail_champs = [];
+
+function aeOpenModPicker() {
+  var catId = document.getElementById('ae-cat').value;
+  _ae_avail_mods = _mods.filter(function(m){ return !catId || m.category_id === catId; });
+  aeRenderModGrid(_ae_avail_mods);
+  document.getElementById('ae-mod-picker').style.display = 'flex';
+  document.getElementById('ae-mod-search').value = '';
+  setTimeout(function(){ document.getElementById('ae-mod-search').focus(); }, 50);
+}
+
+function aeRenderModGrid(list) {
+  var g = document.getElementById('ae-mod-grid');
+  g.innerHTML = list.length ? list.map(function(m){
+    return '<div onclick="aeSelectMod(''+m.id+'',''+m.name.replace(/'/g,"\'")+'')" style="border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--acc)'" onmouseout="this.style.borderColor='var(--b1)'">'
+      +(m.image_url?'<img src="'+m.image_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">':'<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:24px;color:var(--t3);"></i></div>')
+      +'<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+m.name+'</div></div>';
+  }).join('') : '<div style="padding:20px;text-align:center;color:var(--t2);grid-column:1/-1;">No mods for this category.</div>';
+}
+
+function aeFilterModPicker(q) {
+  aeRenderModGrid(_ae_avail_mods.filter(function(m){ return m.name.toLowerCase().includes(q.toLowerCase()); }));
+}
+
+function aeSelectMod(id, name) {
+  document.getElementById('ae-mod').value = id;
+  document.getElementById('ae-mod-text').textContent = name;
+  document.getElementById('ae-mod-text').style.color = 'var(--t1)';
+  document.getElementById('ae-mod-picker').style.display = 'none';
+}
+
+function aeOpenChampPicker() {
+  var catId = document.getElementById('ae-cat').value;
+  _ae_avail_champs = _champs.filter(function(c){ return !catId || !c.category_id || c.category_id === catId; });
+  aeRenderChampGrid(_ae_avail_champs);
+  document.getElementById('ae-champ-picker').style.display = 'flex';
+  document.getElementById('ae-champ-search').value = '';
+  setTimeout(function(){ document.getElementById('ae-champ-search').focus(); }, 50);
+}
+
+function aeRenderChampGrid(list) {
+  var g = document.getElementById('ae-champ-grid');
+  g.innerHTML = list.length ? list.map(function(c){
+    return '<div onclick="aeSelectChamp(''+c.id+'',''+(c.short_name||c.name).replace(/'/g,"\'")+'')" style="border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .12s;" onmouseover="this.style.borderColor='var(--acc)'" onmouseout="this.style.borderColor='var(--b1)'">'
+      +(c.logo_url?'<img src="'+c.logo_url+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">':'<div style="width:100%;aspect-ratio:16/9;background:var(--s2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-trophy" style="font-size:24px;color:var(--t3);"></i></div>')
+      +'<div style="padding:8px 10px;font-size:12px;font-weight:600;color:var(--t1);">'+(c.short_name||c.name)+'</div></div>';
+  }).join('') : '<div style="padding:20px;text-align:center;color:var(--t2);grid-column:1/-1;">No championships.</div>';
+}
+
+function aeFilterChampPicker(q) {
+  aeRenderChampGrid(_ae_avail_champs.filter(function(c){ return (c.short_name||c.name).toLowerCase().includes(q.toLowerCase()); }));
+}
+
+function aeSelectChamp(id, name) {
+  document.getElementById('ae-champ').value = id;
+  document.getElementById('ae-champ-text').textContent = name;
+  document.getElementById('ae-champ-text').style.color = 'var(--t1)';
+  document.getElementById('ae-champ-picker').style.display = 'none';
 }
 
 function aeFilterMods(catId) {
