@@ -606,10 +606,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     </div>
     <nav class="sb-nav">
       <div class="sb-sec">My content</div>
-      <button class="sb-link on" id="nl-liveries"><i class="ti ti-photo"></i> My liveries</button>
-      <button class="sb-link" id="nl-addons"><i class="ti ti-puzzle"></i> My addons</button>
-      <button class="sb-link" id="nl-submit"><i class="ti ti-plus"></i> Add livery</button>
-      <button class="sb-link" id="nl-profile"><i class="ti ti-user"></i> My profile</button>
+      <button class="sb-link on" id="nl-liveries" onclick="aeNav('liveries')"><i class="ti ti-photo"></i> My liveries</button>
+      <button class="sb-link" id="nl-addons" onclick="aeNav('addons')"><i class="ti ti-puzzle"></i> My addons</button>
+      <button class="sb-link" id="nl-submit" onclick="aeNav('submit')"><i class="ti ti-plus"></i> Add livery</button>
+      <button class="sb-link" id="nl-profile" onclick="aeNav('profile')"><i class="ti ti-user"></i> My profile</button>
     </nav>
     <a href="index.html" class="sb-back"><i class="ti ti-arrow-left"></i> Back to site</a>
   </aside>
@@ -807,14 +807,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
         <div class="field"><label>Patreon</label><input id="pf-patreon" type="url" placeholder="https://patreon.com/…"></div>
         <div class="field"><label>YouTube</label><input id="pf-youtube" type="url" placeholder="https://youtube.com/…"></div>
         <div class="field"><label>Overtake</label><input id="pf-overtake" type="url" placeholder="https://www.overtake.gg/…"></div>
-        <button class="btn-primary" id="pf-save"><i class="ti ti-check"></i> Save profile</button>
+        <button class="btn-primary" id="pf-save" onclick="aePfSave()"><i class="ti ti-check"></i> Save profile</button>
       </div>
     </div>
 
   </div>
 </div>
 
-<div class="modal-ov" id="ae-lm-ov">
+<div class="modal-ov" id="ae-lm-ov" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal">
     <div class="modal-title"><i class="ti ti-pencil" style="color:var(--acc);"></i> Edit livery</div>
     <div class="form-grid">
@@ -827,9 +827,9 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       <div class="field full"><label>Notes</label><textarea id="ae-lm-notes"></textarea></div>
     </div>
     <div class="modal-foot">
-      <button class="btn-ghost" id="ae-lm-cancel">Cancel</button>
-      <button class="btn-danger" id="ae-lm-delete"><i class="ti ti-trash"></i> Delete</button>
-      <button class="btn-primary" id="ae-lm-save"><i class="ti ti-check"></i> Save</button>
+      <button class="btn-ghost" id="ae-lm-cancel" onclick="document.getElementById('ae-lm-ov').classList.remove('open')">Cancel</button>
+      <button class="btn-danger" id="ae-lm-delete" onclick="aeLmDelete()"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn-primary" id="ae-lm-save" onclick="aeLmSave()"><i class="ti ti-check"></i> Save</button>
     </div>
   </div>
 </div>
@@ -855,6 +855,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 
 <div class="toast" id="ae-toast"></div>
 
+
 <script>
 var _ae_token = new URLSearchParams(location.search).get('token');
 var _ae_artist = null;
@@ -863,7 +864,6 @@ var _ae_brand = 'RSS';
 var _cats = [], _mods = [], _champs = [];
 
 
-document.addEventListener('DOMContentLoaded', function() {
 function aeToast(msg, type) {
   var t = document.getElementById('ae-toast');
   t.textContent = msg; t.className = 'toast ' + (type||'ok'); t.style.display = 'flex';
@@ -881,20 +881,14 @@ function aeNav(v) {
   if (v==='submit') setTimeout(aeInitSubmit,0);
 }
 
-document.getElementById('nl-liveries').addEventListener('click', function(){ aeNav('liveries'); });
-document.getElementById('nl-addons').addEventListener('click', function(){ aeNav('addons'); });
-document.getElementById('nl-submit').addEventListener('click', function(){ aeNav('submit'); });
-document.getElementById('nl-profile').addEventListener('click', function(){ aeNav('profile'); });
-
-document.getElementById('ae-brand-btns').addEventListener('click', function(e) {
-  var btn = e.target.closest('.brand-btn');
-  if (!btn) return;
-  _ae_brand = btn.dataset.brand;
-  document.getElementById('ae-brand').value = _ae_brand;
-  document.querySelectorAll('.brand-btn').forEach(function(b){ b.classList.remove('on'); });
-  btn.classList.add('on');
+function aeSelectBrand(b) {
+  _ae_brand = b;
+  document.getElementById('ae-brand').value = b;
+  document.querySelectorAll('.brand-btn').forEach(function(x){ x.classList.remove('on'); });
+  var btn = document.querySelector('.brand-btn[data-brand="'+b+'"]');
+  if (btn) btn.classList.add('on');
   aeFilterCats();
-});
+}
 
 function aeFilterCats() {
   var catSel = document.getElementById('ae-cat');
@@ -980,9 +974,7 @@ async function aeEditLivery(id) {
   document.getElementById('ae-lm-ov').classList.add('open');
 }
 
-document.getElementById('ae-lm-cancel').addEventListener('click', function(){ document.getElementById('ae-lm-ov').classList.remove('open'); });
-document.getElementById('ae-lm-ov').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
-document.getElementById('ae-lm-save').addEventListener('click', async function(){
+async function aeLmSave(){
   var name = document.getElementById('ae-lm-name').value.trim();
   if (!name){ aeToast('Name required','err'); return; }
   var payload = {name:name, team:document.getElementById('ae-lm-team').value.trim()||null, driver:document.getElementById('ae-lm-driver').value.trim()||null, season:document.getElementById('ae-lm-season').value.trim()||null, car_number:document.getElementById('ae-lm-car').value.trim()||null, is_paid:document.getElementById('ae-lm-paid').value==='true', notes:document.getElementById('ae-lm-notes').value.trim()||null};
@@ -990,13 +982,13 @@ document.getElementById('ae-lm-save').addEventListener('click', async function()
   if (res.error){ aeToast('Error: '+res.error.message,'err'); return; }
   document.getElementById('ae-lm-ov').classList.remove('open');
   aeToast('Saved!'); aeLiveries();
-});
-document.getElementById('ae-lm-delete').addEventListener('click', async function(){
+}
+async function aeLmDelete(){
   if (!confirm('Delete this livery?')) return;
   await db.from('liveries').delete().eq('id',_ae_edit_id);
   document.getElementById('ae-lm-ov').classList.remove('open');
   aeToast('Deleted.'); aeLiveries();
-});
+}
 
 async function aeAddons() {
   var el = document.getElementById('ae-addons-grid');
@@ -1014,7 +1006,7 @@ async function aeAddons() {
   }).join('');
 }
 
-document.getElementById('ae-submit-btn').addEventListener('click', async function(){
+async function aeDoSubmit(){
   var name = document.getElementById('ae-lname').value.trim();
   var url = document.getElementById('ae-url').value.trim();
   if (!name){ document.getElementById('ae-submit-err').textContent='Livery name required.'; document.getElementById('ae-submit-err').style.display='block'; return; }
@@ -1024,7 +1016,7 @@ document.getElementById('ae-submit-btn').addEventListener('click', async functio
   if (res.error){ document.getElementById('ae-submit-err').textContent='Error: '+res.error.message; document.getElementById('ae-submit-err').style.display='block'; return; }
   aeToast('Livery published!');
   aeNav('liveries');
-});
+}
 
 function aeProfile() {
   if (!_ae_artist) return;
@@ -1037,7 +1029,7 @@ function aeProfile() {
   document.getElementById('pf-overtake').value = _ae_artist.url_overtake||'';
 }
 
-document.getElementById('pf-save').addEventListener('click', async function(){
+async function aePfSave(){
   var name = document.getElementById('pf-name').value.trim();
   if (!name){ aeToast('Name required','err'); return; }
   var payload = {name:name, discord:document.getElementById('pf-discord').value.trim()||null, bio:document.getElementById('pf-bio').value.trim()||null, url_twitter:document.getElementById('pf-twitter').value.trim()||null, url_patreon:document.getElementById('pf-patreon').value.trim()||null, url_youtube:document.getElementById('pf-youtube').value.trim()||null, url_overtake:document.getElementById('pf-overtake').value.trim()||null};
@@ -1046,7 +1038,7 @@ document.getElementById('pf-save').addEventListener('click', async function(){
   Object.assign(_ae_artist, payload);
   document.getElementById('ae-name').textContent = _ae_artist.name;
   aeToast('Profile saved!');
-});
+}
 
 
 // ── SUBMIT FORM FUNCTIONS ──────────────────────────────
@@ -1238,16 +1230,7 @@ function aeInitSubmit(){
   updateSubmitPreview();
 }
 
-// Submit handler — intercept s-submit-btn
-document.addEventListener('DOMContentLoaded',function(){
-  var btn=document.getElementById('s-submit-btn');
-  if(btn){
-    btn.addEventListener('click',async function(e){
-      e.preventDefault(); e.stopImmediatePropagation();
-      await aeDoSubmit();
-    },true);
-  }
-});
+// Submit handled via onclick on s-submit-btn
 
 async function aeDoSubmit(){
   var name=(document.getElementById('s-name')||{value:''}).value.trim();
@@ -1280,7 +1263,6 @@ async function aeDoSubmit(){
 
 if (_ae_token) aeBoot();
 
-});
 </script>
 </body>
 </html>
