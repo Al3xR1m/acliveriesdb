@@ -862,6 +862,8 @@ var _ae_edit_id = null;
 var _ae_brand = 'RSS';
 var _cats = [], _mods = [], _champs = [];
 
+
+document.addEventListener('DOMContentLoaded', function() {
 function aeToast(msg, type) {
   var t = document.getElementById('ae-toast');
   t.textContent = msg; t.className = 'toast ' + (type||'ok'); t.style.display = 'flex';
@@ -1277,6 +1279,8 @@ async function aeDoSubmit(){
 
 
 if (_ae_token) aeBoot();
+
+});
 </script>
 </body>
 </html>
