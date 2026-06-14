@@ -81,49 +81,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
 .tab-bar{display:flex;border-bottom:0.5px solid var(--b1);padding:0 28px;}
 .tab-btn{padding:12px 16px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--t2);font-family:inherit;display:flex;align-items:center;gap:6px;}
 .tab-btn.on{color:var(--t1);border-bottom-color:var(--acc);}
-.pill{padding:3px 11px;border-radius:20px;border:0.5px solid var(--b1);background:transparent;font-size:10px;font-weight:600;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .12s;white-space:nowrap;flex-shrink:0;}
-.pill:hover{color:var(--t1);}
-.pill.on{background:var(--acc2);border-color:rgba(91,110,247,.3);color:var(--acc);}
-.picker-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 11px;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;font-family:inherit;}
-.picker-btn:hover:not(:disabled){border-color:var(--b2);color:var(--t1);}
-.picker-btn:disabled{opacity:.45;cursor:not-allowed;}
-.picker-ph{width:22px;height:22px;border-radius:5px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3);flex-shrink:0;}
-.picker-logo{width:22px;height:22px;border-radius:5px;object-fit:cover;flex-shrink:0;}
-.ap-item{border:0.5px solid var(--b1);border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .12s;background:var(--s1);display:flex;align-items:center;gap:10px;min-width:160px;}
-.ap-item:hover{border-color:var(--b2);}
-.ap-item.selected{border-color:var(--crown);background:rgba(255,159,10,.06);}
-.ap-av{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;}
-.ap-av img{width:100%;height:100%;object-fit:cover;}
-.ap-av-ph{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
-.ap-name{font-size:13px;font-weight:700;color:var(--t1);}
-.ap-crown{font-size:12px;color:var(--crown);}
-.upload-widget{display:flex;flex-direction:column;gap:5px;}
-.upload-btn-label{display:flex;align-items:center;gap:6px;padding:8px 11px;border:0.5px dashed var(--b2);border-radius:9px;background:transparent;color:var(--t2);font-size:12px;cursor:pointer;width:100%;justify-content:center;font-family:inherit;transition:all .12s;}
-.upload-btn-label:hover{border-color:var(--acc);color:var(--acc);}
-.upload-preview{width:100%;height:80px;border-radius:8px;object-fit:cover;border:0.5px solid var(--b1);display:none;margin-bottom:4px;}
-.upload-preview.visible{display:block;}
-.upload-prog{font-size:10px;color:var(--t3);}
-.sub-cta{height:42px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;width:100%;transition:opacity .15s;}
-.sub-cta:hover{opacity:.88;}
-.sub-step{margin-bottom:28px;}
-.sub-step-label{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.sub-step-n{width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sub-cta:hover{opacity:.88;}
-.sub-error{color:var(--red);font-size:12px;margin-top:8px;display:none;}
-.picker-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
-.picker-box{background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
-.picker-head{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:0.5px solid var(--b1);}
-.picker-search{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--t1);font-family:inherit;}
-.picker-search::placeholder{color:var(--t3);}
-.picker-close{background:none;border:none;font-size:18px;color:var(--t2);cursor:pointer;padding:0 3px;line-height:1;}
-.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:14px;overflow-y:auto;}
-.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;border-radius:10px;cursor:pointer;border:0.5px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;}
-.pi:hover{border-color:var(--b2);}
-.pi.selected{border-color:var(--acc);background:var(--acc3);}
-.pi-logo{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
-.pi-logo-ph{width:100%;aspect-ratio:16/9;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--t3);}
-.pi-name{font-size:11px;font-weight:600;color:var(--t1);line-height:1.3;padding:8px 10px;}
-.pi-none{grid-column:1/-1;text-align:center;padding:18px;font-size:12px;color:var(--t3);}
 </style>
 </head>
 <body>
@@ -152,10 +109,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
     </div>
     <nav class="sb-nav">
       <div class="sb-sec">My content</div>
-      <button class="sb-link on" onclick="aeNav('liveries')"><i class="ti ti-photo"></i> My liveries</button>
-      <button class="sb-link" onclick="aeNav('addons')"><i class="ti ti-puzzle"></i> My addons</button>
-      <button class="sb-link" onclick="aeNav('submit')"><i class="ti ti-plus"></i> Add content</button>
-      <button class="sb-link" onclick="aeNav('profile')"><i class="ti ti-user"></i> My profile</button>
+      <button class="sb-link on" onclick="aeNav('liveries',this)"><i class="ti ti-photo"></i> My liveries</button>
+      <button class="sb-link" onclick="aeNav('addons',this)"><i class="ti ti-puzzle"></i> My addons</button>
+      <button class="sb-link" onclick="aeNav('submit',this)"><i class="ti ti-plus"></i> Add content</button>
+      <button class="sb-link" onclick="aeNav('profile',this)"><i class="ti ti-user"></i> My profile</button>
     </nav>
     <a href="index.html" class="sb-back"><i class="ti ti-arrow-left"></i> Back to site</a>
   </aside>
@@ -183,100 +140,44 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
         <div class="page-ey"><span></span>Creator Dashboard</div>
         <h2 class="page-h1">Add <em>content</em></h2>
       </div>
-      <!-- TYPE TABS -->
       <div class="tab-bar">
         <button class="tab-btn on" id="ae-tab-livery" onclick="aeSetMode('livery')"><i class="ti ti-photo"></i> Livery</button>
         <button class="tab-btn" id="ae-tab-addon" onclick="aeSetMode('addon')"><i class="ti ti-puzzle"></i> Addon</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 300px;min-height:calc(100vh - 120px);">
-        <div style="padding:24px 28px 60px;overflow-y:auto;border-right:0.5px solid var(--b1);">
-          <!-- BRAND -->
-          <div style="margin-bottom:20px;">
-            <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Publisher</div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-              <button class="brand-btn rss on" onclick="aeSelectBrand('RSS')"><div style="font-size:16px;font-weight:900;font-style:italic;">RSS</div><div style="font-size:10px;margin-top:2px;">Race Sim Studio</div></button>
-              <button class="brand-btn vrc" onclick="aeSelectBrand('VRC')"><div style="font-size:16px;font-weight:900;font-style:italic;">VRC</div><div style="font-size:10px;margin-top:2px;">Virtual Racing Cars</div></button>
-              <button class="brand-btn urd" onclick="aeSelectBrand('URD')"><div style="font-size:16px;font-weight:900;font-style:italic;">URD</div><div style="font-size:10px;margin-top:2px;">United Racing Design</div></button>
-            </div>
-          </div>
-          <div class="form-grid">
-            <div class="field full"><label id="ae-name-label">Livery name *</label><input id="ae-lname" type="text" placeholder="e.g. Ferrari SF-24 2024" oninput="aeUpdatePreview()"></div>
-            <div class="field">
-              <label>Category</label>
-              <select id="ae-cat" onchange="aeOnCatChange()"><option value="">Select…</option></select>
-            </div>
-            <div class="field">
-              <label>Mod</label>
-              <button type="button" id="ae-mod-btn" onclick="aeOpenModPicker()" disabled style="height:38px;padding:0 12px;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;color:var(--t2);font-size:13px;font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;">
-                <span id="ae-mod-text">— Select category first —</span>
-                <i class="ti ti-chevron-right" style="font-size:12px;color:var(--t3);"></i>
-              </button>
-              <input type="hidden" id="ae-mod">
-            </div>
-            <div class="field full livery-only" id="ae-champ-wrap">
-              <label>Championship</label>
-              <button type="button" id="ae-champ-btn" onclick="aeOpenChampPicker()" disabled style="height:38px;padding:0 12px;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;color:var(--t2);font-size:13px;font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;">
-                <span id="ae-champ-text">— Select category first —</span>
-                <i class="ti ti-chevron-right" style="font-size:12px;color:var(--t3);"></i>
-              </button>
-              <input type="hidden" id="ae-champ">
-            </div>
-            <div class="field livery-only"><label>Team</label><input id="ae-team" type="text" oninput="aeUpdatePreview()"></div>
-            <div class="field livery-only"><label>Driver(s)</label><input id="ae-driver" type="text" oninput="aeUpdatePreview()"></div>
-            <div class="field livery-only"><label>Season</label><input id="ae-season" type="text" oninput="aeUpdatePreview()"></div>
-            <div class="field livery-only"><label>Car number</label><input id="ae-carnumber" type="text" maxlength="4" oninput="aeUpdatePreview()"></div>
-            <div class="field addon-only" style="display:none;"><label>Addon type</label>
-              <select id="ae-addon-type">
-                <option value="tyre_skin">Tyre skin</option>
-                <option value="3d_asset">3D asset</option>
-                <option value="shader">Shader</option>
-                <option value="ui">UI element</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="field full"><label>Download URL *</label><input id="ae-url" type="url" placeholder="https://…" oninput="aeUpdateChecklist()"></div>
-            <div class="field full"><label>Preview image URL</label><input id="ae-img" type="url" placeholder="https://…" oninput="aeUpdatePreview()"></div>
-            <div class="field"><label>Pricing</label><select id="ae-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
-            <div class="field"><label>Notes</label><input id="ae-notes" type="text"></div>
-          </div>
-          <div id="ae-submit-err" style="color:var(--red);font-size:12px;margin-bottom:8px;display:none;"></div>
-        </div>
-        <!-- RIGHT PANEL -->
-        <!-- RIGHT — STICKY PANEL -->
-      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
-
-        <!-- LIVE PREVIEW CARD -->
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
-          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-              <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
-            </div>
-            <div style="padding:10px 12px 12px;">
-              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
-              <div style="font-size:14px;font-weight:800;font-style:italic;letter-spacing:-.4px;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
-              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
-            </div>
+      <div class="form-wrap">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Publisher</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <button class="brand-btn rss on" onclick="aeSelectBrand('RSS')"><div style="font-size:16px;font-weight:900;font-style:italic;">RSS</div><div style="font-size:10px;margin-top:2px;">Race Sim Studio</div></button>
+            <button class="brand-btn vrc" onclick="aeSelectBrand('VRC')"><div style="font-size:16px;font-weight:900;font-style:italic;">VRC</div><div style="font-size:10px;margin-top:2px;">Virtual Racing Cars</div></button>
+            <button class="brand-btn urd" onclick="aeSelectBrand('URD')"><div style="font-size:16px;font-weight:900;font-style:italic;">URD</div><div style="font-size:10px;margin-top:2px;">United Racing Design</div></button>
           </div>
         </div>
-
-        <!-- CHECKLIST -->
-        <div style="flex:1;">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Required fields</div>
-          <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
-        </div>
-
-        <!-- TIPS -->
-        <div style="background:var(--bg);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
-          <div style="font-size:11px;color:var(--t3);line-height:1.6;">
-            Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
-            Preview image should be <strong style="color:var(--t2);">16:9</strong>, min 800px wide.
+        <div class="form-grid">
+          <div class="field full"><label id="ae-name-label">Livery name *</label><input id="ae-lname" type="text"></div>
+          <div class="field"><label>Category</label><select id="ae-cat" onchange="aeOnCatChange()"><option value="">Select…</option></select></div>
+          <div class="field"><label>Mod</label><select id="ae-mod"><option value="">Select…</option></select></div>
+          <div class="field full livery-only" id="ae-champ-wrap"><label>Championship</label><select id="ae-champ"><option value="">None</option></select></div>
+          <div class="field livery-only"><label>Team</label><input id="ae-team" type="text"></div>
+          <div class="field livery-only"><label>Driver(s)</label><input id="ae-driver" type="text"></div>
+          <div class="field livery-only"><label>Season</label><input id="ae-season" type="text"></div>
+          <div class="field livery-only"><label>Car number</label><input id="ae-carnumber" type="text" maxlength="4"></div>
+          <div class="field addon-only" style="display:none;"><label>Addon type</label>
+            <select id="ae-addon-type">
+              <option value="tyre_skin">Tyre skin</option>
+              <option value="3d_asset">3D asset</option>
+              <option value="shader">Shader</option>
+              <option value="ui">UI element</option>
+              <option value="other">Other</option>
+            </select>
           </div>
+          <div class="field full"><label>Download URL *</label><input id="ae-url" type="url" placeholder="https://…"></div>
+          <div class="field full"><label>Preview image URL</label><input id="ae-img" type="url" placeholder="https://…"></div>
+          <div class="field"><label>Pricing</label><select id="ae-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
+          <div class="field"><label>Notes</label><input id="ae-notes" type="text"></div>
         </div>
-
-        <button class="sub-cta" id="s-submit-btn" onclick="aeDoSubmit()"><i class="ti ti-send"></i> Publish</button>
-      </div>
+        <button class="btn-primary" onclick="aeDoSubmit()"><i class="ti ti-send"></i> <span id="ae-submit-label">Publish livery</span></button>
+        <div id="ae-submit-err" style="color:var(--red);font-size:12px;margin-top:8px;display:none;"></div>
       </div>
     </div>
 
@@ -287,7 +188,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
       </div>
       <div class="form-wrap">
         <div class="field"><label>Name *</label><input id="pf-name" type="text"></div>
-        <div class="field"><label>Discord</label><input id="pf-discord" type="text" placeholder="@username"></div>
+        <div class="field"><label>Discord</label><input id="pf-discord" type="text"></div>
         <div class="field"><label>Bio</label><textarea id="pf-bio"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Social links</div>
         <div class="field"><label>Twitter/X</label><input id="pf-twitter" type="url"></div>
@@ -321,41 +222,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;-w
   </div>
 </div>
 
-<!-- PICKER MODALS -->
-<div class="picker-modal" id="mod-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('mod-picker').style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head"><input class="picker-search" id="mod-ps" placeholder="Search mods…" oninput="filterModPicker(this.value)"><button class="picker-close" onclick="document.getElementById('mod-picker').style.display='none'">×</button></div>
-    <div class="picker-grid" id="mod-pg"></div>
-  </div>
-</div>
-<div class="picker-modal" id="champ-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('champ-picker').style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head"><input class="picker-search" id="champ-ps" placeholder="Search championships…" oninput="filterChampPicker(this.value)"><button class="picker-close" onclick="document.getElementById('champ-picker').style.display='none'">×</button></div>
-    <div class="picker-grid" id="champ-pg"></div>
-  </div>
-</div>
-
-<!-- REPORT MODAL -->
-<div class="report-modal" id="report-modal">
-  <div class="report-box">
-    <div class="report-title"><i class="ti ti-flag" style="color:var(--acc);"></i> Report a problem</div>
-    <p style="font-size:12px;color:var(--t2);margin-bottom:14px;">What's wrong with this livery?</p>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="broken_link" checked> Broken download link</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="wrong_info"> Wrong information</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="duplicate"> Duplicate entry</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);cursor:pointer;"><input type="radio" name="rr" value="other"> Other</label>
-    </div>
-    <div class="field"><label>Notes (optional)</label><textarea id="report-notes" placeholder="Describe the issue…" style="min-height:56px;"></textarea></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
-      <button onclick="closeReport()" style="height:34px;padding:0 12px;background:transparent;color:var(--t2);border:0.5px solid var(--b2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Cancel</button>
-      <button onclick="submitReport()" style="height:34px;padding:0 12px;background:var(--acc);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Send report</button>
-    </div>
-  </div>
-</div>
-
-
-
 <div class="toast" id="ae-toast"></div>
 
 <script>
@@ -372,11 +238,11 @@ function aeToast(msg, type) {
   setTimeout(function(){ t.style.display='none'; }, 3000);
 }
 
-function aeNav(v) {
+function aeNav(v, btn) {
   document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
   document.querySelectorAll('.sb-link').forEach(function(x){ x.classList.remove('on'); });
   document.getElementById('ae-view-'+v).classList.add('on');
-  event.currentTarget.classList.add('on');
+  if (btn) btn.classList.add('on');
   if (v==='liveries') aeLiveries();
   if (v==='addons') aeAddons();
   if (v==='profile') aeProfile();
@@ -386,7 +252,7 @@ function aeSelectBrand(b) {
   _ae_brand = b;
   document.querySelectorAll('.brand-btn').forEach(function(x){ x.classList.remove('on'); });
   document.querySelector('.brand-btn.'+b.toLowerCase()).classList.add('on');
-  aeFilterCats(); aeUpdatePreview();
+  aeFilterCats();
 }
 
 function aeFilterCats() {
@@ -395,10 +261,28 @@ function aeFilterCats() {
   _cats.filter(function(c){ return c.brand === _ae_brand; }).forEach(function(c){
     var o = document.createElement('option'); o.value = c.id; o.textContent = c.name; catSel.appendChild(o);
   });
-  var modSel = document.getElementById('ae-mod');
-  modSel.innerHTML = '<option value="">Select…</option>';
-  _mods.filter(function(m){ return m.brand === _ae_brand; }).forEach(function(m){
-    var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; modSel.appendChild(o);
+  aeFilterMods('');
+  aeFilterChamps('');
+}
+
+function aeOnCatChange() {
+  aeFilterMods(document.getElementById('ae-cat').value);
+  aeFilterChamps(document.getElementById('ae-cat').value);
+}
+
+function aeFilterMods(catId) {
+  var sel = document.getElementById('ae-mod');
+  sel.innerHTML = '<option value="">Select…</option>';
+  _mods.filter(function(m){ return !catId || m.category_id === catId; }).forEach(function(m){
+    var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; sel.appendChild(o);
+  });
+}
+
+function aeFilterChamps(catId) {
+  var sel = document.getElementById('ae-champ');
+  sel.innerHTML = '<option value="">None</option>';
+  _champs.filter(function(c){ return !catId || !c.category_id || c.category_id === catId; }).forEach(function(c){
+    var o = document.createElement('option'); o.value = c.id; o.textContent = c.short_name||c.name; sel.appendChild(o);
   });
 }
 
@@ -408,7 +292,6 @@ function aeSetMode(m) {
   document.getElementById('ae-tab-addon').classList.toggle('on', m==='addon');
   document.querySelectorAll('.livery-only').forEach(function(x){ x.style.display = m==='livery'?'':'none'; });
   document.querySelectorAll('.addon-only').forEach(function(x){ x.style.display = m==='addon'?'':'none'; });
-  document.getElementById('ae-champ-wrap').style.display = m==='livery'?'':'none';
   document.getElementById('ae-name-label').textContent = m==='livery'?'Livery name *':'Addon name *';
   document.getElementById('ae-submit-label').textContent = m==='livery'?'Publish livery':'Publish addon';
 }
@@ -425,11 +308,6 @@ async function aeBoot() {
     db.from('championships').select('*').order('name'),
   ]);
   _cats = r[0].data||[]; _mods = r[1].data||[]; _champs = r[2].data||[];
-
-  var cs = document.getElementById('ae-champ');
-  _champs.forEach(function(c){
-    var o = document.createElement('option'); o.value = c.id; o.textContent = c.short_name||c.name; cs.appendChild(o);
-  });
   aeFilterCats();
 
   document.getElementById('ae-gate').style.display = 'none';
@@ -450,7 +328,7 @@ async function aeLiveries() {
   var res = await db.from('liveries').select('*,categories(name),mods(name),championships(short_name)').eq('artist_id',_ae_artist.id).order('created_at',{ascending:false});
   var data = res.data||[];
   if (!data.length) {
-    el.innerHTML = '<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-photo" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No liveries yet.<br><br><button onclick="aeNav(\'submit\')" style="margin-top:8px;height:38px;padding:0 18px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Add your first livery</button></div>';
+    el.innerHTML = '<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-photo" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No liveries yet.</div>';
     return;
   }
   el.innerHTML = data.map(function(l){
@@ -523,7 +401,6 @@ async function aeDoSubmit() {
   if (!name){ err.textContent='Name required.'; err.style.display='block'; return; }
   if (!url){ err.textContent='Download URL required.'; err.style.display='block'; return; }
   err.style.display='none';
-
   if (_ae_mode === 'livery') {
     var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:document.getElementById('ae-img').value.trim()||null, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
     var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
@@ -535,7 +412,7 @@ async function aeDoSubmit() {
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     aeToast('Addon published!');
   }
-  aeNav('liveries');
+  aeNav('liveries', document.querySelector('.sb-link'));
 }
 
 function aeProfile() {
@@ -558,124 +435,6 @@ async function aePfSave() {
   Object.assign(_ae_artist, payload);
   document.getElementById('ae-name').textContent = _ae_artist.name;
   aeToast('Profile saved!');
-}
-
-
-// ── PICKER & PREVIEW ──────────────────────────────────
-var _ae_avail_mods = [], _ae_avail_champs = [];
-var _sPreviewImg = null;
-
-function aeOnCatChange() {
-  var catId = document.getElementById('ae-cat').value;
-  var brand = _ae_brand;
-  _ae_avail_mods = _mods.filter(function(m){ return m.category_id === catId; });
-  _ae_avail_champs = _champs.filter(function(c){ return !c.category_id || c.category_id === catId; });
-  // Reset mod/champ
-  document.getElementById('ae-mod').value = '';
-  document.getElementById('ae-mod-text').textContent = _ae_avail_mods.length ? '— Select mod —' : '— No mods for this category —';
-  document.getElementById('ae-mod-btn').disabled = !_ae_avail_mods.length;
-  document.getElementById('ae-champ').value = '';
-  document.getElementById('ae-champ-text').textContent = '— Select championship —';
-  document.getElementById('ae-champ-btn').disabled = false;
-  aeUpdateChecklist();
-  aeUpdatePreview();
-}
-
-function aeOpenModPicker() {
-  var g = document.getElementById('mod-pg');
-  g.innerHTML = _ae_avail_mods.map(function(m){
-    return '<div class="pi" onclick="aeSelectMod(''+m.id+'',''+m.name.replace(/'/g,"\'")+'')">'
-      +(m.image_url?'<img src="'+m.image_url+'" class="pi-logo">':'<div class="pi-logo-ph"><i class="ti ti-car"></i></div>')
-      +'<div class="pi-name">'+m.name+'</div></div>';
-  }).join('') || '<div style="padding:20px;text-align:center;color:var(--t2);">No mods.</div>';
-  document.getElementById('mod-picker').style.display = 'flex';
-  setTimeout(function(){ var s=document.getElementById('mod-ps'); if(s) s.focus(); }, 50);
-}
-
-function aeSelectMod(id, name) {
-  document.getElementById('ae-mod').value = id;
-  document.getElementById('ae-mod-text').textContent = name;
-  document.getElementById('ae-mod-text').style.color = 'var(--t1)';
-  document.getElementById('mod-picker').style.display = 'none';
-  aeUpdateChecklist(); aeUpdatePreview();
-}
-
-function aeOpenChampPicker() {
-  var g = document.getElementById('champ-pg');
-  g.innerHTML = _ae_avail_champs.map(function(c){
-    return '<div class="pi" onclick="aeSelectChamp(''+c.id+'',''+(c.short_name||c.name).replace(/'/g,"\'")+'')">'
-      +(c.logo_url?'<img src="'+c.logo_url+'" class="pi-logo">':'<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>')
-      +'<div class="pi-name">'+(c.short_name||c.name)+'</div></div>';
-  }).join('') || '<div style="padding:20px;text-align:center;color:var(--t2);">No championships.</div>';
-  document.getElementById('champ-picker').style.display = 'flex';
-  setTimeout(function(){ var s=document.getElementById('champ-ps'); if(s) s.focus(); }, 50);
-}
-
-function aeSelectChamp(id, name) {
-  document.getElementById('ae-champ').value = id;
-  document.getElementById('ae-champ-text').textContent = name;
-  document.getElementById('ae-champ-text').style.color = 'var(--t1)';
-  document.getElementById('champ-picker').style.display = 'none';
-  aeUpdatePreview();
-}
-
-function filterModPicker(q) {
-  var list = _ae_avail_mods.filter(function(m){ return m.name.toLowerCase().includes(q.toLowerCase()); });
-  var g = document.getElementById('mod-pg');
-  g.innerHTML = list.map(function(m){
-    return '<div class="pi" onclick="aeSelectMod(''+m.id+'',''+m.name.replace(/'/g,"\'")+'')">'
-      +(m.image_url?'<img src="'+m.image_url+'" class="pi-logo">':'<div class="pi-logo-ph"><i class="ti ti-car"></i></div>')
-      +'<div class="pi-name">'+m.name+'</div></div>';
-  }).join('') || '<div style="padding:20px;text-align:center;color:var(--t2);">No results.</div>';
-}
-
-function filterChampPicker(q) {
-  var list = _ae_avail_champs.filter(function(c){ return (c.short_name||c.name).toLowerCase().includes(q.toLowerCase()); });
-  var g = document.getElementById('champ-pg');
-  g.innerHTML = list.map(function(c){
-    return '<div class="pi" onclick="aeSelectChamp(''+c.id+'',''+(c.short_name||c.name).replace(/'/g,"\'")+'')">'
-      +(c.logo_url?'<img src="'+c.logo_url+'" class="pi-logo">':'<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>')
-      +'<div class="pi-name">'+(c.short_name||c.name)+'</div></div>';
-  }).join('') || '<div style="padding:20px;text-align:center;color:var(--t2);">No results.</div>';
-}
-
-function aeUpdateChecklist() {
-  var el = document.getElementById('s-checklist'); if(!el) return;
-  var checks = [
-    {label:'Name', ok:!!(document.getElementById('ae-lname')?.value?.trim())},
-    {label:'Category', ok:!!(document.getElementById('ae-cat')?.value)},
-    {label:'Mod', ok:!!(document.getElementById('ae-mod')?.value)},
-    {label:'Download URL', ok:!!(document.getElementById('ae-url')?.value?.trim())},
-  ];
-  if (_ae_mode === 'livery') {
-    checks.push({label:'Team', ok:!!(document.getElementById('ae-team')?.value?.trim())});
-    checks.push({label:'Season', ok:!!(document.getElementById('ae-season')?.value?.trim())});
-  }
-  el.innerHTML = checks.map(function(c){
-    return '<div style="display:flex;align-items:center;gap:7px;font-size:12px;color:'+(c.ok?'var(--t2)':'var(--t3)')+';">'
-      +'<i class="ti ti-'+(c.ok?'circle-check-filled" style="color:var(--grn)':'circle" style="color:var(--t3)')+'"></i>'+c.label+'</div>';
-  }).join('');
-}
-
-function aeUpdatePreview() {
-  var name = document.getElementById('ae-lname')?.value || 'Livery name';
-  var num = document.getElementById('ae-carnumber')?.value || '';
-  var team = document.getElementById('ae-team')?.value || '';
-  var driver = document.getElementById('ae-driver')?.value || '';
-  var champ = document.getElementById('ae-champ-text')?.textContent || '';
-  var mod = document.getElementById('ae-mod-text')?.textContent || '';
-  var img = document.getElementById('ae-img')?.value || '';
-
-  var numEl = document.getElementById('sub-num'); if(numEl) numEl.textContent = num?'#'+num:'';
-  var teamEl = document.getElementById('sub-team'); if(teamEl) teamEl.textContent = team;
-  var nameEl = document.getElementById('sub-title'); if(nameEl) nameEl.textContent = name;
-  var champEl = document.getElementById('sub-champ'); if(champEl) champEl.textContent = champ.startsWith('—')?'':champ;
-  var driverEl = document.getElementById('sub-driver'); if(driverEl) driverEl.textContent = driver;
-  var modEl = document.getElementById('sub-mod'); if(modEl) modEl.textContent = mod.startsWith('—')?'':mod;
-  var creatorEl = document.getElementById('sub-creator'); if(creatorEl) creatorEl.textContent = _ae_artist?.name||'';
-  var prev = document.getElementById('sub-prev');
-  if(prev){ prev.src=img; prev.style.display=img?'block':'none'; }
-  aeUpdateChecklist();
 }
 
 if (_ae_token) aeBoot();
