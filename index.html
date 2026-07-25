@@ -272,15 +272,15 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 
 /* LIST mode */
 .lv-list{padding:0 20px;}
-.lv-row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:11px 0;border-bottom:0.5px solid var(--b1);cursor:pointer;border-radius:8px;transition:all .12s;}
+.lv-row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--b1);cursor:pointer;transition:all .12s;}
 .lv-row:hover{background:var(--s1);margin:0 -8px;padding:9px 8px;}
 .lv-row:last-child{border-bottom:none;}
-.lv-thumb{width:64px;height:40px;border-radius:7px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;}
+.lv-thumb{width:64px;height:40px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;}
 .lv-thumb img{width:100%;height:100%;object-fit:cover;}
-.lv-name{font-size:14px;font-weight:600;font-style:italic;color:var(--t1);letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lv-meta{font-size:11px;color:var(--t2);margin-top:3px;}
-.lv-right{display:flex;align-items:center;gap:5px;flex-shrink:0;}
-.lv-votes{font-size:10px;font-weight:600;color:var(--t3);display:flex;align-items:center;gap:2px;}
+.lv-name{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;}
+.lv-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.lv-votes{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--t3);display:flex;align-items:center;gap:2px;}
 
 /* GRID mode */
 .lv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--b1);margin:0 20px;border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;}
@@ -1738,7 +1738,7 @@ async function renderArtistProfile(id){
   const ini=artist.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
   const brands=(artist.brands||[]);
-  const brandPills=brands.length?brands.map(b=>{const bm=BRC[b]||{c:'var(--t2)',bg:'var(--s2)',border:'var(--b1)'};return `<span style="padding:3px 10px;border-radius:20px;border:1px solid ${bm.border};background:${bm.bg};color:${bm.c};font-size:10px;font-weight:700;">${b}</span>`;}).join(''):'';
+  const brandPills=brands.length?brands.map(b=>{const bm=BRC[b]||{c:'var(--t2)',bg:'var(--s2)',border:'var(--b1)'};return `<span style="padding:3px 10px;border:1px solid ${bm.border};background:${bm.bg};color:${bm.c};font-family:'Space Mono',monospace;font-size:10px;font-weight:700;">${b}</span>`;}).join(''):'';
   const socials=[
     artist.url_twitter?`<a href="${artist.url_twitter}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-x"></i></a>`:'',
     artist.url_patreon?`<a href="${artist.url_patreon}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-patreon"></i></a>`:'',
@@ -1748,50 +1748,51 @@ async function renderArtistProfile(id){
 
   el.innerHTML=`
     <!-- BACK -->
-    <div style="padding:16px 28px;border-bottom:0.5px solid var(--b1);">
-      <button onclick="nav('artists')" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;font-family:inherit;display:flex;align-items:center;gap:6px;">
+    <div style="padding:16px 28px;border-bottom:1px solid var(--b1);">
+      <button onclick="nav('artists')" style="background:none;border:none;cursor:pointer;color:var(--t2);font-family:'Space Mono',monospace;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:6px;transition:color .12s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">
         <i class="ti ti-arrow-left"></i> All artists
       </button>
     </div>
 
     <!-- HEADER -->
-    <div style="padding:32px 28px 24px;border-bottom:0.5px solid var(--b1);display:flex;align-items:flex-start;gap:24px;">
+    <div style="padding:32px 28px 24px;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;gap:24px;">
       ${artist.avatar_url
-        ?`<img src="${artist.avatar_url}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;flex-shrink:0;">`
-        :`<div style="width:80px;height:80px;border-radius:50%;background:rgba(91,110,247,.15);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#5B6EF7;flex-shrink:0;">${ini}</div>`
+        ?`<img src="${artist.avatar_url}" style="width:80px;height:80px;object-fit:cover;flex-shrink:0;">`
+        :`<div style="width:80px;height:80px;background:linear-gradient(135deg,var(--acc),var(--pur));display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:26px;font-weight:400;color:#0A0A0F;flex-shrink:0;">${ini}</div>`
       }
       <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
-          <h2 style="font-size:28px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">👑 ${artist.name}</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+          <h2 style="font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);">👑 ${artist.name}</h2>
           ${brandPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;">${brandPills}</div>`:''}
         </div>
-        ${artist.discord?`<div style="font-size:12px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-brand-discord"></i> ${artist.discord}</div>`:''}
+        <div style="margin-bottom:8px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;">Confirmed artist</span></div>
+        ${artist.discord?`<div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-brand-discord"></i> ${artist.discord}</div>`:''}
         ${socials?`<div style="display:flex;gap:12px;">${socials}</div>`:''}
       </div>
       <!-- STATS -->
-      <div style="display:flex;gap:0;border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;flex-shrink:0;">
-        <div style="padding:14px 20px;text-align:center;border-right:0.5px solid var(--b1);">
-          <div style="font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">${livs.length}</div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Liveries</div>
+      <div style="display:flex;gap:0;border:1px solid var(--b1);flex-shrink:0;">
+        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--b1);">
+          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--t1);">${livs.length}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Liveries</div>
         </div>
-        <div style="padding:14px 20px;text-align:center;border-right:0.5px solid var(--b1);">
-          <div style="font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">${adds.length}</div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Addons</div>
+        <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--b1);">
+          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--t1);">${adds.length}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Addons</div>
         </div>
         <div style="padding:14px 20px;text-align:center;">
-          <div style="font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);">${totalVotes}</div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Upvotes</div>
+          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--acc);">${totalVotes}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Upvotes</div>
         </div>
       </div>
     </div>
 
     <!-- TABS -->
-    <div style="padding:0 28px;border-bottom:0.5px solid var(--b1);display:flex;gap:0;">
-      <button id="ap-tab-liveries" onclick="setArtistTab('liveries')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid var(--acc);cursor:pointer;font-size:13px;font-weight:600;color:var(--t1);font-family:inherit;display:flex;align-items:center;gap:6px;">
-        <i class="ti ti-photo"></i> Liveries <span style="background:var(--s2);color:var(--t2);font-size:10px;padding:1px 6px;border-radius:4px;">${livs.length}</span>
+    <div style="padding:0 28px;border-bottom:1px solid var(--b1);display:flex;gap:0;">
+      <button id="ap-tab-liveries" onclick="setArtistTab('liveries')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid var(--acc);cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t1);display:flex;align-items:center;gap:7px;">
+        <i class="ti ti-photo"></i> Liveries <span style="background:var(--s2);color:var(--t2);font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;">${livs.length}</span>
       </button>
-      <button id="ap-tab-addons" onclick="setArtistTab('addons')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--t2);font-family:inherit;display:flex;align-items:center;gap:6px;">
-        <i class="ti ti-puzzle"></i> Addons <span style="background:var(--s2);color:var(--t2);font-size:10px;padding:1px 6px;border-radius:4px;">${adds.length}</span>
+      <button id="ap-tab-addons" onclick="setArtistTab('addons')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);display:flex;align-items:center;gap:7px;">
+        <i class="ti ti-puzzle"></i> Addons <span style="background:var(--s2);color:var(--t2);font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;">${adds.length}</span>
       </button>
     </div>
 
