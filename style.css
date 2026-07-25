@@ -3,14 +3,14 @@
    Dark-first · Inter display · Indigo accent
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,700;1,14..32,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 /* ============================================================
    1. RESET
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
+body { background: var(--bg); color: var(--text); font-family: 'Archivo', sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font-family: inherit; font-size: inherit; }
 img { display: block; max-width: 100%; }
@@ -37,40 +37,40 @@ ul, ol { list-style: none; }
   --text-3: #3A3A50;
 
   /* Accent — indigo */
-  --acc:        #5B6EF7;
-  --acc-2:      rgba(91,110,247,0.15);
-  --acc-3:      rgba(91,110,247,0.07);
-  --acc-border: rgba(91,110,247,0.28);
+  --acc:        #FF3D81;
+  --acc-2:      rgba(255,61,129,0.15);
+  --acc-3:      rgba(255,61,129,0.07);
+  --acc-border: rgba(255,61,129,0.35);
 
   /* Semantic */
-  --green:   #22C55E;
-  --green-2: rgba(34,197,94,0.10);
-  --amber:   #F59E0B;
-  --amber-2: rgba(245,158,11,0.10);
-  --red:     #EF4444;
-  --red-2:   rgba(239,68,68,0.10);
-  --purple:  #A855F7;
-  --purple-2:rgba(168,85,247,0.12);
-  --crown:   #F59E0B;
+  --green:   #30D158;
+  --green-2: rgba(48,209,88,0.10);
+  --amber:   #FFB13D;
+  --amber-2: rgba(255,177,61,0.10);
+  --red:     #FF6B6B;
+  --red-2:   rgba(255,107,107,0.10);
+  --purple:  #3DE8FF;
+  --purple-2:rgba(61,232,255,0.14);
+  --crown:   #FFB13D;
 
-  /* Brand mods */
-  --rss:        #5B6EF7;
-  --rss-2:      rgba(91,110,247,0.12);
-  --rss-border: rgba(91,110,247,0.22);
-  --vrc:        #22C55E;
-  --vrc-2:      rgba(34,197,94,0.10);
-  --vrc-border: rgba(34,197,94,0.22);
-  --urd:        #F59E0B;
-  --urd-2:      rgba(245,158,11,0.10);
-  --urd-border: rgba(245,158,11,0.22);
+  /* Brand mods (kept as real publisher identity colors) */
+  --rss:        #E8312A;
+  --rss-2:      rgba(232,49,42,0.12);
+  --rss-border: rgba(232,49,42,0.3);
+  --vrc:        #30D158;
+  --vrc-2:      rgba(48,209,88,0.10);
+  --vrc-border: rgba(48,209,88,0.25);
+  --urd:        #FF9F0A;
+  --urd-2:      rgba(255,159,10,0.10);
+  --urd-border: rgba(255,159,10,0.25);
 
   /* Spacing */
   --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
   --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
   --sp-12: 48px; --sp-16: 64px;
 
-  /* Radius */
-  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 18px; --r-full: 9999px;
+  /* Radius — paint-swatch DA: sharp corners everywhere */
+  --r-sm: 0; --r-md: 0; --r-lg: 0; --r-xl: 0; --r-full: 0;
 
   /* Transitions */
   --t: 0.15s ease;
@@ -746,3 +746,10 @@ ul, ol { list-style: none; }
   .toolbar { flex-direction: column; align-items: stretch; }
   .search-box { width: 100%; }
 }
+
+
+/* ── PAINT-SWATCH DA: GLOBAL OVERRIDES (admin) ── */
+*{border-radius:0!important;}
+h1,h2,h3,.title,.card-title,.stat-num,.kpi-num,.modal-title{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal;text-transform:uppercase;letter-spacing:0;}
+[style*="font-weight:900"],[style*="font-weight: 900"]{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal!important;text-transform:uppercase;}
+.mono,code,pre,.badge,.tag,.pill{font-family:'Space Mono',monospace;}
