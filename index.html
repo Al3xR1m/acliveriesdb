@@ -721,9 +721,9 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
 
   <!-- ARTISTS -->
   <div class="view" id="view-artists">
-    <div style="padding:36px 28px 28px;border-bottom:0.5px solid var(--b1);">
-      <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><span style="width:18px;height:1px;background:var(--acc);display:inline-block;"></span>Assetto Corsa · Community</div>
-      <h2 style="font-size:52px;font-weight:900;font-style:italic;letter-spacing:-3.5px;line-height:.88;color:var(--t1);">The <em style="color:var(--acc);">artists</em></h2>
+    <div style="padding:36px 28px 28px;border-bottom:1px solid var(--b1);">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><span style="width:18px;height:1px;background:var(--acc);display:inline-block;"></span>Assetto Corsa · Community</div>
+      <h2 style="font-family:'Archivo Black',sans-serif;font-size:52px;font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.88;color:var(--t1);">The <em style="color:var(--acc);font-style:normal;">artists</em></h2>
     </div>
     <div id="a-grid" style="padding:24px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;"></div>
   </div>
@@ -1434,14 +1434,14 @@ async function loadMods(){
     const totalLivs = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
     const cats = [...new Set(mods.map(m=>m.categories?.name).filter(Boolean))];
     const modPills = mods.slice(0,4).map(m=>`<span style="padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);border:0.5px solid rgba(255,255,255,.08);">${m.name}</span>`).join('');
-    secA += `<div style="background:${brand==='RSS'?'linear-gradient(140deg,#200808,#150303)':brand==='VRC'?'linear-gradient(140deg,#002010,#001a10)':'linear-gradient(140deg,#1a0d00,#0d0800)'};border:0.5px solid ${brand==='RSS'?'rgba(91,110,247,.3)':brand==='VRC'?'rgba(48,209,88,.25)':'rgba(255,159,10,.25)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;" onclick="openBrandDetail('${brand}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:90px;font-weight:900;font-style:italic;letter-spacing:-5px;color:rgba(255,255,255,.04);pointer-events:none;overflow:hidden;">${brand}</div>
+    secA += `<div style="background:${brand==='RSS'?'linear-gradient(140deg,#200808,#150303)':brand==='VRC'?'linear-gradient(140deg,#002010,#001a10)':'linear-gradient(140deg,#1a0d00,#0d0800)'};border:1px solid ${brand==='RSS'?'rgba(232,49,42,.3)':brand==='VRC'?'rgba(48,209,88,.25)':'rgba(255,159,10,.25)'};overflow:hidden;cursor:pointer;transition:all .2s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;" onclick="openBrandDetail('${brand}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:90px;font-weight:400;letter-spacing:0;color:rgba(242,240,234,.04);pointer-events:none;overflow:hidden;">${brand}</div>
       <div style="position:relative;padding:20px 22px;">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:${bm.c};margin-bottom:8px;">${brand} · ${bm.label}</div>
-        <div style="font-size:24px;font-weight:900;font-style:italic;letter-spacing:-1.2px;color:#fff;line-height:1;margin-bottom:5px;">${bm.label}</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:14px;">${mods.length} mod${mods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'} · ${cats.length} catégorie${cats.length>1?'s':''}</div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;">${modPills}${mods.length>4?`<span style="padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.06);color:rgba(255,255,255,.35);">+${mods.length-4}</span>`:''}</div>
-        <button style="height:28px;padding:0 13px;background:${bm.c};color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;" onclick="event.stopPropagation();openBrandDetail('${brand}')"><i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse ${mods.length} mod${mods.length>1?'s':''}</button>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:${bm.c};margin-bottom:8px;">${brand} · ${bm.label}</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:24px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:#fff;line-height:1;margin-bottom:5px;">${bm.label}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(242,240,234,.45);margin-bottom:14px;">${mods.length} mod${mods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'} · ${cats.length} catégorie${cats.length>1?'s':''}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;">${modPills}${mods.length>4?`<span style="padding:2px 8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:400;background:rgba(242,240,234,.06);color:rgba(242,240,234,.35);">+${mods.length-4}</span>`:''}</div>
+        <button style="height:30px;padding:0 14px;background:transparent;color:${bm.c};border:1px solid ${bm.c};font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;" onclick="event.stopPropagation();openBrandDetail('${brand}')" onmouseover="this.style.background='${bm.c}';this.style.color='#0A0A0F'" onmouseout="this.style.background='transparent';this.style.color='${bm.c}'"><i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse ${mods.length} mod${mods.length>1?'s':''}</button>
       </div>
     </div>`;
   });
@@ -1454,7 +1454,7 @@ async function loadMods(){
     .slice(0,6);
 
   let secB = '<div style="padding:28px 20px 0;">';
-  secB += '<div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Recent livery additions <span style="flex:1;height:0.5px;background:var(--b1);"></span></div>';
+  secB += '<div style="font-family:\'Space Mono\',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Recent livery additions <span style="flex:1;height:1px;background:var(--b1);"></span></div>';
   secB += '<div style="display:flex;flex-direction:column;gap:5px;">';
   recentMods.forEach(m=>{
     const brand = m.brand&&brandMeta[m.brand]?m.brand:null;
@@ -1466,20 +1466,20 @@ async function loadMods(){
       const d = Math.floor((Date.now()-new Date(lastDate))/86400000);
       return d===0?'Today':d===1?'Yesterday':`${d} days ago`;
     })() : '—';
-    secB += `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s1);border:0.5px solid var(--b1);border-left:2.5px solid ${bm?.c||'var(--t3)'};border-radius:10px;cursor:pointer;transition:all .15s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='var(--s1)')">
-      <div style="width:44px;height:44px;border-radius:9px;overflow:hidden;flex-shrink:0;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
+    secB += `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);border-left:2px solid ${bm?.c||'var(--t3)'};cursor:pointer;transition:all .15s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='var(--s1)')">
+      <div style="width:44px;height:44px;overflow:hidden;flex-shrink:0;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
         ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
-          `<span style="font-size:14px;font-weight:900;font-style:italic;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
+          `<span style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
       </div>
       <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:700;font-style:italic;color:var(--t1);letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
-        <div style="font-size:10px;color:var(--t2);margin-top:1px;">${bm?.label||'—'} · ${m.categories?.name||'—'}${champs.length?' · '+champs[0]:''}</div>
+        <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:2px;">${bm?.label||'—'} · ${m.categories?.name||'—'}${champs.length?' · '+champs[0]:''}</div>
       </div>
       <div style="flex-shrink:0;text-align:right;">
-        <div style="font-size:11px;font-weight:600;color:var(--t1);">${cnt} liveri${cnt!==1?'es':'y'}</div>
-        <div style="font-size:10px;color:var(--t3);margin-top:1px;">${timeAgo}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t1);">${cnt} liveri${cnt!==1?'es':'y'}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin-top:1px;">${timeAgo}</div>
       </div>
-      ${brand?`<span style="flex-shrink:0;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;background:${bm.bg};color:${bm.c};">${brand}</span>`:''}
+      ${brand?`<span style="flex-shrink:0;padding:3px 8px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;background:${bm.bg};color:${bm.c};">${brand}</span>`:''}
     </div>`;
   });
   secB += '</div></div>';
@@ -1492,37 +1492,37 @@ async function loadMods(){
   const maxLivs = top3.length ? (lc[top3[0].id]||1) : 1;
 
   let secC = '<div style="padding:28px 20px 40px;">';
-  secC += '<div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Most popular mods <span style="flex:1;height:0.5px;background:var(--b1);"></span></div>';
-  secC += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">';
+  secC += '<div style="font-family:\'Space Mono\',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Most popular mods <span style="flex:1;height:1px;background:var(--b1);"></span></div>';
+  secC += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);border:1px solid var(--b1);">';
   top3.forEach((m,i)=>{
     const brand = m.brand&&brandMeta[m.brand]?m.brand:null;
     const bm = brand?brandMeta[brand]:null;
     const cnt = lc[m.id]||0;
     const pct = Math.round((cnt/maxLivs)*100);
     const champs = [...((modChamps[m.id]||new Map()).values())].slice(0,3);
-    secC += `<div style="background:var(--s1);border:0.5px solid ${bm?`rgba(${brand==='RSS'?'232,49,42':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+    secC += `<div style="background:var(--s1);cursor:pointer;transition:all .2s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='var(--s1)'">
       <div style="padding:14px 15px 0;display:flex;align-items:center;gap:10px;margin-bottom:11px;">
-        <div style="width:38px;height:38px;border-radius:10px;flex-shrink:0;overflow:hidden;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
+        <div style="width:38px;height:38px;flex-shrink:0;overflow:hidden;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
           ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
-            `<span style="font-size:15px;font-weight:900;font-style:italic;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
+            `<span style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
         </div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:14px;font-weight:800;letter-spacing:-.5px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
-          <div style="font-size:10px;font-weight:700;color:${bm?.c||'var(--t3)'};text-transform:uppercase;letter-spacing:.3px;margin-top:1px;">${brand||'—'}</div>
+          <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:${bm?.c||'var(--t3)'};text-transform:uppercase;letter-spacing:.05em;margin-top:2px;">${brand||'—'}</div>
         </div>
-        <div style="width:22px;height:22px;border-radius:50%;background:${bm?.bg||'var(--s2)'};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:${bm?.c||'var(--t2)'};">#${i+1}</div>
+        <div style="width:24px;height:24px;background:${bm?.bg||'var(--s2)'};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:${bm?.c||'var(--t2)'};flex-shrink:0;">#${i+1}</div>
       </div>
       <div style="padding:0 15px;font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:10px;min-height:34px;">${m.description||'<span style="color:var(--t3);">No description yet.</span>'}</div>
-      <div style="margin:0 15px 4px;height:3px;background:var(--b1);border-radius:2px;">
-        <div style="height:100%;border-radius:2px;background:${bm?.c||'var(--t2)'};width:${pct}%;transition:width .4s;"></div>
+      <div style="margin:0 15px 4px;height:3px;background:var(--b1);">
+        <div style="height:100%;background:${bm?.c||'var(--t2)'};width:${pct}%;transition:width .4s;"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin:0 15px 10px;">
-        <span style="color:${bm?.c||'var(--t1)'};font-weight:600;">${cnt} liveri${cnt!==1?'es':'y'}</span>
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin:0 15px 10px;">
+        <span style="color:${bm?.c||'var(--t1)'};font-weight:700;">${cnt} liveri${cnt!==1?'es':'y'}</span>
         <span>${m.categories?.name||'—'}</span>
       </div>
-      ${champs.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 15px 12px;">${champs.map(c=>`<span style="padding:2px 7px;border-radius:5px;font-size:10px;font-weight:600;background:var(--s2);color:var(--t2);border:0.5px solid var(--b1);">${c}</span>`).join('')}</div>`:''}
-      <div style="padding:8px 15px 12px;border-top:0.5px solid var(--b1);display:flex;justify-content:flex-end;">
-        <button style="height:24px;padding:0 10px;background:${bm?.bg||'var(--s2)'};color:${bm?.c||'var(--t2)'};border:0.5px solid ${bm?`rgba(${brand==='RSS'?'232,49,42':brand==='VRC'?'48,209,88':'255,159,10'},.2)`:'var(--b1)'};border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid" style="font-size:11px;"></i> Browse</button>
+      ${champs.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 15px 12px;">${champs.map(c=>`<span style="padding:3px 8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:400;background:var(--s2);color:var(--t2);border:1px solid var(--b1);">${c}</span>`).join('')}</div>`:''}
+      <div style="padding:8px 15px 12px;border-top:1px solid var(--b1);display:flex;justify-content:flex-end;">
+        <button style="height:26px;padding:0 12px;background:transparent;color:${bm?.c||'var(--t2)'};border:1px solid ${bm?.c||'var(--b1)'};font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid" style="font-size:11px;"></i> Browse</button>
       </div>
     </div>`;
   });
@@ -1683,7 +1683,7 @@ async function loadArtists(){
       ?`<div class="av-av"><img class="av-avatar-img" src="${a.avatar_url}" alt="${a.name}"></div>`
       :`<div class="av-av" style="background:${abg};color:${ac};">${ini}</div>`;
     const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
-    const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:2px 8px;border-radius:12px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-size:9px;font-weight:700;">${b}</span>`;}).join('');
+    const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:3px 9px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-family:'Space Mono',monospace;font-size:9px;font-weight:700;">${b}</span>`;}).join('');
     const socials=[
       a.url_twitter?`<a href="${a.url_twitter}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-x"></i></a>`:'',
       a.url_patreon?`<a href="${a.url_patreon}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-patreon"></i></a>`:'',
@@ -1702,12 +1702,12 @@ async function loadArtists(){
       ${brandPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${brandPills}</div>`:''}
       <div class="av-stats">
         <div class="av-stat">
-          <div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);">${s.c}</div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Liveries</div>
+          <div class="av-n">${s.c}</div>
+          <div class="av-l">Liveries</div>
         </div>
         <div class="av-stat">
-          <div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--t1);">${s.v}</div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Upvotes</div>
+          <div class="av-n">${s.v}</div>
+          <div class="av-l">Upvotes</div>
         </div>
       </div>
     </div>`;
