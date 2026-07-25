@@ -1060,12 +1060,14 @@ let _sAvailMods=[],_sAvailChamps=[],_sSelMod='',_sSelChamp='',_sArtistId=null,_s
 let _getSubmitImg=()=>null;
 
 // ── NAVIGATION ──
+const ROUTABLE_VIEWS=['home','liveries','mods','artists','addons','submit'];
 function nav(v){
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));
   document.getElementById('view-'+v)?.classList.add('on');
   document.getElementById('nl-'+v)?.classList.add('on');
   document.getElementById('main-scroll').scrollTop=0;
+  if(ROUTABLE_VIEWS.includes(v) && location.hash.slice(1)!==v) history.pushState(null,'','#'+v);
   if(v==='home')loadHome();
   if(v==='liveries')loadLiveries();
   if(v==='mods')loadMods();
@@ -1074,9 +1076,9 @@ function nav(v){
   if(v==='addons')loadAddons();
   if(v==='submit')initSubmit();
 }
-function navBack(){nav(_prevView);}
-function openLivery(id){_prevView=document.querySelector('.view.on')?.id?.replace('view-','')??'liveries';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('view-livery-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;loadLiveryDetail(id);}
-function openModDetail(id){_prevView='mods';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('nl-mods').classList.add('on');document.getElementById('view-mod-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;loadModDetail(id);}
+function navBack(){history.back();}
+function openLivery(id){_prevView=document.querySelector('.view.on')?.id?.replace('view-','')??'liveries';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('view-livery-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;if(location.hash!=='#livery/'+id) history.pushState(null,'','#livery/'+id);loadLiveryDetail(id);}
+function openModDetail(id){_prevView='mods';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('nl-mods').classList.add('on');document.getElementById('view-mod-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;if(location.hash!=='#mod/'+id) history.pushState(null,'','#mod/'+id);loadModDetail(id);}
 
 // ── BOOT ──
 async function boot(){
@@ -1538,6 +1540,7 @@ async function openBrandDetail(brand){
   document.getElementById('nl-mods').classList.add('on');
   document.getElementById('main-scroll').scrollTop=0;
   _prevView='mods';
+  if(location.hash!=='#brand/'+brand) history.pushState(null,'','#brand/'+brand);
 
   const brandMeta={
     RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',gbg:'linear-gradient(135deg,#200808,#150303)',label:'Race Sim Studio'},
@@ -1715,6 +1718,7 @@ var _apId=null, _apTab='liveries';
 async function openArtistProfile(id){
   _apId=id; _apTab='liveries';
   nav('artist-profile');
+  if(location.hash!=='#artist/'+id) history.pushState(null,'','#artist/'+id);
   renderArtistProfile(id);
 }
 
@@ -2032,14 +2036,20 @@ if(editToken){
 // ── HASH ROUTING ──
 function handleHash(){
   const h=location.hash;
+  if(!h||h==='#'){nav('liveries');return;}
   if(h.startsWith('#livery/'))openLivery(h.replace('#livery/',''));
+  else if(h.startsWith('#mod/'))openModDetail(h.replace('#mod/',''));
+  else if(h.startsWith('#artist/'))openArtistProfile(h.replace('#artist/',''));
+  else if(h.startsWith('#brand/'))openBrandDetail(h.replace('#brand/',''));
   else if(h==='#liveries')nav('liveries');
   else if(h==='#mods')nav('mods');
   else if(h==='#artists')nav('artists');
   else if(h==='#addons')nav('addons');
   else if(h==='#submit')nav('submit');
+  else nav('liveries');
 }
 window.addEventListener('hashchange',handleHash);
+window.addEventListener('popstate',handleHash);
 
 // ── BOOT ──
 // ── DRAWER ──────────────────────────────────
