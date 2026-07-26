@@ -15,23 +15,23 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 ::selection{background:var(--acc);color:var(--bg);}
 .gate{display:flex;align-items:center;justify-content:center;height:100vh;}
 .gate-box{background:var(--s1);border:1px solid var(--b1);padding:40px;width:100%;max-width:400px;text-align:center;}
-.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
-.sidebar{background:var(--bg);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;}
-.sb-logo{padding:20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;}
+.shell{display:flex;flex-direction:column;min-height:100vh;}
+.sidebar{background:var(--bg);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:24px;padding:0 24px;flex-shrink:0;position:sticky;top:0;z-index:60;height:60px;}
+.sb-logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;text-decoration:none;}
 .sb-logo::before{content:'';width:12px;height:12px;background:linear-gradient(135deg,var(--acc),#3DE8FF);flex-shrink:0;}
-.sb-artist{padding:14px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;}
-.sb-av{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;overflow:hidden;background:var(--acc2);color:var(--acc);}
+.sb-artist{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.sb-av{width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:11px;font-weight:400;overflow:hidden;background:var(--acc2);color:var(--acc);}
 .sb-av img{width:100%;height:100%;object-fit:cover;}
-.sb-nav{padding:10px 0;flex:1;}
-.sb-sec{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:14px 20px 6px;}
-.sb-link{display:flex;align-items:center;gap:9px;padding:9px 20px;cursor:pointer;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);transition:all .12s;border:none;border-left:2px solid transparent;background:none;width:100%;text-align:left;}
-.sb-link:hover{color:var(--t1);background:var(--s1);}
-.sb-link.on{color:var(--t1);background:var(--s1);border-left-color:var(--acc);}
+.sb-nav{display:flex;align-items:center;gap:2px;height:100%;}
+.sb-sec{display:none;}
+.sb-link{display:flex;align-items:center;gap:7px;padding:0 14px;height:100%;cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);transition:all .12s;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;}
+.sb-link:hover{color:var(--t1);}
+.sb-link.on{color:var(--acc);border-bottom-color:var(--acc);}
 .sb-link.on i{color:var(--acc);}
-.sb-link i{font-size:16px;flex-shrink:0;color:var(--t3);}
-.sb-back{display:flex;align-items:center;gap:7px;margin:10px;padding:10px;border:1px solid var(--b1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;text-decoration:none;background:transparent;transition:all .15s;}
+.sb-link i{font-size:14px;flex-shrink:0;color:var(--t3);}
+.sb-back{display:flex;align-items:center;gap:7px;padding:0 14px;height:34px;border:1px solid var(--b1);font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;text-decoration:none;background:transparent;transition:all .15s;flex-shrink:0;}
 .sb-back:hover{color:var(--t1);border-color:var(--acc);}
-.main{min-height:100vh;overflow-y:auto;}
+.main{flex:1;min-height:0;overflow-y:auto;}
 .view{display:none;}
 .view.on{display:block;}
 .page-top{padding:28px 28px 20px;border-bottom:0.5px solid var(--b1);}
@@ -114,28 +114,26 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 </div>
 
 <div class="shell" id="ae-shell" style="display:none;">
-  <aside class="sidebar">
+  <header class="sidebar">
     <div class="sb-logo">
-      <span style="font-size:15px;font-weight:900;font-style:italic;color:var(--acc);">AC</span>
-      <span style="font-size:15px;font-weight:900;font-style:italic;color:var(--t1);"> Liveries</span>
-      <span style="font-size:8px;font-weight:700;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-left:4px;">DB</span>
-    </div>
-    <div class="sb-artist">
-      <div class="sb-av" id="ae-av">?</div>
-      <div style="min-width:0;">
-        <div style="font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="ae-name">…</div>
-        <div style="font-size:10px;color:var(--t3);">👑 Confirmed artist</div>
-      </div>
+      <span style="font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;color:var(--acc);text-transform:uppercase;">AC</span>
+      <span style="font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;color:var(--t1);text-transform:uppercase;">&nbsp;Liveries</span>
+      <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-left:4px;">DB</span>
     </div>
     <nav class="sb-nav">
-      <div class="sb-sec">My content</div>
       <button class="sb-link on" onclick="aeNav('liveries',this)"><i class="ti ti-photo"></i> My liveries</button>
       <button class="sb-link" onclick="aeNav('addons',this)"><i class="ti ti-puzzle"></i> My addons</button>
       <button class="sb-link" onclick="aeNav('submit',this)"><i class="ti ti-plus"></i> Add content</button>
       <button class="sb-link" onclick="aeNav('profile',this)"><i class="ti ti-user"></i> My profile</button>
     </nav>
+    <div class="sb-artist">
+      <div class="sb-av" id="ae-av">?</div>
+      <div style="min-width:0;">
+        <div style="font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;" id="ae-name">…</div>
+      </div>
+    </div>
     <a href="index.html" class="sb-back"><i class="ti ti-arrow-left"></i> Back to site</a>
-  </aside>
+  </header>
 
   <div class="main">
 
