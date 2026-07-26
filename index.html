@@ -171,7 +171,9 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .bt-vrc{background:rgba(48,209,88,.14);color:#30D158;}
 .bt-urd{background:rgba(255,159,10,.14);color:#FF9F0A;}
 /* ── LIVERY CARDS (chip / paint-swatch style) ── */
-.lv-cards{padding:1px 28px 32px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--b1);border:1px solid var(--b1);margin:0 28px 32px;width:calc(100% - 56px);}
+.lv-cards{padding:1px 28px 32px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--b1);border:1px solid var(--b1);margin:0 28px 32px;width:calc(100% - 56px);}
+@media(min-width:1600px){.lv-cards{grid-template-columns:repeat(5,1fr);}}
+@media(min-width:1180px) and (max-width:1599px){.lv-cards{grid-template-columns:repeat(4,1fr);}}
 .lv-card{background:var(--s1);cursor:pointer;transition:border-color .18s;border:1px solid transparent;display:flex;flex-direction:column;position:relative;}
 .lv-card:hover{border-color:var(--acc);}
 .lv-card::after{content:'';position:absolute;right:0;bottom:0;width:0;height:0;background:var(--acc);transition:width .18s,height .18s;z-index:3;}
