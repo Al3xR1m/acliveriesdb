@@ -121,10 +121,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
       <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-left:4px;">DB</span>
     </div>
     <nav class="sb-nav">
-      <button class="sb-link on" onclick="aeNav('liveries',this)"><i class="ti ti-photo"></i> My liveries</button>
-      <button class="sb-link" onclick="aeNav('addons',this)"><i class="ti ti-puzzle"></i> My addons</button>
-      <button class="sb-link" onclick="aeNav('submit',this)"><i class="ti ti-plus"></i> Add content</button>
-      <button class="sb-link" onclick="aeNav('profile',this)"><i class="ti ti-user"></i> My profile</button>
+      <button class="sb-link on" data-v="liveries" onclick="aeNav('liveries',this)"><i class="ti ti-photo"></i> My liveries</button>
+      <button class="sb-link" data-v="addons" onclick="aeNav('addons',this)"><i class="ti ti-puzzle"></i> My addons</button>
+      <button class="sb-link" data-v="submit" onclick="aeNav('submit',this)"><i class="ti ti-plus"></i> Add content</button>
+      <button class="sb-link" data-v="profile" onclick="aeNav('profile',this)"><i class="ti ti-user"></i> My profile</button>
     </nav>
     <div class="sb-artist">
       <div class="sb-av" id="ae-av">?</div>
@@ -322,6 +322,7 @@ function aeNav(v, btn) {
   document.querySelectorAll('.sb-link').forEach(function(x){ x.classList.remove('on'); });
   document.getElementById('ae-view-'+v).classList.add('on');
   if (btn) btn.classList.add('on');
+  if (location.hash.slice(1) !== v) history.pushState(null, '', '#'+v);
   if (v==='liveries') aeLiveries();
   if (v==='addons') aeAddons();
   if (v==='profile') aeProfile();
@@ -474,7 +475,7 @@ async function aeBoot() {
   aeFilterCats();
 
   document.getElementById('ae-gate').style.display = 'none';
-  document.getElementById('ae-shell').style.display = 'grid';
+  document.getElementById('ae-shell').style.display = 'flex';
 
   var ini = _ae_artist.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
   var av = document.getElementById('ae-av');
@@ -487,8 +488,23 @@ async function aeBoot() {
   else heroAv.textContent = ini;
   document.getElementById('ae-hero-name').textContent = _ae_artist.name;
 
-  aeLiveries();
+  aeHandleHash();
 }
+
+function aeHandleHash() {
+  var v = (location.hash || '#liveries').slice(1);
+  if (['liveries','addons','submit','profile'].indexOf(v) === -1) v = 'liveries';
+  document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
+  document.querySelectorAll('.sb-link').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('ae-view-'+v).classList.add('on');
+  var btn = document.querySelector('.sb-link[data-v="'+v+'"]');
+  if (btn) btn.classList.add('on');
+  if (v==='liveries') aeLiveries();
+  if (v==='addons') aeAddons();
+  if (v==='profile') aeProfile();
+}
+window.addEventListener('hashchange', aeHandleHash);
+window.addEventListener('popstate', aeHandleHash);
 
 async function aeLiveries() {
   var el = document.getElementById('ae-liveries-grid');
