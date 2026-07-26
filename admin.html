@@ -17,18 +17,19 @@
     .data-table td { padding:10px 12px; border-bottom:1px solid var(--border); color:var(--text); vertical-align:middle; }
     .data-table tr:hover td { background:var(--bg-s2); }
     .data-table tr:last-child td { border-bottom:none; }
-    .action-btn { font-size:12px; padding:5px 11px; border-radius:var(--radius-sm); border:1px solid var(--border); cursor:pointer; background:transparent; color:var(--text-2); transition:all .12s; margin-right:4px; font-family:var(--font-body); display:inline-flex; align-items:center; gap:5px; }
+    .action-btn { font-family:'Archivo',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:0 12px; height:32px; border:1px solid var(--border-md); cursor:pointer; background:transparent; color:var(--text-2); transition:all .12s; margin-right:4px; display:inline-flex; align-items:center; gap:6px; }
     .action-btn:hover { border-color:var(--acc); color:var(--acc); }
-    .action-btn.danger:hover { border-color:var(--red); color:var(--red); }
-    .action-btn.success { background:var(--green-2); border-color:rgba(34,197,94,0.3); color:var(--green); }
-    .action-btn.success:hover { background:rgba(34,197,94,0.2); }
+    .action-btn.danger { color:var(--red); border-color:var(--red); }
+    .action-btn.danger:hover { background:var(--red); color:#fff; }
+    .action-btn.success { background:transparent; border-color:var(--green); color:var(--green); }
+    .action-btn.success:hover { background:var(--green); color:#fff; }
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:200; align-items:center; justify-content:center; }
     .modal-overlay.open { display:flex; }
     .modal-box { background:var(--bg-s1); border:1px solid var(--border-md); border-radius:var(--radius-xl); padding:24px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; }
-    .modal-title { font-family:var(--font-display); font-size:18px; font-weight:800; margin-bottom:18px; display:flex; align-items:center; gap:8px; letter-spacing:-0.5px; }
+    .modal-title { font-family:'Archivo Black',sans-serif; font-size:17px; font-weight:400; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px; letter-spacing:0; }
     .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
     .field { display:flex; flex-direction:column; gap:5px; }
-    .field label { font-size:11px; font-weight:600; color:var(--text-2); text-transform:uppercase; letter-spacing:0.04em; }
+    .field label { font-family:'Space Mono',monospace; font-size:9px; font-weight:400; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; }
     .field input, .field select, .field textarea { background:var(--bg-s2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; color:var(--text); font-size:13px; font-family:var(--font-body); outline:none; transition:border-color .15s; }
     .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--acc); }
     .field textarea { resize:vertical; min-height:72px; }
@@ -41,8 +42,8 @@
     .cat-check-item.checked { color:var(--text); border-color:var(--acc); background:var(--acc-3); }
     .cat-check-item .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .linked-cats { display:flex; flex-wrap:wrap; gap:4px; }
-    .tbl-avatar { width:32px; height:32px; border-radius:50%; object-fit:cover; border:2px solid rgba(245,158,11,0.3); vertical-align:middle; }
-    .tbl-avatar-ph { width:32px; height:32px; border-radius:50%; background:var(--bg-s2); display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-3); border:2px solid rgba(245,158,11,0.3); vertical-align:middle; }
+    .tbl-avatar { width:32px; height:32px; object-fit:cover; border:2px solid var(--amber); vertical-align:middle; }
+    .tbl-avatar-ph { width:32px; height:32px; background:var(--bg-s2); display:inline-flex; align-items:center; justify-content:center; font-family:'Archivo Black',sans-serif; font-size:13px; color:var(--text-3); border:2px solid var(--amber); vertical-align:middle; }
     .upload-widget { display:flex; flex-direction:column; gap:6px; }
     .upload-preview { width:100%; height:100px; border-radius:var(--radius-sm); object-fit:cover; border:1px solid var(--border); display:none; }
     .upload-preview.avatar { width:64px; height:64px; border-radius:50%; }
@@ -54,7 +55,7 @@
     .upload-progress.visible { display:block; }
     .upload-existing { font-size:11px; color:var(--text-3); display:flex; align-items:center; gap:6px; }
     .upload-existing a { color:var(--acc); }
-    .cat-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; }
+    .cat-badge { display:inline-flex; align-items:center; padding:3px 8px; border:1px solid currentColor; background:var(--bg); font-family:'Space Mono',monospace; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
     @media(max-width:700px){
       .admin-layout { grid-template-columns:1fr; }
       .admin-sidebar { display:flex; overflow-x:auto; padding:0; height:auto; position:relative; }
@@ -68,7 +69,7 @@
 <div id="loginScreen" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--bg);">
   <div class="card" style="padding:36px; width:100%; max-width:360px; text-align:center;">
     <div style="font-size:36px; color:var(--acc); margin-bottom:12px;"><i class="ti ti-shield-lock"></i></div>
-    <h1 style="font-family:var(--font-display); font-size:24px; font-weight:900; font-style:italic; letter-spacing:-1px; margin-bottom:6px;">Admin Panel</h1>
+    <h1 style="font-family:'Archivo Black',sans-serif; font-size:22px; font-weight:400; text-transform:uppercase; letter-spacing:0; margin-bottom:6px;">Admin Panel</h1>
     <p style="font-size:13px; color:var(--text-2); margin-bottom:24px;">AC Liveries DB — restricted access</p>
     <input type="password" class="form-input" id="pwInput" placeholder="Password" autocomplete="current-password" style="margin-bottom:10px;">
     <button class="btn btn--primary" id="loginBtn" style="width:100%; height:40px; font-size:14px; border-radius:var(--radius-md);">Enter</button>
@@ -269,6 +270,12 @@
         </div>
         <div style="overflow-x:auto;"><table class="data-table" id="cat-table"></table></div>
       </div>
+
+      <!-- FOOTER -->
+      <footer style="padding:36px 0 20px;margin-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;border-top:1px solid var(--border);">
+        <div style="font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;text-transform:uppercase;color:var(--text);">AC Liveries DB — Admin</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-3);">INTERNAL TOOL — NOT PUBLIC</div>
+      </footer>
 
     </div>
   </div>

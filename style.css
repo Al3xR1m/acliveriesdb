@@ -20,6 +20,8 @@ ul, ol { list-style: none; }
    2. TOKENS
    ============================================================ */
 :root {
+  --font-display: 'Archivo Black', sans-serif;
+  --font-body: 'Archivo', sans-serif;
   /* Backgrounds */
   --bg:    #0D0D10;
   --bg-s1: #13131A;
@@ -646,7 +648,9 @@ ul, ol { list-style: none; }
 /* ============================================================
    24. LABEL (eyebrow text)
    ============================================================ */
-.label { font-size: 10px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: var(--text-3); }
+.label { font-family:'Space Mono',monospace; font-size: 9px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.action-btn { display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 14px; background:transparent; color:var(--text-2); border:1px solid var(--border-md); font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; cursor:pointer; transition:all var(--t); }
+.action-btn:hover { color:var(--text); border-color:var(--acc); }
 
 /* ============================================================
    25. PICKER MODALS (submit form)
