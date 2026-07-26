@@ -324,13 +324,27 @@ document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorag
 if(checkLogin()){document.getElementById('loginScreen').style.display='none';document.getElementById('adminApp').style.display='block';}
 
 // Panel nav
+const ADMIN_PANELS = ['dashboard','pending','reports','edit-requests','liveries','addons','artists','championships','mods','categories'];
 function showPanel(name){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.admin-nav-item').forEach(i=>i.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   document.querySelector(`[data-panel="${name}"]`).classList.add('active');
+  if (location.hash.slice(1) !== name) history.pushState(null, '', '#'+name);
   loadPanel(name);
 }
+function adminHandleHash(){
+  let name = location.hash.slice(1);
+  if (!ADMIN_PANELS.includes(name)) name = 'dashboard';
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.admin-nav-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  const btn = document.querySelector(`[data-panel="${name}"]`);
+  if (btn) btn.classList.add('active');
+  loadPanel(name);
+}
+window.addEventListener('hashchange', adminHandleHash);
+window.addEventListener('popstate', adminHandleHash);
 document.querySelectorAll('.admin-nav-item').forEach(item=>item.addEventListener('click',()=>showPanel(item.dataset.panel)));
 
 // Modal
@@ -372,7 +386,7 @@ async function reloadCache(){
   [_cats,_mods,_champs,_artists]=await Promise.all([fetchCategories(),fetchMods(),fetchChampionships(),fetchArtists()]);
 }
 
-async function initAdmin(){await reloadCache();loadPanel('dashboard');}
+async function initAdmin(){await reloadCache();adminHandleHash();}
 async function loadPanel(name){
   if(name==='dashboard')    await loadDashboard();
   if(name==='pending')      await loadPending();
