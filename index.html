@@ -182,28 +182,30 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card.vrc:hover::after{background:var(--grn);}
 .lv-card.urd:hover{border-color:var(--amb);}
 .lv-card.urd:hover::after{background:var(--amb);}
-.lv-card-thumb{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--s2);}
-.lv-card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;}
+.lv-card-thumb{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;background:var(--s2);}
+.lv-card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;z-index:0;}
 .lv-card:hover .lv-card-thumb img{transform:scale(1.04);}
-.lv-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.75),transparent 55%);pointer-events:none;}
-.lv-card-top{position:absolute;top:8px;left:8px;display:flex;gap:4px;}
-.lv-card-crown{position:absolute;top:8px;right:8px;font-size:13px;}
-.lv-card-votes{position:absolute;bottom:7px;right:8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.55);display:flex;align-items:center;gap:2px;}
-.lv-card-body{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1;}
-.lv-card-bottom{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;}
-.lv-card-num{font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;letter-spacing:-1px;color:#fff;line-height:1;}
-.lv-card-team{font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:rgba(242,240,234,.6);margin-top:2px;text-transform:uppercase;}
-.lv-card-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.lv-card-paint{position:absolute;inset:0;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);z-index:1;}
+.lv-card:hover .lv-card-paint{transform:translateY(0%);}
+.lv-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.8),transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s;}
+.lv-card:hover .lv-card-ov{opacity:0;}
+.lv-card-top{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
+.lv-card-crown{position:absolute;top:8px;right:8px;font-size:13px;z-index:3;transition:opacity .25s;}
+.lv-card-dl{position:absolute;top:9px;right:8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
+.lv-card:hover .lv-card-top,.lv-card:hover .lv-card-crown,.lv-card:hover .lv-card-dl{opacity:0;}
+.lv-card-thumb:has(.lv-card-crown) .lv-card-dl{top:26px;}
+.lv-card-meta{position:absolute;inset:0;padding:12px 14px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
+.lv-card:hover .lv-card-meta *{color:var(--bg)!important;}
+.lv-card-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .lv-card-champ{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
 .lv-card-season{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t2);flex-shrink:0;margin-left:6px;}
-.lv-card-name{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);line-height:1.2;margin-bottom:3px;}
-.lv-card-driver{font-family:'Space Mono',monospace;font-size:11px;color:var(--t2);margin-bottom:8px;}
-.lv-card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--b1);margin-top:auto;}
-.lv-card-creator{display:flex;align-items:center;gap:5px;min-width:0;}
+.lv-card-name{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);line-height:1.25;}
+.lv-card-driver{font-family:'Space Mono',monospace;font-size:11px;color:var(--t2);margin-top:2px;}
+.lv-card-foot{display:flex;align-items:center;padding:9px 14px;border-top:1px solid var(--b1);}
+.lv-card-creator{display:flex;align-items:center;gap:6px;min-width:0;}
 .lv-card-creator-av{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;flex-shrink:0;}
 .lv-card-creator-name{font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;}
 .lv-card-mod{font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lv-card-votes{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);display:flex;align-items:center;gap:3px;flex-shrink:0;}
 /* FILTER DRAWER */
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none;backdrop-filter:blur(2px);}
 /* Cascade steps */
@@ -974,6 +976,7 @@ function richCard(l){
   const driver=l.driver||'';
   const season=l.season||'';
   const modName=l.mods?.name||'';
+  const paintColor=l.categories?.color_bg||brandColor;
   // Creator
   const creatorName=l.artists?.name||(l.author||'');
   const creatorIni=creatorName?creatorName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():'?';
@@ -982,6 +985,7 @@ function richCard(l){
   return `<div class="lv-card${brandCls?' '+brandCls:''}" onclick="openLivery('${l.id}')">
     <div class="lv-card-thumb">
       ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
+      <div class="lv-card-paint" style="background:${paintColor};"></div>
       <div class="lv-card-ov"></div>
       <div class="lv-card-top">
         ${isNew2?'<span class="badge b-n">New</span>':''}
@@ -989,25 +993,21 @@ function richCard(l){
         ${brandTag}
       </div>
       ${isArtist?'<span class="lv-card-crown">👑</span>':''}
-      <div class="lv-card-bottom">
-        <div class="lv-card-num">${l.car_number?'#'+l.car_number:''}</div>
-        ${l.team?`<div class="lv-card-team">${l.team}</div>`:''}
+      <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
+      <div class="lv-card-meta">
+        <div class="lv-card-champ-row">
+          <span class="lv-card-champ" style="color:${brandColor};">${champName||cn||'—'}</span>
+          ${season?`<span class="lv-card-season">${season}</span>`:''}
+        </div>
+        <div class="lv-card-name">${l.name}</div>
+        ${driver?`<div class="lv-card-driver">${driver}</div>`:l.team?`<div class="lv-card-driver">${l.team}</div>`:''}
       </div>
     </div>
-    <div class="lv-card-body">
-      <div class="lv-card-champ-row">
-        <span class="lv-card-champ" style="color:${brandColor};">${champName||cn||'—'}</span>
-        ${season?`<span class="lv-card-season">${season}</span>`:''}
-      </div>
-      <div class="lv-card-name">${l.name}</div>
-      ${driver?`<div class="lv-card-driver">${driver}</div>`:''}
-      <div class="lv-card-foot">
-        <div class="lv-card-creator">
-          <div class="lv-card-creator-av" style="background:${brandColor}22;color:${brandColor};">${isArtist?'👑':creatorIni}</div>
-          <span class="lv-card-creator-name">${creatorName||'—'}</span>
-          ${modName?`<span class="lv-card-mod">· ${modName}</span>`:''}
-        </div>
-        <div class="lv-card-votes"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
+    <div class="lv-card-foot">
+      <div class="lv-card-creator">
+        <div class="lv-card-creator-av" style="background:${brandColor}22;color:${brandColor};">${isArtist?'👑':creatorIni}</div>
+        <span class="lv-card-creator-name">${creatorName||'—'}</span>
+        ${modName?`<span class="lv-card-mod">· ${modName}</span>`:''}
       </div>
     </div>
   </div>`;
