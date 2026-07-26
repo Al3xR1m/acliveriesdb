@@ -140,9 +140,31 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
   <div class="main">
 
     <div class="view on" id="ae-view-liveries">
-      <div class="page-top">
-        <div class="page-ey"><span></span>Creator Dashboard</div>
-        <h2 class="page-h1">My <em>liveries</em></h2>
+      <div class="page-top" style="display:flex;align-items:flex-start;gap:24px;justify-content:space-between;flex-wrap:wrap;">
+        <div>
+          <div class="page-ey"><span></span>Creator Dashboard</div>
+          <div id="ae-hero-av" style="width:64px;height:64px;background:linear-gradient(135deg,var(--acc),#3DE8FF);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:22px;font-weight:400;color:#0A0A0F;margin-bottom:16px;overflow:hidden;">?</div>
+          <h2 class="page-h1" id="ae-hero-name" style="font-size:30px;">My liveries</h2>
+          <div style="margin-top:10px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;">👑 Confirmed artist</span></div>
+        </div>
+        <div style="display:flex;gap:0;border:1px solid var(--b1);flex-shrink:0;">
+          <div style="padding:12px 18px;text-align:center;border-right:1px solid var(--b1);">
+            <div id="ae-hero-liv" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--t1);">—</div>
+            <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Liveries</div>
+          </div>
+          <div style="padding:12px 18px;text-align:center;border-right:1px solid var(--b1);">
+            <div id="ae-hero-add" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--t1);">—</div>
+            <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Addons</div>
+          </div>
+          <div style="padding:12px 18px;text-align:center;">
+            <div id="ae-hero-votes" style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--acc);">—</div>
+            <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Upvotes</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:20px 28px 12px;display:flex;align-items:center;gap:10px;">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;">// Liveries</span>
+        <span style="flex:1;height:1px;background:var(--b1);"></span>
       </div>
       <div class="lv-grid" id="ae-liveries-grid"></div>
     </div>
@@ -457,6 +479,11 @@ async function aeBoot() {
   else av.textContent = ini;
   document.getElementById('ae-name').textContent = _ae_artist.name;
 
+  var heroAv = document.getElementById('ae-hero-av');
+  if (_ae_artist.avatar_url) heroAv.innerHTML = '<img src="'+_ae_artist.avatar_url+'" style="width:100%;height:100%;object-fit:cover;">';
+  else heroAv.textContent = ini;
+  document.getElementById('ae-hero-name').textContent = _ae_artist.name;
+
   aeLiveries();
 }
 
@@ -465,6 +492,14 @@ async function aeLiveries() {
   el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
   var res = await db.from('liveries').select('*,categories(name),mods(name),championships(short_name)').eq('artist_id',_ae_artist.id).order('created_at',{ascending:false});
   var data = res.data||[];
+
+  // Hero stats
+  var addonsRes = await db.from('addons').select('id',{count:'exact',head:true}).eq('artist_id',_ae_artist.id);
+  var totalVotes = data.reduce(function(s,l){return s+(l.upvotes||0);},0);
+  document.getElementById('ae-hero-liv').textContent = data.length;
+  document.getElementById('ae-hero-add').textContent = addonsRes.count||0;
+  document.getElementById('ae-hero-votes').textContent = totalVotes;
+
   if (!data.length) {
     el.innerHTML = '<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-photo" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No liveries yet.</div>';
     return;
