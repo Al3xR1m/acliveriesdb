@@ -315,31 +315,45 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 /* ── LIVERY DETAIL ── */
 .ld-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;transition:color .12s;border-bottom:1px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
 .ld-back:hover{color:var(--acc);}
-.ld-body{padding:32px 28px;max-width:1300px;margin:0 auto;}
-.ld-grid{display:grid;grid-template-columns:1fr 320px;gap:1px;align-items:start;background:var(--b1);border:1px solid var(--b1);}
-.ld-cover{width:100%;aspect-ratio:16/10;max-height:640px;overflow:hidden;position:relative;background:var(--s2);display:flex;align-items:center;justify-content:center;}
+.ld-body{padding:32px 28px 60px;max-width:1200px;margin:0 auto;}
+.ld-crumb{font-family:'Space Mono',monospace;font-size:12px;color:var(--t3);margin-bottom:24px;}
+.ld-crumb a{cursor:pointer;color:var(--t3);}
+.ld-crumb a:hover{color:var(--acc);}
+.ld-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:44px;align-items:start;}
+@media(max-width:900px){.ld-grid{grid-template-columns:1fr;}}
+.ld-cover{width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;}
 .ld-cover img{width:100%;height:100%;object-fit:cover;display:block;}
-.ld-info{background:var(--bg);padding:18px;display:flex;flex-direction:column;gap:0;}
-.ld-title{font-family:'Archivo Black',sans-serif;font-size:20px;font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:1.05;color:var(--t1);margin-bottom:4px;}
-.ld-mod{font-family:'Space Mono',monospace;font-size:12px;color:var(--pur);margin-bottom:16px;}
-.ld-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1);}
-.ld-row:last-child{border-bottom:none;}
-.ld-key{font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:5px;}
-.ld-key i{display:none;}
-.ld-val{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t1);}
-.ld-notes{margin-top:14px;padding:12px 14px;background:var(--s1);border:1px solid var(--b1);font-size:12px;color:var(--t2);line-height:1.6;}
-.ld-actions{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
-.ld-btn{height:42px;border:1px solid var(--t1);background:transparent;color:var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .18s;}
+.ld-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--pur);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block;}
+.ld-title{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.98;color:var(--t1);margin-bottom:14px;}
+.ld-artist-line{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);flex-wrap:wrap;}
+.ld-artist-line strong{color:var(--t1);cursor:pointer;}
+.ld-artist-line strong:hover{color:var(--acc);}
+.ld-artist-badge{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;}
+.ld-stats{display:flex;gap:26px;margin-bottom:26px;flex-wrap:wrap;}
+.ld-stat-num{font-family:'Archivo Black',sans-serif;font-size:21px;font-weight:400;color:var(--t1);}
+.ld-stat-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+.ld-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
+.ld-btn{height:44px;padding:0 22px;border:1px solid var(--t1);background:transparent;color:var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .18s;}
 .ld-btn.primary{background:var(--t1);color:var(--bg);}
 .ld-btn.primary:hover{background:var(--acc);border-color:var(--acc);color:#fff;}
 .ld-btn.ghost{background:transparent;color:var(--t2);border:1px solid var(--b2);}
 .ld-btn.ghost:hover{color:var(--pur);border-color:var(--pur);}
-.upvote-btn{height:46px;border:1px solid var(--b2);background:transparent;color:var(--t2);font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;margin-top:8px;}
-.upvote-btn:hover{border-color:var(--acc);color:var(--acc);}
-.upvote-btn.voted{background:var(--acc2);border-color:var(--acc);color:var(--acc);}
-.artist-link{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s1);border:1px solid var(--amb);cursor:pointer;transition:all .15s;margin-top:14px;}
-.artist-link:hover{background:var(--amb2);}
-.artist-av{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;}
+.ld-btn.ghost.voted{background:var(--acc2);border-color:var(--acc);color:var(--acc);}
+.ld-links{display:flex;gap:16px;margin-bottom:24px;}
+.ld-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s;}
+.ld-links a:hover{color:var(--t1);}
+.ld-meta-panel{margin-top:8px;border-top:1px solid var(--b1);padding-top:6px;}
+.ld-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--b1);}
+.ld-row:last-child{border-bottom:none;}
+.ld-key{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
+.ld-val{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t1);}
+.ld-notes{margin-top:10px;padding:14px 16px;background:var(--s1);border:1px solid var(--b1);font-size:13px;color:var(--t2);line-height:1.7;}
+.ld-section{padding:56px 0;border-top:1px solid var(--b1);margin-top:40px;}
+.ld-section-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:block;}
+.ld-section h2{font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:400;text-transform:uppercase;color:var(--t1);margin-bottom:16px;}
+.ld-desc{color:var(--t2);max-width:640px;line-height:1.75;font-size:14px;}
+.ld-more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px;}
+@media(max-width:900px){.ld-more-grid{grid-template-columns:repeat(2,1fr);}}
 .similar-section{padding:24px 20px 40px;}
 .similar-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;}
 .similar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--b1);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;}
@@ -1161,57 +1175,75 @@ function gp(n){_page=n;loadLiveries();document.getElementById('main-scroll').scr
 
 // ── LIVERY DETAIL ──
 async function loadLiveryDetail(id){
-  document.getElementById('ld-content').innerHTML=`<div style="padding:40px;text-align:center;"><div class="sk" style="height:200px;border-radius:14px;margin-bottom:16px;"></div><div class="sk" style="height:120px;border-radius:14px;"></div></div>`;
+  document.getElementById('ld-content').innerHTML=`<div style="padding:40px;text-align:center;"><div class="sk" style="height:200px;margin-bottom:16px;"></div><div class="sk" style="height:120px;"></div></div>`;
   const l=await fetchLivery(id);
   if(!l){document.getElementById('ld-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Livery not found.</div>';return;}
   _voted=getVotedSet();
   const cn=l.categories?.name||'';
   const voted=_voted.has(l.id);
   const rows=[
-    ['ti-car','Mod',l.mods?.name||'—'],
-    ['ti-category','Category',l.categories?`<span class="badge" style="background:${l.categories.color_bg};color:${l.categories.color_text};">${l.categories.name}</span>`:'—'],
-    ['ti-trophy','Championship',l.championships?.name||'—'],
-    ['ti-flag','Team',l.team||'—'],
-    ['ti-users','Driver(s)',l.driver||'—'],
-    ['ti-calendar','Season',l.season||'—'],
-    ...(l.car_number?[['ti-hash','Car #',`#${l.car_number}`]]:[]),
-    ['ti-lock-open','Pricing',l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'],
+    ['Mod',l.mods?.name||'—'],
+    ['Category',l.categories?.name||'—'],
+    ['Championship',l.championships?.name||'—'],
+    ['Team',l.team||'—'],
+    ['Driver(s)',l.driver||'—'],
+    ['Season',l.season||'—'],
+    ...(l.car_number?[['Car #',`#${l.car_number}`]]:[]),
+    ['Pricing',l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'],
   ];
-  const artistBlock=l.artists?`<div class="artist-link" onclick="nav('artists')"><div class="artist-av" style="background:${AVC[0][0]};color:${AVC[0][1]};">${l.artists.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div><div><div style="font-size:10px;color:var(--crown);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px;">👑 Confirmed Artist</div><div style="font-size:14px;font-weight:700;color:var(--t1);">${l.artists.name}</div></div><i class="ti ti-chevron-right" style="margin-left:auto;color:var(--t3);font-size:14px;"></i></div>`:l.author?`<div style="font-size:12px;color:var(--t2);padding:8px 0;">Creator: ${l.author}</div>`:'';
+  const artistName=l.artists?.name||l.author||'';
+  const isConfirmed=!!l.artists;
+
   document.getElementById('ld-content').innerHTML=`
     <div class="ld-body">
+      <div class="ld-crumb"><a onclick="nav('liveries')">Browse</a> / <a onclick="nav('liveries')">${cn||'All'}</a> / ${l.name}</div>
       <div class="ld-grid">
         <div>
-          <div class="ld-cover">${l.image_url?`<img src="${l.image_url}" alt="${l.name}">`:`<div style="height:240px;position:relative;">${svg(cn,seed(l))}</div>`}</div>
-          ${l.notes?`<div class="ld-notes" style="margin-top:14px;">${l.notes}</div>`:''}
-          <div style="margin-top:20px;">
-            <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;">Similar liveries</div>
-            <div class="similar-grid" id="ld-similar"><div class="sk" style="height:80px;border-radius:0;"></div><div class="sk" style="height:80px;border-radius:0;"></div><div class="sk" style="height:80px;border-radius:0;"></div><div class="sk" style="height:80px;border-radius:0;"></div></div>
-          </div>
+          <div class="ld-cover">${l.image_url?`<img src="${l.image_url}" alt="${l.name}">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}</div>
         </div>
         <div>
-          <div class="ld-info">
-            <div class="ld-title">${l.name}</div>
-            <div class="ld-mod">${l.mods?.name||'—'}</div>
-            ${rows.map(([ico,k,v])=>`<div class="ld-row"><div class="ld-key"><i class="ti ${ico}"></i>${k}</div><div class="ld-val">${v}</div></div>`).join('')}
+          <span class="ld-tag">${[cn,l.championships?.short_name||l.championships?.name].filter(Boolean).join(' · ')||'Livery'}</span>
+          <h1 class="ld-title">${l.name}</h1>
+          <div class="ld-artist-line">
+            ${artistName?`by <strong onclick="${isConfirmed?`openArtistProfile('${l.artists.id}')`:''}">${artistName}</strong>`:''}
+            ${isConfirmed?'<span class="ld-artist-badge">👑 Confirmed</span>':''}
           </div>
-          ${artistBlock}
-          <div class="ld-actions" style="margin-top:14px;">
-            ${l.download_url?`<a href="${l.download_url}" target="_blank" class="ld-btn primary" style="text-decoration:none;"><i class="ti ti-download"></i> Download livery</a>`:''}
-            <button class="ld-btn ghost" onclick="copyLink('${l.id}')"><i class="ti ti-link"></i> Copy link</button>
-            <button class="ld-btn ghost" onclick="openReport('${l.id}')"><i class="ti ti-flag"></i> Report a problem</button>
+          <div class="ld-stats">
+            <div><div class="ld-stat-num" id="upvote-count">${l.upvotes||0}</div><div class="ld-stat-label">Upvotes</div></div>
+            ${l.car_number?`<div><div class="ld-stat-num">#${l.car_number}</div><div class="ld-stat-label">Car #</div></div>`:''}
+            ${l.season?`<div><div class="ld-stat-num">${l.season}</div><div class="ld-stat-label">Season</div></div>`:''}
           </div>
-          <button class="upvote-btn${voted?' voted':''}" id="upvote-btn" onclick="handleUpvote('${l.id}')">
-            <i class="ti ti-thumb-up" style="font-size:18px;"></i>
-            <span id="upvote-count">${l.upvotes||0}</span> upvotes
-            <span style="font-size:11px;font-weight:400;opacity:.6;">${voted?'(remove)':'(click to upvote)'}</span>
-          </button>
+          <div class="ld-actions">
+            ${l.download_url?`<a href="${l.download_url}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download livery</a>`:''}
+            <button class="ld-btn ghost${voted?' voted':''}" id="upvote-btn" onclick="handleUpvote('${l.id}')"><i class="ti ti-thumb-up"></i> ${voted?'Upvoted':'Upvote'}</button>
+          </div>
+          <div class="ld-links">
+            <a onclick="copyLink('${l.id}')"><i class="ti ti-link"></i> Copy link</a>
+            <a onclick="openReport('${l.id}')"><i class="ti ti-flag"></i> Report a problem</a>
+          </div>
+          <div class="ld-meta-panel">
+            ${rows.map(([k,v])=>`<div class="ld-row"><div class="ld-key">${k}</div><div class="ld-val">${v}</div></div>`).join('')}
+          </div>
         </div>
       </div>
+
+      ${l.notes?`<section class="ld-section">
+        <span class="ld-section-tag">// About this livery</span>
+        <h2>Built around a single idea</h2>
+        <p class="ld-desc">${l.notes}</p>
+      </section>`:''}
+
+      <section class="ld-section">
+        <span class="ld-section-tag">// ${artistName?'More from this artist':'Similar liveries'}</span>
+        <h2>${artistName?'By '+artistName:'You might also like'}</h2>
+        <div class="ld-more-grid" id="ld-similar">
+          <div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div>
+        </div>
+      </section>
     </div>`;
   const similar=await fetchLiveries({categoryId:l.category_id,sort:'votes',pageSize:6});
   const sim=similar.filter(x=>x.id!==l.id).slice(0,4);
-  document.getElementById('ld-similar').innerHTML=sim.length?sim.map(gcCard).join(''):'<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t2);font-size:12px;">No similar liveries found.</div>';
+  document.getElementById('ld-similar').innerHTML=sim.length?sim.map(richCard).join(''):'<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t2);font-size:12px;">No similar liveries found.</div>';
 }
 
 async function handleUpvote(id){
@@ -1223,7 +1255,7 @@ async function handleUpvote(id){
   else{const ok=await upvoteLivery(id);if(ok){cnt.textContent=parseInt(cnt.textContent)+1;btn.classList.add('voted');}}
 }
 function copyLink(id){
-  navigator.clipboard.writeText(location.origin+location.pathname+'#livery/'+id).then(()=>{const btn=document.querySelector('.ld-btn.ghost');if(btn){btn.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Copied!';setTimeout(()=>btn.innerHTML='<i class="ti ti-link"></i> Copy link',1500);}});
+  navigator.clipboard.writeText(location.origin+location.pathname+'#livery/'+id).then(()=>{const btn=event.currentTarget;if(btn){const orig=btn.innerHTML;btn.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Copied!';setTimeout(()=>btn.innerHTML=orig,1500);}});
 }
 function openReport(id){_pendingReport=id;document.getElementById('report-modal').classList.add('open');}
 function closeReport(){document.getElementById('report-modal').classList.remove('open');document.getElementById('report-notes').value='';}
