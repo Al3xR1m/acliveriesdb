@@ -65,7 +65,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
 /* ── BADGES ── */
-.badge{font-family:'Space Mono',monospace;font-size:8px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.5px;text-transform:uppercase;background:var(--bg);}
+.badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.4px;text-transform:uppercase;background:var(--bg);}
 .b-f{color:var(--grn);}
 .b-p{color:var(--amb);}
 .b-n{color:var(--pur);}
@@ -323,21 +323,21 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 @media(max-width:900px){.ld-grid{grid-template-columns:1fr;}}
 .ld-cover{width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;}
 .ld-cover img{width:100%;height:100%;object-fit:cover;display:block;}
-.ld-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--pur);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block;}
+.ld-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block;}
 .ld-title{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.98;color:var(--t1);margin-bottom:14px;}
 .ld-artist-line{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);flex-wrap:wrap;}
 .ld-artist-line strong{color:var(--t1);cursor:pointer;}
 .ld-artist-line strong:hover{color:var(--acc);}
-.ld-artist-badge{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;}
+.ld-artist-badge{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.04em;}
 .ld-stats{display:flex;gap:26px;margin-bottom:26px;flex-wrap:wrap;}
 .ld-stat-num{font-family:'Archivo Black',sans-serif;font-size:21px;font-weight:400;color:var(--t1);}
-.ld-stat-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+.ld-stat-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
 .ld-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
 .ld-btn{height:44px;padding:0 22px;border:1px solid var(--t1);background:transparent;color:var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .18s;}
 .ld-btn.primary{background:var(--t1);color:var(--bg);}
 .ld-btn.primary:hover{background:var(--acc);border-color:var(--acc);color:#fff;}
 .ld-btn.ghost{background:transparent;color:var(--t2);border:1px solid var(--b2);}
-.ld-btn.ghost:hover{color:var(--pur);border-color:var(--pur);}
+.ld-btn.ghost:hover{color:var(--acc);border-color:var(--acc);}
 .ld-btn.ghost.voted{background:var(--acc2);border-color:var(--acc);color:var(--acc);}
 .ld-links{display:flex;gap:16px;margin-bottom:24px;}
 .ld-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s;}
@@ -486,7 +486,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sub-body{padding:20px;max-width:520px;}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
 .field label{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;}
-.field input,.field select,.field textarea{background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 11px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;transition:border-color .12s;}
+.field input,.field select,.field textarea{background:var(--s2);border:1px solid var(--b1);padding:10px 12px;color:var(--t1);font-size:13px;outline:none;font-family:'Archivo',sans-serif;transition:border-color .12s;}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
 .field input::placeholder,.field textarea::placeholder{color:var(--t3);}
 .field select{appearance:none;cursor:pointer;}
@@ -496,12 +496,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sub-toggle-btn.on{background:var(--s2);color:var(--t1);border:0.5px solid var(--b2);}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .field.full{grid-column:1/-1;}
-.picker-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 11px;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;font-family:inherit;}
+.picker-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;background:var(--s2);border:1px solid var(--b1);cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;font-family:'Archivo',sans-serif;}
+.picker-btn:hover{border-color:var(--b2);}
 .picker-btn:hover:not(:disabled){border-color:var(--b2);color:var(--t1);}
 .picker-btn:disabled{opacity:.45;cursor:not-allowed;}
 .picker-ph{width:22px;height:22px;border-radius:5px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3);flex-shrink:0;}
 .picker-logo{width:22px;height:22px;border-radius:5px;object-fit:cover;flex-shrink:0;}
-.checker{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3);padding:2px 0;transition:color .12s;}
+.checker{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);padding:2px 0;transition:color .12s;}
 .checker.done{color:var(--grn);}
 .checker.done i{color:var(--grn);}
 .checker i{font-size:13px;width:15px;flex-shrink:0;}
@@ -515,20 +516,22 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .ap-name{font-size:13px;font-weight:700;color:var(--t1);}
 .ap-crown{font-size:12px;color:var(--crown);}
 .upload-widget{display:flex;flex-direction:column;gap:5px;}
-.upload-btn-label{display:flex;align-items:center;gap:6px;padding:8px 11px;border:0.5px dashed var(--b2);border-radius:9px;background:transparent;color:var(--t2);font-size:12px;cursor:pointer;width:100%;justify-content:center;font-family:inherit;transition:all .12s;}
+.upload-btn-label{display:flex;align-items:center;gap:6px;padding:10px 12px;border:1px dashed var(--b2);background:transparent;color:var(--t2);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;width:100%;justify-content:center;transition:all .12s;}
+.upload-btn-label:hover{border-color:var(--acc);color:var(--acc);}
 .upload-btn-label:hover{border-color:var(--acc);color:var(--acc);}
 .upload-preview{width:100%;height:80px;border-radius:8px;object-fit:cover;border:0.5px solid var(--b1);display:none;margin-bottom:4px;}
 .upload-preview.visible{display:block;}
 .upload-prog{font-size:10px;color:var(--t3);}
 .sub-cta{height:46px;background:var(--acc);color:#fff;border:1px solid var(--acc);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;font-family:'Archivo',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;width:100%;transition:all .15s;}
 .sub-cta:hover{opacity:.88;}
-.sub-step{margin-bottom:28px;}
-.sub-step-label{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.sub-step-n{width:20px;height:20px;border-radius:50%;background:var(--acc);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
-.brand-btn{padding:14px 16px;border-radius:12px;border:1.5px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:inherit;color:var(--t3);width:100%;transition:all .15s;}
-.brand-btn-active[data-brand="RSS"]{border-color:rgba(232,49,42,.4);background:rgba(232,49,42,.10);color:#E8312A;}
-.brand-btn-active[data-brand="VRC"]{border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.08);color:#30D158;}
-.brand-btn-active[data-brand="URD"]{border-color:rgba(255,159,10,.3);background:rgba(255,159,10,.08);color:#FF9F0A;}
+.sub-step{margin-bottom:20px;padding:20px 22px;background:var(--s1);border:1px solid var(--b1);}
+.sub-step-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sub-step-n{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.brand-btn{padding:14px 16px;border:1px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;color:var(--t3);width:100%;transition:all .15s;}
+.brand-btn:hover{border-color:var(--b2);}
+.brand-btn-active[data-brand="RSS"]{border-color:#E8312A;background:rgba(232,49,42,.10);color:#E8312A;}
+.brand-btn-active[data-brand="VRC"]{border-color:#30D158;background:rgba(48,209,88,.08);color:#30D158;}
+.brand-btn-active[data-brand="URD"]{border-color:#FF9F0A;background:rgba(255,159,10,.08);color:#FF9F0A;}
 .sub-cta:hover{opacity:.88;}
 .sub-error{color:var(--red);font-size:12px;margin-top:8px;display:none;}
 .hint{font-size:10px;color:var(--t3);}
@@ -775,7 +778,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
         <!-- LIVERY / ADDON -->
         <div style="display:flex;gap:8px;margin-bottom:28px;">
           <button id="stg-livery" onclick="setSubMode('livery')" style="flex:1;height:44px;border:1px solid var(--acc);background:var(--acc2);color:var(--acc);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;"><i class="ti ti-photo"></i> Livery</button>
-          <button id="stg-addon" onclick="setSubMode('addon')" style="flex:1;height:42px;border-radius:10px;border:0.5px solid var(--b1);background:transparent;color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;"><i class="ti ti-puzzle"></i> Addon</button>
+          <button id="stg-addon" onclick="setSubMode('addon')" style="flex:1;height:44px;border:1px solid var(--b1);background:transparent;color:var(--t2);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;"><i class="ti ti-puzzle"></i> Addon</button>
         </div>
 
         <!-- STEP 1 — PUBLISHER -->
@@ -847,8 +850,8 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
             <div class="field" style="margin:0;grid-column:1/-1;">
               <label>Pricing</label>
               <div style="display:flex;gap:10px;margin-top:6px;">
-                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
-                <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2);cursor:pointer;padding:8px 16px;border-radius:8px;border:0.5px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
+                <label style="display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;padding:9px 18px;border:1px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
+                <label style="display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;padding:9px 18px;border:1px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
               </div>
             </div>
           </div>
@@ -876,33 +879,33 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
       </div>
 
       <!-- RIGHT — STICKY PANEL -->
-      <div style="border-left:0.5px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
+      <div style="border-left:1px solid var(--b1);padding:28px 22px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--s1);">
 
         <!-- LIVE PREVIEW CARD -->
         <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Preview</div>
-          <div id="s-preview-card" style="background:var(--s2);border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;">
-            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/9;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Preview</div>
+          <div id="s-preview-card" style="background:var(--s2);border:1px solid var(--b1);overflow:hidden;">
+            <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/10;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
               <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
             </div>
-            <div style="padding:10px 12px 12px;">
-              <div style="font-size:8px;font-weight:700;color:var(--acc);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="s-preview-champ">— Championship —</div>
-              <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:2px;" id="s-preview-name">Livery name</div>
-              <div style="font-size:11px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
+            <div style="padding:12px 14px 14px;">
+              <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;" id="s-preview-champ">— Championship —</div>
+              <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:3px;" id="s-preview-name">Livery name</div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
             </div>
           </div>
         </div>
 
         <!-- CHECKLIST -->
         <div style="flex:1;">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">Required fields</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
           <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
         </div>
 
         <!-- TIPS -->
-        <div style="background:var(--bg);border:0.5px solid var(--b1);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
-          <div style="font-size:11px;color:var(--t3);line-height:1.6;">
+        <div style="background:var(--bg);border:1px solid var(--b1);padding:14px 16px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
+          <div style="font-size:12px;color:var(--t3);line-height:1.65;">
             Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
             Preview image should be <strong style="color:var(--t2);">16:9 or 16:10</strong>, min 1200px wide for a sharp result.
           </div>
@@ -1214,7 +1217,7 @@ async function loadLiveryDetail(id){
             ${l.season?`<div><div class="ld-stat-num">${l.season}</div><div class="ld-stat-label">Season</div></div>`:''}
           </div>
           <div class="ld-actions">
-            ${l.download_url?`<a href="${l.download_url}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download livery</a>`:''}
+            ${l.download_url?`<a href="${l.download_url}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download link</a>`:''}
             <button class="ld-btn ghost${voted?' voted':''}" id="upvote-btn" onclick="handleUpvote('${l.id}')"><i class="ti ti-thumb-up"></i> ${voted?'Upvoted':'Upvote'}</button>
           </div>
           <div class="ld-links">
@@ -1234,16 +1237,16 @@ async function loadLiveryDetail(id){
       </section>`:''}
 
       <section class="ld-section">
-        <span class="ld-section-tag">// ${artistName?'More from this artist':'Similar liveries'}</span>
-        <h2>${artistName?'By '+artistName:'You might also like'}</h2>
+        <span class="ld-section-tag">// You may like</span>
+        <h2>Same mod, more liveries</h2>
         <div class="ld-more-grid" id="ld-similar">
           <div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div>
         </div>
       </section>
     </div>`;
-  const similar=await fetchLiveries({categoryId:l.category_id,sort:'votes',pageSize:6});
+  const similar=await fetchLiveries({modId:l.mod_id,sort:'votes',pageSize:8});
   const sim=similar.filter(x=>x.id!==l.id).slice(0,4);
-  document.getElementById('ld-similar').innerHTML=sim.length?sim.map(richCard).join(''):'<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t2);font-size:12px;">No similar liveries found.</div>';
+  document.getElementById('ld-similar').innerHTML=sim.length?sim.map(richCard).join(''):'<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t2);font-size:12px;">No other liveries for this mod yet.</div>';
 }
 
 async function handleUpvote(id){
