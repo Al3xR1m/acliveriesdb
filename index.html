@@ -491,6 +491,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .field input::placeholder,.field textarea::placeholder{color:var(--t3);}
 .field select{appearance:none;cursor:pointer;}
 .field textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.pricing-toggle{display:flex;border:1px solid var(--b1);width:fit-content;}
+.price-opt{position:relative;cursor:pointer;}
+.price-opt input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.price-opt:not(:last-child){border-right:1px solid var(--b1);}
+.price-opt span{display:flex;align-items:center;padding:10px 24px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);transition:all .15s;}
+.price-opt:hover span{color:var(--t1);}
+.price-opt:has(input:checked) span{background:var(--acc);color:#fff;}
 .sub-toggle{display:flex;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:3px;gap:3px;margin-bottom:18px;}
 .sub-toggle-btn{flex:1;padding:7px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;}
 .sub-toggle-btn.on{background:var(--s2);color:var(--t1);border:0.5px solid var(--b2);}
@@ -539,18 +546,18 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 
 /* PICKER MODAL */
 .picker-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
-.picker-box{background:var(--s1);border:0.5px solid var(--b2);border-radius:16px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
-.picker-head{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:0.5px solid var(--b1);}
-.picker-search{flex:1;background:transparent;border:none;outline:none;font-size:13px;color:var(--t1);font-family:inherit;}
+.picker-box{background:var(--s1);border:1px solid var(--b2);width:100%;max-width:1100px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
+.picker-head{display:flex;align-items:center;gap:8px;padding:16px 18px;border-bottom:1px solid var(--b1);}
+.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:13px;color:var(--t1);}
 .picker-search::placeholder{color:var(--t3);}
-.picker-close{background:none;border:none;font-size:18px;color:var(--t2);cursor:pointer;padding:0 3px;line-height:1;}
-.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:14px;overflow-y:auto;}
-.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;border-radius:10px;cursor:pointer;border:0.5px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;}
+.picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
+.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;}
+.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;cursor:pointer;border:1px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;}
 .pi:hover{border-color:var(--b2);}
-.pi.selected{border-color:var(--acc);background:var(--acc3);}
-.pi-logo{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
-.pi-logo-ph{width:100%;aspect-ratio:16/9;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--t3);}
-.pi-name{font-size:11px;font-weight:600;color:var(--t1);line-height:1.3;padding:8px 10px;}
+.pi.selected{border-color:var(--acc);background:var(--acc2);}
+.pi-logo{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;}
+.pi-logo-ph{width:100%;aspect-ratio:16/10;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--t3);}
+.pi-name{font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);line-height:1.3;padding:12px 14px;}
 .pi-none{grid-column:1/-1;text-align:center;padding:18px;font-size:12px;color:var(--t3);}
 
 /* ARTIST EDIT LINK */
@@ -850,9 +857,11 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
             <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
             <div class="field" style="margin:0;grid-column:1/-1;">
               <label>Pricing</label>
-              <div style="display:flex;gap:10px;margin-top:6px;">
-                <label style="display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;padding:9px 18px;border:1px solid var(--b1);"><input type="radio" name="s-pricing" id="s-free" checked> Free</label>
-                <label style="display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;padding:9px 18px;border:1px solid var(--b1);"><input type="radio" name="s-pricing" id="s-paid"> Paid</label>
+              <div style="margin-top:6px;">
+              <div class="pricing-toggle">
+                <label class="price-opt"><input type="radio" name="s-pricing" id="s-free" checked><span>Free</span></label>
+                <label class="price-opt"><input type="radio" name="s-pricing" id="s-paid"><span>Paid</span></label>
+              </div>
               </div>
             </div>
           </div>
@@ -892,7 +901,8 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
             <div style="padding:12px 14px 14px;">
               <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;" id="s-preview-champ">Championship</div>
               <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:3px;" id="s-preview-name">Livery name</div>
-              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:4px;" id="s-preview-driver"></div>
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);" id="s-preview-meta">Mod · Creator</div>
             </div>
           </div>
         </div>
@@ -1911,14 +1921,15 @@ function initSubmit(){
   // Upload widget
   _getSubmitImg=buildSubmitUpload();
   updateChecklist();
-  ['s-name','s-team','s-season','s-carnumber','s-url','s-author'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',updateChecklist);el.addEventListener('input',updateSubmitPreview);}});
+  updateSubmitPreview();
+  ['s-name','s-team','s-driver','s-season','s-carnumber','s-url','s-author'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('input',updateChecklist);el.addEventListener('input',updateSubmitPreview);}});
   document.querySelectorAll('input[name="s-pricing"]').forEach(r=>r.addEventListener('change',updateChecklist));
 }
 function selectArtist(el){
   const id=el.dataset.id;
   if(_sArtistId===id){_sArtistId=null;el.classList.remove('selected');document.getElementById('s-author').disabled=false;document.getElementById('s-author-hint').textContent='Leave empty if you selected an artist above.';document.getElementById('s-author-hint').className='hint';}
   else{document.querySelectorAll('.ap-item').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');_sArtistId=id;document.getElementById('s-author').value='';document.getElementById('s-author').disabled=true;document.getElementById('s-author-hint').textContent=`✓ ${el.dataset.name} selected.`;document.getElementById('s-author-hint').className='hint ok';}
-  updateChecklist();
+  updateSubmitPreview();updateChecklist();
 }
 function selectSubmitBrand(b){
   document.getElementById('s-brand').value=b;
@@ -1962,22 +1973,32 @@ function setSubMode(m){
   updateChecklist();
 }
 function updateSubmitPreview(){
-  // Thumb
-  const img=document.getElementById('s-preview-thumb');
-  const imgUrl=typeof _getSubmitImg==='function'?null:null; // image set via upload widget
+  // Thumb — actually show the uploaded image now
+  const thumb=document.getElementById('s-preview-thumb');
+  if(thumb){
+    thumb.innerHTML=_sPreviewImg
+      ?`<img src="${_sPreviewImg}" alt="preview" style="width:100%;height:100%;object-fit:cover;">`
+      :'<i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>';
+  }
   // Name
   const name=document.getElementById('s-name')?.value||'Livery name';
   document.getElementById('s-preview-name').textContent=name;
-  // Champ
+  // Championship / category label
   const champText=document.getElementById('s-champ-text')?.textContent||'';
   const champEl=document.getElementById('s-preview-champ');
-  if(champEl) champEl.textContent=champText.startsWith('—')?'— Championship —':champText;
-  // Meta
+  const champPlaceholders=['Select category first','Select a championship…','No championships'];
+  if(champEl) champEl.textContent=champPlaceholders.includes(champText)?'Championship':champText;
+  // Driver
+  const driver=document.getElementById('s-driver')?.value||document.getElementById('s-team')?.value||'';
+  const driverEl=document.getElementById('s-preview-driver');
+  if(driverEl) driverEl.textContent=driver;
+  // Meta — mod + creator
   const modText=document.getElementById('s-mod-text')?.textContent||'';
+  const modPlaceholders=['Select category first','Select a mod…','No mods for this category'];
   const author=document.getElementById('s-author')?.value||'';
   const artistEl=document.querySelector('.ap-item.selected');
   const creator=artistEl?artistEl.dataset.name:author||'Creator';
-  const mod=modText.startsWith('—')?'Mod':modText;
+  const mod=modPlaceholders.includes(modText)?'Mod':modText;
   const metaEl=document.getElementById('s-preview-meta');
   if(metaEl) metaEl.textContent=mod+' · '+creator;
 }
@@ -2012,7 +2033,7 @@ function buildSubmitUpload(){
       const blob=await compressImg(file);
       prog.textContent=`Uploading… (${(blob.size/1024).toFixed(0)}KB)`;
       const url=await uploadImg(blob,'liveries');
-      if(url){cur=url;_sPreviewImg=url;const prev=document.getElementById('sub-prev');prev.src=url;prev.classList.add('visible');prog.textContent='✓ Uploaded';lbl.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="sub-img-input">';document.getElementById('sub-img-input').addEventListener('change',arguments.callee.bind(document.getElementById('sub-img-input')));}
+      if(url){cur=url;_sPreviewImg=url;const prev=document.getElementById('sub-prev');prev.src=url;prev.classList.add('visible');prog.textContent='✓ Uploaded';lbl.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="sub-img-input">';document.getElementById('sub-img-input').addEventListener('change',arguments.callee.bind(document.getElementById('sub-img-input')));updateSubmitPreview();updateChecklist();}
       else prog.textContent='✗ Failed.';
     }catch(e){prog.textContent='✗ Error.';}
     lbl.style.opacity='1';lbl.style.pointerEvents='auto';
@@ -2093,6 +2114,7 @@ function resetSubmitForm(){
   document.querySelectorAll('input[name="addon-type"]').forEach(x=>x.checked=false);
   document.querySelectorAll('.ap-item.selected').forEach(x=>x.classList.remove('selected'));
   _sArtistId=null;
+  _sPreviewImg=null;
   document.getElementById('s-author').value='';
   document.getElementById('s-author').disabled=false;
   document.getElementById('s-author-hint').textContent='Leave empty if you selected an artist above.';
@@ -2101,6 +2123,7 @@ function resetSubmitForm(){
   document.getElementById('s-preview-thumb').innerHTML='<i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>';
   document.getElementById('s-preview-champ').textContent='Championship';
   document.getElementById('s-preview-name').textContent='Livery name';
+  document.getElementById('s-preview-driver').textContent='';
   document.getElementById('s-preview-meta').textContent='Mod · Creator';
   selectSubmitBrand('RSS');
   const btn=document.getElementById('s-submit-btn');btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Submit for review';
