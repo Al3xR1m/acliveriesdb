@@ -574,6 +574,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
   
 /* ── PAINT-SWATCH DESIGN SYSTEM: GLOBAL OVERRIDES ── */
 *{border-radius:0!important;}
+.am-av,.av-av,.av-avatar-img,.ap-av,.ap-av-ph,.artist-av,.sb-av,.ae-hero-av,#ae-hero-av,#ae-av{border-radius:50%!important;overflow:hidden;}
 .add-title,.am-av,.ap-av-ph,.artist-av,.av-av,.av-title,.hero-name,.ld-title,.lotd-name,.lotd-stat-n,.lv-title,.md-name,.md-stat-n,.mv-brand-card-bg,.mv-brand-card-name,.mv-brand-icon,.mv-brand-stat-n,.mv-title,.sub-title{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal;text-transform:uppercase;letter-spacing:0;}
 [style*="font-weight:900"]{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal!important;text-transform:uppercase;}
 .add-title em,.hero-name em,.ld-title em,.lv-title em,.md-name em,.mv-title em,.sub-title em,em{font-style:normal;}
@@ -768,7 +769,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
 
   <!-- SUBMIT -->
   <div class="view" id="view-submit">
-    <div style="display:grid;grid-template-columns:1fr 320px;height:100%;min-height:0;">
+    <div id="submit-form-wrap" style="display:grid;grid-template-columns:1fr 320px;height:100%;min-height:0;">
 
       <!-- LEFT — FORM -->
       <div style="overflow-y:auto;padding:36px 40px 60px;">
@@ -813,7 +814,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
               <label id="s-mod-label">Mod *</label>
               <button type="button" class="picker-btn" id="s-mod-btn" disabled onclick="openModPicker()">
                 <div class="picker-ph" id="s-mod-ph"><i class="ti ti-car"></i></div>
-                <span id="s-mod-text">— Select category first —</span>
+                <span id="s-mod-text">Select category first</span>
               </button>
               <input type="hidden" id="s-mod">
             </div>
@@ -821,7 +822,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
               <label>Championship</label>
               <button type="button" class="picker-btn" id="s-champ-btn" disabled onclick="openChampPicker()">
                 <div class="picker-ph" id="s-champ-ph"><i class="ti ti-trophy"></i></div>
-                <span id="s-champ-text">— Select category first —</span>
+                <span id="s-champ-text">Select category first</span>
               </button>
               <input type="hidden" id="s-champ">
             </div>
@@ -889,7 +890,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
               <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
             </div>
             <div style="padding:12px 14px 14px;">
-              <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;" id="s-preview-champ">— Championship —</div>
+              <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;" id="s-preview-champ">Championship</div>
               <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:3px;" id="s-preview-name">Livery name</div>
               <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);" id="s-preview-meta">Mod · Creator</div>
             </div>
@@ -1905,7 +1906,7 @@ function initSubmit(){
   const avatar=a.avatar_url
     ?`<div class="ap-av"><img src="${a.avatar_url}" alt="${a.name}"></div>`
     :`<div class="ap-av-ph" style="background:${abg};color:${ac};">${ini}</div>`;
-  return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)">${avatar}<div><div class="ap-crown">👑</div><div class="ap-name">${a.name}</div></div></div>`;
+  return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)">${avatar}<div class="ap-name">👑 ${a.name}</div></div>`;
 }).join('');
   // Upload widget
   _getSubmitImg=buildSubmitUpload();
@@ -1922,6 +1923,9 @@ function selectArtist(el){
 function selectSubmitBrand(b){
   document.getElementById('s-brand').value=b;
   var BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.10)',border:'rgba(232,49,42,.4)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)',border:'rgba(48,209,88,.3)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)',border:'rgba(255,159,10,.3)'}};
+  var bmSel=BRC[b];
+  var submitView=document.getElementById('view-submit');
+  if(submitView){submitView.style.setProperty('--acc',bmSel.c);submitView.style.setProperty('--acc2',bmSel.bg);}
   ['RSS','VRC','URD'].forEach(function(br){
     var btn=document.getElementById('s-brand-'+br);if(!btn)return;
     var bm=BRC[br];var active=br===b;
@@ -2063,9 +2067,46 @@ document.getElementById('s-submit-btn').addEventListener('click',async()=>{
   let ok;
   if(isAddon)ok=await submitAddon({...base,mod_id:mod||null,addon_type:addonTypes.join(',')});
   else ok=await submitLivery({...base,mod_id:mod,championship_id:document.getElementById('s-champ').value||null,team:document.getElementById('s-team').value.trim(),driver:document.getElementById('s-driver').value.trim(),season:document.getElementById('s-season').value.trim(),car_number:document.getElementById('s-carnumber').value.trim()||null});
-  if(ok){document.getElementById('submit-form-wrap').innerHTML=`<div style="padding:60px 20px;text-align:center;"><i class="ti ti-circle-check" style="font-size:48px;color:var(--grn);display:block;margin-bottom:16px;"></i><div style="font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px;margin-bottom:8px;">${isAddon?'Addon':'Livery'} submitted!</div><p style="font-size:13px;color:var(--t2);margin-bottom:20px;">Thank you! It will appear once approved.</p><button onclick="nav('liveries')" style="height:38px;padding:0 18px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;"><i class="ti ti-arrow-left"></i> Back to gallery</button></div>`;}
+  if(ok){
+    resetSubmitForm();
+    showSubmitSuccess(isAddon?'Addon':'Livery');
+  }
   else{btn.disabled=false;btn.textContent='Submit for review';errEl.style.display='block';errEl.textContent='Something went wrong. Please try again.';}
 });
+function showSubmitSuccess(kind){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;top:76px;left:50%;transform:translateX(-50%);z-index:400;background:var(--bg);border:1px solid var(--grn);padding:14px 20px;display:flex;align-items:center;gap:10px;font-family:\'Archivo\',sans-serif;font-size:13px;font-weight:700;color:var(--grn);box-shadow:0 8px 24px rgba(0,0,0,.4);';
+  el.innerHTML=`<i class="ti ti-circle-check" style="font-size:18px;"></i> ${kind} submitted — it will appear once approved.`;
+  document.body.appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),300);},4000);
+}
+function resetSubmitForm(){
+  document.getElementById('s-name').value='';
+  const catSel=document.getElementById('s-cat');catSel.value='';catSel.dispatchEvent(new Event('change'));
+  document.getElementById('s-team').value='';
+  document.getElementById('s-driver').value='';
+  document.getElementById('s-season').value='';
+  document.getElementById('s-carnumber').value='';
+  document.getElementById('s-url').value='';
+  document.getElementById('s-notes').value='';
+  document.getElementById('s-free').checked=true;
+  document.querySelectorAll('input[name="addon-type"]').forEach(x=>x.checked=false);
+  document.querySelectorAll('.ap-item.selected').forEach(x=>x.classList.remove('selected'));
+  _sArtistId=null;
+  document.getElementById('s-author').value='';
+  document.getElementById('s-author').disabled=false;
+  document.getElementById('s-author-hint').textContent='Leave empty if you selected an artist above.';
+  document.getElementById('s-author-hint').className='hint';
+  _getSubmitImg=buildSubmitUpload();
+  document.getElementById('s-preview-thumb').innerHTML='<i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>';
+  document.getElementById('s-preview-champ').textContent='Championship';
+  document.getElementById('s-preview-name').textContent='Livery name';
+  document.getElementById('s-preview-meta').textContent='Mod · Creator';
+  selectSubmitBrand('RSS');
+  const btn=document.getElementById('s-submit-btn');btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Submit for review';
+  updateChecklist();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
 
 
