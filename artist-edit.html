@@ -39,8 +39,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .page-ey span{width:18px;height:1px;background:var(--acc);display:inline-block;}
 .page-h1{font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2px;color:var(--t1);}
 .page-h1 em{color:var(--acc);}
-.lv-grid{padding:1px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--b1);border:1px solid var(--b1);margin:0 28px 40px;width:calc(100% - 56px);}
-.lv-card{background:var(--s1);position:relative;overflow:hidden;transition:border-color .18s;border:1px solid transparent;}
+.lv-grid{padding:0 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.lv-card{background:var(--s1);position:relative;overflow:hidden;transition:border-color .18s;border:1px solid var(--b1);}
 .lv-card:hover{border-color:var(--acc);}
 .lv-card::after{content:'';position:absolute;right:0;bottom:0;width:0;height:0;background:var(--acc);transition:width .18s,height .18s;z-index:3;}
 .lv-card:hover::after{width:10px;height:10px;}
