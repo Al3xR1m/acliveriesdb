@@ -315,11 +315,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 /* ── LIVERY DETAIL ── */
 .ld-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;transition:color .12s;border-bottom:1px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
 .ld-back:hover{color:var(--acc);}
-.ld-body{padding:32px 28px 60px;max-width:1200px;margin:0 auto;}
+.ld-body{padding:32px 5vw 60px;}
 .ld-crumb{font-family:'Space Mono',monospace;font-size:12px;color:var(--t3);margin-bottom:24px;}
 .ld-crumb a{cursor:pointer;color:var(--t3);}
 .ld-crumb a:hover{color:var(--acc);}
-.ld-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:44px;align-items:start;}
+.ld-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:start;}
 @media(max-width:900px){.ld-grid{grid-template-columns:1fr;}}
 .ld-cover{width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;}
 .ld-cover img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -904,7 +904,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
           <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
           <div style="font-size:11px;color:var(--t3);line-height:1.6;">
             Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
-            Preview image should be <strong style="color:var(--t2);">16:9</strong>, min 800px wide.
+            Preview image should be <strong style="color:var(--t2);">16:9 or 16:10</strong>, min 1200px wide for a sharp result.
           </div>
         </div>
 
@@ -2013,7 +2013,7 @@ function buildSubmitUpload(){
   });
   return()=>cur;
 }
-async function compressImg(file,maxW=800,maxH=600,q=0.82){
+async function compressImg(file,maxW=1600,maxH=1000,q=0.85){
   return new Promise((res,rej)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{URL.revokeObjectURL(url);const r=Math.min(maxW/img.naturalWidth,maxH/img.naturalHeight,1);const cw=Math.round(img.naturalWidth*r);const ch=Math.round(img.naturalHeight*r);const c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(img,0,0,cw,ch);c.toBlob(b=>res(b),'image/jpeg',q);};img.onerror=rej;img.src=url;});
 }
 async function uploadImg(blob,folder){
