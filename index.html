@@ -2093,18 +2093,22 @@ function renderModPicker(list,page){
 }
 function selectMod(id,name){_sSelMod=id;document.getElementById('s-mod').value=id;document.getElementById('s-mod-text').textContent=name;document.getElementById('mod-picker').style.display='none';document.getElementById('s-champ-btn').disabled=!_sAvailChamps2.length;updateChecklist();updateSubmitPreview();}
 // Champ picker
+const NONE_CHAMP_MARKER={__none:true};
 function openChampPicker(){_champPickerPage=0;renderChampPicker(_sAvailChamps2);document.getElementById('champ-picker').style.display='flex';setTimeout(()=>document.getElementById('champ-ps').focus(),50);}
 function filterChampPicker(q){_champPickerPage=0;renderChampPicker(_sAvailChamps2.filter(c=>(c.name+' '+(c.short_name||'')).toLowerCase().includes(q.toLowerCase())));}
 function gotoChampPickerPage(p){renderChampPicker(_sAvailChamps2,p);}
 function renderChampPicker(list,page){
   if(typeof page==='number')_champPickerPage=page;
   const g=document.getElementById('champ-pg');
-  const noneCard=renderPickerCard(null,'No championship','ti-x',!_sSelChamp,"selectChamp('','No championship')");
+  const fullList=[NONE_CHAMP_MARKER,...list];
   const start=_champPickerPage*PICKER_PAGE_SIZE;
-  const pageItems=list.slice(start,start+PICKER_PAGE_SIZE);
-  const cards=pageItems.map(c=>renderPickerCard(c.logo_url,c.short_name||c.name,'ti-trophy',c.id===_sSelChamp,`selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')`)).join('');
-  g.innerHTML=(_champPickerPage===0?noneCard:'')+cards
-    + renderPaginationControls('champ-pg',list.length,_champPickerPage,PICKER_PAGE_SIZE,'gotoChampPickerPage');
+  const pageItems=fullList.slice(start,start+PICKER_PAGE_SIZE);
+  const cards=pageItems.map(c=>c.__none
+    ? renderPickerCard(null,'No championship','ti-x',!_sSelChamp,"selectChamp('','No championship')")
+    : renderPickerCard(c.logo_url,c.short_name||c.name,'ti-trophy',c.id===_sSelChamp,`selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')`)
+  ).join('');
+  g.innerHTML=cards
+    + renderPaginationControls('champ-pg',fullList.length,_champPickerPage,PICKER_PAGE_SIZE,'gotoChampPickerPage');
 }
 function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';updateSubmitPreview();}
 
