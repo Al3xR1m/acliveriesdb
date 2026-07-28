@@ -993,9 +993,17 @@ function svg(cat,seed){
 }
 const seed=l=>parseInt((l.id||'').replace(/\D/g,'').slice(0,6))||0;
 
+function detectBrand(modName){
+  if(!modName)return null;
+  const n=modName.toUpperCase();
+  if(n.includes('RSS'))return 'RSS';
+  if(n.includes('VRC'))return 'VRC';
+  if(n.includes('URD'))return 'URD';
+  return null;
+}
 function richCard(l){
   const cn=l.categories?.name||'';
-  const brand=l.mods?.brand||null;
+  const brand=l.mods?.brand||detectBrand(l.mods?.name);
   const brandCls=brand?brand.toLowerCase():'';
   const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
   const brandColor=brand&&BRC[brand]?BRC[brand]:'var(--acc)';
@@ -1197,8 +1205,12 @@ async function loadLiveryDetail(id){
   _voted=getVotedSet();
   const cn=l.categories?.name||'';
   const voted=_voted.has(l.id);
+  const brand=l.mods?.brand||detectBrand(l.mods?.name);
+  const BRC_LD={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
+  const brandColor=brand&&BRC_LD[brand]?BRC_LD[brand]:'var(--acc)';
   const rows=[
     ['Mod',l.mods?.name||'—'],
+    ...(brand?[['Studio',`<span class="bt bt-${brand.toLowerCase()}">${brand}</span>`]]:[]),
     ['Category',l.categories?.name||'—'],
     ['Championship',l.championships?.name||'—'],
     ['Team',l.team||'—'],
@@ -1219,6 +1231,7 @@ async function loadLiveryDetail(id){
         </div>
         <div>
           <span class="ld-tag">${[cn,l.championships?.short_name||l.championships?.name].filter(Boolean).join(' · ')||'Livery'}</span>
+          ${brand?`<span class="bt bt-${brand.toLowerCase()}" style="margin-left:8px;vertical-align:middle;">${brand}</span>`:''}
           <h1 class="ld-title">${l.name}</h1>
           <div class="ld-artist-line">
             ${artistName?`by <strong onclick="${isConfirmed?`openArtistProfile('${l.artists.id}')`:''}">${artistName}</strong>`:''}
