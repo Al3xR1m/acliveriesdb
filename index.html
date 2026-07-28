@@ -551,7 +551,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:13px;color:var(--t1);}
 .picker-search::placeholder{color:var(--t3);}
 .picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
-.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;}
+.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;flex:1 1 auto;min-height:0;align-content:start;}
 .pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;cursor:pointer;border:1px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;}
 .pi:hover{border-color:var(--b2);}
 .pi.selected{border-color:var(--acc);background:var(--acc2);}
