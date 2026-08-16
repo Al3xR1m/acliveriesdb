@@ -569,7 +569,7 @@ async function loadLiveries(search=''){
   filtersHtml+='<select onchange="window._livArtist=this.value;loadLiveries();" style="appearance:none;background:var(--bg-s1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--text-2);font-family:var(--font-body);cursor:pointer;outline:none;">';
   filtersHtml+='<option value="all">All creators</option>';
   _artists.forEach(function(a){
-    filtersHtml+='<option value="'+a.id+'" '+(window._livArtist===a.id?'selected':'')+'>👑 '+a.name+'</option>';
+    filtersHtml+='<option value="'+a.id+'" '+(window._livArtist===a.id?'selected':'')+'>✓ '+a.name+'</option>';
   });
   filtersHtml+='</select></div>';
   filtersHtml+='</div>';
@@ -594,7 +594,7 @@ async function loadLiveries(search=''){
     gridHtml='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;">';
     list.forEach(function(l){
       var isApproved=l.approved;
-      var creator=l.artists?'<span style="color:var(--amber);">👑</span> '+l.artists.name:l.author||'—';
+      var creator=l.artists?'<span style="display:inline-flex;"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span> '+l.artists.name:l.author||'—';
       gridHtml+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;" onclick="editLiveryModal(\''+l.id+'\',false)">';
       gridHtml+='<div style="width:100%;aspect-ratio:16/9;background:var(--bg-s2);position:relative;overflow:hidden;">';
       gridHtml+=l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo" style="font-size:28px;color:var(--text-3);"></i></div>';
@@ -691,7 +691,7 @@ async function loadArtists(){
     h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;">';
     // Top row — avatar + name + discord
     h+='<div style="display:flex;align-items:center;gap:12px;">'+avatar;
-    h+='<div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;">'+a.name+' <span style="color:var(--amber);">👑</span></div>';
+    h+='<div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;">'+a.name+' <span style="display:inline-flex;"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span></div>';
     h+=(a.discord?'<div style="font-size:11px;color:var(--text-3);margin-top:2px;"><i class="ti ti-brand-discord"></i> '+a.discord+'</div>':'');
     h+='</div></div>';
     // Stats row

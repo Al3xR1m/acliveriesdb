@@ -193,7 +193,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.85),transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s;}
 .lv-card:hover .lv-card-ov{opacity:0;}
 .lv-card-top{position:absolute;top:10px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
-.lv-card-crown{position:absolute;top:10px;right:10px;font-size:14px;z-index:3;transition:opacity .25s;}
+.lv-card-crown{position:absolute;top:10px;right:10px;font-size:14px;z-index:3;transition:opacity .25s;color:var(--crown);font-weight:700;}
 .lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-card-top,.lv-card:hover .lv-card-crown,.lv-card:hover .lv-card-dl{opacity:0;}
 .lv-card-thumb:has(.lv-card-crown) .lv-card-dl{top:30px;}
@@ -296,7 +296,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .gc:hover .gc-thumb img{transform:scale(1.03);}
 .gc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent 55%);}
 .gc-b{position:absolute;top:6px;left:6px;display:flex;gap:3px;}
-.gc-crown{position:absolute;top:6px;right:7px;font-size:12px;}
+.gc-crown{position:absolute;top:6px;right:7px;font-size:12px;color:var(--crown);font-weight:700;}
 .gc-v{position:absolute;bottom:5px;right:7px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:2px;}
 .gc-body{padding:8px 10px 10px;}
 .gc-series{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;}
@@ -1018,7 +1018,7 @@ function richCard(l){
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
         ${brandTag}
       </div>
-      ${isArtist?'<span class="lv-card-crown">👑</span>':''}
+      ${isArtist?'<span class="lv-card-crown"><svg width="15" height="15" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
       <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
       <div class="lv-card-meta">
         <div class="lv-card-champ-row">
@@ -1069,7 +1069,7 @@ function renderLOTD(idx){
     <div>
       <div class="lotd-label"><i class="ti ti-flame"></i> Livery of the day</div>
       <div class="lotd-name">${l.name}</div>
-      <div class="lotd-meta">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}${l.artists?' · by '+l.artists.name+' 👑':l.author?' · by '+l.author:''}</div>
+      <div class="lotd-meta">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}${l.artists?' · by '+l.artists.name+' '+`<svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg>`:l.author?' · by '+l.author:''}</div>
       <div class="lotd-badges">
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
         ${brandTag}
@@ -1151,12 +1151,12 @@ function setVMode(m){_vmode='grid';loadLiveries();}
 
 // ── LIVERY CARD (grid) ──
 function gcCard(l){
-  return `<div class="gc" onclick="openLivery('${l.id}')"><div class="gc-thumb">${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(l.categories?.name||'',seed(l))}</div>`}<div class="gc-ov"></div><div class="gc-b">${isNew(l)?'<span class="badge b-n">New</span>':''}${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div>${l.artists?'<span class="gc-crown">👑</span>':''}<div class="gc-v"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</div></div><div class="gc-body"><div class="gc-series">${l.championships?.short_name||l.categories?.name||'—'}</div><div class="gc-name">${l.name}</div><div class="gc-mod">${l.mods?.name||'—'}</div></div></div>`;
+  return `<div class="gc" onclick="openLivery('${l.id}')"><div class="gc-thumb">${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(l.categories?.name||'',seed(l))}</div>`}<div class="gc-ov"></div><div class="gc-b">${isNew(l)?'<span class="badge b-n">New</span>':''}${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div>${l.artists?'<span class="gc-crown"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}<div class="gc-v"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</div></div><div class="gc-body"><div class="gc-series">${l.championships?.short_name||l.categories?.name||'—'}</div><div class="gc-name">${l.name}</div><div class="gc-mod">${l.mods?.name||'—'}</div></div></div>`;
 }
 // ── LIVERY ROW (list) ──
 function lvRow(l){
   const cn=l.categories?.name||'';
-  return `<div class="lv-row" onclick="openLivery('${l.id}')"><div class="lv-thumb">${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}</div><div><div class="lv-name">${l.name}</div><div class="lv-meta">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div></div><div class="lv-right">${isNew(l)?'<span class="badge b-n">New</span>':''}${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}${l.artists?'<span style="font-size:12px;">👑</span>':''}<span class="lv-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</span></div></div>`;
+  return `<div class="lv-row" onclick="openLivery('${l.id}')"><div class="lv-thumb">${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}</div><div><div class="lv-name">${l.name}</div><div class="lv-meta">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div></div><div class="lv-right">${isNew(l)?'<span class="badge b-n">New</span>':''}${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}${l.artists?'<span style="display:inline-flex;"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}<span class="lv-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</span></div></div>`;
 }
 
 // ── LOAD LIVERIES ──
@@ -1220,7 +1220,7 @@ async function loadLiveryDetail(id){
           <h1 class="ld-title">${l.name}</h1>
           <div class="ld-artist-line">
             ${artistName?`by <strong onclick="${isConfirmed?`openArtistProfile('${l.artists.id}')`:''}">${artistName}</strong>`:''}
-            ${isConfirmed?'<span class="ld-artist-badge">👑 Confirmed</span>':''}
+            ${isConfirmed?'<span class="ld-artist-badge"><svg width="11" height="11" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> Confirmed</span>':''}
           </div>
           <div class="ld-stats">
             <div><div class="ld-stat-num" id="upvote-count">${l.upvotes||0}</div><div class="ld-stat-label">Upvotes</div></div>
@@ -1362,7 +1362,7 @@ async function loadHome(){
       <div style="position:relative;overflow:hidden;cursor:pointer;background:var(--s2);grid-row:span 2;" onclick="openLivery('${main.id}')">
         ${posterSVG(main)}
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.9) 0%,rgba(10,10,15,.25) 55%,transparent 100%);"></div>
-        ${main.artists?'<span style="position:absolute;top:10px;right:10px;font-size:14px;">👑</span>':''}
+        ${main.artists?'<span style="position:absolute;top:10px;right:10px;"><svg width="16" height="16" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
         <div style="position:absolute;bottom:0;left:0;right:0;padding:22px 24px;">
           <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-crown" style="font-size:10px;"></i> Most upvoted</div>
           <div style="font-family:'Archivo Black',sans-serif;font-size:24px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:#fff;line-height:1;margin-bottom:8px;">${main.name}</div>
@@ -1377,7 +1377,7 @@ async function loadHome(){
         <div style="position:relative;overflow:hidden;cursor:pointer;background:var(--s2);" onclick="openLivery('${l.id}')">
           ${posterSVG(l)}
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.88) 0%,rgba(10,10,15,.2) 60%,transparent 100%);"></div>
-          ${l.artists?'<span style="position:absolute;top:7px;right:8px;font-size:12px;">👑</span>':''}
+          ${l.artists?'<span style="position:absolute;top:7px;right:8px;"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
           <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px;">
             <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;">${l.championships?.short_name||l.categories?.name||'—'}</div>
             <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
@@ -1448,7 +1448,7 @@ async function loadHome(){
     const [abg,ac]=AVC[i%AVC.length]; const s=stArtist[a.id]||{c:0,v:0};
     return `<div style="display:flex;align-items:center;gap:12px;padding:9px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
       <div style="width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;background:${abg};color:${ac};">${ini}</div>
-      <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);">${a.name} 👑</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
+      <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);">${a.name} <svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
       <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t3);">${s.v} votes</span>
     </div>`;
   }).join('');
@@ -1749,7 +1749,7 @@ async function loadArtists(){
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
         ${avatar}
         <div style="flex:1;min-width:0;">
-          <div class="av-name">👑 ${a.name}</div>
+          <div class="av-name"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${a.name}</div>
           ${a.discord?`<div class="av-discord"><i class="ti ti-brand-discord" style="font-size:11px;"></i> ${a.discord}</div>`:''}
           ${socials?`<div style="display:flex;gap:10px;margin-top:6px;">${socials}</div>`:''}
         </div>
@@ -1817,7 +1817,7 @@ async function renderArtistProfile(id){
       }
       <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
-          <h2 style="font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);">👑 ${artist.name}</h2>
+          <h2 style="font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);"><svg width="22" height="22" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${artist.name}</h2>
           ${brandPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;">${brandPills}</div>`:''}
         </div>
         <div style="margin-bottom:8px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;">Confirmed artist</span></div>
@@ -1916,7 +1916,7 @@ function initSubmit(){
   const avatar=a.avatar_url
     ?`<div class="ap-av"><img src="${a.avatar_url}" alt="${a.name}"></div>`
     :`<div class="ap-av-ph" style="background:${abg};color:${ac};">${ini}</div>`;
-  return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)">${avatar}<div class="ap-name">👑 ${a.name}</div></div>`;
+  return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)">${avatar}<div class="ap-name"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${a.name}</div></div>`;
 }).join('');
   // Upload widget
   _getSubmitImg=buildSubmitUpload();
@@ -2249,7 +2249,7 @@ function updateBreadcrumb(){
   if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)crumbs.push({label:c.short_name||c.name,type:'champ'});}
   if(_price===false)crumbs.push({label:'Free',type:'price'});
   if(_price===true)crumbs.push({label:'Paid',type:'price'});
-  if(_artistFilter==='confirmed')crumbs.push({label:'👑 Confirmed',type:'artist'});
+  if(_artistFilter==='confirmed')crumbs.push({label:'✓ Confirmed',type:'artist'});
   if(_artistFilter==='community')crumbs.push({label:'Community',type:'artist'});
   const el=document.getElementById('dr-breadcrumb');
   if(!el)return;
@@ -2318,7 +2318,7 @@ function updateFilterBadge(){
   if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)chips.push({label:c.short_name||c.name,type:'champ'});}
   if(_price===false)chips.push({label:'Free',type:'price'});
   if(_price===true)chips.push({label:'Paid',type:'price'});
-  if(_artistFilter==='confirmed')chips.push({label:'👑 Confirmed',type:'artist'});
+  if(_artistFilter==='confirmed')chips.push({label:'✓ Confirmed',type:'artist'});
   if(_artistFilter==='community')chips.push({label:'Community',type:'artist'});
   const chipsEl=document.getElementById('l-chips');
   if(chips.length){
@@ -2457,8 +2457,8 @@ boot().then(handleHash).then(()=>{
         <button class="di on" data-step="4" data-type="artist" data-val="all" data-label="">
           <span style="font-size:13px;">👤</span><span style="flex:1;">All creators</span>
         </button>
-        <button class="di" data-step="4" data-type="artist" data-val="confirmed" data-label="👑 Confirmed">
-          <span style="font-size:13px;">👑</span><span style="flex:1;">Confirmed artists only</span>
+        <button class="di" data-step="4" data-type="artist" data-val="confirmed" data-label="✓ Confirmed">
+          <span style="display:inline-flex;"><svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span><span style="flex:1;">Confirmed artists only</span>
         </button>
         <button class="di" data-step="4" data-type="artist" data-val="community" data-label="Community">
           <span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span>
