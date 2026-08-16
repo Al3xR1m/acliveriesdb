@@ -485,7 +485,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sub-title em{color:var(--acc);}
 .sub-body{padding:20px;max-width:520px;}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
-.field label{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;}
+.field label{font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;color:var(--t2);text-transform:none;letter-spacing:0;}
 .field input,.field select,.field textarea{background:var(--s2);border:1px solid var(--b1);padding:10px 12px;color:var(--t1);font-size:13px;outline:none;font-family:'Archivo',sans-serif;transition:border-color .12s;}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
 .field input::placeholder,.field textarea::placeholder{color:var(--t3);}
@@ -532,7 +532,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sub-cta{height:46px;background:var(--acc);color:#fff;border:1px solid var(--acc);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;font-family:'Archivo',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;width:100%;transition:all .15s;}
 .sub-cta:hover{opacity:.88;}
 .sub-step{margin-bottom:20px;padding:20px 22px;background:var(--s1);border:1px solid var(--b1);}
-.sub-step-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sub-step-label{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);text-transform:none;letter-spacing:0;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .sub-step-n{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .brand-btn{padding:14px 16px;border:1px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;color:var(--t3);width:100%;transition:all .15s;}
 .brand-btn:hover{border-color:var(--b2);}
@@ -545,19 +545,19 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .hint.ok{color:var(--grn);}
 
 /* PICKER MODAL */
-.picker-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;}
-.picker-box{background:var(--s1);border:1px solid var(--b2);width:100%;max-width:1600px;height:94vh;max-height:94vh;display:flex;flex-direction:column;overflow:hidden;}
-.picker-head{display:flex;align-items:center;gap:8px;padding:20px 24px;border-bottom:1px solid var(--b1);}
-.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:16px;color:var(--t1);}
+.picker-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+.picker-box{background:var(--s1);border:1px solid var(--b2);width:100%;max-width:1100px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
+.picker-head{display:flex;align-items:center;gap:8px;padding:16px 18px;border-bottom:1px solid var(--b1);}
+.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:13px;color:var(--t1);}
 .picker-search::placeholder{color:var(--t3);}
-.picker-close{background:none;border:none;font-size:26px;color:var(--t2);cursor:pointer;padding:0 6px;line-height:1;}
-.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:26px;overflow-y:auto;flex:1 1 auto;min-height:0;align-content:start;}
-.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;cursor:pointer;border:1px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;border-radius:8px;}
+.picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
+.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;}
+.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;cursor:pointer;border:1px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;}
 .pi:hover{border-color:var(--b2);}
 .pi.selected{border-color:var(--acc);background:var(--acc2);}
-.pi-logo{width:100%;aspect-ratio:16/9;object-fit:contain;object-position:center;display:block;background:#0d0d10;padding:18px;box-sizing:border-box;}
-.pi-logo-ph{width:100%;aspect-ratio:16/9;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--t3);}
-.pi-name{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;color:var(--t1);line-height:1.35;padding:16px 18px;}
+.pi-logo{width:100%;aspect-ratio:16/10;object-fit:contain;object-position:center;display:block;background:#0d0d10;padding:10px;box-sizing:border-box;}
+.pi-logo-ph{width:100%;aspect-ratio:16/10;background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--t3);}
+.pi-name{font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);line-height:1.3;padding:12px 14px;}
 .pi-none{grid-column:1/-1;text-align:center;padding:18px;font-size:12px;color:var(--t3);}
 
 /* ARTIST EDIT LINK */
@@ -948,14 +948,12 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
   <div class="picker-box">
     <div class="picker-head"><input class="picker-search" id="mod-ps" placeholder="Search mods…" oninput="filterModPicker(this.value)"><button class="picker-close" onclick="document.getElementById('mod-picker').style.display='none'">×</button></div>
     <div class="picker-grid" id="mod-pg"></div>
-    <div id="mod-pg-pagination" style="flex-shrink:0;border-top:1px solid rgba(242,240,234,0.08);"></div>
   </div>
 </div>
 <div class="picker-modal" id="champ-picker" style="display:none;" onclick="if(event.target===this)document.getElementById('champ-picker').style.display='none'">
   <div class="picker-box">
     <div class="picker-head"><input class="picker-search" id="champ-ps" placeholder="Search championships…" oninput="filterChampPicker(this.value)"><button class="picker-close" onclick="document.getElementById('champ-picker').style.display='none'">×</button></div>
     <div class="picker-grid" id="champ-pg"></div>
-    <div id="champ-pg-pagination" style="flex-shrink:0;border-top:1px solid rgba(242,240,234,0.08);"></div>
   </div>
 </div>
 
@@ -993,17 +991,9 @@ function svg(cat,seed){
 }
 const seed=l=>parseInt((l.id||'').replace(/\D/g,'').slice(0,6))||0;
 
-function detectBrand(modName){
-  if(!modName)return null;
-  const n=modName.toUpperCase();
-  if(n.includes('RSS'))return 'RSS';
-  if(n.includes('VRC'))return 'VRC';
-  if(n.includes('URD'))return 'URD';
-  return null;
-}
 function richCard(l){
   const cn=l.categories?.name||'';
-  const brand=l.mods?.brand||detectBrand(l.mods?.name);
+  const brand=l.mods?.brand||null;
   const brandCls=brand?brand.toLowerCase():'';
   const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
   const brandColor=brand&&BRC[brand]?BRC[brand]:'var(--acc)';
@@ -1205,12 +1195,8 @@ async function loadLiveryDetail(id){
   _voted=getVotedSet();
   const cn=l.categories?.name||'';
   const voted=_voted.has(l.id);
-  const brand=l.mods?.brand||detectBrand(l.mods?.name);
-  const BRC_LD={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
-  const brandColor=brand&&BRC_LD[brand]?BRC_LD[brand]:'var(--acc)';
   const rows=[
     ['Mod',l.mods?.name||'—'],
-    ...(brand?[['Studio',`<span class="bt bt-${brand.toLowerCase()}">${brand}</span>`]]:[]),
     ['Category',l.categories?.name||'—'],
     ['Championship',l.championships?.name||'—'],
     ['Team',l.team||'—'],
@@ -1231,7 +1217,6 @@ async function loadLiveryDetail(id){
         </div>
         <div>
           <span class="ld-tag">${[cn,l.championships?.short_name||l.championships?.name].filter(Boolean).join(' · ')||'Livery'}</span>
-          ${brand?`<span class="bt bt-${brand.toLowerCase()}" style="margin-left:8px;vertical-align:middle;">${brand}</span>`:''}
           <h1 class="ld-title">${l.name}</h1>
           <div class="ld-artist-line">
             ${artistName?`by <strong onclick="${isConfirmed?`openArtistProfile('${l.artists.id}')`:''}">${artistName}</strong>`:''}
@@ -2066,62 +2051,21 @@ async function uploadImg(blob,folder){
   const{data}=db.storage.from('images').getPublicUrl(path);
   return data?.publicUrl||null;
 }
-// ---- Shared picker renderer (inline-styled, paginated, cache-proof) ----
-const PICKER_PAGE_SIZE=15;
-let _modPickerPage=0, _champPickerPage=0;
-const PI_BOX_STYLE="display:flex;flex-direction:column;align-items:stretch;cursor:pointer;border:1px solid rgba(242,240,234,0.08);background:#191920;border-radius:8px;overflow:hidden;";
-const PI_BOX_SEL_STYLE="display:flex;flex-direction:column;align-items:stretch;cursor:pointer;border:1px solid #FF3D81;background:rgba(255,61,129,0.14);border-radius:8px;overflow:hidden;";
-const PI_LOGO_STYLE="width:100%;aspect-ratio:16/9;object-fit:contain;object-position:center;display:block;background:#0d0d10;padding:18px;box-sizing:border-box;";
-const PI_PH_STYLE="width:100%;aspect-ratio:16/9;background:#131319;display:flex;align-items:center;justify-content:center;font-size:40px;color:#585866;box-sizing:border-box;";
-const PI_NAME_STYLE="font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;color:#F2F0EA;line-height:1.35;padding:16px 18px;min-height:1.35em;";
-
-function renderPickerCard(imgUrl,name,iconClass,isSelected,onclickCall){
-  const boxStyle=isSelected?PI_BOX_SEL_STYLE:PI_BOX_STYLE;
-  const media=imgUrl
-    ? `<img src="${imgUrl}" alt="${name.replace(/"/g,'&quot;')}" style="${PI_LOGO_STYLE}">`
-    : `<div style="${PI_PH_STYLE}"><i class="ti ${iconClass}"></i></div>`;
-  return `<div style="${boxStyle}" onclick="${onclickCall}">${media}<div style="${PI_NAME_STYLE}">${name}</div></div>`;
-}
-
-function renderPaginationControls(total,page,pageSize,gotoFn){
-  const totalPages=Math.max(1,Math.ceil(total/pageSize));
-  if(totalPages<=1)return '';
-  const p=Math.min(page,totalPages-1);
-  return `<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 0;">
-    <button type="button" onclick="${gotoFn}(${p-1})" ${p<=0?'disabled':''} style="background:none;border:1px solid rgba(242,240,234,0.14);color:#F2F0EA;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:'Space Mono',monospace;font-size:12px;${p<=0?'opacity:.35;cursor:not-allowed;':''}">‹ Préc.</button>
-    <span style="font-family:'Space Mono',monospace;font-size:12px;color:#8B8A94;">Page ${p+1} / ${totalPages}</span>
-    <button type="button" onclick="${gotoFn}(${p+1})" ${p>=totalPages-1?'disabled':''} style="background:none;border:1px solid rgba(242,240,234,0.14);color:#F2F0EA;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:'Space Mono',monospace;font-size:12px;${p>=totalPages-1?'opacity:.35;cursor:not-allowed;':''}">Suiv. ›</button>
-  </div>`;
-}
-
 // Mod picker
-function openModPicker(){if(!_sAvailMods2.length)return;_modPickerPage=0;renderModPicker(_sAvailMods2);document.getElementById('mod-picker').style.display='flex';setTimeout(()=>document.getElementById('mod-ps').focus(),50);}
-function filterModPicker(q){_modPickerPage=0;renderModPicker(_sAvailMods2.filter(m=>m.name.toLowerCase().includes(q.toLowerCase())));}
-function gotoModPickerPage(p){renderModPicker(_sAvailMods2,p);}
-function renderModPicker(list,page){
-  if(typeof page==='number')_modPickerPage=page;
+function openModPicker(){if(!_sAvailMods2.length)return;renderModPicker(_sAvailMods2);document.getElementById('mod-picker').style.display='flex';setTimeout(()=>document.getElementById('mod-ps').focus(),50);}
+function filterModPicker(q){renderModPicker(_sAvailMods2.filter(m=>m.name.toLowerCase().includes(q.toLowerCase())));}
+function renderModPicker(list){
   const g=document.getElementById('mod-pg');
-  const pag=document.getElementById('mod-pg-pagination');
-  if(!list.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:18px;font-size:12px;color:#585866;">No mods found</div>`;pag.innerHTML='';return;}
-  const start=_modPickerPage*PICKER_PAGE_SIZE;
-  const pageItems=list.slice(start,start+PICKER_PAGE_SIZE);
-  g.innerHTML=pageItems.map(m=>renderPickerCard(m.image_url,m.name,'ti-car',m.id===_sSelMod,`selectMod('${m.id}','${m.name.replace(/'/g,"\\'")}')`)).join('');
-  pag.innerHTML=renderPaginationControls(list.length,_modPickerPage,PICKER_PAGE_SIZE,'gotoModPickerPage');
+  g.innerHTML=list.length?list.map(m=>`<div class="pi${m.id===_sSelMod?' selected':''}" onclick="selectMod('${m.id}','${m.name.replace(/'/g,"\\'")}')">${m.image_url?`<img src="${m.image_url}" class="pi-logo" alt="${m.name}">`:`<div class="pi-logo-ph"><i class="ti ti-car"></i></div>`}<div class="pi-name">${m.name}</div></div>`).join(''):`<div class="pi-none">No mods found</div>`;
 }
 function selectMod(id,name){_sSelMod=id;document.getElementById('s-mod').value=id;document.getElementById('s-mod-text').textContent=name;document.getElementById('mod-picker').style.display='none';document.getElementById('s-champ-btn').disabled=!_sAvailChamps2.length;updateChecklist();updateSubmitPreview();}
-// Champ picker (no "None" card — clearing a championship happens elsewhere, not in the grid)
-function openChampPicker(){_champPickerPage=0;renderChampPicker(_sAvailChamps2);document.getElementById('champ-picker').style.display='flex';setTimeout(()=>document.getElementById('champ-ps').focus(),50);}
-function filterChampPicker(q){_champPickerPage=0;renderChampPicker(_sAvailChamps2.filter(c=>(c.name+' '+(c.short_name||'')).toLowerCase().includes(q.toLowerCase())));}
-function gotoChampPickerPage(p){renderChampPicker(_sAvailChamps2,p);}
-function renderChampPicker(list,page){
-  if(typeof page==='number')_champPickerPage=page;
+// Champ picker
+function openChampPicker(){renderChampPicker(_sAvailChamps2);document.getElementById('champ-picker').style.display='flex';setTimeout(()=>document.getElementById('champ-ps').focus(),50);}
+function filterChampPicker(q){renderChampPicker(_sAvailChamps2.filter(c=>(c.name+' '+(c.short_name||'')).toLowerCase().includes(q.toLowerCase())));}
+function renderChampPicker(list){
   const g=document.getElementById('champ-pg');
-  const pag=document.getElementById('champ-pg-pagination');
-  if(!list.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:18px;font-size:12px;color:#585866;">No championships found</div>`;pag.innerHTML='';return;}
-  const start=_champPickerPage*PICKER_PAGE_SIZE;
-  const pageItems=list.slice(start,start+PICKER_PAGE_SIZE);
-  g.innerHTML=pageItems.map(c=>renderPickerCard(c.logo_url,c.short_name||c.name,'ti-trophy',c.id===_sSelChamp,`selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')`)).join('');
-  pag.innerHTML=renderPaginationControls(list.length,_champPickerPage,PICKER_PAGE_SIZE,'gotoChampPickerPage');
+  const none=`<div class="pi${!_sSelChamp?' selected':''}" onclick="selectChamp('','No championship')"><div class="pi-logo-ph"><i class="ti ti-x"></i></div><div class="pi-name">No championship</div></div>`;
+  g.innerHTML=none+list.map(c=>`<div class="pi${c.id===_sSelChamp?' selected':''}" onclick="selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')">${c.logo_url?`<img src="${c.logo_url}" class="pi-logo" alt="${c.name}">`:`<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>`}<div class="pi-name">${c.short_name||c.name}</div></div>`).join('');
 }
 function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';updateSubmitPreview();}
 
