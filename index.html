@@ -1156,7 +1156,7 @@ function setVMode(m){_vmode='grid';loadLiveries();}
 
 // ── LIVERY CARD (grid) ──
 function gcCard(l){
-  return `<div class="gc" onclick="openLivery('${l.id}')"><div class="gc-thumb">${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(l.categories?.name||'',seed(l))}</div>`}<div class="gc-ov"></div><div class="gc-b">${isNew(l)?'<span class="badge b-n">New</span>':''}${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div>${l.artists?'<span class="gc-crown"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}<div class="gc-v"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</div></div><div class="gc-body"><div class="gc-series">${l.championships?.short_name||l.categories?.name||'—'}</div><div class="gc-name">${l.name}</div><div class="gc-mod">${l.mods?.name||'—'}</div></div></div>`;
+  return `<div class="gc" onclick="openLivery('${l.id}')"><div class="gc-thumb">${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(l.categories?.name||'',seed(l))}</div>`}<div class="gc-ov"></div><div class="gc-b">${isNew(l)?'<span class="badge b-n">New</span>':''}${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div>${l.artists?'<span class="gc-crown"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}<div class="gc-v"><i class="ti ti-heart" style="font-size:8px;"></i>${l.upvotes||0}</div></div><div class="gc-body"><div class="gc-series">${l.championships?.short_name||l.categories?.name||'—'}</div><div class="gc-name">${l.name}</div><div class="gc-mod">${l.mods?.name||'—'}${l.artists?' · '+l.artists.name:''}</div></div></div>`;
 }
 // ── LIVERY ROW (list) ──
 function lvRow(l){
@@ -1371,7 +1371,7 @@ async function loadHome(){
         <div style="position:absolute;bottom:0;left:0;right:0;padding:22px 24px;">
           <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-crown" style="font-size:10px;"></i> Most upvoted</div>
           <div style="font-family:'Archivo Black',sans-serif;font-size:24px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:#fff;line-height:1;margin-bottom:8px;">${main.name}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(242,240,234,.5);margin-bottom:12px;">${main.mods?.name||'—'} · ${main.championships?.short_name||main.categories?.name||'—'}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(242,240,234,.5);margin-bottom:12px;">${main.mods?.name||'—'} · ${main.championships?.short_name||main.categories?.name||'—'}${main.artists?' · by '+main.artists.name:''}</div>
           <div style="display:flex;align-items:center;gap:6px;">
             ${main.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
             <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:rgba(242,240,234,.5);display:flex;align-items:center;gap:3px;"><i class="ti ti-heart" style="font-size:10px;"></i>${main.upvotes||0}</span>
@@ -1386,7 +1386,7 @@ async function loadHome(){
           <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px;">
             <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;">${l.championships?.short_name||l.categories?.name||'—'}</div>
             <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-            <div style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(242,240,234,.4);margin-top:2px;">${l.mods?.name||'—'}</div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(242,240,234,.4);margin-top:2px;">${l.mods?.name||'—'}${l.artists?' · '+l.artists.name:''}</div>
           </div>
         </div>`).join('')}`;
   }
