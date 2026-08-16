@@ -650,7 +650,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b1);">
       <!-- Popular -->
       <div style="background:var(--bg);padding:22px 24px;">
-        <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
           <span style="width:6px;height:6px;background:var(--acc);display:inline-block;flex-shrink:0;"></span> Most popular
         </div>
         <div id="h-popular"></div>
@@ -658,13 +658,13 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
       <!-- Recent + Artists -->
       <div style="display:flex;flex-direction:column;gap:1px;background:var(--b1);">
         <div style="background:var(--bg);padding:22px 24px;">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+          <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
             <span style="width:6px;height:6px;background:var(--grn);display:inline-block;flex-shrink:0;"></span> Recently added
           </div>
           <div id="h-recent-list"></div>
         </div>
         <div style="background:var(--bg);padding:22px 24px;">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+          <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
             <span style="width:6px;height:6px;background:var(--amb);display:inline-block;flex-shrink:0;"></span> Confirmed artists
           </div>
           <div id="h-artists-list"></div>
@@ -1325,13 +1325,13 @@ async function loadHome(){
     const bm = brandMeta[brand];
     const mods = _mods.filter(m=>m.brand===brand);
     const cnt = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
-    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:transparent;border:1px solid var(--b1);cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='${bm.c}'" onmouseout="this.style.borderColor='var(--b1)'">
-      <div style="width:28px;height:28px;background:${bm.bg};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
+    return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:transparent;border:1px solid var(--b1);cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='${bm.c}'" onmouseout="this.style.borderColor='var(--b1)'">
+      <div style="width:34px;height:34px;background:${bm.bg};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
       <div style="min-width:0;flex:1;">
-        <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:${bm.c};letter-spacing:0;">${brand} — ${bm.label}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin-top:2px;">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
+        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:${bm.c};letter-spacing:0;">${brand} — ${bm.label}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);margin-top:3px;">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
       </div>
-      <i class="ti ti-chevron-right" style="font-size:13px;color:var(--t3);flex-shrink:0;"></i>
+      <i class="ti ti-chevron-right" style="font-size:15px;color:var(--t3);flex-shrink:0;"></i>
     </div>`;
   }).join('');
 
@@ -1401,9 +1401,9 @@ async function loadHome(){
         {icon:'ti-package',   c:'#30D158',      bg:'rgba(48,209,88,.1)',            n:_mods.length,        l:'Mods'},
         {icon:'ti-thumb-up',  c:'#3DE8FF',      bg:'rgba(61,232,255,.1)',           n:totalVotes.toLocaleString(), l:'Upvotes'},
         {icon:'ti-puzzle',    c:'var(--acc)',   bg:'var(--acc2)',                   n:adds.length,         l:'Addons'},
-      ].map(s=>`<div style="flex:1;padding:14px 16px;border-right:1px solid var(--b1);display:flex;align-items:center;gap:10px;">
-        <div style="width:26px;height:26px;background:${s.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ${s.icon}" style="font-size:12px;color:${s.c};"></i></div>
-        <div><div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;letter-spacing:0;color:${s.l==='Liveries'?'var(--acc)':'var(--t1)'};">${s.n}</div><div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;">${s.l}</div></div>
+      ].map(s=>`<div style="flex:1;padding:18px 18px;border-right:1px solid var(--b1);display:flex;align-items:center;gap:13px;">
+        <div style="width:34px;height:34px;background:${s.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ${s.icon}" style="font-size:16px;color:${s.c};"></i></div>
+        <div><div style="font-family:'Space Mono',monospace;font-size:23px;font-weight:700;letter-spacing:0;color:${s.l==='Liveries'?'var(--acc)':'var(--t1)'};">${s.n}</div><div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;">${s.l}</div></div>
       </div>`).join('')}
     </div>`;
   // Remove last border-right
@@ -1417,17 +1417,17 @@ async function loadHome(){
 
   document.getElementById('h-popular').innerHTML = top.slice(0,5).map(l=>{
     const cn=l.categories?.name||'';
-    return `<div style="display:flex;align-items:center;gap:11px;padding:8px 9px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
-      <div style="width:54px;height:34px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
+    return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:68px;height:44px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
         ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
       </div>
       <div style="flex:1;min-width:0;">
-        <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div>
+        <div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div>
       </div>
       <div style="flex-shrink:0;text-align:right;">
         ${l.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin-top:4px;display:flex;align-items:center;gap:2px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:10px;"></i>${l.upvotes||0}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t3);margin-top:5px;display:flex;align-items:center;gap:3px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:11px;"></i>${l.upvotes||0}</div>
       </div>
     </div>`;
   }).join('');
@@ -1435,13 +1435,13 @@ async function loadHome(){
   // ── RECENT ──
   document.getElementById('h-recent-list').innerHTML = recent.map(l=>{
     const cn=l.categories?.name||'';
-    return `<div style="display:flex;align-items:center;gap:12px;padding:9px 10px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
-      <div style="width:60px;height:38px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
+    return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="openLivery('${l.id}')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:72px;height:46px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;">
         ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
       </div>
       <div style="flex:1;min-width:0;">
-        <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;">${l.mods?.name||'—'}</div>
+        <div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${l.mods?.name||'—'}</div>
       </div>
       <span class="b-n badge">New</span>
     </div>`;
@@ -1451,10 +1451,10 @@ async function loadHome(){
   document.getElementById('h-artists-list').innerHTML = _artists.slice(0,3).map((a,i)=>{
     const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     const [abg,ac]=AVC[i%AVC.length]; const s=stArtist[a.id]||{c:0,v:0};
-    return `<div style="display:flex;align-items:center;gap:12px;padding:9px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
-      <div style="width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;background:${abg};color:${ac};">${ini}</div>
-      <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);">${a.name} <svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
-      <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t3);">${s.v} votes</span>
+    return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
+      <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;background:${abg};color:${ac};">${ini}</div>
+      <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:6px;">${a.name} <svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
+      <span style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--t3);">${s.v} votes</span>
     </div>`;
   }).join('');
 }
