@@ -37,7 +37,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 /* ── TOP NAV (replaces sidebar) ── */
 .sidebar{background:var(--bg);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:28px;padding:0 24px;flex-shrink:0;position:sticky;top:0;z-index:60;height:60px;}
 .sb-logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
-.sb-logo::before{content:'';width:14px;height:14px;background:linear-gradient(135deg,var(--acc),var(--pur));flex-shrink:0;}
 .sb-lac{font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;color:var(--t1);letter-spacing:0;text-transform:uppercase;}
 .sb-lname{font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;color:var(--t1);letter-spacing:0;text-transform:uppercase;}
 .sb-ldb{display:none;}
@@ -52,7 +51,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sb-link:hover{color:var(--t1);}
 .sb-link.on{color:var(--pur);border-bottom-color:var(--pur);}
 .sb-link.on .sb-icon{color:var(--pur);}
-.sb-icon{display:none;}
+.sb-icon{font-size:15px;color:var(--t3);}
+.sb-link.on .sb-icon{color:var(--pur);}
 .sb-badge{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--t3);}
 .sb-submit{margin-left:8px;padding:0 18px;height:36px;background:transparent;border:1px solid var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .18s;flex-shrink:0;white-space:nowrap;}
 .sb-submit:hover{background:var(--acc);border-color:var(--acc);color:#fff;}
@@ -600,14 +600,14 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
 <!-- TOP NAV -->
 <header class="sidebar">
   <div class="sb-logo" onclick="nav('home')">
-    <span class="sb-lac">AC</span><span class="sb-lname">&nbsp;LIVERIES DB</span>
+    <span class="sb-lname">AC LIVERIES DB<span style="color:var(--acc);">.</span></span>
   </div>
   <div class="sb-nav">
-    <button class="sb-link" id="nl-home" onclick="nav('home')">Home</button>
-    <button class="sb-link on" id="nl-liveries" onclick="nav('liveries')">Liveries <span class="sb-badge" id="sb-lc">—</span></button>
-    <button class="sb-link" id="nl-mods" onclick="nav('mods')">Mods <span class="sb-badge" id="sb-mc">—</span></button>
-    <button class="sb-link" id="nl-artists" onclick="nav('artists')">Artists <span class="sb-badge" id="sb-ac">—</span></button>
-    <button class="sb-link" id="nl-addons" onclick="nav('addons')">Addons <span class="sb-badge" id="sb-addc">—</span></button>
+    <button class="sb-link" id="nl-home" onclick="nav('home')"><i class="ti ti-home sb-icon"></i> Home</button>
+    <button class="sb-link on" id="nl-liveries" onclick="nav('liveries')"><i class="ti ti-layout-grid sb-icon"></i> Liveries <span class="sb-badge" id="sb-lc">—</span></button>
+    <button class="sb-link" id="nl-mods" onclick="nav('mods')"><i class="ti ti-package sb-icon"></i> Mods <span class="sb-badge" id="sb-mc">—</span></button>
+    <button class="sb-link" id="nl-artists" onclick="nav('artists')"><i class="ti ti-user-star sb-icon"></i> Artists <span class="sb-badge" id="sb-ac">—</span></button>
+    <button class="sb-link" id="nl-addons" onclick="nav('addons')"><i class="ti ti-puzzle sb-icon"></i> Addons <span class="sb-badge" id="sb-addc">—</span></button>
   </div>
   <div class="sb-stats">
     <div class="sb-stat acc"><span class="sb-stat-n" id="sb-tot">—</span><span class="sb-stat-l">Liveries</span></div>
