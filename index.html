@@ -188,10 +188,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-thumb{width:100%;aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--s2);}
 .lv-card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;z-index:0;}
 .lv-card:hover .lv-card-thumb img{transform:scale(1.04);}
-.lv-card-paint{position:absolute;inset:0;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);z-index:1;}
+.lv-card-paint{position:absolute;inset:0;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);z-index:1;filter:saturate(.85) brightness(.82);}
 .lv-card:hover .lv-card-paint{transform:translateY(0%);}
 .lv-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.85),transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s;}
-.lv-card:hover .lv-card-ov{opacity:0;}
+.lv-card:hover .lv-card-ov{opacity:.4;}
 .lv-card-top{position:absolute;top:10px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
 .lv-card-crown{position:absolute;top:10px;right:10px;font-size:14px;z-index:3;transition:opacity .25s;color:var(--crown);font-weight:700;}
 .lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
