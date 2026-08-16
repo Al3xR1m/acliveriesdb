@@ -96,6 +96,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 
 /* ── PAINT-SWATCH DA: GLOBAL OVERRIDES ── */
 *{border-radius:0!important;}
+.sb-av,#ae-av,#ae-hero-av,.ap-av{border-radius:50%!important;overflow:hidden;}
 .page-h1,.lv-num,.sb-artist-name,h1,h2,h3{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal;text-transform:uppercase;letter-spacing:0;}
 [style*="font-weight:900"]{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal!important;text-transform:uppercase;}
 .page-h1 em,em{font-style:normal;}
@@ -476,7 +477,7 @@ async function aeBoot() {
 
   var ini = _ae_artist.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
   var av = document.getElementById('ae-av');
-  if (_ae_artist.avatar_url) av.innerHTML = '<img src="'+_ae_artist.avatar_url+'">';
+  if (_ae_artist.avatar_url) av.innerHTML = '<img src="'+_ae_artist.avatar_url+'" style="width:100%;height:100%;object-fit:cover;">';
   else av.textContent = ini;
   document.getElementById('ae-name').textContent = _ae_artist.name;
 
