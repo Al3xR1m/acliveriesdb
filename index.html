@@ -498,6 +498,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .price-opt span{display:flex;align-items:center;padding:10px 24px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);transition:all .15s;}
 .price-opt:hover span{color:var(--t1);}
 .price-opt:has(input:checked) span{background:var(--acc);color:#fff;}
+.tag-check{position:relative;cursor:pointer;}
+.tag-check input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.tag-check span{display:inline-flex;align-items:center;padding:8px 14px;border:1px solid var(--b1);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);transition:all .15s;}
+.tag-check:hover span{border-color:var(--b2);color:var(--t1);}
+.tag-check:has(input:checked) span{background:var(--acc2);border-color:var(--acc);color:var(--acc);}
 .sub-toggle{display:flex;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:3px;gap:3px;margin-bottom:18px;}
 .sub-toggle-btn{flex:1;padding:7px;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .12s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;}
 .sub-toggle-btn.on{background:var(--s2);color:var(--t1);border:0.5px solid var(--b2);}
@@ -835,12 +840,13 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
             </div>
             <div class="field" id="s-addon-type-wrap" style="display:none;margin:0;grid-column:1/-1;">
               <label>Addon type *</label>
-              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;">
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="tyre_skin"> Tyre skin</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="3d_asset"> 3D asset</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="shader"> Shader</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="ui"> UI element</label>
-                <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;"><input type="checkbox" name="addon-type" value="other"> Other</label>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+                <label class="tag-check"><input type="checkbox" name="addon-type" value="tyre_skin"><span>Tyre skin</span></label>
+                <label class="tag-check"><input type="checkbox" name="addon-type" value="3d_asset"><span>3D asset</span></label>
+                <label class="tag-check"><input type="checkbox" name="addon-type" value="shader"><span>Shader</span></label>
+                <label class="tag-check"><input type="checkbox" name="addon-type" value="ui"><span>UI element</span></label>
+                <label class="tag-check"><input type="checkbox" name="addon-type" value="other"><span>Other</span></label>
+              </div>
               </div>
             </div>
           </div>
