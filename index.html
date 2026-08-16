@@ -1451,8 +1451,11 @@ async function loadHome(){
   document.getElementById('h-artists-list').innerHTML = _artists.slice(0,3).map((a,i)=>{
     const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     const [abg,ac]=AVC[i%AVC.length]; const s=stArtist[a.id]||{c:0,v:0};
+    const avatar=a.avatar_url
+      ?`<img src="${a.avatar_url}" alt="${a.name}" style="width:44px;height:44px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">`
+      :`<div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;background:${abg};color:${ac};">${ini}</div>`;
     return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
-      <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;background:${abg};color:${ac};">${ini}</div>
+      ${avatar}
       <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:6px;">${a.name} <svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
       <span style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--t3);">${s.v} votes</span>
     </div>`;
@@ -1817,7 +1820,7 @@ async function renderArtistProfile(id){
     <!-- HEADER -->
     <div style="padding:32px 28px 24px;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;gap:24px;">
       ${artist.avatar_url
-        ?`<img src="${artist.avatar_url}" style="width:80px;height:80px;object-fit:cover;flex-shrink:0;">`
+        ?`<img src="${artist.avatar_url}" style="width:80px;height:80px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">`
         :`<div style="width:80px;height:80px;background:linear-gradient(135deg,var(--acc),var(--pur));display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:26px;font-weight:400;color:#0A0A0F;flex-shrink:0;">${ini}</div>`
       }
       <div style="flex:1;min-width:0;">
