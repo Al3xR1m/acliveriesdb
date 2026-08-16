@@ -165,7 +165,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .f-chip:hover{background:var(--acc);color:#fff;}
 .f-chip i{font-size:10px;opacity:.6;}
 /* ── BRAND TAG ── */
-.bt{font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px;}
+.bt{font-size:9px;font-weight:700;padding:3px 6px;text-transform:uppercase;letter-spacing:.3px;background:var(--bg);border:1px solid currentColor;}
 .bt{font-family:'Space Mono',monospace;}
 .bt-rss{background:rgba(232,49,42,.15);color:#E8312A;}
 .bt-vrc{background:rgba(48,209,88,.14);color:#30D158;}
@@ -192,7 +192,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card:hover .lv-card-paint{transform:translateY(0%);}
 .lv-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.85),transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s;}
 .lv-card:hover .lv-card-ov{opacity:.4;}
-.lv-card-top{position:absolute;top:10px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
+.lv-card-brand{position:absolute;top:10px;left:10px;z-index:4;}
+.lv-card-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
 .lv-card-crown{position:absolute;top:10px;right:10px;font-size:14px;z-index:3;transition:opacity .25s;color:var(--crown);font-weight:700;}
 .lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-card-top,.lv-card:hover .lv-card-crown,.lv-card:hover .lv-card-dl{opacity:0;}
@@ -1008,7 +1009,7 @@ function richCard(l){
   const driver=l.driver||l.team||'';
   const season=l.season||'';
   const modName=l.mods?.name||'';
-  const paintColor=l.categories?.color_bg||brandColor;
+  const paintColor=brand&&BRC[brand]?BRC[brand]:(l.categories?.color_bg||brandColor);
   const creatorName=l.artists?.name||(l.author||'');
   const isArtist=!!l.artists;
   const subParts=[creatorName?'@'+creatorName.replace(/\s+/g,'').toLowerCase():'',modName].filter(Boolean).join(' · ');
@@ -1018,10 +1019,10 @@ function richCard(l){
       ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
       <div class="lv-card-paint" style="background:${paintColor};"></div>
       <div class="lv-card-ov"></div>
+      ${brandTag?`<div class="lv-card-brand">${brandTag}</div>`:''}
       <div class="lv-card-top">
         ${isNew2?'<span class="badge b-n">New</span>':''}
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
-        ${brandTag}
       </div>
       ${isArtist?'<span class="lv-card-crown"><svg width="15" height="15" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
       <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
