@@ -65,6 +65,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .field textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .field.full{grid-column:1/-1;}
+.brand-tag-check{position:relative;cursor:pointer;}
+.brand-tag-check input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.brand-tag-check span{display:inline-flex;align-items:center;padding:8px 16px;border:1px solid var(--b1);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);transition:all .15s;}
+.brand-tag-check:hover span{border-color:var(--b2);color:var(--t2);}
+.brand-tag-check:has(input:checked) span{background:var(--bbg);border-color:var(--bc);color:var(--bc);}
 .btn-primary{height:42px;padding:0 20px;background:transparent;color:var(--t1);border:1px solid var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s;}
 .btn-primary:hover{background:var(--acc);border-color:var(--acc);color:#fff;}
 .btn-ghost{height:38px;padding:0 14px;background:transparent;color:var(--t2);border:1px solid var(--b1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
@@ -239,6 +244,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
         <div class="field"><label>Name *</label><input id="pf-name" type="text"></div>
         <div class="field"><label>Discord</label><input id="pf-discord" type="text"></div>
         <div class="field"><label>Bio</label><textarea id="pf-bio"></textarea></div>
+        <div class="field">
+          <label>Publisher brands</label>
+          <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;" id="pf-brands">
+            <label class="brand-tag-check" style="--bc:#E8312A;--bbg:rgba(232,49,42,.10);"><input type="checkbox" name="pf-brand" value="RSS"><span>RSS</span></label>
+            <label class="brand-tag-check" style="--bc:#30D158;--bbg:rgba(48,209,88,.08);"><input type="checkbox" name="pf-brand" value="VRC"><span>VRC</span></label>
+            <label class="brand-tag-check" style="--bc:#FF9F0A;--bbg:rgba(255,159,10,.08);"><input type="checkbox" name="pf-brand" value="URD"><span>URD</span></label>
+          </div>
+        </div>
         <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Social links</div>
         <div class="field"><label>Twitter/X</label><input id="pf-twitter" type="url"></div>
         <div class="field"><label>Patreon</label><input id="pf-patreon" type="url"></div>
@@ -614,12 +627,15 @@ function aeProfile() {
   document.getElementById('pf-patreon').value = _ae_artist.url_patreon||'';
   document.getElementById('pf-youtube').value = _ae_artist.url_youtube||'';
   document.getElementById('pf-overtake').value = _ae_artist.url_overtake||'';
+  var currentBrands = _ae_artist.brands||[];
+  document.querySelectorAll('input[name="pf-brand"]').forEach(function(cb){ cb.checked = currentBrands.includes(cb.value); });
 }
 
 async function aePfSave() {
   var name = document.getElementById('pf-name').value.trim();
   if (!name){ aeToast('Name required','err'); return; }
-  var payload = {name:name, discord:document.getElementById('pf-discord').value.trim()||null, bio:document.getElementById('pf-bio').value.trim()||null, url_twitter:document.getElementById('pf-twitter').value.trim()||null, url_patreon:document.getElementById('pf-patreon').value.trim()||null, url_youtube:document.getElementById('pf-youtube').value.trim()||null, url_overtake:document.getElementById('pf-overtake').value.trim()||null};
+  var brands = Array.from(document.querySelectorAll('input[name="pf-brand"]:checked')).map(function(x){return x.value;});
+  var payload = {name:name, discord:document.getElementById('pf-discord').value.trim()||null, bio:document.getElementById('pf-bio').value.trim()||null, brands:brands, url_twitter:document.getElementById('pf-twitter').value.trim()||null, url_patreon:document.getElementById('pf-patreon').value.trim()||null, url_youtube:document.getElementById('pf-youtube').value.trim()||null, url_overtake:document.getElementById('pf-overtake').value.trim()||null};
   var res = await db.rpc('artist_update_profile',{p_token:_ae_token,p_data:payload});
   if (res.error){ aeToast('Error: '+res.error.message,'err'); return; }
   Object.assign(_ae_artist, payload);

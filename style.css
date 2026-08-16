@@ -225,6 +225,12 @@ ul, ol { list-style: none; }
 }
 .pill:hover { color: var(--text); border-color: var(--acc); }
 .pill.active { background: var(--acc-2); border-color: var(--acc); color: var(--acc); }
+
+.brand-tag-check{position:relative;cursor:pointer;}
+.brand-tag-check input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.brand-tag-check span{display:inline-flex;align-items:center;padding:8px 16px;border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-3);transition:all .15s;}
+.brand-tag-check:hover span{border-color:var(--border-md);color:var(--text-2);}
+.brand-tag-check:has(input:checked) span{background:var(--bbg);border-color:var(--bc);color:var(--bc);}
 .pill--rss.active { background: var(--rss-2); border-color: var(--rss); color: var(--rss); }
 .pill--vrc.active { background: var(--vrc-2); border-color: var(--vrc); color: var(--vrc); }
 .pill--urd.active { background: var(--urd-2); border-color: var(--urd); color: var(--urd); }
