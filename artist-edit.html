@@ -39,7 +39,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .page-h1{font-size:36px;font-weight:900;font-style:italic;letter-spacing:-2px;color:var(--t1);}
 .page-h1 em{color:var(--acc);}
 .lv-grid{padding:0 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
-.lv-card{background:var(--s1);position:relative;overflow:hidden;transition:border-color .18s;border:1px solid var(--b1);}
+.lv-card{background:var(--s1);position:relative;overflow:hidden;transition:border-color .18s;border:1px solid var(--b1);cursor:pointer;}
 .lv-card:hover{border-color:var(--acc);}
 .lv-card::after{content:'';position:absolute;right:0;bottom:0;width:0;height:0;background:var(--acc);transition:width .18s,height .18s;z-index:3;}
 .lv-card:hover::after{width:10px;height:10px;}
@@ -48,19 +48,20 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card:hover .lv-thumb img{transform:scale(1.04);}
 .lv-paint{position:absolute;inset:0;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);z-index:1;filter:saturate(.85) brightness(.82);}
 .lv-card:hover .lv-paint{transform:translateY(0%);}
-.lv-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.85),transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s;}
+.lv-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.92) 0%,rgba(10,10,15,.55) 45%,rgba(10,10,15,.18) 80%,rgba(10,10,15,.18) 100%);pointer-events:none;z-index:1;transition:opacity .3s;}
 .lv-card:hover .lv-ov{opacity:.4;}
 .lv-badges{position:absolute;top:10px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-badges{opacity:0;}
 .lv-brand-tag{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 6px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.3px;}
 .lv-num{position:absolute;top:10px;right:10px;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;color:var(--t1);background:rgba(10,10,15,.6);padding:3px 8px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-num{opacity:0;}
+.lv-edit-hint{position:absolute;top:10px;right:10px;width:26px;height:26px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:4;opacity:0;transition:opacity .2s;}
+.lv-card:hover .lv-edit-hint{opacity:1;}
 .lv-meta{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-meta *{color:var(--bg)!important;}
 .lv-champ{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
 .lv-name{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);text-transform:none;}
 .lv-mod{font-family:'Archivo',sans-serif;font-size:11px;color:var(--t2);margin-top:3px;}
-.lv-foot{display:flex;align-items:center;justify-content:flex-end;padding:8px 10px;border-top:1px solid var(--b1);}
 .badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.5px;text-transform:uppercase;background:var(--bg);}
 .b-f{color:var(--grn);}
 .b-p{color:var(--amb);}
@@ -549,20 +550,18 @@ async function aeLiveries() {
     var bm=brand&&BRC[brand]?BRC[brand]:null;
     var paintColor=bm?bm.c:(l.categories&&l.categories.color_bg)||'var(--acc)';
     var brandTag=bm?'<span class="lv-brand-tag" style="color:'+bm.c+';background:var(--bg);border-color:'+bm.c+';">'+brand+'</span>':'';
-    return '<div class="lv-card">'
+    return '<div class="lv-card" onclick="aeEditLivery(\''+l.id+'\')">'
       +'<div class="lv-thumb">'+(l.image_url?'<img src="'+l.image_url+'" loading="lazy">':'<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>')
       +'<div class="lv-paint" style="background:'+paintColor+';"></div>'
       +'<div class="lv-ov"></div>'
       +'<div class="lv-badges">'+brandTag+'<span class="badge '+(l.approved?'b-f':'b-n')+'">'+(l.approved?'Published':'Pending')+'</span></div>'
       +(l.car_number?'<div class="lv-num">#'+l.car_number+'</div>':'')
+      +'<div class="lv-edit-hint"><i class="ti ti-pencil"></i></div>'
       +'<div class="lv-meta">'
       +(l.championships&&l.championships.short_name?'<div class="lv-champ">'+l.championships.short_name+'</div>':'')
       +'<div class="lv-name">'+l.name+'</div>'
       +'<div class="lv-mod">'+(l.mods&&l.mods.name||'—')+'</div>'
-      +'</div></div>'
-      +'<div class="lv-foot">'
-      +'<button class="btn-ghost" style="height:28px;padding:0 12px;font-size:11px;" onclick="aeEditLivery(\''+l.id+'\')"><i class="ti ti-pencil"></i> Edit</button>'
-      +'</div></div>';
+      +'</div></div></div>';
   }).join('');
 }
 
