@@ -81,7 +81,7 @@ async function fetchLiveries({
   search, sort = 'votes', page = 1, pageSize = 24,
   approvedOnly = true,
 } = {}) {
-  let q = db.from('liveries').select('*, mods(id,name), categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url)');
+  let q = db.from('liveries').select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url)');
   if (approvedOnly) q = q.eq('approved', true);
   if (categoryId)     q = q.eq('category_id', categoryId);
   if (championshipId) q = q.eq('championship_id', championshipId);
@@ -127,13 +127,13 @@ async function fetchLiveriesCount({
 
 async function fetchLivery(id) {
   const { data } = await db.from('liveries')
-    .select('*, mods(id,name), categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url,url_twitter,url_discord,url_patreon,url_youtube,url_overtake)')
+    .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url,url_twitter,url_discord,url_patreon,url_youtube,url_overtake)')
     .eq('id', id).single();
   return data;
 }
 
 async function fetchAddons({ modId, categoryId, sort = 'votes', approvedOnly = true, search } = {}) {
-  let q = db.from('addons').select('*, mods(id,name), categories(id,name,color_bg,color_text), artists(id,name)');
+  let q = db.from('addons').select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), artists(id,name)');
   if (approvedOnly) q = q.eq('approved', true);
   if (modId)       q = q.eq('mod_id', modId);
   if (categoryId)  q = q.eq('category_id', categoryId);
@@ -188,14 +188,14 @@ async function fetchAdminStats() {
 
 async function fetchPendingLiveries() {
   const { data } = await db.from('liveries')
-    .select('*, mods(id,name), categories(id,name,color_bg,color_text), championships(id,name), artists(id,name)')
+    .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name), artists(id,name)')
     .eq('approved', false).order('created_at', { ascending: false });
   return data || [];
 }
 
 async function fetchPendingAddons() {
   const { data } = await db.from('addons')
-    .select('*, mods(id,name), categories(id,name,color_bg,color_text), artists(id,name)')
+    .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), artists(id,name)')
     .eq('approved', false).order('created_at', { ascending: false });
   return data || [];
 }
@@ -232,7 +232,7 @@ async function fetchLiveriesByToken(token) {
   const artist = await fetchArtistByToken(token);
   if (!artist) return [];
   const { data } = await db.from('liveries')
-    .select('*, mods(id,name), categories(id,name,color_bg,color_text), championships(id,name)')
+    .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name)')
     .eq('artist_id', artist.id).eq('approved', true).order('created_at', { ascending: false });
   return data || [];
 }
@@ -241,7 +241,7 @@ async function fetchAddonsByToken(token) {
   const artist = await fetchArtistByToken(token);
   if (!artist) return [];
   const { data } = await db.from('addons')
-    .select('*, mods(id,name), categories(id,name,color_bg,color_text)')
+    .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text)')
     .eq('artist_id', artist.id).eq('approved', true).order('created_at', { ascending: false });
   return data || [];
 }
