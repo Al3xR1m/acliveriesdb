@@ -43,24 +43,29 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card:hover{border-color:var(--acc);}
 .lv-card::after{content:'';position:absolute;right:0;bottom:0;width:0;height:0;background:var(--acc);transition:width .18s,height .18s;z-index:3;}
 .lv-card:hover::after{width:10px;height:10px;}
-.lv-thumb{width:100%;aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;}
-.lv-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:transform .3s;z-index:0;}
+.lv-thumb{width:100%;aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--s2);}
+.lv-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;z-index:0;}
 .lv-card:hover .lv-thumb img{transform:scale(1.04);}
 .lv-paint{position:absolute;inset:0;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);z-index:1;filter:saturate(.85) brightness(.82);}
 .lv-card:hover .lv-paint{transform:translateY(0%);}
 .lv-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.92) 0%,rgba(10,10,15,.55) 45%,rgba(10,10,15,.18) 80%,rgba(10,10,15,.18) 100%);pointer-events:none;z-index:1;transition:opacity .3s;}
 .lv-card:hover .lv-ov{opacity:.4;}
-.lv-badges{position:absolute;top:10px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
-.lv-card:hover .lv-badges{opacity:0;}
-.lv-brand-tag{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 6px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.3px;}
-.lv-num{position:absolute;top:10px;right:10px;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;color:var(--t1);background:rgba(10,10,15,.6);padding:3px 8px;z-index:3;transition:opacity .25s;}
-.lv-card:hover .lv-num{opacity:0;}
-.lv-edit-hint{position:absolute;top:10px;right:10px;width:26px;height:26px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:4;opacity:0;transition:opacity .2s;}
+.lv-brand{position:absolute;top:10px;left:10px;z-index:4;}
+.lv-brand-tag{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 6px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.3px;background:var(--bg);}
+.lv-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
+.lv-card:hover .lv-top{opacity:0;}
+.lv-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
+.lv-card:hover .lv-dl{opacity:0;}
+.lv-edit-hint{position:absolute;top:9px;right:10px;width:22px;height:22px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;}
 .lv-card:hover .lv-edit-hint{opacity:1;}
-.lv-meta{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
+.lv-meta{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-meta *{color:var(--bg)!important;}
-.lv-champ{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
-.lv-name{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);text-transform:none;}
+.lv-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.lv-champ{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.lv-numtag{font-family:'Archivo Black',sans-serif;font-size:12px;font-weight:400;color:var(--t1);}
+.lv-season{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--t2);}
+.lv-name{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);text-transform:none;line-height:1.2;}
+.lv-driver{font-family:'Archivo',sans-serif;font-size:11px;color:var(--t2);margin-top:4px;}
 .lv-mod{font-family:'Archivo',sans-serif;font-size:11px;color:var(--t2);margin-top:3px;}
 .badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.5px;text-transform:uppercase;background:var(--bg);}
 .b-f{color:var(--grn);}
@@ -544,23 +549,36 @@ async function aeLiveries() {
     el.innerHTML = '<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-photo" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No liveries yet.</div>';
     return;
   }
-  var BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.15)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.14)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.14)'}};
+  var BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
+  var isNew=function(l){return l.created_at && (Date.now()-new Date(l.created_at).getTime())<7*24*60*60*1000;};
   el.innerHTML = data.map(function(l){
     var brand=l.mods&&l.mods.brand;
-    var bm=brand&&BRC[brand]?BRC[brand]:null;
-    var paintColor=bm?bm.c:(l.categories&&l.categories.color_bg)||'var(--acc)';
-    var brandTag=bm?'<span class="lv-brand-tag" style="color:'+bm.c+';background:var(--bg);border-color:'+bm.c+';">'+brand+'</span>':'';
+    var brandColor=(brand&&BRC[brand])?BRC[brand]:'var(--acc)';
+    var brandTag=brand?'<span class="lv-brand-tag" style="color:'+brandColor+';border-color:'+brandColor+';">'+brand+'</span>':'';
+    var paintColor=(brand&&BRC[brand])?BRC[brand]:((l.categories&&l.categories.color_bg)||brandColor);
+    var champName=(l.championships&&l.championships.short_name)||(l.categories&&l.categories.name)||'—';
+    var driver=l.driver||l.team||'';
+    var season=l.season||'';
     return '<div class="lv-card" onclick="aeEditLivery(\''+l.id+'\')">'
       +'<div class="lv-thumb">'+(l.image_url?'<img src="'+l.image_url+'" loading="lazy">':'<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>')
       +'<div class="lv-paint" style="background:'+paintColor+';"></div>'
       +'<div class="lv-ov"></div>'
-      +'<div class="lv-badges">'+brandTag+'<span class="badge '+(l.approved?'b-f':'b-n')+'">'+(l.approved?'Published':'Pending')+'</span></div>'
-      +(l.car_number?'<div class="lv-num">#'+l.car_number+'</div>':'')
+      +(brandTag?'<div class="lv-brand">'+brandTag+'</div>':'')
+      +'<div class="lv-top">'
+      +(isNew(l)?'<span class="badge b-n">New</span>':'')
+      +'<span class="badge '+(l.approved?'b-f':'b-p')+'">'+(l.approved?'Published':'Pending')+'</span>'
+      +'</div>'
       +'<div class="lv-edit-hint"><i class="ti ti-pencil"></i></div>'
+      +'<div class="lv-dl"><i class="ti ti-heart" style="font-size:9px;"></i>'+(l.upvotes||0)+'</div>'
       +'<div class="lv-meta">'
-      +(l.championships&&l.championships.short_name?'<div class="lv-champ">'+l.championships.short_name+'</div>':'')
+      +'<div class="lv-champ-row"><span class="lv-champ" style="color:'+brandColor+';">'+champName+'</span>'
+      +'<span style="display:flex;align-items:center;gap:8px;flex-shrink:0;">'
+      +(l.car_number?'<span class="lv-numtag">#'+l.car_number+'</span>':'')
+      +(season?'<span class="lv-season">'+season+'</span>':'')
+      +'</span></div>'
       +'<div class="lv-name">'+l.name+'</div>'
-      +'<div class="lv-mod">'+(l.mods&&l.mods.name||'—')+'</div>'
+      +(driver?'<div class="lv-driver">'+driver+'</div>':'')
+      +(l.mods&&l.mods.name?'<div class="lv-mod">'+l.mods.name+'</div>':'')
       +'</div></div></div>';
   }).join('');
 }
