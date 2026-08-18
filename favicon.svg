@@ -1,12 +1,4 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="138.000000pt" height="138.000000pt" viewBox="0 0 138.000000 138.000000"
- preserveAspectRatio="xMidYMid meet">
-
-<g transform="translate(0.000000,138.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M1120 505 l0 -55 60 0 60 0 0 55 0 55 -60 0 -60 0 0 -55z"/>
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<rect width="32" height="32" fill="#0A0A0F"/>
+<text x="16" y="22" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="15" fill="#F2F0EA">DB<tspan fill="#FF3D81">.</tspan></text>
 </svg>
