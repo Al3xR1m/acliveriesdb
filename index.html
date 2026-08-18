@@ -194,10 +194,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card:hover .lv-card-ov{opacity:.4;}
 .lv-card-brand{position:absolute;top:10px;left:10px;z-index:4;}
 .lv-card-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
-.lv-card-crown{position:absolute;top:10px;right:10px;font-size:14px;z-index:3;transition:opacity .25s;color:var(--crown);font-weight:700;}
+.lv-card-crown{position:absolute;top:10px;right:10px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;z-index:3;transition:opacity .25s;color:var(--t1);background:rgba(10,10,15,.7);border:1px solid var(--crown);padding:3px 8px;display:flex;align-items:center;gap:5px;white-space:nowrap;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;}
 .lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-card-top,.lv-card:hover .lv-card-crown,.lv-card:hover .lv-card-dl{opacity:0;}
-.lv-card-thumb:has(.lv-card-crown) .lv-card-dl{top:30px;}
+.lv-card-thumb:has(.lv-card-crown) .lv-card-dl{top:36px;}
 .lv-card-meta{position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-card-meta *{color:var(--bg)!important;}
 .lv-card-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
@@ -1024,7 +1024,7 @@ function richCard(l){
         ${isNew2?'<span class="badge b-n">New</span>':''}
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
       </div>
-      ${isArtist?'<span class="lv-card-crown"><svg width="15" height="15" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
+      ${isArtist?`<span class="lv-card-crown"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${l.artists.name}</span>`:''}
       <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
       <div class="lv-card-meta">
         <div class="lv-card-champ-row">
