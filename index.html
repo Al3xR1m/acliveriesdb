@@ -1012,7 +1012,7 @@ function richCard(l){
   const paintColor=brand&&BRC[brand]?BRC[brand]:(l.categories?.color_bg||brandColor);
   const creatorName=l.artists?.name||(l.author||'');
   const isArtist=!!l.artists;
-  const subParts=[creatorName?'@'+creatorName.replace(/\s+/g,'').toLowerCase():'',modName].filter(Boolean).join(' · ');
+  const subParts=[(!isArtist&&creatorName)?'@'+creatorName.replace(/\s+/g,'').toLowerCase():'',modName].filter(Boolean).join(' · ');
 
   return `<div class="lv-card${brandCls?' '+brandCls:''}" onclick="openLivery('${l.id}')">
     <div class="lv-card-thumb">
