@@ -286,15 +286,19 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 </div>
 
 <div class="modal-ov" id="ae-lm-ov" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal">
+  <div class="modal" style="max-width:560px;">
     <div class="modal-title"><i class="ti ti-pencil" style="color:var(--acc);"></i> Edit livery</div>
+    <div id="ae-lm-preview" style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--s2);border:1px solid var(--b1);margin-bottom:20px;">
+      <div id="ae-lm-preview-thumb" style="width:64px;height:40px;background:var(--bg);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo" style="color:var(--t3);font-size:16px;"></i></div>
+      <div style="min-width:0;"><div id="ae-lm-preview-name" style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);">You're editing this livery</div></div>
+    </div>
     <div class="form-grid">
       <div class="field full"><label>Name *</label><input id="ae-lm-name"></div>
       <div class="field"><label>Team</label><input id="ae-lm-team"></div>
       <div class="field"><label>Driver(s)</label><input id="ae-lm-driver"></div>
       <div class="field"><label>Season</label><input id="ae-lm-season"></div>
-      <div class="field"><label>Car #</label><input id="ae-lm-car" maxlength="4"></div>
-      <div class="field"><label>Pricing</label><select id="ae-lm-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
+      <div class="field"><label>Car number</label><input id="ae-lm-car" maxlength="4" placeholder="e.g. 27"></div>
+      <div class="field full"><label>Pricing</label><select id="ae-lm-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
       <div class="field full"><label>Notes</label><textarea id="ae-lm-notes"></textarea></div>
     </div>
     <div class="modal-foot">
@@ -587,6 +591,8 @@ async function aeEditLivery(id) {
   _ae_edit_id = id;
   var res = await db.from('liveries').select('*').eq('id',id).single();
   var l = res.data; if (!l) return;
+  document.getElementById('ae-lm-preview-thumb').innerHTML = l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-photo" style="color:var(--t3);font-size:16px;"></i>';
+  document.getElementById('ae-lm-preview-name').textContent = l.name||'Untitled livery';
   document.getElementById('ae-lm-name').value = l.name||'';
   document.getElementById('ae-lm-team').value = l.team||'';
   document.getElementById('ae-lm-driver').value = l.driver||'';
