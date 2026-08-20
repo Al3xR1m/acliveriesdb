@@ -201,6 +201,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-meta{position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-card-meta *{color:var(--bg)!important;}
 .lv-card-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.lv-card-numtag{font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;color:var(--t1);}
 .lv-card-champ{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
 .lv-card-season{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t2);flex-shrink:0;margin-left:6px;}
 .lv-card-name{font-family:'Archivo',sans-serif;font-size:19px;font-weight:700;letter-spacing:0;color:var(--t1);line-height:1.15;}
@@ -1029,7 +1030,10 @@ function richCard(l){
       <div class="lv-card-meta">
         <div class="lv-card-champ-row">
           <span class="lv-card-champ" style="color:${brandColor};">${champName||cn||'—'}</span>
-          ${season?`<span class="lv-card-season">${season}</span>`:''}
+          <span style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            ${l.car_number?`<span class="lv-card-numtag">#${l.car_number}</span>`:''}
+            ${season?`<span class="lv-card-season">${season}</span>`:''}
+          </span>
         </div>
         <div class="lv-card-name">${l.name}</div>
         ${driver?`<div class="lv-card-driver">${driver}</div>`:''}
