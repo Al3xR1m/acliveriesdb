@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Azeret+Mono:wght@400;500;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#0A0A0F;--s1:#131319;--s2:#191920;--b1:rgba(242,240,234,0.08);--b2:rgba(242,240,234,0.14);--t1:#F2F0EA;--t2:#8B8A94;--t3:#585866;--acc:#FF3D81;--acc2:rgba(255,61,129,0.14);--grn:#30D158;--grn2:rgba(48,209,88,0.10);--amb:#FFB13D;--amb2:rgba(255,177,61,0.10);--red:#FF6B6B;--red2:rgba(255,107,107,0.10);--crown:#FFB13D;}
 html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
@@ -51,23 +51,23 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.92) 0%,rgba(10,10,15,.55) 45%,rgba(10,10,15,.18) 80%,rgba(10,10,15,.18) 100%);pointer-events:none;z-index:1;transition:opacity .3s;}
 .lv-card:hover .lv-ov{opacity:.4;}
 .lv-brand{position:absolute;top:10px;left:10px;z-index:4;}
-.lv-brand-tag{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 6px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.3px;background:var(--bg);}
+.lv-brand-tag{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;padding:3px 6px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.3px;background:var(--bg);}
 .lv-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-top{opacity:0;}
-.lv-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
+.lv-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-dl{opacity:0;}
 .lv-edit-hint{position:absolute;top:9px;right:10px;width:22px;height:22px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;}
 .lv-card:hover .lv-edit-hint{opacity:1;}
 .lv-meta{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-meta *{color:var(--bg)!important;}
 .lv-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.lv-champ{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.lv-champ{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
 .lv-numtag{font-family:'Archivo Black',sans-serif;font-size:12px;font-weight:400;color:var(--t1);}
-.lv-season{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--t2);}
+.lv-season{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:var(--t2);}
 .lv-name{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);text-transform:none;line-height:1.2;}
 .lv-driver{font-family:'Archivo',sans-serif;font-size:11px;color:var(--t2);margin-top:4px;}
 .lv-mod{font-family:'Archivo',sans-serif;font-size:11px;color:var(--t2);margin-top:3px;}
-.badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.5px;text-transform:uppercase;background:var(--bg);}
+.badge{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.5px;text-transform:uppercase;background:var(--bg);}
 .b-f{color:var(--grn);}
 .b-p{color:var(--amb);}
 .b-n{color:#3DE8FF;}
@@ -76,7 +76,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .field label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
 .sub-step{margin-bottom:20px;padding:20px 22px;background:var(--s1);border:1px solid var(--b1);}
 .sub-step-label{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);text-transform:none;letter-spacing:0;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.sub-step-n{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sub-step-n{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .field input,.field select,.field textarea{background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;transition:border-color .12s;}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
 .field select{appearance:none;cursor:pointer;}
@@ -85,12 +85,12 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .upload-btn-label:hover{border-color:var(--acc);color:var(--acc);}
 .upload-preview{width:100%;height:120px;object-fit:cover;border:1px solid var(--b1);display:none;margin-bottom:6px;}
 .upload-preview.visible{display:block;}
-.upload-prog{font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin-top:6px;}
+.upload-prog{font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);margin-top:6px;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .field.full{grid-column:1/-1;}
 .brand-tag-check{position:relative;cursor:pointer;}
 .brand-tag-check input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
-.brand-tag-check span{display:inline-flex;align-items:center;padding:8px 16px;border:1px solid var(--b1);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);transition:all .15s;}
+.brand-tag-check span{display:inline-flex;align-items:center;padding:8px 16px;border:1px solid var(--b1);font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);transition:all .15s;}
 .brand-tag-check:hover span{border-color:var(--b2);color:var(--t2);}
 .brand-tag-check:has(input:checked) span{background:var(--bbg);border-color:var(--bc);color:var(--bc);}
 .btn-primary{height:42px;padding:0 20px;background:transparent;color:var(--t1);border:1px solid var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s;}
@@ -104,7 +104,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .modal{background:var(--s1);border:1px solid var(--b2);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:24px;}
 .modal-title{font-family:'Archivo Black',sans-serif;font-size:17px;font-weight:400;text-transform:uppercase;letter-spacing:0;margin-bottom:18px;}
 .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:1px solid var(--b1);}
-.toast{position:fixed;bottom:24px;right:24px;padding:11px 16px;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;z-index:300;display:none;align-items:center;gap:8px;border:1px solid;}
+.toast{position:fixed;bottom:24px;right:24px;padding:11px 16px;font-family:'Azeret Mono',monospace;font-size:12px;font-weight:700;z-index:300;display:none;align-items:center;gap:8px;border:1px solid;}
 .toast.ok{background:var(--bg);color:var(--grn);border-color:var(--grn);}
 .toast.err{background:var(--bg);color:var(--red);border-color:var(--red);}
 .brand-btn{padding:14px 16px;border:1px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;color:var(--t3);width:100%;transition:all .15s;}
@@ -123,7 +123,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .pi-name{font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);line-height:1.3;padding:12px 14px;}
 .picker-box{background:var(--s1);border:1px solid var(--b2);width:100%;max-width:1100px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
 .picker-head{display:flex;align-items:center;gap:8px;padding:16px 18px;border-bottom:1px solid var(--b1);flex-shrink:0;}
-.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:13px;color:var(--t1);}
+.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Azeret Mono',monospace;font-size:13px;color:var(--t1);}
 .picker-search::placeholder{color:var(--t3);}
 .picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
 .picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;}
@@ -136,7 +136,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .page-h1,.lv-num,.sb-artist-name,h1,h2,h3{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal;text-transform:uppercase;letter-spacing:0;}
 [style*="font-weight:900"]{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal!important;text-transform:uppercase;}
 .page-h1 em,em{font-style:normal;}
-.page-ey,.sb-sec,.badge,.field label{font-family:'Space Mono',monospace;}
+.page-ey,.sb-sec,.badge,.field label{font-family:'Azeret Mono',monospace;}
 </style>
 </head>
 <body>
@@ -176,25 +176,25 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
         <div class="page-ey"><span></span>Creator Dashboard</div>
         <div id="ae-hero-av" style="width:64px;height:64px;background:linear-gradient(135deg,var(--acc),#3DE8FF);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:22px;font-weight:400;color:#0A0A0F;margin-bottom:16px;overflow:hidden;">?</div>
         <h2 class="page-h1" id="ae-hero-name" style="font-size:30px;">My liveries</h2>
-        <div style="margin-top:10px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> Confirmed artist</span></div>
+        <div style="margin-top:10px;"><span style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> Confirmed artist</span></div>
 
         <div style="display:flex;gap:0;margin-top:28px;border-top:1px solid var(--b1);flex-wrap:wrap;">
           <div style="padding:16px 28px 16px 0;margin-right:28px;border-right:1px solid var(--b1);">
             <div id="ae-hero-liv" style="font-family:'Archivo Black',sans-serif;font-size:22px;font-weight:400;color:var(--t1);">—</div>
-            <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Liveries</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Liveries</div>
           </div>
           <div style="padding:16px 28px 16px 0;margin-right:28px;border-right:1px solid var(--b1);">
             <div id="ae-hero-add" style="font-family:'Archivo Black',sans-serif;font-size:22px;font-weight:400;color:var(--t1);">—</div>
-            <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Addons</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Addons</div>
           </div>
           <div style="padding:16px 0;">
             <div id="ae-hero-votes" style="font-family:'Archivo Black',sans-serif;font-size:22px;font-weight:400;color:var(--acc);">—</div>
-            <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Upvotes</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Upvotes</div>
           </div>
         </div>
       </div>
       <div style="padding:20px 28px 12px;display:flex;align-items:center;gap:10px;">
-        <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;">// Liveries</span>
+        <span style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;">// Liveries</span>
         <span style="flex:1;height:1px;background:var(--b1);"></span>
       </div>
       <div class="lv-grid" id="ae-liveries-grid"></div>
@@ -297,19 +297,19 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
         <!-- RIGHT — sticky preview + checklist -->
         <div style="border-left:1px solid var(--b1);padding:22px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;">
           <div>
-            <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Preview</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Preview</div>
             <div style="background:var(--s2);border:1px solid var(--b1);overflow:hidden;">
               <div id="ae-preview-thumb" style="width:100%;aspect-ratio:16/10;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;"><i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i></div>
               <div style="padding:12px 14px 14px;">
-                <div id="ae-preview-champ" style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;">Championship</div>
+                <div id="ae-preview-champ" style="font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;">Championship</div>
                 <div id="ae-preview-name" style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:3px;">Livery name</div>
-                <div id="ae-preview-driver" style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:4px;"></div>
-                <div id="ae-preview-meta" style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);">Mod</div>
+                <div id="ae-preview-driver" style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:4px;"></div>
+                <div id="ae-preview-meta" style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);">Mod</div>
               </div>
             </div>
           </div>
           <div>
-            <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
             <div id="ae-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
           </div>
           <button class="btn-primary" style="width:100%;justify-content:center;" onclick="aeDoSubmit()"><i class="ti ti-send"></i> <span id="ae-submit-label">Publish livery</span></button>
@@ -347,7 +347,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
     <!-- FOOTER -->
     <footer style="padding:36px 28px 24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;border-top:1px solid var(--b1);">
       <div style="font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;text-transform:uppercase;color:var(--t1);">AC Liveries DB</div>
-      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);">CREATOR DASHBOARD — PRIVATE</div>
+      <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);">CREATOR DASHBOARD — PRIVATE</div>
     </footer>
 
   </div>

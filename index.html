@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Azeret+Mono:wght@400;500;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --bg:#0A0A0F;--s1:#131319;--s2:#191920;--s3:#212129;
@@ -42,8 +42,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sb-ldb{display:none;}
 .sb-stats{display:flex;align-items:center;gap:18px;flex-shrink:0;margin-left:auto;}
 .sb-stat{display:flex;align-items:baseline;gap:5px;}
-.sb-stat-n{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0;color:var(--t1);}
-.sb-stat-l{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;}
+.sb-stat-n{font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0;color:var(--t1);}
+.sb-stat-l{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;}
 .sb-stat.acc .sb-stat-n{color:var(--acc);}
 .sb-nav{display:flex;align-items:center;gap:2px;height:100%;overflow-x:auto;}
 .sb-section{display:none;}
@@ -53,7 +53,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sb-link.on .sb-icon{color:var(--pur);}
 .sb-icon{font-size:15px;color:var(--t3);}
 .sb-link.on .sb-icon{color:var(--pur);}
-.sb-badge{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--t3);}
+.sb-badge{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:var(--t3);}
 .sb-submit{margin-left:8px;padding:0 18px;height:36px;background:transparent;border:1px solid var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .18s;flex-shrink:0;white-space:nowrap;}
 .sb-submit:hover{background:var(--acc);border-color:var(--acc);color:#fff;}
 @media(max-width:900px){.sb-stats{display:none;}}
@@ -65,7 +65,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
 /* ── BADGES ── */
-.badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.4px;text-transform:uppercase;background:var(--bg);}
+.badge{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border:1px solid currentColor;letter-spacing:.4px;text-transform:uppercase;background:var(--bg);}
 .b-f{color:var(--grn);}
 .b-p{color:var(--amb);}
 .b-n{color:var(--pur);}
@@ -120,23 +120,23 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lotd:hover .lotd-bg{transform:scale(1.03);}
 .lotd-blur{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,15,.97) 0%,rgba(10,10,15,.8) 40%,rgba(10,10,15,.3) 70%,transparent 100%);}
 .lotd-content{position:relative;padding:24px 28px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;min-height:200px;}
-.lotd-label{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--bg);border:1px solid var(--amb);font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--amb);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
+.lotd-label{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--bg);border:1px solid var(--amb);font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;color:var(--amb);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}
 .lotd-name{font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.92;color:#fff;margin-bottom:8px;}
-.lotd-meta{font-family:'Space Mono',monospace;font-size:11px;color:rgba(242,240,234,.5);margin-bottom:14px;line-height:1.5;}
+.lotd-meta{font-family:'Azeret Mono',monospace;font-size:11px;color:rgba(242,240,234,.5);margin-bottom:14px;line-height:1.5;}
 .lotd-badges{display:flex;align-items:center;gap:7px;}
 .lotd-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
 .lotd-stats{display:flex;gap:0;border:1px solid var(--b2);background:rgba(10,10,15,.3);}
 .lotd-stat{padding:10px 16px;text-align:center;border-right:1px solid var(--b2);}
 .lotd-stat:last-child{border-right:none;}
-.lotd-stat-n{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;letter-spacing:0;color:#fff;}
-.lotd-stat-l{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:rgba(242,240,234,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.lotd-stat-n{font-family:'Azeret Mono',monospace;font-size:18px;font-weight:700;letter-spacing:0;color:#fff;}
+.lotd-stat-l{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:rgba(242,240,234,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
 .lotd-btn{height:34px;padding:0 16px;background:transparent;border:1px solid #fff;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;}
 .lotd-btn:hover{background:var(--acc);border-color:var(--acc);}
 .lotd-dots{position:absolute;bottom:12px;right:20px;display:flex;gap:4px;}
 .lotd-dot{width:6px;height:6px;background:rgba(242,240,234,.2);cursor:pointer;transition:all .15s;}
 .lotd-dot.on{background:#fff;width:16px;}
 .page-head{padding:32px 28px 24px;border-bottom:1px solid var(--b1);flex-shrink:0;}
-.page-head-eyebrow{font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--pur);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.page-head-eyebrow{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--pur);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .page-head h1{font-family:'Archivo Black',sans-serif;font-size:34px;font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.92;color:var(--t1);}
 .page-head-sub{color:var(--t2);max-width:520px;margin-top:12px;font-size:13px;line-height:1.6;}
 /* ── TOOLBAR ── */
@@ -145,28 +145,28 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .tb-inner{padding:0 28px;display:flex;align-items:stretch;gap:0;min-height:46px;}
 .tb-ghost{flex:1;display:flex;align-items:center;gap:10px;border-right:1px solid var(--b1);padding:0;}
 .tb-ghost i{color:var(--t3);font-size:14px;flex-shrink:0;transition:color .15s;}
-.tb-ghost input{background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:12px;color:var(--t1);width:100%;caret-color:var(--acc);}
+.tb-ghost input{background:transparent;border:none;outline:none;font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t1);width:100%;caret-color:var(--acc);}
 .tb-ghost input::placeholder{color:var(--t3);}
 .tb-ghost.focused i{color:var(--acc);}
 .tb-action{display:flex;align-items:center;gap:6px;padding:0 16px;border-right:1px solid var(--b1);cursor:pointer;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);background:none;border-top:none;border-bottom:none;transition:color .15s;white-space:nowrap;}
 .tb-action:hover{color:var(--t1);}
 .tb-action.on{color:var(--acc);}
-.tb-action .cnt{background:var(--acc);color:#fff;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;}
+.tb-action .cnt{background:var(--acc);color:#fff;font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;}
 .tb-accent{height:2px;background:linear-gradient(90deg,var(--acc) 0%,transparent 50%);opacity:0;transition:opacity .25s;}
 .tb-wrap.focused .tb-accent{opacity:1;}
 .tb-views{display:flex;align-items:center;padding:0 12px;gap:2px;}
 .tb-vbtn{width:28px;height:28px;border:1px solid transparent;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:13px;transition:all .15s;}
 .tb-vbtn.on{color:var(--acc);border-color:var(--acc);}
-.tb-count{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);white-space:nowrap;border-left:1px solid var(--b1);padding:0 0 0 14px;display:flex;align-items:center;}
+.tb-count{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);white-space:nowrap;border-left:1px solid var(--b1);padding:0 0 0 14px;display:flex;align-items:center;}
 /* ── CHIPS ── */
 .chips-bar{padding:8px 28px;display:flex;gap:5px;align-items:center;border-bottom:1px solid var(--b1);flex-wrap:wrap;}
 .chips-bar.empty{display:none;}
-.f-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px 4px 8px;font-family:'Space Mono',monospace;background:var(--acc2);border:1px solid var(--acc);font-size:10px;font-weight:700;color:var(--acc);cursor:pointer;transition:all .15s;}
+.f-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px 4px 8px;font-family:'Azeret Mono',monospace;background:var(--acc2);border:1px solid var(--acc);font-size:10px;font-weight:700;color:var(--acc);cursor:pointer;transition:all .15s;}
 .f-chip:hover{background:var(--acc);color:#fff;}
 .f-chip i{font-size:10px;opacity:.6;}
 /* ── BRAND TAG ── */
 .bt{font-size:9px;font-weight:700;padding:3px 6px;text-transform:uppercase;letter-spacing:.3px;background:var(--bg);border:1px solid currentColor;}
-.bt{font-family:'Space Mono',monospace;}
+.bt{font-family:'Azeret Mono',monospace;}
 .bt-rss{background:rgba(232,49,42,.15);color:#E8312A;}
 .bt-vrc{background:rgba(48,209,88,.14);color:#30D158;}
 .bt-urd{background:rgba(255,159,10,.14);color:#FF9F0A;}
@@ -194,16 +194,16 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card:hover .lv-card-ov{opacity:.4;}
 .lv-card-brand{position:absolute;top:10px;left:10px;z-index:4;}
 .lv-card-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
-.lv-card-crown{position:absolute;top:10px;right:10px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;z-index:3;transition:opacity .25s;color:var(--t1);background:rgba(10,10,15,.7);border:1px solid var(--crown);padding:3px 8px;display:flex;align-items:center;gap:5px;white-space:nowrap;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;}
-.lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
+.lv-card-crown{position:absolute;top:10px;right:10px;font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;z-index:3;transition:opacity .25s;color:var(--t1);background:rgba(10,10,15,.7);border:1px solid var(--crown);padding:3px 8px;display:flex;align-items:center;gap:5px;white-space:nowrap;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;}
+.lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-card-top,.lv-card:hover .lv-card-crown,.lv-card:hover .lv-card-dl{opacity:0;}
 .lv-card-thumb:has(.lv-card-crown) .lv-card-dl{top:36px;}
 .lv-card-meta{position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-card-meta *{color:var(--bg)!important;}
 .lv-card-champ-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .lv-card-numtag{font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;color:var(--t1);}
-.lv-card-champ{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
-.lv-card-season{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t2);flex-shrink:0;margin-left:6px;}
+.lv-card-champ{font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.lv-card-season{font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;color:var(--t2);flex-shrink:0;margin-left:6px;}
 .lv-card-name{font-family:'Archivo',sans-serif;font-size:19px;font-weight:700;letter-spacing:0;color:var(--t1);line-height:1.15;}
 .lv-card-driver{font-family:'Archivo',sans-serif;font-size:12px;color:var(--t2);margin-top:5px;}
 .lv-card-sub{font-family:'Archivo',sans-serif;font-size:12px;color:var(--t2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -233,7 +233,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .drawer-close:hover{background:var(--s2);color:var(--t1);}
 .drawer-body{flex:1;overflow-y:auto;padding:0;}
 .drawer-section{padding:14px 20px;border-bottom:0.5px solid var(--b1);}
-.drawer-section-title{font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.drawer-section-title{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
 .drawer-items{display:flex;flex-direction:column;gap:2px;}
 .di{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;border:none;background:none;font-family:inherit;width:100%;text-align:left;}
 .di:hover{background:var(--s2);color:var(--t1);}
@@ -241,7 +241,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .di.on .di-count{color:var(--acc);opacity:.7;}
 .di .di-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .di .di-count{margin-left:auto;font-size:10px;font-weight:700;color:var(--t3);}
-.di .di-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;}
+.di .di-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;}
 .drawer-foot{padding:14px 20px;border-top:0.5px solid var(--b1);display:flex;gap:8px;flex-shrink:0;}
 .drawer-reset{flex:1;height:34px;background:transparent;border:0.5px solid var(--b1);border-radius:8px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .12s;}
 .drawer-reset:hover{color:var(--t1);border-color:var(--b2);}
@@ -249,7 +249,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .drawer-apply:hover{opacity:.88;}
 /* Filter chips */
 .filter-chips{display:flex;gap:5px;flex-wrap:wrap;padding:8px 20px;border-bottom:0.5px solid var(--b1);}
-.fchip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-family:'Space Mono',monospace;background:var(--acc2);border:1px solid var(--acc);font-size:10px;font-weight:700;color:var(--acc);cursor:pointer;transition:all .12s;}
+.fchip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-family:'Azeret Mono',monospace;background:var(--acc2);border:1px solid var(--acc);font-size:10px;font-weight:700;color:var(--acc);cursor:pointer;transition:all .12s;}
 .fchip:hover{background:var(--acc);color:#fff;}
 .fchip-x{opacity:.6;margin-left:1px;}
 /* Filters btn badge */
@@ -285,9 +285,9 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-thumb{width:64px;height:40px;overflow:hidden;flex-shrink:0;background:var(--s2);position:relative;}
 .lv-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
 .lv-name{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lv-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;}
+.lv-meta{font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t2);margin-top:3px;}
 .lv-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-.lv-votes{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--t3);display:flex;align-items:center;gap:2px;}
+.lv-votes{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:var(--t3);display:flex;align-items:center;gap:2px;}
 
 /* GRID mode */
 .lv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--b1);margin:0 20px;border:0.5px solid var(--b1);border-radius:12px;overflow:hidden;}
@@ -315,25 +315,25 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .pb:disabled{opacity:.2;cursor:default;}
 
 /* ── LIVERY DETAIL ── */
-.ld-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;transition:color .12s;border-bottom:1px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
+.ld-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-family:'Azeret Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;transition:color .12s;border-bottom:1px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
 .ld-back:hover{color:var(--acc);}
 .ld-body{padding:32px 5vw 60px;}
-.ld-crumb{font-family:'Space Mono',monospace;font-size:12px;color:var(--t3);margin-bottom:24px;}
+.ld-crumb{font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t3);margin-bottom:24px;}
 .ld-crumb a{cursor:pointer;color:var(--t3);}
 .ld-crumb a:hover{color:var(--acc);}
 .ld-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:start;}
 @media(max-width:900px){.ld-grid{grid-template-columns:1fr;}}
 .ld-cover{width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;}
 .ld-cover img{width:100%;height:100%;object-fit:cover;display:block;}
-.ld-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block;}
+.ld-tag{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:block;}
 .ld-title{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.98;color:var(--t1);margin-bottom:14px;}
-.ld-artist-line{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);flex-wrap:wrap;}
+.ld-artist-line{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t2);flex-wrap:wrap;}
 .ld-artist-line strong{color:var(--t1);cursor:pointer;}
 .ld-artist-line strong:hover{color:var(--acc);}
-.ld-artist-badge{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.04em;}
+.ld-artist-badge{font-family:'Azeret Mono',monospace;font-size:10px;padding:4px 9px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.04em;}
 .ld-stats{display:flex;gap:26px;margin-bottom:26px;flex-wrap:wrap;}
 .ld-stat-num{font-family:'Archivo Black',sans-serif;font-size:21px;font-weight:400;color:var(--t1);}
-.ld-stat-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
+.ld-stat-label{font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
 .ld-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
 .ld-btn{height:44px;padding:0 22px;border:1px solid var(--t1);background:transparent;color:var(--t1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all .18s;}
 .ld-btn.primary{background:var(--t1);color:var(--bg);}
@@ -342,16 +342,16 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .ld-btn.ghost:hover{color:var(--acc);border-color:var(--acc);}
 .ld-btn.ghost.voted{background:var(--acc2);border-color:var(--acc);color:var(--acc);}
 .ld-links{display:flex;gap:16px;margin-bottom:24px;}
-.ld-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s;}
+.ld-links a{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .15s;}
 .ld-links a:hover{color:var(--t1);}
 .ld-meta-panel{margin-top:8px;border-top:1px solid var(--b1);padding-top:6px;}
 .ld-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--b1);}
 .ld-row:last-child{border-bottom:none;}
-.ld-key{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
-.ld-val{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t1);}
+.ld-key{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
+.ld-val{font-family:'Azeret Mono',monospace;font-size:12px;font-weight:700;color:var(--t1);}
 .ld-notes{margin-top:10px;padding:14px 16px;background:var(--s1);border:1px solid var(--b1);font-size:13px;color:var(--t2);line-height:1.7;}
 .ld-section{padding:56px 0;border-top:1px solid var(--b1);margin-top:40px;}
-.ld-section-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:block;}
+.ld-section-tag{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:block;}
 .ld-section h2{font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:400;text-transform:uppercase;color:var(--t1);margin-bottom:16px;}
 .ld-desc{color:var(--t2);max-width:640px;line-height:1.75;font-size:14px;}
 .ld-more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px;}
@@ -385,14 +385,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .mv-brand-card-mods{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
 .mv-brand-mod-pill{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);border:0.5px solid rgba(255,255,255,.08);}
 /* Brand detail view */
-.mv-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-family:'Space Mono',monospace;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;transition:color .12s;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
+.mv-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-family:'Azeret Mono',monospace;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;transition:color .12s;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
 .mv-back:hover{color:var(--acc);}
 .mv-section{padding:0 20px 32px;}
 .mv-section{padding:0 20px 32px;}
 .mv-brand-header{display:flex;align-items:center;gap:12px;padding:20px 0 16px;}
-.mv-brand-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
+.mv-brand-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-family:'Azeret Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
 .mv-brand-name{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);}
-.mv-brand-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--t2);margin-top:1px;}
+.mv-brand-sub{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t2);margin-top:1px;}
 .mv-brand-sep{flex:1;height:1px;background:var(--b1);}
 .mv-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
 /* Mod card — rich style */
@@ -410,16 +410,16 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .mv-mod-name{font-family:'Archivo',sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:4px;}
 .mv-mod-desc{font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:11px;}
 .mv-stats{display:flex;gap:14px;padding:9px 0;border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);margin-bottom:10px;}
-.mv-stat-n{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);}
-.mv-stat-l{font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+.mv-stat-n{font-family:'Azeret Mono',monospace;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);}
+.mv-stat-l{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
 .mv-champs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
-.mv-champ-pill{padding:3px 8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:400;background:var(--s2);color:var(--t2);border:1px solid var(--b1);}
+.mv-champ-pill{padding:3px 8px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;background:var(--s2);color:var(--t2);border:1px solid var(--b1);}
 .mv-footer{padding:0 15px 13px;display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
-.mv-updated{font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);}
+.mv-updated{font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);}
 .mv-browse-btn{height:28px;padding:0 11px;background:transparent;color:var(--acc);border:1px solid var(--acc);font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;}
 .mv-browse-btn:hover{background:var(--acc);color:#fff;}
 /* Cat sub-section label */
-.mv-cat-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.mv-cat-label{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .mv-cat-dot{width:5px;height:5px;display:inline-block;flex-shrink:0;}
 .mv-cat-sep{flex:1;height:1px;background:var(--b1);}
 
@@ -467,14 +467,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .av-card:hover{border-color:var(--acc);}
 .av-av{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;font-style:italic;flex-shrink:0;overflow:hidden;}
 .av-name{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:3px;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.av-discord{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);margin-bottom:0;}
+.av-discord{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);margin-bottom:0;}
 .av-avatar-img{width:100%;height:100%;object-fit:cover;}
-.av-handle{font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:10px;}
+.av-handle{font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:10px;}
 .av-stats{display:flex;gap:0;border:1px solid var(--b1);overflow:hidden;margin-top:14px;}
 .av-stat{flex:1;padding:10px 12px;text-align:center;border-right:1px solid var(--b1);}
 .av-stat:last-child{border-right:none;}
-.av-n{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);}
-.av-l{font-family:'Space Mono',monospace;font-size:8px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+.av-n{font-family:'Azeret Mono',monospace;font-size:15px;font-weight:700;letter-spacing:0;color:var(--t1);}
+.av-l{font-family:'Azeret Mono',monospace;font-size:8px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
 
 /* ── ADDONS ── */
 .add-top{padding:18px 20px;border-bottom:0.5px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:10;}
@@ -497,12 +497,12 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .price-opt{position:relative;cursor:pointer;}
 .price-opt input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
 .price-opt:not(:last-child){border-right:1px solid var(--b1);}
-.price-opt span{display:flex;align-items:center;padding:10px 24px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);transition:all .15s;}
+.price-opt span{display:flex;align-items:center;padding:10px 24px;font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);transition:all .15s;}
 .price-opt:hover span{color:var(--t1);}
 .price-opt:has(input:checked) span{background:var(--acc);color:#fff;}
 .tag-check{position:relative;cursor:pointer;}
 .tag-check input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
-.tag-check span{display:inline-flex;align-items:center;padding:8px 14px;border:1px solid var(--b1);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);transition:all .15s;}
+.tag-check span{display:inline-flex;align-items:center;padding:8px 14px;border:1px solid var(--b1);font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);transition:all .15s;}
 .tag-check:hover span{border-color:var(--b2);color:var(--t1);}
 .tag-check:has(input:checked) span{background:var(--acc2);border-color:var(--acc);color:var(--acc);}
 .sub-toggle{display:flex;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:3px;gap:3px;margin-bottom:18px;}
@@ -516,7 +516,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .picker-btn:disabled{opacity:.45;cursor:not-allowed;}
 .picker-ph{width:22px;height:22px;border-radius:5px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3);flex-shrink:0;}
 .picker-logo{width:22px;height:22px;border-radius:5px;object-fit:cover;flex-shrink:0;}
-.checker{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);padding:2px 0;transition:color .12s;}
+.checker{display:flex;align-items:center;gap:7px;font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);padding:2px 0;transition:color .12s;}
 .checker.done{color:var(--grn);}
 .checker.done i{color:var(--grn);}
 .checker i{font-size:13px;width:15px;flex-shrink:0;}
@@ -540,7 +540,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .sub-cta:hover{opacity:.88;}
 .sub-step{margin-bottom:20px;padding:20px 22px;background:var(--s1);border:1px solid var(--b1);}
 .sub-step-label{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);text-transform:none;letter-spacing:0;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.sub-step-n{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sub-step-n{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .brand-btn{padding:14px 16px;border:1px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;color:var(--t3);width:100%;transition:all .15s;}
 .brand-btn:hover{border-color:var(--b2);}
 .brand-btn-active[data-brand="RSS"]{border-color:#E8312A;background:rgba(232,49,42,.10);color:#E8312A;}
@@ -555,7 +555,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .picker-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
 .picker-box{background:var(--s1);border:1px solid var(--b2);width:100%;max-width:1100px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
 .picker-head{display:flex;align-items:center;gap:8px;padding:16px 18px;border-bottom:1px solid var(--b1);}
-.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Space Mono',monospace;font-size:13px;color:var(--t1);}
+.picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Azeret Mono',monospace;font-size:13px;color:var(--t1);}
 .picker-search::placeholder{color:var(--t3);}
 .picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
 .picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;align-items:start;}
@@ -592,7 +592,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .add-title,.am-av,.ap-av-ph,.artist-av,.av-av,.av-title,.hero-name,.ld-title,.lotd-name,.lotd-stat-n,.lv-title,.md-name,.md-stat-n,.mv-brand-card-bg,.mv-brand-card-name,.mv-brand-icon,.mv-brand-stat-n,.mv-title,.sub-title{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal;text-transform:uppercase;letter-spacing:0;}
 [style*="font-weight:900"]{font-family:'Archivo Black',sans-serif;font-weight:400;font-style:normal!important;text-transform:uppercase;}
 .add-title em,.hero-name em,.ld-title em,.lv-title em,.md-name em,.mv-title em,.sub-title em,em{font-style:normal;}
-.badge,.bt,.hint,.lv-count,.tb-count,.mv-updated,.sb-badge{font-family:'Space Mono',monospace;}
+.badge,.bt,.hint,.lv-count,.tb-count,.mv-updated,.sb-badge{font-family:'Azeret Mono',monospace;}
 button,input,select,textarea{font-family:'Archivo',sans-serif;}
 </style>
 </head>
@@ -652,7 +652,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b1);">
       <!-- Popular -->
       <div style="background:var(--bg);padding:22px 24px;">
-        <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
+        <div style="font-family:'Azeret Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
           <span style="width:6px;height:6px;background:var(--acc);display:inline-block;flex-shrink:0;"></span> Most popular
         </div>
         <div id="h-popular"></div>
@@ -660,13 +660,13 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
       <!-- Recent + Artists -->
       <div style="display:flex;flex-direction:column;gap:1px;background:var(--b1);">
         <div style="background:var(--bg);padding:22px 24px;">
-          <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
+          <div style="font-family:'Azeret Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
             <span style="width:6px;height:6px;background:var(--grn);display:inline-block;flex-shrink:0;"></span> Recently added
           </div>
           <div id="h-recent-list"></div>
         </div>
         <div style="background:var(--bg);padding:22px 24px;">
-          <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
+          <div style="font-family:'Azeret Mono',monospace;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px;">
             <span style="width:6px;height:6px;background:var(--amb);display:inline-block;flex-shrink:0;"></span> Confirmed artists
           </div>
           <div id="h-artists-list"></div>
@@ -764,7 +764,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
   <!-- ARTISTS -->
   <div class="view" id="view-artists">
     <div style="padding:36px 28px 28px;border-bottom:1px solid var(--b1);">
-      <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><span style="width:18px;height:1px;background:var(--acc);display:inline-block;"></span>Assetto Corsa · Community</div>
+      <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><span style="width:18px;height:1px;background:var(--acc);display:inline-block;"></span>Assetto Corsa · Community</div>
       <h2 style="font-family:'Archivo Black',sans-serif;font-size:52px;font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.88;color:var(--t1);">The <em style="color:var(--acc);font-style:normal;">artists</em></h2>
     </div>
     <div id="a-grid" style="padding:24px 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;"></div>
@@ -900,29 +900,29 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
 
         <!-- LIVE PREVIEW CARD -->
         <div>
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Preview</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Preview</div>
           <div id="s-preview-card" style="background:var(--s2);border:1px solid var(--b1);overflow:hidden;">
             <div id="s-preview-thumb" style="width:100%;aspect-ratio:16/10;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
               <i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>
             </div>
             <div style="padding:12px 14px 14px;">
-              <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;" id="s-preview-champ">Championship</div>
+              <div style="font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;" id="s-preview-champ">Championship</div>
               <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);margin-bottom:3px;" id="s-preview-name">Livery name</div>
-              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:4px;" id="s-preview-driver"></div>
-              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);" id="s-preview-meta">Mod · Creator</div>
+              <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t2);margin-bottom:4px;" id="s-preview-driver"></div>
+              <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);" id="s-preview-meta">Mod · Creator</div>
             </div>
           </div>
         </div>
 
         <!-- CHECKLIST -->
         <div style="flex:1;">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
           <div id="s-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
         </div>
 
         <!-- TIPS -->
         <div style="background:var(--bg);border:1px solid var(--b1);padding:14px 16px;">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> Tips</div>
           <div style="font-size:12px;color:var(--t3);line-height:1.65;">
             Use the <strong style="color:var(--t2);">official mod name</strong> and <strong style="color:var(--t2);">car number</strong> for easy search.<br><br>
             Preview image should be <strong style="color:var(--t2);">16:9 or 16:10</strong>, min 1200px wide for a sharp result.
@@ -939,7 +939,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
   <!-- FOOTER -->
   <footer style="padding:44px 28px 32px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;border-top:1px solid var(--b1);">
     <div style="font-family:'Archivo Black',sans-serif;font-size:16px;font-weight:400;text-transform:uppercase;color:var(--t1);">AC Liveries DB</div>
-    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);line-height:1.8;text-align:right;">
+    <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);line-height:1.8;text-align:right;">
       COMMUNITY ARCHIVE — ASSETTO CORSA<br>
       NOT AFFILIATED WITH KUNOS SIMULAZIONI
     </div>
@@ -1331,10 +1331,10 @@ async function loadHome(){
     const mods = _mods.filter(m=>m.brand===brand);
     const cnt = mods.reduce((s,m)=>s+(lc[m.id]||0),0);
     return `<div onclick="openBrandDetail('${brand}')" style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:transparent;border:1px solid var(--b1);cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='${bm.c}'" onmouseout="this.style.borderColor='var(--b1)'">
-      <div style="width:34px;height:34px;background:${bm.bg};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
+      <div style="width:34px;height:34px;background:${bm.bg};display:flex;align-items:center;justify-content:center;font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;color:${bm.c};flex-shrink:0;">${brand[0]}</div>
       <div style="min-width:0;flex:1;">
-        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:${bm.c};letter-spacing:0;">${brand} — ${bm.label}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);margin-top:3px;">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;color:${bm.c};letter-spacing:0;">${brand} — ${bm.label}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);margin-top:3px;">${cnt} liveries · ${_mods.filter(m=>m.brand===brand).length} mods</div>
       </div>
       <i class="ti ti-chevron-right" style="font-size:15px;color:var(--t3);flex-shrink:0;"></i>
     </div>`;
@@ -1342,7 +1342,7 @@ async function loadHome(){
 
   document.getElementById('h-title-block').innerHTML = `
     <div>
-      <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:22px;display:flex;align-items:center;gap:8px;">
+      <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:22px;display:flex;align-items:center;gap:8px;">
         <span style="width:18px;height:1px;background:var(--acc);display:inline-block;flex-shrink:0;"></span>
         Assetto Corsa · Community
       </div>
@@ -1374,12 +1374,12 @@ async function loadHome(){
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.9) 0%,rgba(10,10,15,.25) 55%,transparent 100%);"></div>
         ${main.artists?'<span style="position:absolute;top:10px;right:10px;"><svg width="16" height="16" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
         <div style="position:absolute;bottom:0;left:0;right:0;padding:22px 24px;">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-crown" style="font-size:10px;"></i> Most upvoted</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-crown" style="font-size:10px;"></i> Most upvoted</div>
           <div style="font-family:'Archivo Black',sans-serif;font-size:24px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:#fff;line-height:1;margin-bottom:8px;">${main.name}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(242,240,234,.5);margin-bottom:12px;">${main.mods?.name||'—'} · ${main.championships?.short_name||main.categories?.name||'—'}${main.artists?' · by '+main.artists.name:''}</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:rgba(242,240,234,.5);margin-bottom:12px;">${main.mods?.name||'—'} · ${main.championships?.short_name||main.categories?.name||'—'}${main.artists?' · by '+main.artists.name:''}</div>
           <div style="display:flex;align-items:center;gap:6px;">
             ${main.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
-            <span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:rgba(242,240,234,.5);display:flex;align-items:center;gap:3px;"><i class="ti ti-heart" style="font-size:10px;"></i>${main.upvotes||0}</span>
+            <span style="margin-left:auto;font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;color:rgba(242,240,234,.5);display:flex;align-items:center;gap:3px;"><i class="ti ti-heart" style="font-size:10px;"></i>${main.upvotes||0}</span>
           </div>
         </div>
       </div>
@@ -1389,9 +1389,9 @@ async function loadHome(){
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.88) 0%,rgba(10,10,15,.2) 60%,transparent 100%);"></div>
           ${l.artists?'<span style="position:absolute;top:7px;right:8px;"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span>':''}
           <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px;">
-            <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;">${l.championships?.short_name||l.categories?.name||'—'}</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:var(--acc);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;">${l.championships?.short_name||l.categories?.name||'—'}</div>
             <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-            <div style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(242,240,234,.4);margin-top:2px;">${l.mods?.name||'—'}${l.artists?' · '+l.artists.name:''}</div>
+            <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:rgba(242,240,234,.4);margin-top:2px;">${l.mods?.name||'—'}${l.artists?' · '+l.artists.name:''}</div>
           </div>
         </div>`).join('')}`;
   }
@@ -1408,7 +1408,7 @@ async function loadHome(){
         {icon:'ti-puzzle',    c:'var(--acc)',   bg:'var(--acc2)',                   n:adds.length,         l:'Addons'},
       ].map(s=>`<div style="flex:1;padding:18px 18px;border-right:1px solid var(--b1);display:flex;align-items:center;gap:13px;">
         <div style="width:34px;height:34px;background:${s.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ${s.icon}" style="font-size:16px;color:${s.c};"></i></div>
-        <div><div style="font-family:'Space Mono',monospace;font-size:23px;font-weight:700;letter-spacing:0;color:${s.l==='Liveries'?'var(--acc)':'var(--t1)'};">${s.n}</div><div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;">${s.l}</div></div>
+        <div><div style="font-family:'Azeret Mono',monospace;font-size:23px;font-weight:700;letter-spacing:0;color:${s.l==='Liveries'?'var(--acc)':'var(--t1)'};">${s.n}</div><div style="font-family:'Azeret Mono',monospace;font-size:11px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;">${s.l}</div></div>
       </div>`).join('')}
     </div>`;
   // Remove last border-right
@@ -1428,11 +1428,11 @@ async function loadHome(){
       </div>
       <div style="flex:1;min-width:0;">
         <div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}</div>
       </div>
       <div style="flex-shrink:0;text-align:right;">
         ${l.is_paid?'<span class="b-p badge">Paid</span>':'<span class="b-f badge">Free</span>'}
-        <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t3);margin-top:5px;display:flex;align-items:center;gap:3px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:11px;"></i>${l.upvotes||0}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t3);margin-top:5px;display:flex;align-items:center;gap:3px;justify-content:flex-end;"><i class="ti ti-heart" style="font-size:11px;"></i>${l.upvotes||0}</div>
       </div>
     </div>`;
   }).join('');
@@ -1446,7 +1446,7 @@ async function loadHome(){
       </div>
       <div style="flex:1;min-width:0;">
         <div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${l.mods?.name||'—'}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${l.mods?.name||'—'}</div>
       </div>
       <span class="b-n badge">New</span>
     </div>`;
@@ -1461,8 +1461,8 @@ async function loadHome(){
       :`<div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;background:${abg};color:${ac};">${ini}</div>`;
     return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
       ${avatar}
-      <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:6px;">${a.name} <svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
-      <span style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--t3);">${s.v} votes</span>
+      <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:6px;">${a.name} <svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
+      <span style="font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;color:var(--t3);">${s.v} votes</span>
     </div>`;
   }).join('');
 }
@@ -1506,10 +1506,10 @@ async function loadMods(){
     secA += `<div style="background:${brand==='RSS'?'linear-gradient(140deg,#200808,#150303)':brand==='VRC'?'linear-gradient(140deg,#002010,#001a10)':'linear-gradient(140deg,#1a0d00,#0d0800)'};border:1px solid ${brand==='RSS'?'rgba(232,49,42,.3)':brand==='VRC'?'rgba(48,209,88,.25)':'rgba(255,159,10,.25)'};overflow:hidden;cursor:pointer;transition:all .2s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;" onclick="openBrandDetail('${brand}')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:90px;font-weight:400;letter-spacing:0;color:rgba(242,240,234,.04);pointer-events:none;overflow:hidden;">${brand}</div>
       <div style="position:relative;padding:20px 22px;">
-        <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:${bm.c};margin-bottom:8px;">${brand} · ${bm.label}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:${bm.c};margin-bottom:8px;">${brand} · ${bm.label}</div>
         <div style="font-family:'Archivo Black',sans-serif;font-size:24px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:#fff;line-height:1;margin-bottom:5px;">${bm.label}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(242,240,234,.45);margin-bottom:14px;">${mods.length} mod${mods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'} · ${cats.length} catégorie${cats.length>1?'s':''}</div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;">${modPills}${mods.length>4?`<span style="padding:2px 8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:400;background:rgba(242,240,234,.06);color:rgba(242,240,234,.35);">+${mods.length-4}</span>`:''}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:rgba(242,240,234,.45);margin-bottom:14px;">${mods.length} mod${mods.length>1?'s':''} · ${totalLivs} liveri${totalLivs!==1?'es':'y'} · ${cats.length} catégorie${cats.length>1?'s':''}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;">${modPills}${mods.length>4?`<span style="padding:2px 8px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;background:rgba(242,240,234,.06);color:rgba(242,240,234,.35);">+${mods.length-4}</span>`:''}</div>
         <button style="height:30px;padding:0 14px;background:transparent;color:${bm.c};border:1px solid ${bm.c};font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;" onclick="event.stopPropagation();openBrandDetail('${brand}')" onmouseover="this.style.background='${bm.c}';this.style.color='#0A0A0F'" onmouseout="this.style.background='transparent';this.style.color='${bm.c}'"><i class="ti ti-layout-grid" style="font-size:12px;"></i> Browse ${mods.length} mod${mods.length>1?'s':''}</button>
       </div>
     </div>`;
@@ -1523,7 +1523,7 @@ async function loadMods(){
     .slice(0,6);
 
   let secB = '<div style="padding:28px 20px 0;">';
-  secB += '<div style="font-family:\'Space Mono\',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Recent livery additions <span style="flex:1;height:1px;background:var(--b1);"></span></div>';
+  secB += '<div style="font-family:\'Azeret Mono\',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Recent livery additions <span style="flex:1;height:1px;background:var(--b1);"></span></div>';
   secB += '<div style="display:flex;flex-direction:column;gap:5px;">';
   recentMods.forEach(m=>{
     const brand = m.brand&&brandMeta[m.brand]?m.brand:null;
@@ -1538,17 +1538,17 @@ async function loadMods(){
     secB += `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);border-left:2px solid ${bm?.c||'var(--t3)'};cursor:pointer;transition:all .15s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='var(--s1)')">
       <div style="width:44px;height:44px;overflow:hidden;flex-shrink:0;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
         ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
-          `<span style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
+          `<span style="font-family:'Azeret Mono',monospace;font-size:14px;font-weight:700;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
       </div>
       <div style="flex:1;min-width:0;">
         <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:var(--t1);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t2);margin-top:2px;">${bm?.label||'—'} · ${m.categories?.name||'—'}${champs.length?' · '+champs[0]:''}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t2);margin-top:2px;">${bm?.label||'—'} · ${m.categories?.name||'—'}${champs.length?' · '+champs[0]:''}</div>
       </div>
       <div style="flex-shrink:0;text-align:right;">
-        <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--t1);">${cnt} liveri${cnt!==1?'es':'y'}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin-top:1px;">${timeAgo}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;color:var(--t1);">${cnt} liveri${cnt!==1?'es':'y'}</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);margin-top:1px;">${timeAgo}</div>
       </div>
-      ${brand?`<span style="flex-shrink:0;padding:3px 8px;font-family:'Space Mono',monospace;font-size:9px;font-weight:700;background:${bm.bg};color:${bm.c};">${brand}</span>`:''}
+      ${brand?`<span style="flex-shrink:0;padding:3px 8px;font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;background:${bm.bg};color:${bm.c};">${brand}</span>`:''}
     </div>`;
   });
   secB += '</div></div>';
@@ -1561,7 +1561,7 @@ async function loadMods(){
   const maxLivs = top3.length ? (lc[top3[0].id]||1) : 1;
 
   let secC = '<div style="padding:28px 20px 40px;">';
-  secC += '<div style="font-family:\'Space Mono\',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Most popular mods <span style="flex:1;height:1px;background:var(--b1);"></span></div>';
+  secC += '<div style="font-family:\'Azeret Mono\',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:10px;">Most popular mods <span style="flex:1;height:1px;background:var(--b1);"></span></div>';
   secC += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">';
   top3.forEach((m,i)=>{
     const brand = m.brand&&brandMeta[m.brand]?m.brand:null;
@@ -1572,23 +1572,23 @@ async function loadMods(){
     secC += `<div style="background:var(--s1);border:1px solid var(--b1);cursor:pointer;transition:all .2s;" onclick="openModDetail('${m.id}')" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background='var(--s1)'">      <div style="padding:14px 15px 0;display:flex;align-items:center;gap:10px;margin-bottom:11px;">
         <div style="width:38px;height:38px;flex-shrink:0;overflow:hidden;background:${bm?.gbg||'var(--s2)'};display:flex;align-items:center;justify-content:center;">
           ${m.image_url?`<img src="${m.image_url}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`:
-            `<span style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
+            `<span style="font-family:'Azeret Mono',monospace;font-size:15px;font-weight:700;color:${bm?.c||'var(--t3)'};">${(brand||'?')[0]}</span>`}
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:0;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:400;color:${bm?.c||'var(--t3)'};text-transform:uppercase;letter-spacing:.05em;margin-top:2px;">${brand||'—'}</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:${bm?.c||'var(--t3)'};text-transform:uppercase;letter-spacing:.05em;margin-top:2px;">${brand||'—'}</div>
         </div>
-        <div style="width:24px;height:24px;background:${bm?.bg||'var(--s2)'};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:${bm?.c||'var(--t2)'};flex-shrink:0;">#${i+1}</div>
+        <div style="width:24px;height:24px;background:${bm?.bg||'var(--s2)'};display:flex;align-items:center;justify-content:center;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:${bm?.c||'var(--t2)'};flex-shrink:0;">#${i+1}</div>
       </div>
       <div style="padding:0 15px;font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:10px;min-height:34px;">${m.description||'<span style="color:var(--t3);">No description yet.</span>'}</div>
       <div style="margin:0 15px 4px;height:3px;background:var(--b1);">
         <div style="height:100%;background:${bm?.c||'var(--t2)'};width:${pct}%;transition:width .4s;"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin:0 15px 10px;">
+      <div style="display:flex;justify-content:space-between;font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);margin:0 15px 10px;">
         <span style="color:${bm?.c||'var(--t1)'};font-weight:700;">${cnt} liveri${cnt!==1?'es':'y'}</span>
         <span>${m.categories?.name||'—'}</span>
       </div>
-      ${champs.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 15px 12px;">${champs.map(c=>`<span style="padding:3px 8px;font-family:'Space Mono',monospace;font-size:10px;font-weight:400;background:var(--s2);color:var(--t2);border:1px solid var(--b1);">${c}</span>`).join('')}</div>`:''}
+      ${champs.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 15px 12px;">${champs.map(c=>`<span style="padding:3px 8px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;background:var(--s2);color:var(--t2);border:1px solid var(--b1);">${c}</span>`).join('')}</div>`:''}
       <div style="padding:8px 15px 12px;border-top:1px solid var(--b1);display:flex;justify-content:flex-end;">
         <button style="height:26px;padding:0 12px;background:transparent;color:${bm?.c||'var(--t2)'};border:1px solid ${bm?.c||'var(--b1)'};font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;" onclick="event.stopPropagation();openModDetail('${m.id}')"><i class="ti ti-layout-grid" style="font-size:11px;"></i> Browse</button>
       </div>
@@ -1751,7 +1751,7 @@ async function loadArtists(){
       ?`<div class="av-av"><img class="av-avatar-img" src="${a.avatar_url}" alt="${a.name}"></div>`
       :`<div class="av-av" style="background:${abg};color:${ac};">${ini}</div>`;
     const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
-    const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:3px 9px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-family:'Space Mono',monospace;font-size:9px;font-weight:700;">${b}</span>`;}).join('');
+    const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:3px 9px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;">${b}</span>`;}).join('');
     const socials=[
       a.url_twitter?`<a href="${a.url_twitter}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-x"></i></a>`:'',
       a.url_patreon?`<a href="${a.url_patreon}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-patreon"></i></a>`:'',
@@ -1806,7 +1806,7 @@ async function renderArtistProfile(id){
   const ini=artist.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
   const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
   const brands=(artist.brands||[]);
-  const brandPills=brands.length?brands.map(b=>{const bm=BRC[b]||{c:'var(--t2)',bg:'var(--s2)',border:'var(--b1)'};return `<span style="padding:3px 10px;border:1px solid ${bm.border};background:${bm.bg};color:${bm.c};font-family:'Space Mono',monospace;font-size:10px;font-weight:700;">${b}</span>`;}).join(''):'';
+  const brandPills=brands.length?brands.map(b=>{const bm=BRC[b]||{c:'var(--t2)',bg:'var(--s2)',border:'var(--b1)'};return `<span style="padding:3px 10px;border:1px solid ${bm.border};background:${bm.bg};color:${bm.c};font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;">${b}</span>`;}).join(''):'';
   const socials=[
     artist.url_twitter?`<a href="${artist.url_twitter}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-x"></i></a>`:'',
     artist.url_patreon?`<a href="${artist.url_patreon}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-patreon"></i></a>`:'',
@@ -1817,7 +1817,7 @@ async function renderArtistProfile(id){
   el.innerHTML=`
     <!-- BACK -->
     <div style="padding:16px 28px;border-bottom:1px solid var(--b1);">
-      <button onclick="nav('artists')" style="background:none;border:none;cursor:pointer;color:var(--t2);font-family:'Space Mono',monospace;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:6px;transition:color .12s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">
+      <button onclick="nav('artists')" style="background:none;border:none;cursor:pointer;color:var(--t2);font-family:'Azeret Mono',monospace;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;font-family:'Azeret Mono',monospace;display:flex;align-items:center;gap:6px;transition:color .12s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">
         <i class="ti ti-arrow-left"></i> All artists
       </button>
     </div>
@@ -1833,23 +1833,23 @@ async function renderArtistProfile(id){
           <h2 style="font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);"><svg width="22" height="22" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${artist.name}</h2>
           ${brandPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;">${brandPills}</div>`:''}
         </div>
-        <div style="margin-bottom:8px;"><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;">Confirmed artist</span></div>
-        ${artist.discord?`<div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-brand-discord"></i> ${artist.discord}</div>`:''}
+        <div style="margin-bottom:8px;"><span style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--acc);color:var(--acc);text-transform:uppercase;letter-spacing:.05em;">Confirmed artist</span></div>
+        ${artist.discord?`<div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-brand-discord"></i> ${artist.discord}</div>`:''}
         ${socials?`<div style="display:flex;gap:12px;">${socials}</div>`:''}
       </div>
       <!-- STATS -->
       <div style="display:flex;gap:0;border:1px solid var(--b1);flex-shrink:0;">
         <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--b1);">
-          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--t1);">${livs.length}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Liveries</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--t1);">${livs.length}</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Liveries</div>
         </div>
         <div style="padding:14px 20px;text-align:center;border-right:1px solid var(--b1);">
-          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--t1);">${adds.length}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Addons</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--t1);">${adds.length}</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Addons</div>
         </div>
         <div style="padding:14px 20px;text-align:center;">
-          <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--acc);">${totalVotes}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Upvotes</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:22px;font-weight:700;letter-spacing:0;color:var(--acc);">${totalVotes}</div>
+          <div style="font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;">Upvotes</div>
         </div>
       </div>
     </div>
@@ -1857,10 +1857,10 @@ async function renderArtistProfile(id){
     <!-- TABS -->
     <div style="padding:0 28px;border-bottom:1px solid var(--b1);display:flex;gap:0;">
       <button id="ap-tab-liveries" onclick="setArtistTab('liveries')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid var(--acc);cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t1);display:flex;align-items:center;gap:7px;">
-        <i class="ti ti-photo"></i> Liveries <span style="background:var(--s2);color:var(--t2);font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;">${livs.length}</span>
+        <i class="ti ti-photo"></i> Liveries <span style="background:var(--s2);color:var(--t2);font-family:'Azeret Mono',monospace;font-size:10px;padding:2px 7px;">${livs.length}</span>
       </button>
       <button id="ap-tab-addons" onclick="setArtistTab('addons')" style="padding:14px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);display:flex;align-items:center;gap:7px;">
-        <i class="ti ti-puzzle"></i> Addons <span style="background:var(--s2);color:var(--t2);font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;">${adds.length}</span>
+        <i class="ti ti-puzzle"></i> Addons <span style="background:var(--s2);color:var(--t2);font-family:'Azeret Mono',monospace;font-size:10px;padding:2px 7px;">${adds.length}</span>
       </button>
     </div>
 

@@ -13,7 +13,7 @@
     .panel { display:none; }
     .panel.active { display:block; }
     .data-table { width:100%; border-collapse:collapse; font-size:13px; }
-    .data-table th { text-align:left; padding:8px 12px; font-family:'Space Mono',monospace; font-size:9px; font-weight:400; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); border-bottom:1px solid var(--border); }
+    .data-table th { text-align:left; padding:8px 12px; font-family:'Azeret Mono',monospace; font-size:9px; font-weight:400; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); border-bottom:1px solid var(--border); }
     .data-table td { padding:10px 12px; border-bottom:1px solid var(--border); color:var(--text); vertical-align:middle; }
     .data-table tr:hover td { background:var(--bg-s2); }
     .data-table tr:last-child td { border-bottom:none; }
@@ -29,7 +29,7 @@
     .modal-title { font-family:'Archivo Black',sans-serif; font-size:17px; font-weight:400; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px; letter-spacing:0; }
     .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
     .field { display:flex; flex-direction:column; gap:5px; }
-    .field label { font-family:'Space Mono',monospace; font-size:9px; font-weight:400; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; }
+    .field label { font-family:'Azeret Mono',monospace; font-size:9px; font-weight:400; color:var(--text-2); text-transform:uppercase; letter-spacing:0.08em; }
     .field input, .field select, .field textarea { background:var(--bg-s2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; color:var(--text); font-size:13px; font-family:var(--font-body); outline:none; transition:border-color .15s; }
     .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--acc); }
     .field textarea { resize:vertical; min-height:72px; }
@@ -55,7 +55,7 @@
     .upload-progress.visible { display:block; }
     .upload-existing { font-size:11px; color:var(--text-3); display:flex; align-items:center; gap:6px; }
     .upload-existing a { color:var(--acc); }
-    .cat-badge { display:inline-flex; align-items:center; padding:3px 8px; border:1px solid currentColor; background:var(--bg); font-family:'Space Mono',monospace; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .cat-badge { display:inline-flex; align-items:center; padding:3px 8px; border:1px solid currentColor; background:var(--bg); font-family:'Azeret Mono',monospace; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
     @media(max-width:700px){
       .admin-layout { grid-template-columns:1fr; }
       .admin-sidebar { display:flex; overflow-x:auto; padding:0; height:auto; position:relative; }
@@ -272,7 +272,7 @@
       <!-- FOOTER -->
       <footer style="padding:36px 0 20px;margin-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;border-top:1px solid var(--border);">
         <div style="font-family:'Archivo Black',sans-serif;font-size:14px;font-weight:400;text-transform:uppercase;color:var(--text);">AC Liveries DB — Admin</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-3);">INTERNAL TOOL — NOT PUBLIC</div>
+        <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--text-3);">INTERNAL TOOL — NOT PUBLIC</div>
       </footer>
 
     </div>
@@ -879,7 +879,7 @@ async function loadChampionships(){
   var brandCats=_cats.filter(function(c){return c.brand===window._champBrand;});
   var pillsHtml='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;">';
   var allActive=window._champCatFilter==='all';
-  pillsHtml+='<button onclick="window._champCatFilter=\'all\';loadChampionships();" style="padding:5px 13px;border:1px solid '+(allActive?'#FF3D81':'var(--border)')+';background:'+(allActive?'rgba(255,61,129,.14)':'transparent')+';color:'+(allActive?'#FF3D81':'var(--text-2)')+';font-family:\'Space Mono\',monospace;font-size:11px;font-weight:700;cursor:pointer;">All</button>';
+  pillsHtml+='<button onclick="window._champCatFilter=\'all\';loadChampionships();" style="padding:5px 13px;border:1px solid '+(allActive?'#FF3D81':'var(--border)')+';background:'+(allActive?'rgba(255,61,129,.14)':'transparent')+';color:'+(allActive?'#FF3D81':'var(--text-2)')+';font-family:\'Azeret Mono\',monospace;font-size:11px;font-weight:700;cursor:pointer;">All</button>';
   brandCats.sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(c){
     var active=window._champCatFilter===c.name;
     pillsHtml+='<button onclick="window._champCatFilter=\''+c.name+'\';loadChampionships();" style="padding:4px 12px;border-radius:20px;border:1px solid '+(active?c.color_bg:'var(--border)')+';background:'+(active?c.color_bg:'transparent')+';color:'+(active?c.color_text:'var(--text-2)')+';font-size:11px;font-weight:600;cursor:pointer;">'+c.name+'</button>';
