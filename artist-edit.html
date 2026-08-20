@@ -81,6 +81,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc);}
 .field select{appearance:none;cursor:pointer;}
 .field textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.upload-btn-label{display:flex;align-items:center;gap:6px;padding:10px 12px;border:1px dashed var(--b2);background:transparent;color:var(--t2);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;width:100%;justify-content:center;transition:all .12s;box-sizing:border-box;}
+.upload-btn-label:hover{border-color:var(--acc);color:var(--acc);}
+.upload-preview{width:100%;height:120px;object-fit:cover;border:1px solid var(--b1);display:none;margin-bottom:6px;}
+.upload-preview.visible{display:block;}
+.upload-prog{font-family:'Space Mono',monospace;font-size:10px;color:var(--t3);margin-top:6px;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .field.full{grid-column:1/-1;}
 .brand-tag-check{position:relative;cursor:pointer;}
@@ -280,7 +285,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
             <div class="sub-step-label"><span class="sub-step-n">4</span> Link &amp; preview</div>
             <div class="form-grid">
               <div class="field full"><label>Download URL *</label><input id="ae-url" type="url" placeholder="https://…"></div>
-              <div class="field full"><label>Preview image URL</label><input id="ae-img" type="url" placeholder="https://…"></div>
+              <div class="field full"><label>Preview image</label><div id="ae-img-widget"></div></div>
               <div class="field"><label>Pricing</label><select id="ae-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
               <div class="field"><label>Notes</label><input id="ae-notes" type="text"></div>
             </div>
@@ -385,6 +390,8 @@ var _ae_artist = null;
 var _ae_edit_id = null;
 var _ae_brand = 'RSS';
 var _ae_mode = 'livery';
+var _ae_preview_img = null;
+var _ae_get_img = function(){ return null; };
 var _cats = [], _mods = [], _champs = [];
 
 function aeToast(msg, type) {
@@ -402,6 +409,56 @@ function aeNav(v, btn) {
   if (v==='liveries') aeLiveries();
   if (v==='addons') aeAddons();
   if (v==='profile') aeProfile();
+}
+
+function aeBuildUpload(){
+  var w = document.getElementById('ae-img-widget');
+  if (!w) return;
+  w.innerHTML = '<img id="ae-img-prev" class="upload-preview" alt="preview"><label class="upload-btn-label"><i class="ti ti-upload"></i> Upload preview image<input type="file" accept="image/*" style="display:none;" id="ae-img-input"></label><div class="upload-prog" id="ae-img-prog"></div>';
+  document.getElementById('ae-img-input').addEventListener('change', aeHandleImgUpload);
+}
+async function aeHandleImgUpload(){
+  var file = this.files[0]; if (!file) return;
+  if (file.size > 2*1024*1024) { alert('Max 2MB.'); return; }
+  var lbl = this.parentElement; lbl.style.opacity='.6'; lbl.style.pointerEvents='none';
+  var prog = document.getElementById('ae-img-prog'); prog.textContent = 'Compressing…';
+  try {
+    var blob = await aeCompressImg(file);
+    prog.textContent = 'Uploading… ('+(blob.size/1024).toFixed(0)+'KB)';
+    var url = await aeUploadImg(blob, 'liveries');
+    if (url) {
+      _ae_preview_img = url;
+      var prev = document.getElementById('ae-img-prev');
+      prev.src = url; prev.classList.add('visible');
+      prog.textContent = '✓ Uploaded';
+      lbl.innerHTML = '<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="ae-img-input">';
+      document.getElementById('ae-img-input').addEventListener('change', aeHandleImgUpload);
+      aeUpdatePreview(); aeUpdateChecklist();
+    } else prog.textContent = '✗ Failed.';
+  } catch(e){ prog.textContent = '✗ Error.'; }
+  lbl.style.opacity='1'; lbl.style.pointerEvents='auto';
+}
+async function aeCompressImg(file, maxW, maxH, q){
+  maxW = maxW||1600; maxH = maxH||1000; q = q||0.85;
+  return new Promise(function(res, rej){
+    var img = new Image(); var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var r = Math.min(maxW/img.naturalWidth, maxH/img.naturalHeight, 1);
+      var cw = Math.round(img.naturalWidth*r), ch = Math.round(img.naturalHeight*r);
+      var c = document.createElement('canvas'); c.width=cw; c.height=ch;
+      c.getContext('2d').drawImage(img,0,0,cw,ch);
+      c.toBlob(function(b){ res(b); }, 'image/jpeg', q);
+    };
+    img.onerror = rej; img.src = url;
+  });
+}
+async function aeUploadImg(blob, folder){
+  var path = folder+'/'+Date.now()+'_upload.jpg';
+  var up = await db.storage.from('images').upload(path, blob, {contentType:'image/jpeg', upsert:false});
+  if (up.error) return null;
+  var pub = db.storage.from('images').getPublicUrl(path);
+  return pub.data ? pub.data.publicUrl : null;
 }
 
 function aeSelectBrand(b) {
@@ -668,7 +725,14 @@ async function aeEditLivery(id) {
   document.getElementById('ae-season').value = l.season||'';
   document.getElementById('ae-carnumber').value = l.car_number||'';
   document.getElementById('ae-url').value = l.download_url||'';
-  document.getElementById('ae-img').value = l.image_url||'';
+  aeBuildUpload();
+  if (l.image_url) {
+    _ae_preview_img = l.image_url;
+    var prev = document.getElementById('ae-img-prev');
+    prev.src = l.image_url; prev.classList.add('visible');
+    document.querySelector('#ae-img-widget .upload-btn-label').innerHTML = '<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="ae-img-input">';
+    document.getElementById('ae-img-input').addEventListener('change', aeHandleImgUpload);
+  }
   document.getElementById('ae-paid').value = l.is_paid?'true':'false';
   document.getElementById('ae-notes').value = l.notes||'';
   aeUpdatePreview();
@@ -686,9 +750,10 @@ function aeResetSubmitForm() {
   document.getElementById('ae-season').value = '';
   document.getElementById('ae-carnumber').value = '';
   document.getElementById('ae-url').value = '';
-  document.getElementById('ae-img').value = '';
   document.getElementById('ae-notes').value = '';
   document.getElementById('ae-paid').value = 'false';
+  _ae_preview_img = null;
+  aeBuildUpload();
   document.getElementById('ae-mod').value = '';
   document.getElementById('ae-mod-text').textContent = 'Select category first';
   document.getElementById('ae-mod-text').style.color = 'var(--t2)';
@@ -710,7 +775,7 @@ function aeUpdatePreview() {
   document.getElementById('ae-preview-driver').textContent = driver || '';
   var modText = document.getElementById('ae-mod-text').textContent;
   document.getElementById('ae-preview-meta').textContent = (modText==='Select category first'||modText==='Select mod') ? 'Mod' : modText;
-  var imgUrl = document.getElementById('ae-img').value.trim();
+  var imgUrl = _ae_preview_img;
   document.getElementById('ae-preview-thumb').innerHTML = imgUrl?'<img src="'+imgUrl+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>';
 }
 
@@ -719,17 +784,18 @@ function aeUpdateChecklist() {
     {label:'Livery name', done:!!document.getElementById('ae-lname').value.trim()},
     {label:'Mod selected', done:!!document.getElementById('ae-mod').value},
     {label:'Download URL', done:!!document.getElementById('ae-url').value.trim()},
-    {label:'Preview image', done:!!document.getElementById('ae-img').value.trim()},
+    {label:'Preview image', done:!!_ae_preview_img},
   ];
   document.getElementById('ae-checklist').innerHTML = items.map(function(it){
     return '<div class="checker'+(it.done?' done':'')+'"><i class="ti '+(it.done?'ti-circle-check':'ti-circle-dashed')+'"></i> '+it.label+'</div>';
   }).join('');
 }
 
-['ae-lname','ae-team','ae-driver','ae-season','ae-carnumber','ae-url','ae-img'].forEach(function(fid){
+['ae-lname','ae-team','ae-driver','ae-season','ae-carnumber','ae-url'].forEach(function(fid){
   var el = document.getElementById(fid);
   if (el) el.addEventListener('input', function(){ aeUpdatePreview(); aeUpdateChecklist(); });
 });
+aeBuildUpload();
 
 async function aeDeleteFromForm() {
   if (!_ae_edit_id) return;
@@ -764,7 +830,7 @@ async function aeDoSubmit() {
   if (!url){ err.textContent='Download URL required.'; err.style.display='block'; return; }
   err.style.display='none';
   if (_ae_edit_id) {
-    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:document.getElementById('ae-img').value.trim()||null, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null};
+    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null};
     var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:_ae_edit_id,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     aeToast('Livery updated!');
@@ -773,12 +839,12 @@ async function aeDoSubmit() {
     return;
   }
   if (_ae_mode === 'livery') {
-    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:document.getElementById('ae-img').value.trim()||null, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
+    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
     var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     aeToast('Livery published!');
   } else {
-    var payload = {name:name, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, download_url:url, image_url:document.getElementById('ae-img').value.trim()||null, addon_type:document.getElementById('ae-addon-type').value, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
+    var payload = {name:name, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, download_url:url, image_url:_ae_preview_img, addon_type:document.getElementById('ae-addon-type').value, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
     var res = await db.rpc('artist_submit_addon',{p_token:_ae_token,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     aeToast('Addon published!');
