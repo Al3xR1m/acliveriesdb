@@ -1287,8 +1287,12 @@ async function submitReport(){
   if(!_pendingReport)return;
   const reason=document.querySelector('input[name="rr"]:checked')?.value||'broken_link';
   const notes=document.getElementById('report-notes').value.trim()||null;
-  await reportLivery(_pendingReport,reason,notes);
-  closeReport();_pendingReport=null;alert('Report sent. Thank you!');
+  const res=await reportLivery(_pendingReport,reason,notes);
+  if(res.ok){
+    closeReport();_pendingReport=null;alert('Report sent. Thank you!');
+  } else {
+    alert('Failed to send report: '+(res.error?.message||'unknown error')+'\n\nCheck the browser console for details.');
+  }
 }
 
 // ── HOME ──

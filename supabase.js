@@ -301,8 +301,9 @@ async function submitAddon(d) {
 }
 
 async function reportLivery(id, reason, notes) {
-  const { data } = await db.rpc('submit_report', { p_livery_id: id, p_reason: reason, p_notes: notes || null });
-  return !!data;
+  const { data, error } = await db.rpc('submit_report', { p_livery_id: id, p_reason: reason, p_notes: notes || null });
+  if (error) { console.error('submit_report failed:', error); return { ok:false, error }; }
+  return { ok:true, data };
 }
 
 // Admin mutations
