@@ -201,9 +201,10 @@ async function fetchPendingAddons() {
 }
 
 async function fetchReports() {
-  const { data } = await db.from('reports')
+  const { data, error } = await db.from('reports')
     .select('*, liveries(id,name,download_url)')
     .eq('resolved', false).order('created_at', { ascending: false });
+  if (error) console.error('fetchReports failed:', error);
   return data || [];
 }
 
