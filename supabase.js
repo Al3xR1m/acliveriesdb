@@ -174,7 +174,7 @@ async function fetchAdminStats() {
     db.from('liveries').select('id', { count: 'exact', head: true }).eq('approved', false),
     db.from('addons').select('id', { count: 'exact', head: true }).eq('approved', false),
     db.from('liveries').select('upvotes').eq('approved', true),
-    db.from('reports').select('id', { count: 'exact', head: true }).eq('resolved', false),
+    db.rpc('admin_get_reports'),
   ]);
   const totalVotes = (votes.data || []).reduce((s, l) => s + (l.upvotes || 0), 0);
   return {
@@ -182,7 +182,7 @@ async function fetchAdminStats() {
     pending: pending.count || 0,
     pendingAddons: pendingAddons.count || 0,
     totalVotes,
-    openReports: reports.count || 0,
+    openReports: (reports.data || []).length,
   };
 }
 
@@ -201,10 +201,8 @@ async function fetchPendingAddons() {
 }
 
 async function fetchReports() {
-  const { data, error } = await db.from('reports')
-    .select('*, liveries(id,name,download_url)')
-    .eq('resolved', false).order('created_at', { ascending: false });
-  if (error) console.error('fetchReports failed:', error);
+  const { data, error } = await db.rpc('admin_get_reports');
+  if (error) { console.error('fetchReports failed:', error); return []; }
   return data || [];
 }
 
