@@ -626,15 +626,13 @@ async function editLiveryModal(id,isApproval){
   const l=(await fetchLivery(id))||pending.find(x=>x.id===id);
   if(!l)return;
   const catOpts=_cats.map(c=>`<option value="${c.id}" ${l.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
-  const modOpts=_mods.map(m=>`<option value="${m.id}" ${l.mod_id===m.id?'selected':''}>${m.name}</option>`).join('');
-  const champOpts=_champs.map(ch=>`<option value="${ch.id}" ${l.championship_id===ch.id?'selected':''}>${ch.name}</option>`).join('');
   const artistOpts=_artists.map(a=>`<option value="${a.id}" ${l.artist_id===a.id?'selected':''}>${a.name}</option>`).join('');
   openModal(`<i class="ti ti-pencil"></i> Edit livery`,`
     <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
       <div class="field full"><label>Name</label><input id="el-name" value="${l.name||''}"></div>
-      <div class="field"><label>Category</label><select id="el-cat"><option value="">—</option>${catOpts}</select></div>
-      <div class="field"><label>Mod</label><select id="el-mod"><option value="">—</option>${modOpts}</select></div>
-      <div class="field full"><label>Championship</label><select id="el-champ"><option value="">—</option>${champOpts}</select></div>
+      <div class="field"><label>Category</label><select id="el-cat" onchange="elFilterModChamp()"><option value="">—</option>${catOpts}</select></div>
+      <div class="field"><label>Mod</label><select id="el-mod"></select></div>
+      <div class="field full"><label>Championship</label><select id="el-champ"></select></div>
       <div class="field"><label>Team</label><input id="el-team" value="${l.team||''}"></div>
       <div class="field"><label>Drivers</label><input id="el-driver" value="${l.driver||''}"></div>
       <div class="field"><label>Season</label><input id="el-season" value="${l.season||''}"></div>
@@ -671,7 +669,18 @@ async function editLiveryModal(id,isApproval){
     closeModal();
     if(isApproval){await loadPending();await loadDashboard();}else await loadLiveries();
   });
+  window._elCurrentModId = l.mod_id||'';
+  window._elCurrentChampId = l.championship_id||'';
+  elFilterModChamp(l.category_id||'');
   setTimeout(()=>{ window._getLiveryImg = buildUploadWidget('el-img-widget',{currentUrl:l.image_url||'',folder:'liveries',label:'Upload livery screenshot'}); },50);
+}
+function elFilterModChamp(catId){
+  catId = catId!==undefined ? catId : document.getElementById('el-cat').value;
+  const modSel=document.getElementById('el-mod');
+  const champSel=document.getElementById('el-champ');
+  modSel.innerHTML='<option value="">—</option>'+_mods.filter(m=>!catId||m.category_id===catId).map(m=>`<option value="${m.id}" ${window._elCurrentModId===m.id?'selected':''}>${m.name}</option>`).join('');
+  champSel.innerHTML='<option value="">—</option>'+_champs.filter(c=>!catId||!c.category_id||c.category_id===catId).map(c=>`<option value="${c.id}" ${window._elCurrentChampId===c.id?'selected':''}>${c.name}</option>`).join('');
+  window._elCurrentModId=null; window._elCurrentChampId=null;
 }
 
 // ARTISTS
