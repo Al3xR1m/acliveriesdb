@@ -226,6 +226,14 @@ ul, ol { list-style: none; }
 .pill:hover { color: var(--text); border-color: var(--acc); }
 .pill.active { background: var(--acc-2); border-color: var(--acc); color: var(--acc); }
 
+.pricing-toggle{display:flex;border:1px solid var(--border);width:fit-content;}
+.price-opt{position:relative;cursor:pointer;}
+.price-opt input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.price-opt:not(:last-child){border-right:1px solid var(--border);}
+.price-opt span{display:flex;align-items:center;padding:10px 22px;font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-2);transition:all .15s;}
+.price-opt:hover span{color:var(--text);}
+.price-opt:has(input:checked) span{background:var(--acc);color:#fff;}
+
 .brand-tag-check{position:relative;cursor:pointer;}
 .brand-tag-check input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
 .brand-tag-check span{display:inline-flex;align-items:center;padding:8px 16px;border:1px solid var(--border);font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-3);transition:all .15s;}

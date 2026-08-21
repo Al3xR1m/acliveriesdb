@@ -645,9 +645,9 @@ async function editLiveryModal(id,isApproval){
       <div class="field full"><label>Livery screenshot</label><div id="el-img-widget"></div></div>
       <div class="field full"><label>Notes</label><textarea id="el-notes">${l.notes||''}</textarea></div>
       <div class="field full"><label>Pricing</label>
-        <div style="display:flex;gap:10px;margin-top:4px;">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="el-pricing" id="el-free" ${!l.is_paid?'checked':''}> Free</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="el-pricing" id="el-paid" ${l.is_paid?'checked':''}> Paid</label>
+        <div class="pricing-toggle" style="margin-top:6px;">
+          <label class="price-opt"><input type="radio" name="el-pricing" id="el-free" ${!l.is_paid?'checked':''}><span>Free</span></label>
+          <label class="price-opt"><input type="radio" name="el-pricing" id="el-paid" ${l.is_paid?'checked':''}><span>Paid</span></label>
         </div>
       </div>
     </div>`,async()=>{
@@ -1045,9 +1045,9 @@ async function editAddonModal(id, isApproval=false){
       <div class="field full"><label>Preview image</label><div id="ae-img-widget"></div></div>
       <div class="field full"><label>Notes</label><textarea id="ae-notes">${a.notes||''}</textarea></div>
       <div class="field full"><label>Pricing</label>
-        <div style="display:flex;gap:10px;margin-top:4px;">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="ae-pricing" id="ae-free" ${!a.is_paid?'checked':''}> Free</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text-2);"><input type="radio" name="ae-pricing" id="ae-paid" ${a.is_paid?'checked':''}> Paid</label>
+        <div class="pricing-toggle" style="margin-top:6px;">
+          <label class="price-opt"><input type="radio" name="ae-pricing" id="ae-free" ${!a.is_paid?'checked':''}><span>Free</span></label>
+          <label class="price-opt"><input type="radio" name="ae-pricing" id="ae-paid" ${a.is_paid?'checked':''}><span>Paid</span></label>
         </div>
       </div>
     </div>`, async()=>{
