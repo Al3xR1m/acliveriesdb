@@ -384,7 +384,7 @@ async function reloadCache(){
   [_cats,_mods,_champs,_artists]=await Promise.all([fetchCategories(),fetchMods(),fetchChampionships(),fetchArtists()]);
 }
 
-async function initAdmin(){await reloadCache();adminHandleHash();}
+async function initAdmin(){await reloadCache();await loadDashboard();adminHandleHash();}
 async function loadPanel(name){
   if(name==='dashboard')    await loadDashboard();
   if(name==='pending')      await loadPending();
