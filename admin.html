@@ -443,7 +443,10 @@ async function loadPending(){
     <div class="card" style="padding:16px;margin-bottom:12px;display:grid;grid-template-columns:140px 1fr auto;gap:16px;align-items:start;">
       <div style="height:90px;overflow:hidden;">${imgBlock}</div>
       <div>
-        ${dupes.length?`<div class="badge badge--pending" style="margin-bottom:8px;padding:4px 10px;display:inline-flex;align-items:center;gap:5px;" title="${dupes.map(d=>d.livery.name+' (matched: '+d.matched.join(', ')+')').join(' | ')}"><i class="ti ti-alert-triangle" style="font-size:12px;"></i> Possible duplicate — matches "${dupes[0].livery.name}" (${dupes[0].matched.join(', ')})</div>` : ''}
+        ${dupes.length?`<div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div class="badge badge--pending" style="padding:4px 10px;display:inline-flex;align-items:center;gap:5px;" title="${dupes.map(d=>d.livery.name+' (matched: '+d.matched.join(', ')+')').join(' | ')}"><i class="ti ti-alert-triangle" style="font-size:12px;"></i> Possible duplicate — matches "${dupes[0].livery.name}" (${dupes[0].matched.join(', ')})</div>
+          <a href="index.html#livery/${dupes[0].livery.id}" target="_blank" style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--acc);display:inline-flex;align-items:center;gap:4px;text-decoration:none;"><i class="ti ti-external-link" style="font-size:12px;"></i> Compare</a>
+        </div>` : ''}
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
           <div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;">${l.name}</div>
           ${paidBadge}
