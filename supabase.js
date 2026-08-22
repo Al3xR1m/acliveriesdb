@@ -75,6 +75,31 @@ async function fetchArtistStats() {
   return stats;
 }
 
+function _norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+
+// Compares candidate liveries for the same mod against the given fields,
+// scoring matches across name / car_number / season / championship.
+async function findDuplicates(modId, fields, excludeId, approvedOnly = true) {
+  if (!modId) return [];
+  const candidates = await fetchLiveries({ modId, pageSize: 200, approvedOnly });
+  const nName = _norm(fields.name);
+  const nNum  = _norm(fields.car_number);
+  const nSeason = _norm(fields.season);
+  const results = [];
+  for (const c of candidates) {
+    if (excludeId && c.id === excludeId) continue;
+    let score = 0; const matched = [];
+    const cName = _norm(c.name), cNum = _norm(c.car_number), cSeason = _norm(c.season);
+    if (nName && cName && (cName === nName || (nName.length > 3 && (cName.includes(nName) || nName.includes(cName))))) { score += 2; matched.push('name'); }
+    if (nNum && cNum && cNum === nNum) { score += 2; matched.push('car number'); }
+    if (nSeason && cSeason && cSeason === nSeason) { score += 1; matched.push('season'); }
+    if (fields.championship_id && c.championship_id && fields.championship_id === c.championship_id) { score += 1; matched.push('championship'); }
+    if (score >= 3) results.push({ livery: c, score, matched });
+  }
+  results.sort((a, b) => b.score - a.score);
+  return results;
+}
+
 async function fetchLiveries({
   categoryId, championshipId, modId, artistId,
   isPaid, confirmedOnly, communityOnly,

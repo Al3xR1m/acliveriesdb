@@ -942,8 +942,8 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
             </div>
             <div class="field livery-only" style="margin:0;"><label>Team *</label><input type="text" id="s-team" placeholder="e.g. Scuderia Ferrari"></div>
             <div class="field livery-only" style="margin:0;"><label>Driver(s)</label><input type="text" id="s-driver" placeholder="e.g. Charles Leclerc"></div>
-            <div class="field livery-only" style="margin:0;"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024"></div>
-            <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4"></div>
+            <div class="field livery-only" style="margin:0;"><label>Season *</label><input type="text" id="s-season" placeholder="e.g. 2024" oninput="checkDuplicateLivery()"></div>
+            <div class="field livery-only" style="margin:0;"><label>Car number *</label><input type="text" id="s-carnumber" placeholder="e.g. 16" maxlength="4" oninput="checkDuplicateLivery()"></div>
             <div class="field" style="margin:0;grid-column:1/-1;">
               <label>Pricing</label>
               <div style="margin-top:6px;">
@@ -2170,9 +2170,16 @@ async function checkDuplicateLivery(){
     const name=document.getElementById('s-name').value.trim();
     const warn=document.getElementById('s-dup-warning');
     if(!name||name.length<3||!_sSelMod){warn.style.display='none';return;}
-    const matches=await fetchLiveries({modId:_sSelMod,search:name,pageSize:3});
+    const fields={
+      name,
+      car_number:document.getElementById('s-carnumber')?.value.trim()||'',
+      season:document.getElementById('s-season')?.value.trim()||'',
+      championship_id:document.getElementById('s-champ')?.value||null,
+    };
+    const matches=await findDuplicates(_sSelMod,fields);
     if(matches.length){
-      document.getElementById('s-dup-name').textContent=`"${matches[0].name}"`+(matches.length>1?` (+${matches.length-1} more)`:'');
+      const top=matches[0];
+      document.getElementById('s-dup-name').textContent=`"${top.livery.name}" — matched on ${top.matched.join(', ')}`+(matches.length>1?` (+${matches.length-1} more)`:'');
       warn.style.display='flex';
     } else {
       warn.style.display='none';
@@ -2187,7 +2194,7 @@ function renderChampPicker(list){
   const none=`<div class="pi${!_sSelChamp?' selected':''}" onclick="selectChamp('','No championship')"><div class="pi-logo-ph"><i class="ti ti-x"></i></div><div class="pi-name">No championship</div></div>`;
   g.innerHTML=none+list.map(c=>`<div class="pi${c.id===_sSelChamp?' selected':''}" onclick="selectChamp('${c.id}','${(c.short_name||c.name).replace(/'/g,"\\'")}')">${c.logo_url?`<img src="${c.logo_url}" class="pi-logo" alt="${c.name}">`:`<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>`}<div class="pi-name">${c.short_name||c.name}</div></div>`).join('');
 }
-function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';updateSubmitPreview();}
+function selectChamp(id,name){_sSelChamp=id;document.getElementById('s-champ').value=id;document.getElementById('s-champ-text').textContent=name;document.getElementById('champ-picker').style.display='none';updateSubmitPreview();checkDuplicateLivery();}
 
 document.getElementById('s-submit-btn').addEventListener('click',async()=>{
   const name=document.getElementById('s-name').value.trim();

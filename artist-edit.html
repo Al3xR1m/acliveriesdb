@@ -268,8 +268,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
             <div class="form-grid">
               <div class="field"><label>Team</label><input id="ae-team" type="text"></div>
               <div class="field"><label>Driver(s)</label><input id="ae-driver" type="text"></div>
-              <div class="field"><label>Season</label><input id="ae-season" type="text" placeholder="e.g. 2026"></div>
-              <div class="field"><label>Car number</label><input id="ae-carnumber" type="text" maxlength="4" placeholder="e.g. 27"></div>
+              <div class="field"><label>Season</label><input id="ae-season" type="text" placeholder="e.g. 2026" oninput="aeCheckDuplicate()"></div>
+              <div class="field"><label>Car number</label><input id="ae-carnumber" type="text" maxlength="4" placeholder="e.g. 27" oninput="aeCheckDuplicate()"></div>
             </div>
           </div>
 
@@ -543,10 +543,16 @@ async function aeCheckDuplicate(){
     var modId = document.getElementById('ae-mod').value;
     var warn = document.getElementById('ae-dup-warning');
     if (!name || name.length<3 || !modId){ warn.style.display='none'; return; }
-    var matches = await fetchLiveries({modId:modId, search:name, pageSize:3});
-    matches = matches.filter(function(m){ return m.id !== _ae_edit_id; });
+    var fields = {
+      name: name,
+      car_number: document.getElementById('ae-carnumber')?.value.trim()||'',
+      season: document.getElementById('ae-season')?.value.trim()||'',
+      championship_id: document.getElementById('ae-champ')?.value||null,
+    };
+    var matches = await findDuplicates(modId, fields, _ae_edit_id);
     if (matches.length){
-      document.getElementById('ae-dup-name').textContent = '"'+matches[0].name+'"'+(matches.length>1?' (+'+(matches.length-1)+' more)':'');
+      var top = matches[0];
+      document.getElementById('ae-dup-name').textContent = '"'+top.livery.name+'" — matched on '+top.matched.join(', ')+(matches.length>1?' (+'+(matches.length-1)+' more)':'');
       warn.style.display='flex';
     } else warn.style.display='none';
   }, 500);
@@ -592,7 +598,7 @@ function aeSelectChamp(id, name) {
   document.getElementById('ae-champ-text').textContent = name;
   document.getElementById('ae-champ-text').style.color = 'var(--t1)';
   document.getElementById('ae-champ-picker').style.display = 'none';
-  aeUpdatePreview();
+  aeUpdatePreview(); aeCheckDuplicate();
 }
 
 function aeFilterMods(catId) {
