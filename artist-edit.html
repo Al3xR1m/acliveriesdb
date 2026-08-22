@@ -231,7 +231,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
               <button class="brand-btn urd" onclick="aeSelectBrand('URD')"><div style="font-family:'Archivo Black',sans-serif;font-size:15px;">URD</div><div style="font-size:10px;margin-top:2px;">United Racing Design</div></button>
             </div>
             <div class="form-grid">
-              <div class="field full"><label id="ae-name-label">Livery name *</label><input id="ae-lname" type="text"></div>
+              <div class="field full"><label id="ae-name-label">Livery name *</label><input id="ae-lname" type="text" oninput="aeCheckDuplicate()"></div>
+              <div id="ae-dup-warning" style="display:none;background:var(--amb2);border:1px solid var(--amb);padding:10px 14px;align-items:flex-start;gap:8px;">
+                <i class="ti ti-alert-triangle" style="color:var(--amb);font-size:14px;flex-shrink:0;margin-top:2px;"></i>
+                <div style="font-size:12px;color:var(--t1);line-height:1.5;">
+                  Similar livery already found for this mod: <span id="ae-dup-name" style="font-weight:700;"></span>.
+                  <br><span style="color:var(--t2);">You can still submit — this is just a heads up.</span>
+                </div>
+              </div>
               <div class="field full"><label>Category</label><select id="ae-cat" onchange="aeOnCatChange()"><option value="">Select…</option></select></div>
             </div>
           </div>
@@ -525,7 +532,24 @@ function aeSelectMod(id, name) {
   document.getElementById('ae-mod-text').textContent = name;
   document.getElementById('ae-mod-text').style.color = 'var(--t1)';
   document.getElementById('ae-mod-picker').style.display = 'none';
-  aeUpdatePreview(); aeUpdateChecklist();
+  aeUpdatePreview(); aeUpdateChecklist(); aeCheckDuplicate();
+}
+
+let _aeDupTimer = null;
+async function aeCheckDuplicate(){
+  clearTimeout(_aeDupTimer);
+  _aeDupTimer = setTimeout(async()=>{
+    var name = document.getElementById('ae-lname').value.trim();
+    var modId = document.getElementById('ae-mod').value;
+    var warn = document.getElementById('ae-dup-warning');
+    if (!name || name.length<3 || !modId){ warn.style.display='none'; return; }
+    var matches = await fetchLiveries({modId:modId, search:name, pageSize:3});
+    matches = matches.filter(function(m){ return m.id !== _ae_edit_id; });
+    if (matches.length){
+      document.getElementById('ae-dup-name').textContent = '"'+matches[0].name+'"'+(matches.length>1?' (+'+(matches.length-1)+' more)':'');
+      warn.style.display='flex';
+    } else warn.style.display='none';
+  }, 500);
 }
 
 function aeOpenChampPicker() {
@@ -741,6 +765,7 @@ async function aeEditLivery(id) {
 
 function aeResetSubmitForm() {
   _ae_edit_id = null;
+  document.getElementById('ae-dup-warning').style.display='none';
   document.getElementById('ae-submit-title').innerHTML = 'Add <em>content</em>';
   document.getElementById('ae-submit-label').textContent = _ae_mode==='livery' ? 'Publish livery' : 'Publish addon';
   document.getElementById('ae-edit-delete-btn').style.display = 'none';
