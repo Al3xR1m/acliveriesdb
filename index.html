@@ -648,9 +648,9 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     </div>
 
     <!-- FEATURED -->
-    <div id="h-featured-wrap" style="display:none;padding:20px 28px;border-bottom:1px solid var(--b1);">
+    <div id="h-featured-wrap" style="display:none;padding:32px 28px;border-bottom:1px solid var(--b1);">
       <div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;color:var(--amb);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Featured</div>
-      <div id="h-featured" style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:var(--b1);"></div>
+      <div id="h-featured" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;"></div>
     </div>
 
     <!-- STATS STRIP -->
@@ -1468,25 +1468,14 @@ async function loadHome(){
     fetchLiveries({sort:'votes', pageSize:6}),
     fetchLiveries({sort:'newest', pageSize:3}),
     fetchLiveries({sort:'votes', pageSize:1000}),
-    fetchLiveries({featuredOnly:true, sort:'votes', pageSize:6}),
+    fetchLiveries({featuredOnly:true, sort:'votes', pageSize:8}),
   ]);
 
   // Featured section
   const featWrap=document.getElementById('h-featured-wrap');
   if(featured.length){
     featWrap.style.display='block';
-    document.getElementById('h-featured').innerHTML=featured.slice(0,6).map(l=>{
-      const cn=l.categories?.name||'';
-      return `<div style="position:relative;aspect-ratio:1/1;overflow:hidden;cursor:pointer;background:var(--s2);" onclick="openLivery('${l.id}')">
-        ${l.image_url?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(l))}</div>`}
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.9) 0%,rgba(10,10,15,.15) 55%,transparent 100%);"></div>
-        <span style="position:absolute;top:7px;right:8px;font-size:11px;color:var(--amb);"><i class="ti ti-star-filled"></i></span>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;">
-          <div style="font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}</div>
-          <div style="font-family:'Azeret Mono',monospace;font-size:9px;color:rgba(242,240,234,.5);margin-top:2px;">${l.mods?.brand||'—'}</div>
-        </div>
-      </div>`;
-    }).join('');
+    document.getElementById('h-featured').innerHTML=featured.map(richCard).join('');
   } else {
     featWrap.style.display='none';
   }
