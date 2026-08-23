@@ -743,7 +743,11 @@ function filterFeaturedSearch(input,brand){
   const matches=(window._featuredAll||[]).filter(l=>l.mods?.brand===brand && !l.featured && l.name.toLowerCase().includes(term)).slice(0,8);
   resEl.innerHTML=matches.map(l=>
     '<div style="display:flex;align-items:center;gap:8px;padding:5px 6px;cursor:pointer;" onclick="toggleFeaturedAndReload(\''+l.id+'\',true)" onmouseover="this.style.background=\'var(--bg-s2)\'" onmouseout="this.style.background=\'\'">'
-    +'<span style="flex:1;font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+l.name+'</span>'
+    +'<div style="width:36px;height:24px;background:var(--bg);flex-shrink:0;overflow:hidden;">'+(l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'')+'</div>'
+    +'<div style="flex:1;min-width:0;">'
+    +'<div style="font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+l.name+'</div>'
+    +'<div style="font-size:9px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(l.mods?.name||'—')+' · '+(l.categories?.name||'—')+(l.artists?' · '+l.artists.name:l.author?' · '+l.author:'')+'</div>'
+    +'</div>'
     +'<i class="ti ti-plus" style="font-size:12px;color:var(--acc);flex-shrink:0;"></i>'
     +'</div>'
   ).join('') || '<div style="font-size:11px;color:var(--text-3);padding:4px 6px;">No matches.</div>';
