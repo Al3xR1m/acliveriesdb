@@ -649,7 +649,10 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
 
     <!-- FEATURED -->
     <div id="h-featured-wrap" style="display:none;padding:32px 28px;border-bottom:1px solid var(--b1);">
-      <div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;color:var(--amb);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Featured</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;color:var(--amb);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Featured</div>
+        <span id="h-featured-seeall" style="display:none;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;transition:color .15s;" onclick="goToFeaturedFilter()" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">See all featured <i class="ti ti-arrow-right" style="font-size:11px;"></i></span>
+      </div>
       <div id="h-featured" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;"></div>
     </div>
 
@@ -1463,6 +1466,11 @@ async function submitReport(){
 }
 
 // ── HOME ──
+function goToFeaturedFilter(){
+  _featuredOnly=true;
+  nav('liveries');
+  updateFilterBadge();
+}
 async function loadHome(){
   const [top, recent, livCount, featured] = await Promise.all([
     fetchLiveries({sort:'votes', pageSize:6}),
@@ -1475,7 +1483,8 @@ async function loadHome(){
   const featWrap=document.getElementById('h-featured-wrap');
   if(featured.length){
     featWrap.style.display='block';
-    document.getElementById('h-featured').innerHTML=featured.map(richCard).join('');
+    document.getElementById('h-featured').innerHTML=featured.slice(0,4).map(richCard).join('');
+    document.getElementById('h-featured-seeall').style.display=featured.length>4?'flex':'none';
   } else {
     featWrap.style.display='none';
   }
