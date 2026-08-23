@@ -71,9 +71,10 @@
     <div style="font-size:36px; color:var(--acc); margin-bottom:12px;"><i class="ti ti-shield-lock"></i></div>
     <h1 style="font-family:'Archivo Black',sans-serif; font-size:22px; font-weight:400; text-transform:uppercase; letter-spacing:0; margin-bottom:6px;">Admin Panel</h1>
     <p style="font-size:13px; color:var(--text-2); margin-bottom:24px;">AC Liveries DB — restricted access</p>
+    <input type="email" class="form-input" id="emailInput" placeholder="Email" autocomplete="username" style="margin-bottom:10px;">
     <input type="password" class="form-input" id="pwInput" placeholder="Password" autocomplete="current-password" style="margin-bottom:10px;">
     <button class="btn btn--primary" id="loginBtn" style="width:100%; height:40px; font-size:14px; border-radius:var(--radius-md);">Enter</button>
-    <div id="loginErr" style="color:var(--red); font-size:13px; margin-top:8px; display:none;">Incorrect password.</div>
+    <div id="loginErr" style="color:var(--red); font-size:13px; margin-top:8px; display:none;">Incorrect email or password.</div>
   </div>
 </div>
 
@@ -353,25 +354,37 @@ function customAlert(message, type){
 }
 </script>
 <script>
-const ADMIN_PASS = 'Kx9LpQvT8mZ!';
-
 // Theme
 document.documentElement.setAttribute('data-theme', 'dark');
 
-// Login
-function checkLogin(){return sessionStorage.getItem('acl_admin')==='1';}
+// Login (real Supabase Auth)
 document.getElementById('loginBtn').addEventListener('click',doLogin);
 document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-function doLogin(){
-  if(document.getElementById('pwInput').value===ADMIN_PASS){
-    sessionStorage.setItem('acl_admin','1');
+document.getElementById('emailInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+async function doLogin(){
+  const email=document.getElementById('emailInput').value.trim();
+  const password=document.getElementById('pwInput').value;
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true; btn.textContent='Signing in…';
+  const {error}=await db.auth.signInWithPassword({email,password});
+  btn.disabled=false; btn.textContent='Enter';
+  if(error){
+    document.getElementById('loginErr').style.display='block';
+    return;
+  }
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminApp').style.display='block';
+  initAdmin();
+}
+document.getElementById('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();location.reload();});
+(async()=>{
+  const {data:{session}}=await db.auth.getSession();
+  if(session){
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('adminApp').style.display='block';
     initAdmin();
-  } else document.getElementById('loginErr').style.display='block';
-}
-document.getElementById('logoutBtn').addEventListener('click',()=>{sessionStorage.removeItem('acl_admin');location.reload();});
-if(checkLogin()){document.getElementById('loginScreen').style.display='none';document.getElementById('adminApp').style.display='block';}
+  }
+})();
 
 // Panel nav
 const ADMIN_PANELS = ['dashboard','pending','reports','edit-requests','liveries','addons','artists','championships','mods','categories'];
