@@ -195,6 +195,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.85),transparent 55%);pointer-events:none;z-index:1;transition:opacity .3s;}
 .lv-card:hover .lv-card-ov{opacity:.4;}
 .lv-card-brand{position:absolute;top:10px;left:10px;z-index:4;}
+.lv-card-featured{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:4;width:24px;height:24px;background:var(--amb2);border:1px solid var(--amb);color:var(--amb);display:flex;align-items:center;justify-content:center;font-size:11px;}
 .lv-card-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
 .lv-card-crown{position:absolute;top:10px;right:10px;font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;z-index:3;transition:opacity .25s;color:var(--t1);background:rgba(10,10,15,.7);border:1px solid var(--crown);padding:3px 8px;display:flex;align-items:center;gap:5px;white-space:nowrap;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;}
 .lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
@@ -644,6 +645,12 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
         <div class="sk" style="border-radius:0;"></div>
         <div class="sk" style="border-radius:0;"></div>
       </div>
+    </div>
+
+    <!-- FEATURED -->
+    <div id="h-featured-wrap" style="display:none;padding:32px 28px;border-bottom:1px solid var(--b1);">
+      <div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;color:var(--amb);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Featured</div>
+      <div id="h-featured" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;"></div>
     </div>
 
     <!-- STATS STRIP -->
@@ -1112,6 +1119,7 @@ function richCard(l){
       <div class="lv-card-paint" style="background:${paintColor};"></div>
       <div class="lv-card-ov"></div>
       ${brandTag?`<div class="lv-card-brand">${brandTag}</div>`:''}
+      ${l.featured?'<div class="lv-card-featured" title="Featured"><i class="ti ti-star-filled"></i></div>':''}
       <div class="lv-card-top">
         ${isNew2?'<span class="badge b-n">New</span>':''}
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
@@ -1248,7 +1256,7 @@ const isNew=l=>l.created_at&&(Date.now()-new Date(l.created_at).getTime())<7*24*
 
 // ── STATE ──
 var _cats=[],_champs=[],_mods=[],_artists=[];
-var _cat='all',_champ='all',_price=null,_artistFilter='all',_activeBrand=null,_sort='votes',_search='',_page=1,_total=0,_vmode='grid';
+var _cat='all',_champ='all',_price=null,_artistFilter='all',_activeBrand=null,_featuredOnly=false,_sort='votes',_search='',_page=1,_total=0,_vmode='grid';
 var _champLivCounts={cat:{},champ:{},brand:{}};
 let _prevView='liveries',_voted=getVotedSet(),_pendingReport=null;
 const PAGE=20;
@@ -1320,7 +1328,7 @@ function lvRow(l){
 
 // ── LOAD LIVERIES ──
 async function loadLiveries(){
-  const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
+  const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',featuredOnly:_featuredOnly||undefined,search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
   // Brand filter applied client-side after fetch
   const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
   _total=total;_voted=getVotedSet();
@@ -1456,11 +1464,21 @@ async function submitReport(){
 
 // ── HOME ──
 async function loadHome(){
-  const [top, recent, livCount] = await Promise.all([
+  const [top, recent, livCount, featured] = await Promise.all([
     fetchLiveries({sort:'votes', pageSize:6}),
     fetchLiveries({sort:'newest', pageSize:3}),
     fetchLiveries({sort:'votes', pageSize:1000}),
+    fetchLiveries({featuredOnly:true, sort:'votes', pageSize:8}),
   ]);
+
+  // Featured section
+  const featWrap=document.getElementById('h-featured-wrap');
+  if(featured.length){
+    featWrap.style.display='block';
+    document.getElementById('h-featured').innerHTML=featured.map(richCard).join('');
+  } else {
+    featWrap.style.display='none';
+  }
 
   // Stats
   const totalLivs = livCount.length;
@@ -2431,6 +2449,8 @@ function syncDrawerActive(){
   });
   // Artist
   document.querySelectorAll('.di[data-type="artist"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_artistFilter));
+  // Featured
+  document.querySelectorAll('.di[data-type="featured"]').forEach(b=>b.classList.toggle('on',_featuredOnly));
   // Step lock/unlock
   const step2=document.getElementById('dr-step-2');
   const step3=document.getElementById('dr-step-3');
@@ -2464,6 +2484,7 @@ function updateBreadcrumb(){
   if(_price===true)crumbs.push({label:'Paid',type:'price'});
   if(_artistFilter==='confirmed')crumbs.push({label:'✓ Confirmed',type:'artist'});
   if(_artistFilter==='community')crumbs.push({label:'Community',type:'artist'});
+  if(_featuredOnly)crumbs.push({label:'★ Featured',type:'featured'});
   const el=document.getElementById('dr-breadcrumb');
   if(!el)return;
   if(!crumbs.length){el.innerHTML='<span style="font-size:11px;color:var(--t3);">No filters active</span>';return;}
@@ -2507,6 +2528,8 @@ function initDrawerListeners(){
       _price=val==='free'?false:val==='paid'?true:null;_page=1;
     } else if(type==='artist'){
       _artistFilter=val;_page=1;
+    } else if(type==='featured'){
+      _featuredOnly=!_featuredOnly;_page=1;
     }
     syncDrawerActive();
     updateFilterBadge();
@@ -2520,7 +2543,8 @@ function updateFilterBadge(){
     _cat!=='all',
     _champ!=='all',
     _price!==null,
-    _artistFilter!=='all'
+    _artistFilter!=='all',
+    _featuredOnly
   ].filter(Boolean).length;
   const btn=document.getElementById('filters-btn');
   const badge=document.getElementById('filters-count');
@@ -2535,6 +2559,7 @@ function updateFilterBadge(){
   if(_price===true)chips.push({label:'Paid',type:'price'});
   if(_artistFilter==='confirmed')chips.push({label:'✓ Confirmed',type:'artist'});
   if(_artistFilter==='community')chips.push({label:'Community',type:'artist'});
+  if(_featuredOnly)chips.push({label:'★ Featured',type:'featured'});
   const chipsEl=document.getElementById('l-chips');
   if(chips.length){
     chipsEl.style.display='flex';
@@ -2550,11 +2575,12 @@ function removeChip(type){
   if(type==='champ'){_champ='all';}
   if(type==='price'){_price=null;}
   if(type==='artist'){_artistFilter='all';}
+  if(type==='featured'){_featuredOnly=false;}
   _page=1;updateFilterBadge();loadLiveries();
 }
 
 function resetFilters(){
-  _activeBrand=null;_cat='all';_champ='all';_price=null;_artistFilter='all';_search='';_page=1;
+  _activeBrand=null;_cat='all';_champ='all';_price=null;_artistFilter='all';_featuredOnly=false;_search='';_page=1;
   document.getElementById('l-search').value='';
   rebuildCatStep();rebuildChampStep();
   updateFilterBadge();loadLiveries();closeDrawer();
@@ -2680,6 +2706,10 @@ boot().then(handleHash).then(()=>{
         </button>
         <button class="di" data-step="4" data-type="artist" data-val="community" data-label="Community">
           <span style="font-size:13px;color:var(--t3);">👤</span><span style="flex:1;">Community only</span>
+        </button>
+        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:12px 9px 6px;">Highlights</div>
+        <button class="di" data-step="4" data-type="featured" data-val="featured" data-label="Featured">
+          <span style="font-size:13px;color:var(--amb);"><i class="ti ti-star-filled"></i></span><span style="flex:1;">Featured only</span>
         </button>
       </div>
     </div>
