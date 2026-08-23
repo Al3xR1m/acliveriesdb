@@ -2307,12 +2307,7 @@ var _drawerBuilt=false;
 function buildDrawerOnce(){
   if(_drawerBuilt)return;
   _drawerBuilt=true;
-  // Build category step
-  const catEl=document.getElementById('dr-categories');
-  catEl.innerHTML=
-    '<button class="di on" data-step="2" data-type="cat" data-val="all" data-label="All categories"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
-    +_cats.map(c=>`<button class="di" data-step="2" data-type="cat" data-val="${c.id}" data-label="${c.name}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count" id="drc-${c.id}"></span></button>`).join('');
-  updateDrawerCounts();
+  rebuildCatStep();
   initDrawerListeners();
 }
 
@@ -2325,6 +2320,22 @@ function updateDrawerCounts(){
     const el=document.getElementById('drc-'+c.id);
     if(el)el.textContent=_champLivCounts.cat[c.id]||'';
   });
+}
+
+function rebuildCatStep(){
+  const catEl=document.getElementById('dr-categories');
+  const visibleCatIds=_activeBrand
+    ? new Set(_mods.filter(m=>m.brand===_activeBrand).map(m=>m.category_id))
+    : null;
+  const vis=visibleCatIds ? _cats.filter(c=>visibleCatIds.has(c.id)) : _cats;
+  if(!vis.length){
+    catEl.innerHTML='<div style="padding:8px 9px;font-size:12px;color:var(--t3);">No categories for this publisher.</div>';
+    return;
+  }
+  catEl.innerHTML=
+    '<button class="di on" data-step="2" data-type="cat" data-val="all" data-label="All categories"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
+    +vis.map(c=>`<button class="di" data-step="2" data-type="cat" data-val="${c.id}" data-label="${c.name}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${c.name}</span><span class="di-count" id="drc-${c.id}"></span></button>`).join('');
+  updateDrawerCounts();
 }
 
 function rebuildChampStep(){
@@ -2420,6 +2431,8 @@ function initDrawerListeners(){
       _activeBrand=val==='all'?null:val;
       // Reset downstream
       _cat='all';_champ='all';_page=1;
+      rebuildCatStep();
+      rebuildChampStep();
     } else if(type==='cat'){
       _cat=val;
       // Reset downstream
@@ -2469,7 +2482,7 @@ function updateFilterBadge(){
 }
 
 function removeChip(type){
-  if(type==='brand'){_activeBrand=null;}
+  if(type==='brand'){_activeBrand=null;_cat='all';_champ='all';rebuildCatStep();rebuildChampStep();}
   if(type==='cat'){_cat='all';}
   if(type==='champ'){_champ='all';}
   if(type==='price'){_price=null;}
@@ -2480,6 +2493,7 @@ function removeChip(type){
 function resetFilters(){
   _activeBrand=null;_cat='all';_champ='all';_price=null;_artistFilter='all';_search='';_page=1;
   document.getElementById('l-search').value='';
+  rebuildCatStep();rebuildChampStep();
   updateFilterBadge();loadLiveries();closeDrawer();
 }
 
