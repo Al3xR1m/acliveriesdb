@@ -132,9 +132,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lotd-stat-l{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:400;color:rgba(242,240,234,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
 .lotd-btn{height:34px;padding:0 16px;background:transparent;border:1px solid #fff;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;}
 .lotd-btn:hover{background:var(--acc);border-color:var(--acc);}
-.lotd-dots{position:absolute;bottom:12px;right:20px;display:flex;gap:4px;}
+.lotd-dots{position:absolute;bottom:12px;right:20px;display:flex;gap:4px;z-index:3;}
 .lotd-dot{width:6px;height:6px;background:rgba(242,240,234,.2);cursor:pointer;transition:all .15s;}
 .lotd-dot.on{background:#fff;width:16px;}
+.lotd-progress{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(242,240,234,.1);z-index:3;}
+.lotd-progress-bar{height:100%;width:0%;background:var(--acc);}
 .page-head{padding:32px 28px 24px;border-bottom:1px solid var(--b1);flex-shrink:0;}
 .page-head-eyebrow{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--pur);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .page-head h1{font-family:'Archivo Black',sans-serif;font-size:34px;font-weight:400;text-transform:uppercase;letter-spacing:0;line-height:.92;color:var(--t1);}
@@ -689,12 +691,13 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     </div>
 
     <!-- LIVERY OF THE DAY -->
-    <div class="lotd" id="lotd-wrap">
+    <div class="lotd" id="lotd-wrap" onmouseenter="clearInterval(_lotdTimer);" onmouseleave="startLOTDTimer();">
       <div id="lotd-bg" style="position:absolute;inset:0;background:linear-gradient(135deg,#0d0d1f,#1a0033);"></div>
       <div class="lotd-blur"></div>
       <div class="lotd-content" id="lotd-content">
         <div style="grid-column:1/-1;"><div class="sk" style="height:120px;border-radius:8px;"></div></div>
       </div>
+      <div class="lotd-progress"><div class="lotd-progress-bar" id="lotd-progress-bar"></div></div>
       <div class="lotd-dots" id="lotd-dots"></div>
     </div>
 
@@ -1130,21 +1133,44 @@ function richCard(l){
 }
 
 // LOTD candidates rotate daily based on date seed
-let _lotdList=[], _lotdIdx=0;
+let _lotdList=[], _lotdIdx=0, _lotdTimer=null;
+const LOTD_INTERVAL=7000;
 async function loadLOTD(){
-  const top = await fetchLiveries({sort:'votes', pageSize:20});
-  if(!top.length) return;
-  // Pick 3 based on day of year for deterministic daily rotation
   const day = Math.floor(Date.now()/86400000);
-  _lotdList = [
-    top[day % Math.min(top.length,10)],
-    top[(day+3) % Math.min(top.length,10)],
-    top[(day+7) % Math.min(top.length,10)],
-  ].filter((l,i,a)=>a.findIndex(x=>x.id===l.id)===i);
+  const BRANDS=['RSS','VRC','URD'];
+  const pool = await fetchLiveries({sort:'votes', pageSize:60});
+  const picks=[];
+  for(const brand of BRANDS){
+    const brandPool = pool.filter(l=>l.mods?.brand===brand);
+    if(!brandPool.length) continue;
+    const featured = brandPool.filter(l=>l.featured);
+    const source = featured.length ? featured : brandPool.slice(0,10);
+    const pick = source[day % source.length];
+    if(pick) picks.push(pick);
+  }
+  if(!picks.length){
+    picks.push(...pool.slice(0,3));
+  }
+  _lotdList = picks;
   renderLOTD(0);
-  // Dots
   const dotsEl=document.getElementById('lotd-dots');
-  dotsEl.innerHTML=_lotdList.map((_,i)=>`<div class="lotd-dot${i===0?' on':''}" onclick="renderLOTD(${i})"></div>`).join('');
+  dotsEl.innerHTML=_lotdList.map((_,i)=>`<div class="lotd-dot${i===0?' on':''}" onclick="event.stopPropagation();goToLOTD(${i})"></div>`).join('');
+  startLOTDTimer();
+}
+
+function goToLOTD(idx){
+  renderLOTD(idx);
+  startLOTDTimer();
+}
+function startLOTDTimer(){
+  clearInterval(_lotdTimer);
+  const bar=document.getElementById('lotd-progress-bar');
+  if(bar){ bar.style.transition='none'; bar.style.width='0%'; requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ bar.style.transition=`width ${LOTD_INTERVAL}ms linear`; bar.style.width='100%'; }); }); }
+  if(_lotdList.length<2) return;
+  _lotdTimer=setInterval(()=>{
+    const next=(_lotdIdx+1)%_lotdList.length;
+    renderLOTD(next);
+  },LOTD_INTERVAL);
 }
 
 function renderLOTD(idx){
@@ -1163,7 +1189,7 @@ function renderLOTD(idx){
   const brandTag=brand?`<span class="bt bt-${brand.toLowerCase()}">${brand}</span>`:'';
   document.getElementById('lotd-content').innerHTML=`
     <div>
-      <div class="lotd-label"><i class="ti ti-flame"></i> Livery of the day</div>
+      <div class="lotd-label"><i class="ti ti-flame"></i> Liveries of the day</div>
       <div class="lotd-name">${l.name}</div>
       <div class="lotd-meta">${l.mods?.name||'—'} · ${l.championships?.short_name||cn||'—'}${l.artists?' · by '+l.artists.name+' '+`<svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg>`:l.author?' · by '+l.author:''}</div>
       <div class="lotd-badges">
@@ -1175,11 +1201,12 @@ function renderLOTD(idx){
     <div class="lotd-right">
       <div class="lotd-stats">
         <div class="lotd-stat"><div class="lotd-stat-n">${l.upvotes||0}</div><div class="lotd-stat-l">Upvotes</div></div>
-        <div class="lotd-stat"><div class="lotd-stat-n">#${_lotdIdx+1}</div><div class="lotd-stat-l">Featured</div></div>
+        <div class="lotd-stat"><div class="lotd-stat-n">${brand||'—'}</div><div class="lotd-stat-l">Publisher</div></div>
         <div class="lotd-stat"><div class="lotd-stat-n">${cn||'—'}</div><div class="lotd-stat-l">Category</div></div>
       </div>
-      <button class="lotd-btn" onclick="openLivery('${l.id}')"><i class="ti ti-arrow-right" style="font-size:13px;"></i> View livery</button>
+      <button class="lotd-btn" onclick="event.stopPropagation();openLivery('${l.id}')"><i class="ti ti-arrow-right" style="font-size:13px;"></i> View livery</button>
     </div>`;
+  document.getElementById('lotd-wrap').onclick=()=>openLivery(l.id);
 }
 const isNew=l=>l.created_at&&(Date.now()-new Date(l.created_at).getTime())<7*24*60*60*1000;
 
