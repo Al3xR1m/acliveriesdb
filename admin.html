@@ -89,9 +89,6 @@
       <a href="index.html" class="nav-link">← Back to site</a>
     </div>
     <div class="nav-end">
-      <button class="btn btn--icon btn--ghost" id="themeToggle" aria-label="Toggle theme">
-        <i class="ti ti-sun" id="themeIcon"></i>
-      </button>
       <span class="badge badge--rejected" style="padding:3px 8px; font-size:10px;">Admin</span>
       <button class="btn btn--ghost btn--sm" id="logoutBtn">
         <i class="ti ti-logout"></i> Logout
@@ -359,15 +356,7 @@ function customAlert(message, type){
 const ADMIN_PASS = 'Kx9LpQvT8mZ!';
 
 // Theme
-const root = document.documentElement;
-const savedTheme = localStorage.getItem('acliveries_theme') || 'dark';
-root.setAttribute('data-theme', savedTheme);
-document.getElementById('themeIcon').className = savedTheme==='dark'?'ti ti-sun':'ti ti-moon';
-document.getElementById('themeToggle').addEventListener('click', () => {
-  const next = root.getAttribute('data-theme')==='dark'?'light':'dark';
-  root.setAttribute('data-theme',next); localStorage.setItem('acliveries_theme',next);
-  document.getElementById('themeIcon').className = next==='dark'?'ti ti-sun':'ti ti-moon';
-});
+document.documentElement.setAttribute('data-theme', 'dark');
 
 // Login
 function checkLogin(){return sessionStorage.getItem('acl_admin')==='1';}
