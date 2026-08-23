@@ -291,7 +291,60 @@
   </div>
 </div>
 
+<!-- CUSTOM CONFIRM -->
+<div class="modal-overlay" id="confirm-overlay">
+  <div class="modal-box" style="max-width:380px;">
+    <div class="modal-title" id="confirm-title"><i class="ti ti-alert-triangle" style="color:var(--amber);"></i> Are you sure?</div>
+    <p id="confirm-message" style="font-size:13px;color:var(--text-2);line-height:1.6;"></p>
+    <div class="modal-actions">
+      <button class="btn btn--ghost" id="confirm-cancel">Cancel</button>
+      <button class="btn btn--primary" id="confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="custom-toast" style="position:fixed;bottom:24px;right:24px;z-index:2000;background:var(--bg-s1);border:1px solid var(--border-md);padding:12px 18px;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:10px;transform:translateY(20px);opacity:0;pointer-events:none;transition:all .25s;max-width:360px;"></div>
+
 <script src="supabase.js"></script>
+<script>
+function customConfirm(message, opts){
+  opts = opts || {};
+  return new Promise(function(resolve){
+    var ov = document.getElementById('confirm-overlay');
+    document.getElementById('confirm-message').textContent = message;
+    var okBtn = document.getElementById('confirm-ok');
+    var cancelBtn = document.getElementById('confirm-cancel');
+    okBtn.textContent = opts.okText || 'Confirm';
+    okBtn.className = 'btn ' + (opts.danger ? 'btn--danger' : 'btn--primary');
+    ov.classList.add('open');
+    function cleanup(result){
+      ov.classList.remove('open');
+      okBtn.onclick = null; cancelBtn.onclick = null;
+      resolve(result);
+    }
+    okBtn.onclick = function(){ cleanup(true); };
+    cancelBtn.onclick = function(){ cleanup(false); };
+    ov.onclick = function(e){ if(e.target===ov) cleanup(false); };
+  });
+}
+function customAlert(message, type){
+  var t = document.getElementById('custom-toast');
+  var icon = type==='error' ? 'ti-x' : type==='success' ? 'ti-circle-check' : 'ti-info-circle';
+  var color = type==='error' ? 'var(--red)' : type==='success' ? 'var(--green)' : 'var(--acc)';
+  t.innerHTML = '<i class="ti '+icon+'" style="color:'+color+';font-size:16px;flex-shrink:0;"></i><span>'+message+'</span>';
+  t.style.borderColor = color;
+  t.style.transform = 'translateY(0)';
+  t.style.opacity = '1';
+  t.style.pointerEvents = 'auto';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function(){
+    t.style.transform = 'translateY(20px)';
+    t.style.opacity = '0';
+    t.style.pointerEvents = 'none';
+  }, 3500);
+}
+</script>
 <script>
 const ADMIN_PASS = 'Kx9LpQvT8mZ!';
 
@@ -350,6 +403,8 @@ let modalSaveFn=null;
 function openModal(title,bodyHTML,saveFn){
   document.getElementById('modal-title').innerHTML=title;
   document.getElementById('modal-body').innerHTML=bodyHTML;
+  const footer = document.querySelector('.modal-actions');
+  if (footer) footer.style.display = '';
   modalSaveFn=saveFn;
   document.getElementById('modal').classList.add('open');
 }
@@ -506,8 +561,8 @@ async function loadPending(){
       </div>`}).join('');
   }
 }
-async function doApprove(id){if(!confirm('Approve this livery?'))return;await approveLivery(id);await loadPending();await loadDashboard();}
-async function doReject(id){if(!confirm('Reject and delete this submission?'))return;await rejectLivery(id);await loadPending();await loadDashboard();}
+async function doApprove(id){if(!await customConfirm('Approve this livery?'))return;await approveLivery(id);await loadPending();await loadDashboard();customAlert('Livery approved.','success');}
+async function doReject(id){if(!await customConfirm('Reject and delete this submission?',{danger:true,okText:'Reject'}))return;await rejectLivery(id);await loadPending();await loadDashboard();customAlert('Submission rejected.');}
 
 // REPORTS
 async function loadReports(){
@@ -531,7 +586,7 @@ async function loadReports(){
 }
 async function doResolveReport(id){await resolveReport(id);await loadReports();await loadDashboard();}
 async function doDeleteFromReport(liveryId,reportId){
-  if(!confirm('Delete this livery permanently?'))return;
+  if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;
   await deleteLivery(liveryId);await resolveReport(reportId);await loadReports();await loadDashboard();
 }
 
@@ -632,7 +687,7 @@ async function loadLiveries(search=''){
 
   t.innerHTML=btnHtml+filtersHtml+gridHtml;
 }
-async function doDeleteLivery(id){if(!confirm('Delete this livery permanently?'))return;await deleteLivery(id);await loadLiveries();}
+async function doDeleteLivery(id){if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;await deleteLivery(id);await loadLiveries();customAlert('Livery deleted.');}
 
 async function editLiveryModal(id,isApproval){
   const pending=await fetchPendingLiveries();
@@ -732,6 +787,7 @@ async function loadArtists(){
       h+='<button onclick="doGenerateToken(\''+a.id+'\');" style="flex:1;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:5px;"><i class="ti ti-key"></i> Generate link</button>';
     }
     h+='<button onclick="editArtistModal(\''+a.id+'\');" style="height:32px;width:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-pencil"></i></button>';
+    h+='<button onclick="claimLiveriesModal(\''+a.id+'\',\''+a.name.replace(/'/g,"\\'")+'\');" style="height:32px;width:32px;border-radius:8px;border:1px solid rgba(255,159,10,.3);background:rgba(255,159,10,.08);color:#FFB13D;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Claim unlinked liveries"><i class="ti ti-user-search"></i></button>';
     h+='<button onclick="doDeleteArtist(\''+a.id+'\');" style="height:32px;width:32px;border-radius:8px;border:1px solid rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:#FF453A;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-trash"></i></button>';
     h+='</div>';
     h+='</div>';
@@ -739,6 +795,55 @@ async function loadArtists(){
   h+='</div>';
   t.innerHTML=h;
 }
+async function claimLiveriesModal(artistId, artistName){
+  openModal(`<i class="ti ti-user-search"></i> Claim liveries for ${artistName}`, `
+    <p style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:14px;">
+      Search for liveries submitted with just a text author name (not linked to a confirmed artist yet) that likely belong to <strong style="color:var(--text);">${artistName}</strong>.
+    </p>
+    <div class="field full" style="margin-bottom:14px;">
+      <label>Search by author name</label>
+      <div style="display:flex;gap:8px;">
+        <input id="claim-search" value="${artistName}" style="flex:1;">
+        <button class="btn btn--surface" onclick="runClaimSearch('${artistId}')"><i class="ti ti-search"></i></button>
+      </div>
+    </div>
+    <div id="claim-results" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;"></div>
+  `, null);
+  const footer = document.querySelector('.modal-actions');
+  if (footer) footer.style.display = 'none';
+  runClaimSearch(artistId);
+}
+async function runClaimSearch(artistId){
+  const term = document.getElementById('claim-search').value.trim();
+  const el = document.getElementById('claim-results');
+  el.innerHTML = '<div style="color:var(--text-3);font-size:12px;">Searching…</div>';
+  if (!term){ el.innerHTML=''; return; }
+  const matches = await fetchLiveries({ search: term, communityOnly: true, approvedOnly: false, pageSize: 50 });
+  if (!matches.length){ el.innerHTML='<div style="color:var(--text-3);font-size:12px;">No unlinked liveries found for that name.</div>'; return; }
+  el.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);cursor:pointer;"><input type="checkbox" id="claim-all" onchange="document.querySelectorAll('.claim-cb').forEach(cb=>cb.checked=this.checked)"> Select all (${matches.length})</label>
+    </div>`
+    + matches.map(l=>`
+      <label style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);cursor:pointer;">
+        <input type="checkbox" class="claim-cb" value="${l.id}" checked>
+        <div style="width:44px;height:28px;background:var(--bg-s2);flex-shrink:0;overflow:hidden;">${l.image_url?`<img src="${l.image_url}" style="width:100%;height:100%;object-fit:cover;">`:''}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;font-weight:700;color:var(--text);">${l.name}</div>
+          <div style="font-size:10px;color:var(--text-3);">Author: "${l.author||'—'}" · ${l.mods?.name||'—'} · ${l.approved?'Published':'Pending'}</div>
+        </div>
+      </label>`).join('')
+    + `<button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:8px;" onclick="doClaimSelected('${artistId}')"><i class="ti ti-check"></i> Claim selected</button>`;
+}
+async function doClaimSelected(artistId){
+  const ids = Array.from(document.querySelectorAll('.claim-cb:checked')).map(cb=>cb.value);
+  if (!ids.length){ customAlert('Select at least one livery.','error'); return; }
+  if (!await customConfirm(`Assign ${ids.length} livery/ies to this artist?`)) return;
+  for (const id of ids) await updateLivery(id, { artist_id: artistId, author: null });
+  closeModal();
+  await reloadCache(); await loadArtists();
+  customAlert(`${ids.length} livery/ies claimed.`, 'success');
+}
+
 function artistModalForm(a={}){
   function lnk(id, icon, color, label, val){
     return '<div style="display:flex;align-items:center;gap:8px;background:var(--bg-s2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;margin-bottom:6px;">'
@@ -822,52 +927,45 @@ async function loadEditRequests(){
   }).join('');
 }
 async function doApproveEditRequest(btn){
-  if(!confirm('Apply this change?')) return;
+  if(!await customConfirm('Apply this change?')) return;
   const id=btn.dataset.id, liveryId=btn.dataset.livery, field=btn.dataset.field, val=decodeURIComponent(btn.dataset.val);
   await approveEditRequest(id, liveryId, field, val);
   await loadEditRequests(); await loadDashboard();
 }
 async function doRejectEditRequest(btn){
-  if(!confirm('Reject this change request?')) return;
+  if(!await customConfirm('Reject this change request?',{danger:true,okText:'Reject'})) return;
   await rejectEditRequest(btn.dataset.id);
   await loadEditRequests(); await loadDashboard();
 }
-async function doDeleteArtist(id){if(!confirm('Remove this confirmed artist? Their liveries will keep the text author name.'))return;await deleteArtist(id);await reloadCache();await loadArtists();}
+async function doDeleteArtist(id){if(!await customConfirm('Remove this confirmed artist? Their liveries will keep the text author name.',{danger:true,okText:'Remove'}))return;await deleteArtist(id);await reloadCache();await loadArtists();customAlert('Artist removed.');}
 
 function getBaseUrl() {
   const path = location.pathname.replace(/\/[^/]*$/, '/');
   return location.origin + path;
 }
 async function doGenerateToken(id) {
-  if (!confirm('Generate an edit link for this artist? The old link (if any) will be replaced.')) return;
+  if (!await customConfirm('Generate an edit link for this artist? The old link (if any) will be replaced.')) return;
   const token = await generateArtistToken(id);
   if (token) {
     await reloadCache(); await loadArtists();
     const link = `${getBaseUrl()}artist-edit.html?token=${token}`;
     await navigator.clipboard.writeText(link);
-    alert(`✓ Link generated and copied to clipboard!\
-\
-Send this to the artist via Discord:\
-${link}`);
-  } else { alert('Failed to generate token. Try again.'); }
+    customAlert('Link generated and copied to clipboard — send it to the artist via Discord.','success');
+  } else { customAlert('Failed to generate token. Try again.','error'); }
 }
 async function doRevokeToken(id) {
-  if (!confirm('Revoke the current link and generate a new one?')) return;
+  if (!await customConfirm('Revoke the current link and generate a new one?',{danger:true,okText:'Revoke'})) return;
   const token = await generateArtistToken(id);
   if (token) {
     await reloadCache(); await loadArtists();
     const link = `${getBaseUrl()}artist-edit.html?token=${token}`;
     await navigator.clipboard.writeText(link);
-    alert(`✓ New link generated and copied!\
-\
-${link}`);
+    customAlert('New link generated and copied to clipboard.','success');
   }
 }
 function copyArtistLink(token) {
   const link = `${getBaseUrl()}artist-edit.html?token=${token}`;
-  navigator.clipboard.writeText(link).then(() => alert(`✓ Link copied to clipboard!\
-\
-${link}`));
+  navigator.clipboard.writeText(link).then(() => customAlert('Link copied to clipboard!','success'));
 }
 
 // CHAMPIONSHIPS
@@ -1014,10 +1112,10 @@ async function editChampModal(id){
   bindCatChecks();
   setTimeout(()=>{_getChampLogo=buildAdminUploadWidget('cf-logo-widget',ch.logo_url||'');},100);
 }
-async function doDeleteChamp(id){if(!confirm('Delete this championship?'))return;await deleteChampionship(id);await reloadCache();await loadChampionships();}
+async function doDeleteChamp(id){if(!await customConfirm('Delete this championship?',{danger:true,okText:'Delete'}))return;await deleteChampionship(id);await reloadCache();await loadChampionships();customAlert('Championship deleted.');}
 
-async function doApproveAddon(id){if(!confirm('Approve this addon?'))return;await approveAddon(id);await loadPending();await loadDashboard();}
-async function doRejectAddon(id){if(!confirm('Reject and delete this addon?'))return;await deleteAddon(id);await loadPending();await loadDashboard();}
+async function doApproveAddon(id){if(!await customConfirm('Approve this addon?'))return;await approveAddon(id);await loadPending();await loadDashboard();customAlert('Addon approved.','success');}
+async function doRejectAddon(id){if(!await customConfirm('Reject and delete this addon?',{danger:true,okText:'Reject'}))return;await deleteAddon(id);await loadPending();await loadDashboard();customAlert('Addon rejected.');}
 
 // ALL ADDONS
 async function loadAddons(search=''){
@@ -1038,7 +1136,7 @@ async function loadAddons(search=''){
   </tr>`).join('')}</tbody>`;
 }
 document.getElementById('addon-search')?.addEventListener('input', e=>loadAddons(e.target.value));
-async function doDeleteAddon(id){ if(!confirm('Delete this addon permanently?'))return; await deleteAddon(id); await loadAddons(); }
+async function doDeleteAddon(id){ if(!await customConfirm('Delete this addon permanently?',{danger:true,okText:'Delete'}))return; await deleteAddon(id); await loadAddons(); customAlert('Addon deleted.'); }
 
 async function editAddonModal(id, isApproval=false){
   const list = await fetchPendingAddons();
@@ -1215,7 +1313,7 @@ async function editModModal(id){
   });
   setTimeout(()=>{ _getModImg = buildUploadWidget('mf-img-widget',{currentUrl:m.image_url||'',folder:'mods',label:'Upload mod cover image'}); },50);
 }
-async function doDeleteMod(id){if(!confirm('Delete this mod?'))return;await deleteMod(id);await reloadCache();await loadMods();}
+async function doDeleteMod(id){if(!await customConfirm('Delete this mod?',{danger:true,okText:'Delete'}))return;await deleteMod(id);await reloadCache();await loadMods();customAlert('Mod deleted.');}
 
 // CATEGORIES
 async function loadCategories(){
@@ -1304,7 +1402,7 @@ async function editCatModal(id){
   });
   bindCatPreview();
 }
-async function doDeleteCat(id){if(!confirm('Delete this category?'))return;await deleteCategory(id);await reloadCache();await loadCategories();}
+async function doDeleteCat(id){if(!await customConfirm('Delete this category?',{danger:true,okText:'Delete'}))return;await deleteCategory(id);await reloadCache();await loadCategories();customAlert('Category deleted.');}
 
 // IMAGE UPLOAD + COMPRESSION
 async function compressImage(file, opts = {}) {
@@ -1365,7 +1463,7 @@ function buildUploadWidget(containerId, opts = {}) {
   const progress = document.getElementById(`${containerId}-progress`);
   input.addEventListener('change', async () => {
     const file = input.files[0]; if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { alert('File too large. Max 2MB.'); return; }
+    if (file.size > 2 * 1024 * 1024) { customAlert('File too large. Max 2MB.','error'); return; }
     btn.classList.add('uploading');
     btn.innerHTML = `<i class="ti ti-loader" style="font-size:14px;"></i> Compressing…`;
     progress.textContent = 'Compressing image…'; progress.classList.add('visible');
