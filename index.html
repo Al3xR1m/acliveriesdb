@@ -691,7 +691,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     </div>
 
     <!-- LIVERY OF THE DAY -->
-    <div class="lotd" id="lotd-wrap" onmouseenter="clearInterval(_lotdTimer);" onmouseleave="startLOTDTimer();">
+    <div class="lotd" id="lotd-wrap" onmouseenter="pauseLOTDTimer();" onmouseleave="resumeLOTDTimer();">
       <div id="lotd-bg" style="position:absolute;inset:0;background:linear-gradient(135deg,#0d0d1f,#1a0033);"></div>
       <div class="lotd-blur"></div>
       <div class="lotd-content" id="lotd-content">
@@ -1133,7 +1133,7 @@ function richCard(l){
 }
 
 // LOTD candidates rotate daily based on date seed
-let _lotdList=[], _lotdIdx=0, _lotdTimer=null;
+let _lotdList=[], _lotdIdx=0, _lotdTimer=null, _lotdRemaining=0, _lotdTickStart=0;
 const LOTD_INTERVAL=7000;
 async function loadLOTD(){
   const day = Math.floor(Date.now()/86400000);
@@ -1162,15 +1162,51 @@ function goToLOTD(idx){
   renderLOTD(idx);
   startLOTDTimer();
 }
-function startLOTDTimer(){
-  clearInterval(_lotdTimer);
+function animateLOTDBar(duration,fromPct){
   const bar=document.getElementById('lotd-progress-bar');
-  if(bar){ bar.style.transition='none'; bar.style.width='0%'; requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ bar.style.transition=`width ${LOTD_INTERVAL}ms linear`; bar.style.width='100%'; }); }); }
+  if(!bar) return;
+  bar.style.transition='none';
+  bar.style.width=(fromPct||0)+'%';
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+    bar.style.transition=`width ${duration}ms linear`;
+    bar.style.width='100%';
+  }); });
+}
+function startLOTDTimer(){
+  clearTimeout(_lotdTimer);
+  _lotdRemaining=LOTD_INTERVAL;
+  animateLOTDBar(LOTD_INTERVAL,0);
+  scheduleLOTDTick();
+}
+function scheduleLOTDTick(){
+  clearTimeout(_lotdTimer);
   if(_lotdList.length<2) return;
-  _lotdTimer=setInterval(()=>{
+  _lotdTickStart=Date.now();
+  _lotdTimer=setTimeout(()=>{
     const next=(_lotdIdx+1)%_lotdList.length;
     renderLOTD(next);
-  },LOTD_INTERVAL);
+    _lotdRemaining=LOTD_INTERVAL;
+    animateLOTDBar(LOTD_INTERVAL,0);
+    scheduleLOTDTick();
+  },_lotdRemaining);
+}
+function pauseLOTDTimer(){
+  clearTimeout(_lotdTimer);
+  _lotdRemaining=Math.max(0,_lotdRemaining-(Date.now()-_lotdTickStart));
+  const bar=document.getElementById('lotd-progress-bar');
+  if(bar){
+    const donePct=100-(100*_lotdRemaining/LOTD_INTERVAL);
+    bar.style.transition='none';
+    bar.style.width=donePct+'%';
+  }
+}
+function resumeLOTDTimer(){
+  if(_lotdList.length<2) return;
+  if(_lotdRemaining<=0)_lotdRemaining=LOTD_INTERVAL;
+  const bar=document.getElementById('lotd-progress-bar');
+  const fromPct=bar?100-(100*_lotdRemaining/LOTD_INTERVAL):0;
+  animateLOTDBar(_lotdRemaining,fromPct);
+  scheduleLOTDTick();
 }
 
 function renderLOTD(idx){

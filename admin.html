@@ -125,6 +125,7 @@
       <div style="padding:6px 0;">
         <div class="admin-nav-section">Content</div>
         <button class="admin-nav-item" data-panel="liveries"><i class="ti ti-photo"></i>All Liveries</button>
+        <button class="admin-nav-item" data-panel="featured"><i class="ti ti-star"></i>Featured</button>
         <button class="admin-nav-item" data-panel="addons"><i class="ti ti-puzzle"></i>All Addons</button>
       </div>
       <div style="padding:6px 0;">
@@ -222,6 +223,15 @@
           <input type="text" class="form-input" id="livery-search" placeholder="Search…" style="max-width:220px;">
         </div>
         <div style="overflow-x:auto;"><table class="data-table" id="liveries-table"></table></div>
+      </div>
+
+      <!-- FEATURED -->
+      <div class="panel" id="panel-featured">
+        <div style="margin-bottom:16px;">
+          <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-star"></i> Featured (Liveries of the day)</span>
+          <p style="font-size:12px;color:var(--text-3);margin-top:6px;line-height:1.6;">Featured liveries take priority in the rotating "Liveries of the day" banner on the home page — one is picked per publisher (RSS, VRC, URD) each day. Without any featured picks, the top-voted livery for that publisher is used instead.</p>
+        </div>
+        <div id="featured-content"></div>
       </div>
 
       <!-- ALL ADDONS -->
@@ -446,6 +456,7 @@ async function loadPanel(name){
   if(name==='reports')      await loadReports();
   if(name==='edit-requests') await loadEditRequests();
   if(name==='liveries')     await loadLiveries();
+  if(name==='featured')     await loadFeatured();
   if(name==='addons')       await loadAddons();
   if(name==='artists')      await loadArtists();
   if(name==='championships') await loadChampionships();
@@ -676,7 +687,6 @@ async function loadLiveries(search=''){
       gridHtml+='<div style="font-size:11px;color:var(--text-3);">'+creator+'</div>';
       gridHtml+='<div style="display:flex;gap:5px;margin-top:4px;">';
       gridHtml+='<button onclick="event.stopPropagation();editLiveryModal(\''+l.id+'\',false);" style="flex:1;height:28px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-body);"><i class="ti ti-pencil"></i> Edit</button>';
-      gridHtml+='<button onclick="event.stopPropagation();toggleFeatured(\''+l.id+'\','+(!l.featured)+');" style="height:28px;width:28px;border-radius:7px;border:1px solid '+(l.featured?'rgba(255,177,61,.4)':'var(--border)')+';background:'+(l.featured?'rgba(255,177,61,.12)':'transparent')+';color:'+(l.featured?'#FFB13D':'var(--text-3)')+';cursor:pointer;display:flex;align-items:center;justify-content:center;" title="'+(l.featured?'Remove from featured':'Mark as featured (Liveries of the day)')+'"><i class="ti ti-star'+(l.featured?'-filled':'')+'"></i></button>';
       gridHtml+='<button onclick="event.stopPropagation();doDeleteLivery(\''+l.id+'\');" style="height:28px;width:28px;border-radius:7px;border:1px solid rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:#FF453A;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-trash"></i></button>';
       gridHtml+='</div>';
       gridHtml+='</div></div>';
@@ -691,8 +701,56 @@ async function loadLiveries(search=''){
 async function doDeleteLivery(id){if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;await deleteLivery(id);await loadLiveries();customAlert('Livery deleted.');}
 async function toggleFeatured(id, featured){
   await updateLivery(id, { featured: featured });
-  await loadLiveries();
   customAlert(featured?'Marked as featured.':'Removed from featured.','success');
+}
+async function loadFeatured(){
+  const el=document.getElementById('featured-content');
+  el.innerHTML='<div style="color:var(--text-3);font-size:13px;">Loading…</div>';
+  var BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.08)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.08)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.08)'}};
+  const all=await fetchLiveries({sort:'votes',pageSize:500,approvedOnly:true});
+  let html='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">';
+  ['RSS','VRC','URD'].forEach(function(brand){
+    const bm=BRC[brand];
+    const brandLiveries=all.filter(l=>l.mods?.brand===brand);
+    const featured=brandLiveries.filter(l=>l.featured);
+    html+='<div style="background:var(--bg-s1);border:1px solid var(--border);padding:14px;">';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="width:22px;height:22px;background:'+bm.bg+';color:'+bm.c+';display:flex;align-items:center;justify-content:center;font-family:\'Azeret Mono\',monospace;font-size:10px;font-weight:700;">'+brand[0]+'</span><span style="font-family:\'Archivo Black\',sans-serif;font-size:13px;text-transform:uppercase;color:var(--text);">'+brand+'</span></div>';
+    if(featured.length){
+      html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">';
+      featured.forEach(function(l){
+        html+='<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-s2);border-left:2px solid '+bm.c+';">';
+        html+='<div style="width:36px;height:24px;background:var(--bg);flex-shrink:0;overflow:hidden;">'+(l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'')+'</div>';
+        html+='<span style="flex:1;font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+l.name+'</span>';
+        html+='<button onclick="toggleFeaturedAndReload(\''+l.id+'\',false)" style="width:22px;height:22px;border:none;background:transparent;color:var(--text-3);cursor:pointer;flex-shrink:0;" title="Remove"><i class="ti ti-x"></i></button>';
+        html+='</div>';
+      });
+      html+='</div>';
+    } else {
+      html+='<div style="font-size:11px;color:var(--text-3);margin-bottom:12px;">No featured pick — falls back to top-voted automatically.</div>';
+    }
+    html+='<input type="text" placeholder="Search '+brand+' liveries to add…" oninput="filterFeaturedSearch(this,\''+brand+'\')" style="width:100%;background:var(--bg-s2);border:1px solid var(--border);padding:7px 10px;font-size:11px;color:var(--text);outline:none;margin-bottom:6px;box-sizing:border-box;">';
+    html+='<div id="featured-search-'+brand+'" style="display:flex;flex-direction:column;gap:4px;max-height:160px;overflow-y:auto;"></div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+  window._featuredAll=all;
+}
+function filterFeaturedSearch(input,brand){
+  const term=input.value.trim().toLowerCase();
+  const resEl=document.getElementById('featured-search-'+brand);
+  if(!term){resEl.innerHTML='';return;}
+  const matches=(window._featuredAll||[]).filter(l=>l.mods?.brand===brand && !l.featured && l.name.toLowerCase().includes(term)).slice(0,8);
+  resEl.innerHTML=matches.map(l=>
+    '<div style="display:flex;align-items:center;gap:8px;padding:5px 6px;cursor:pointer;" onclick="toggleFeaturedAndReload(\''+l.id+'\',true)" onmouseover="this.style.background=\'var(--bg-s2)\'" onmouseout="this.style.background=\'\'">'
+    +'<span style="flex:1;font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+l.name+'</span>'
+    +'<i class="ti ti-plus" style="font-size:12px;color:var(--acc);flex-shrink:0;"></i>'
+    +'</div>'
+  ).join('') || '<div style="font-size:11px;color:var(--text-3);padding:4px 6px;">No matches.</div>';
+}
+async function toggleFeaturedAndReload(id,featured){
+  await toggleFeatured(id,featured);
+  await loadFeatured();
 }
 
 async function editLiveryModal(id,isApproval){
