@@ -356,6 +356,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .ld-val{font-family:'Azeret Mono',monospace;font-size:14px;font-weight:700;color:var(--t1);}
 .ld-notes{margin-top:10px;padding:14px 16px;background:var(--s1);border:1px solid var(--b1);font-size:13px;color:var(--t2);line-height:1.7;}
 .ld-section{padding:56px 0;border-top:1px solid var(--b1);margin-top:40px;}
+.about-faq{border-bottom:1px solid var(--b1);}
+.about-faq summary{padding:16px 0;font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;}
+.about-faq summary::-webkit-details-marker{display:none;}
+.about-faq summary::after{content:'+';font-family:'Archivo',sans-serif;font-size:18px;font-weight:400;color:var(--t3);flex-shrink:0;margin-left:12px;transition:transform .2s;}
+.about-faq[open] summary::after{transform:rotate(45deg);color:var(--acc);}
+.about-faq summary:hover{color:var(--acc);}
+.about-faq p{font-size:13px;color:var(--t2);line-height:1.6;margin:0 0 18px;}
 .ld-section-tag{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:block;}
 .ld-section h2{font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3vw,28px);font-weight:400;text-transform:uppercase;color:var(--t1);margin-bottom:16px;}
 .ld-desc{color:var(--t2);max-width:640px;line-height:1.75;font-size:14px;}
@@ -808,40 +815,56 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     <div style="display:grid;grid-template-columns:1fr 320px;gap:0;align-items:start;">
 
       <!-- LEFT — rules + FAQ -->
-      <div style="padding:0 28px 60px;">
+      <div class="ld-section" style="padding:0 28px 60px;border-bottom:none;">
 
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n"><i class="ti ti-shield-check" style="font-size:12px;"></i></span> Posting rules</div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div style="display:flex;gap:12px;"><i class="ti ti-point" style="color:var(--acc);flex-shrink:0;margin-top:4px;"></i><p style="font-size:14px;color:var(--t2);line-height:1.6;">Only submit liveries you made yourself, or that you have explicit permission to share.</p></div>
-            <div style="display:flex;gap:12px;"><i class="ti ti-point" style="color:var(--acc);flex-shrink:0;margin-top:4px;"></i><p style="font-size:14px;color:var(--t2);line-height:1.6;">Credit the original artist if you're re-uploading or continuing someone else's work.</p></div>
-            <div style="display:flex;gap:12px;"><i class="ti ti-point" style="color:var(--acc);flex-shrink:0;margin-top:4px;"></i><p style="font-size:14px;color:var(--t2);line-height:1.6;">The preview image must show the actual livery — no misleading or unrelated screenshots.</p></div>
-            <div style="display:flex;gap:12px;"><i class="ti ti-point" style="color:var(--acc);flex-shrink:0;margin-top:4px;"></i><p style="font-size:14px;color:var(--t2);line-height:1.6;">Download links must go directly to the file — no forced redirects, surveys, or malware.</p></div>
-            <div style="display:flex;gap:12px;"><i class="ti ti-point" style="color:var(--acc);flex-shrink:0;margin-top:4px;"></i><p style="font-size:14px;color:var(--t2);line-height:1.6;">Keep it appropriate — no offensive imagery, hate symbols, or NSFW content.</p></div>
-            <div style="display:flex;gap:12px;"><i class="ti ti-point" style="color:var(--acc);flex-shrink:0;margin-top:4px;"></i><p style="font-size:14px;color:var(--t2);line-height:1.6;">Submissions are reviewed before going live — expect a short delay before approval.</p></div>
+        <span class="ld-section-tag">// Ground rules</span>
+        <h2 style="margin-bottom:22px;">Posting rules</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:48px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;margin-top:5px;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--acc)"/></svg>
+            <p style="font-size:14px;color:var(--t2);line-height:1.6;margin:0;">Only submit liveries you made yourself, or that you have explicit permission to share.</p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;margin-top:5px;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--acc)"/></svg>
+            <p style="font-size:14px;color:var(--t2);line-height:1.6;margin:0;">Credit the original artist if you're re-uploading or continuing someone else's work.</p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;margin-top:5px;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--acc)"/></svg>
+            <p style="font-size:14px;color:var(--t2);line-height:1.6;margin:0;">The preview image must show the actual livery — no misleading or unrelated screenshots.</p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;margin-top:5px;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--acc)"/></svg>
+            <p style="font-size:14px;color:var(--t2);line-height:1.6;margin:0;">Download links must go directly to the file — no forced redirects, surveys, or malware.</p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;margin-top:5px;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--acc)"/></svg>
+            <p style="font-size:14px;color:var(--t2);line-height:1.6;margin:0;">Keep it appropriate — no offensive imagery, hate symbols, or NSFW content.</p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;margin-top:5px;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--acc)"/></svg>
+            <p style="font-size:14px;color:var(--t2);line-height:1.6;margin:0;">Submissions are reviewed before going live — expect a short delay before approval.</p>
           </div>
         </div>
 
-        <div class="sub-step">
-          <div class="sub-step-label"><span class="sub-step-n"><i class="ti ti-help-circle" style="font-size:12px;"></i></span> FAQ</div>
-          <div style="display:flex;flex-direction:column;">
-            <div style="padding:14px 0;border-bottom:1px solid var(--b1);">
-              <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px;">Is everything on here free?</div>
-              <div style="font-size:13px;color:var(--t2);line-height:1.6;">Most liveries are free. Some artists mark theirs as "Paid" — check the badge on the livery card before downloading.</div>
-            </div>
-            <div style="padding:14px 0;border-bottom:1px solid var(--b1);">
-              <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px;">How do I submit a livery?</div>
-              <div style="font-size:13px;color:var(--t2);line-height:1.6;">Click "Submit a livery" in the top nav, fill in the details, and it'll appear once approved.</div>
-            </div>
-            <div style="padding:14px 0;border-bottom:1px solid var(--b1);">
-              <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px;">What's a "Confirmed artist"?</div>
-              <div style="font-size:13px;color:var(--t2);line-height:1.6;">A creator whose identity has been verified, with a dedicated profile and dashboard to manage their uploads directly.</div>
-            </div>
-            <div style="padding:14px 0;">
-              <div style="font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px;">Can I ask for a livery to be removed?</div>
-              <div style="font-size:13px;color:var(--t2);line-height:1.6;">Yes — use the "Report a problem" link on the livery's page, or reach out on Discord directly.</div>
-            </div>
-          </div>
+        <span class="ld-section-tag">// Questions</span>
+        <h2 style="margin-bottom:22px;">FAQ</h2>
+        <div style="display:flex;flex-direction:column;">
+          <details class="about-faq">
+            <summary>Is everything on here free?</summary>
+            <p>Most liveries are free. Some artists mark theirs as "Paid" — check the badge on the livery card before downloading.</p>
+          </details>
+          <details class="about-faq">
+            <summary>How do I submit a livery?</summary>
+            <p>Click "Submit a livery" in the top nav, fill in the details, and it'll appear once approved.</p>
+          </details>
+          <details class="about-faq">
+            <summary>What's a "Confirmed artist"?</summary>
+            <p>A creator whose identity has been verified, with a dedicated profile and dashboard to manage their uploads directly.</p>
+          </details>
+          <details class="about-faq">
+            <summary>Can I ask for a livery to be removed?</summary>
+            <p>Yes — use the "Report a problem" link on the livery's page, or reach out on Discord directly.</p>
+          </details>
         </div>
 
       </div>
