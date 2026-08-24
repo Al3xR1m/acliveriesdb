@@ -700,7 +700,7 @@ async function loadLiveries(search=''){
 
   t.innerHTML=btnHtml+filtersHtml+gridHtml;
 }
-async function doDeleteLivery(id){if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;await deleteLivery(id);await loadLiveries();customAlert('Livery deleted.');}
+async function doDeleteLivery(id){if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;const l=await fetchLivery(id);await deleteLivery(id);if(l?.image_url)deleteFromStorage(l.image_url);await loadLiveries();customAlert('Livery deleted.');}
 async function toggleFeatured(id, featured){
   await updateLivery(id, { featured: featured });
   customAlert(featured?'Marked as featured.':'Removed from featured.','success');
@@ -787,6 +787,7 @@ async function editLiveryModal(id,isApproval){
         </div>
       </div>
     </div>`,async()=>{
+    const newImageUrl=(window._getLiveryImg?.())||l.image_url||null;
     await updateLivery(id,{
       name:document.getElementById('el-name').value,
       category_id:document.getElementById('el-cat').value||null,
@@ -799,11 +800,12 @@ async function editLiveryModal(id,isApproval){
       author:document.getElementById('el-author').value||null,
       artist_id:document.getElementById('el-artist').value||null,
       download_url:document.getElementById('el-url').value,
-      image_url:(window._getLiveryImg?.())||l.image_url||null,
+      image_url:newImageUrl,
       notes:document.getElementById('el-notes').value,
       is_paid:document.getElementById('el-paid')?.checked||false,
       approved:isApproval?true:l.approved,
     });
+    if(newImageUrl&&newImageUrl!==l.image_url)deleteFromStorage(l.image_url);
     closeModal();
     if(isApproval){await loadPending();await loadDashboard();}else await loadLiveries();
   });
@@ -968,7 +970,10 @@ document.getElementById('addArtistBtn').addEventListener('click',()=>{
 async function editArtistModal(id){
   const a=_artists.find(x=>x.id===id);if(!a)return;
   openModal('<i class="ti ti-pencil"></i> Edit artist',artistModalForm(a),async()=>{
-    const _bv2=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});await updateArtist(id,{name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||a.avatar_url||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv2,...getArtistUrls()});
+    const _bv2=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});
+    const newAvatar=_getArtistAvatar()||a.avatar_url||null;
+    await updateArtist(id,{name:document.getElementById('af-name').value.trim(),avatar_url:newAvatar,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv2,...getArtistUrls()});
+    if(newAvatar&&newAvatar!==a.avatar_url)deleteFromStorage(a.avatar_url);
     await reloadCache();closeModal();await loadArtists();
   });
   setTimeout(()=>{ _getArtistAvatar = buildUploadWidget('af-avatar-widget',{currentUrl:a.avatar_url||'',folder:'artists',isAvatar:true,label:'Upload profile picture'}); },50);
@@ -1007,7 +1012,7 @@ async function doRejectEditRequest(btn){
   await rejectEditRequest(btn.dataset.id);
   await loadEditRequests(); await loadDashboard();
 }
-async function doDeleteArtist(id){if(!await customConfirm('Remove this confirmed artist? Their liveries will keep the text author name.',{danger:true,okText:'Remove'}))return;await deleteArtist(id);await reloadCache();await loadArtists();customAlert('Artist removed.');}
+async function doDeleteArtist(id){if(!await customConfirm('Remove this confirmed artist? Their liveries will keep the text author name.',{danger:true,okText:'Remove'}))return;const a=_artists.find(x=>x.id===id);await deleteArtist(id);if(a?.avatar_url)deleteFromStorage(a.avatar_url);await reloadCache();await loadArtists();customAlert('Artist removed.');}
 
 function getBaseUrl() {
   const path = location.pathname.replace(/\/[^/]*$/, '/');
@@ -1206,7 +1211,7 @@ async function loadAddons(search=''){
   </tr>`).join('')}</tbody>`;
 }
 document.getElementById('addon-search')?.addEventListener('input', e=>loadAddons(e.target.value));
-async function doDeleteAddon(id){ if(!await customConfirm('Delete this addon permanently?',{danger:true,okText:'Delete'}))return; await deleteAddon(id); await loadAddons(); customAlert('Addon deleted.'); }
+async function doDeleteAddon(id){ if(!await customConfirm('Delete this addon permanently?',{danger:true,okText:'Delete'}))return; const a=await fetchAddon(id); await deleteAddon(id); if(a?.image_url)deleteFromStorage(a.image_url); await loadAddons(); customAlert('Addon deleted.'); }
 
 async function editAddonModal(id, isApproval=false){
   const list = await fetchPendingAddons();
@@ -1241,6 +1246,7 @@ async function editAddonModal(id, isApproval=false){
         </div>
       </div>
     </div>`, async()=>{
+    const newImg=(window._getAddonImg?.())||a.image_url||null;
     await updateAddon(id,{
       name: document.getElementById('ae-name').value.trim(),
       category_id: document.getElementById('ae-cat').value||null,
@@ -1249,11 +1255,12 @@ async function editAddonModal(id, isApproval=false){
       author: document.getElementById('ae-author').value||null,
       artist_id: document.getElementById('ae-artist').value||null,
       download_url: document.getElementById('ae-url').value,
-      image_url: (window._getAddonImg?.())||a.image_url||null,
+      image_url: newImg,
       notes: document.getElementById('ae-notes').value,
       is_paid: document.getElementById('ae-paid')?.checked||false,
       approved: isApproval ? true : a.approved,
     });
+    if(newImg&&newImg!==a.image_url)deleteFromStorage(a.image_url);
     closeModal();
     if(isApproval){await loadPending();await loadDashboard();}
   });

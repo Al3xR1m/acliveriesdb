@@ -391,10 +391,22 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 </div>
 <div class="toast" id="ae-toast"></div>
 
+<div class="modal-ov" id="ae-confirm-ov">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title"><i class="ti ti-alert-triangle" style="color:var(--amb);"></i> Are you sure?</div>
+    <p id="ae-confirm-msg" style="font-size:13px;color:var(--t2);line-height:1.6;"></p>
+    <div class="modal-foot">
+      <button class="btn-ghost" id="ae-confirm-cancel">Cancel</button>
+      <button class="btn-danger" id="ae-confirm-ok">Delete</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var _ae_token = new URLSearchParams(location.search).get('token');
 var _ae_artist = null;
 var _ae_edit_id = null;
+var _ae_edit_original_img = null;
 var _ae_brand = 'RSS';
 var _ae_mode = 'livery';
 var _ae_preview_img = null;
@@ -405,6 +417,24 @@ function aeToast(msg, type) {
   var t = document.getElementById('ae-toast');
   t.textContent = msg; t.className = 'toast ' + (type||'ok'); t.style.display = 'flex';
   setTimeout(function(){ t.style.display='none'; }, 3000);
+}
+
+function aeConfirm(message){
+  return new Promise(function(resolve){
+    var ov = document.getElementById('ae-confirm-ov');
+    document.getElementById('ae-confirm-msg').textContent = message;
+    var ok = document.getElementById('ae-confirm-ok');
+    var cancel = document.getElementById('ae-confirm-cancel');
+    ov.classList.add('open');
+    function cleanup(result){
+      ov.classList.remove('open');
+      ok.onclick = null; cancel.onclick = null;
+      resolve(result);
+    }
+    ok.onclick = function(){ cleanup(true); };
+    cancel.onclick = function(){ cleanup(false); };
+    ov.onclick = function(e){ if(e.target===ov) cleanup(false); };
+  });
 }
 
 function aeNav(v, btn) {
@@ -426,7 +456,7 @@ function aeBuildUpload(){
 }
 async function aeHandleImgUpload(){
   var file = this.files[0]; if (!file) return;
-  if (file.size > 2*1024*1024) { alert('Max 2MB.'); return; }
+  if (file.size > 2*1024*1024) { aeToast('Max 2MB.','err'); return; }
   var lbl = this.parentElement; lbl.style.opacity='.6'; lbl.style.pointerEvents='none';
   var prog = document.getElementById('ae-img-prog'); prog.textContent = 'Compressing…';
   try {
@@ -729,6 +759,7 @@ async function aeEditLivery(id) {
   var res = await db.from('liveries').select('*,categories(name),mods(name),championships(short_name)').eq('id',id).single();
   var l = res.data; if (!l) return;
   _ae_edit_id = id;
+  _ae_edit_original_img = l.image_url || null;
   aeNav('submit', document.querySelector('.sb-link[data-v="submit"]'));
   aeSetMode('livery');
   document.getElementById('ae-submit-title').innerHTML = 'Edit <em>livery</em>';
@@ -830,8 +861,9 @@ aeBuildUpload();
 
 async function aeDeleteFromForm() {
   if (!_ae_edit_id) return;
-  if (!confirm('Delete this livery? This cannot be undone.')) return;
+  if (!await aeConfirm('Delete this livery? This cannot be undone.')) return;
   await db.from('liveries').delete().eq('id',_ae_edit_id);
+  if (_ae_edit_original_img) deleteFromStorage(_ae_edit_original_img);
   aeToast('Deleted.');
   aeResetSubmitForm();
   aeNav('liveries', document.querySelector('.sb-link[data-v="liveries"]'));
@@ -864,6 +896,7 @@ async function aeDoSubmit() {
     var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null};
     var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:_ae_edit_id,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
+    if(_ae_preview_img && _ae_preview_img!==_ae_edit_original_img) deleteFromStorage(_ae_edit_original_img);
     aeToast('Livery updated!');
     aeResetSubmitForm();
     aeNav('liveries', document.querySelector('.sb-link[data-v="liveries"]'));

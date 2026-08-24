@@ -9,6 +9,22 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============================================================
+// STORAGE CLEANUP
+// Deletes an old image from the "images" bucket when it's being
+// replaced, so orphaned files don't pile up in Supabase Storage.
+// Safe no-op if the URL is empty or doesn't belong to our bucket.
+// ============================================================
+async function deleteFromStorage(publicUrl) {
+  if (!publicUrl) return;
+  const marker = '/storage/v1/object/public/images/';
+  const idx = publicUrl.indexOf(marker);
+  if (idx === -1) return; // not one of our storage URLs (or already gone) — nothing to clean up
+  const path = decodeURIComponent(publicUrl.slice(idx + marker.length));
+  const { error } = await db.storage.from('images').remove([path]);
+  if (error) console.warn('Could not delete old image from storage:', path, error.message);
+}
+
+// ============================================================
 // FINGERPRINT (browser-based voting identity)
 // ============================================================
 async function getFingerprint() {
@@ -154,6 +170,12 @@ async function fetchLiveriesCount({
 async function fetchLivery(id) {
   const { data } = await db.from('liveries')
     .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url,url_twitter,url_discord,url_patreon,url_youtube,url_overtake)')
+    .eq('id', id).single();
+  return data;
+}
+async function fetchAddon(id) {
+  const { data } = await db.from('addons')
+    .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), artists(id,name)')
     .eq('id', id).single();
   return data;
 }
