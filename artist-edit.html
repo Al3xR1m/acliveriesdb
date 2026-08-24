@@ -862,7 +862,8 @@ aeBuildUpload();
 async function aeDeleteFromForm() {
   if (!_ae_edit_id) return;
   if (!await aeConfirm('Delete this livery? This cannot be undone.')) return;
-  await db.from('liveries').delete().eq('id',_ae_edit_id);
+  var res = await db.rpc('artist_delete_livery', { p_token: _ae_token, p_livery_id: _ae_edit_id });
+  if (res.error || !res.data) { aeToast('Failed to delete. Try again.','err'); return; }
   if (_ae_edit_original_img) deleteFromStorage(_ae_edit_original_img);
   aeToast('Deleted.');
   aeResetSubmitForm();
