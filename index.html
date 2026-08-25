@@ -438,20 +438,20 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 /* ── MOD DETAIL ── */
 .md-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:color .12s;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
 .md-back:hover{color:var(--t1);}
-.md-body{padding:20px;}
-.md-header{display:grid;grid-template-columns:200px 1fr;gap:20px;margin-bottom:24px;align-items:start;}
-.md-cover{width:100%;height:130px;position:relative;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;}
+.md-body{padding:20px 0;}
+.md-header{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:28px;align-items:start;padding:0 28px;}
+.md-cover{width:100%;height:150px;position:relative;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;border:1px solid var(--b1);}
+.md-brand-label{font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.md-name{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,32px);font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);margin-bottom:12px;}
+.md-stat{flex:1;padding:12px 16px;border-right:1px solid var(--b1);text-align:center;}
+.md-stat-n{font-family:'Archivo Black',sans-serif;font-size:20px;font-weight:400;letter-spacing:0;color:var(--t1);}
+.md-stat-l{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
+.md-tabs{display:flex;gap:2px;border-bottom:1px solid var(--b1);padding:0 28px;}
+.md-tab{padding:10px 16px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;}
 .md-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-.md-brand-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
-.md-name{font-size:26px;font-weight:900;font-style:italic;letter-spacing:-1.5px;color:var(--t1);margin-bottom:6px;}
 .md-desc{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;}
-.md-stats{display:flex;gap:0;border:0.5px solid var(--b1);border-radius:10px;overflow:hidden;max-width:320px;}
-.md-stat{flex:1;padding:10px 12px;border-right:0.5px solid var(--b1);text-align:center;}
+.md-stats{display:flex;gap:0;border:1px solid var(--b1);overflow:hidden;max-width:320px;}
 .md-stat:last-child{border-right:none;}
-.md-stat-n{font-size:18px;font-weight:900;font-style:italic;letter-spacing:-.8px;color:var(--t1);}
-.md-stat-l{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
-.md-tabs{display:flex;gap:2px;border-bottom:0.5px solid var(--b1);padding:0 20px;}
-.md-tab{padding:8px 14px;font-size:12px;font-weight:600;color:var(--t2);border:none;background:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-0.5px;transition:all .12s;}
 .md-tab:hover{color:var(--t1);}
 .md-tab.on{color:var(--t1);border-bottom-color:var(--acc);}
 .md-panel{padding:16px 20px 40px;display:none;}
@@ -921,7 +921,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
         <div style="padding-bottom:20px;">
           <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-heart" style="font-size:13px;"></i> Support the site</div>
           <p style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;">Free to use and always will be. Hosting isn't free though — donations are welcome, never expected.</p>
-          <a href="https://paypal.me/alexismgdx" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:42px;width:100%;background:var(--t1);color:var(--bg);text-decoration:none;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:all .18s;box-sizing:border-box;" onmouseover="this.style.background='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='var(--t1)';this.style.color='var(--bg)'">
+          <a href="https://paypal.me/YOUR_PAYPAL_HERE" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:42px;width:100%;background:var(--t1);color:var(--bg);text-decoration:none;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:all .18s;box-sizing:border-box;" onmouseover="this.style.background='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='var(--t1)';this.style.color='var(--bg)'">
             <i class="ti ti-brand-paypal"></i> Donate via PayPal
           </a>
         </div>
@@ -1971,9 +1971,9 @@ async function loadModDetail(id){
   const champIds=[...new Set(livs.map(l=>l.championship_id).filter(Boolean))];
   const champOpts=_champs.filter(c=>champIds.includes(c.id));
   const lPanel=document.createElement('div');lPanel.className='md-panel on';lPanel.id='md-tab-liveries';
-  lPanel.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;"><button class="pill on" onclick="filterModLiveries('all',this,${JSON.stringify(livs).replace(/'/g,"\\'")})" style="font-size:10px;">All</button>${champOpts.map(c=>`<button class="pill" onclick="filterModLiveries('${c.id}',this,null)">${c.short_name||c.name}</button>`).join('')}</div><div class="lv-grid" id="md-liveries-grid">${livs.map(gcCard).join('')}</div>`;
+  lPanel.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;padding:0 28px;"><button class="pill on" onclick="filterModLiveries('all',this,${JSON.stringify(livs).replace(/'/g,"\\'")})" style="font-size:10px;">All</button>${champOpts.map(c=>`<button class="pill" onclick="filterModLiveries('${c.id}',this,null)">${c.short_name||c.name}</button>`).join('')}</div><div class="lv-cards" id="md-liveries-grid">${livs.map(richCard).join('')}</div>`;
   document.getElementById('md-content').appendChild(lPanel);
-  if(ac){const aPanel=document.createElement('div');aPanel.className='md-panel';aPanel.id='md-tab-addons';aPanel.innerHTML=`<div class="lv-list">${adds.map(a=>`<div class="lv-row"><div class="lv-thumb">${a.image_url?`<img src="${a.image_url}" alt="${a.name}" loading="lazy">`:'<i class="ti ti-puzzle" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--t3);"></i>'}</div><div><div class="lv-name">${a.name}</div><div class="lv-meta">${a.categories?.name||'—'}</div></div><div class="lv-right"><span class="badge" style="background:var(--pur2);color:var(--pur);text-transform:capitalize;">${(a.addon_type||'addon').replace('_',' ')}</span>${a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div></div>`).join('')}</div>`;document.getElementById('md-content').appendChild(aPanel);}
+  if(ac){const aPanel=document.createElement('div');aPanel.className='md-panel';aPanel.id='md-tab-addons';aPanel.innerHTML=`<div class="lv-list" style="padding:0 28px;">${adds.map(a=>`<div class="lv-row"><div class="lv-thumb">${a.image_url?`<img src="${a.image_url}" alt="${a.name}" loading="lazy">`:'<i class="ti ti-puzzle" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--t3);"></i>'}</div><div><div class="lv-name">${a.name}</div><div class="lv-meta">${a.categories?.name||'—'}</div></div><div class="lv-right"><span class="badge" style="background:var(--pur2);color:var(--pur);text-transform:capitalize;">${(a.addon_type||'addon').replace('_',' ')}</span>${a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div></div>`).join('')}</div>`;document.getElementById('md-content').appendChild(aPanel);}
   if(mod.changelog){const pPanel=document.createElement('div');pPanel.className='md-panel';pPanel.id='md-tab-patchnotes';pPanel.innerHTML=`<div class="md-content" style="max-width:600px;">${marked.parse(mod.changelog)}</div>`;document.getElementById('md-content').appendChild(pPanel);}
 }
 window._mdLiveries=null;
@@ -1982,7 +1982,7 @@ function filterModLiveries(champId,btn,livs){
   document.querySelectorAll('.md-tab-liveries .pill, #md-tab-liveries .pill').forEach(p=>p.classList.remove('on'));
   btn.classList.add('on');
   const filtered=champId==='all'?window._mdLiveries:(window._mdLiveries||[]).filter(l=>l.championship_id===champId);
-  document.getElementById('md-liveries-grid').innerHTML=filtered.map(gcCard).join('');
+  document.getElementById('md-liveries-grid').innerHTML=filtered.map(richCard).join('');
 }
 function mdTab(name,btn){
   document.querySelectorAll('.md-tab').forEach(t=>t.classList.remove('on'));
