@@ -1970,16 +1970,16 @@ async function loadModDetail(id){
   document.getElementById('md-content').appendChild(tabsEl);
   const champIds=[...new Set(livs.map(l=>l.championship_id).filter(Boolean))];
   const champOpts=_champs.filter(c=>champIds.includes(c.id));
+  window._mdLiveries=livs;
   const lPanel=document.createElement('div');lPanel.className='md-panel on';lPanel.id='md-tab-liveries';
-  lPanel.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;padding:0 28px;"><button class="pill on" onclick="filterModLiveries('all',this,${JSON.stringify(livs).replace(/'/g,"\\'")})" style="font-size:10px;">All</button>${champOpts.map(c=>`<button class="pill" onclick="filterModLiveries('${c.id}',this,null)">${c.short_name||c.name}</button>`).join('')}</div><div class="lv-cards" id="md-liveries-grid">${livs.map(richCard).join('')}</div>`;
+  lPanel.innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;padding:0 28px;"><button class="pill on" onclick="filterModLiveries('all',this)" style="font-size:10px;">All</button>${champOpts.map(c=>`<button class="pill" onclick="filterModLiveries('${c.id}',this)">${c.short_name||c.name}</button>`).join('')}</div><div class="lv-cards" id="md-liveries-grid">${livs.map(richCard).join('')}</div>`;
   document.getElementById('md-content').appendChild(lPanel);
   if(ac){const aPanel=document.createElement('div');aPanel.className='md-panel';aPanel.id='md-tab-addons';aPanel.innerHTML=`<div class="lv-list" style="padding:0 28px;">${adds.map(a=>`<div class="lv-row"><div class="lv-thumb">${a.image_url?`<img src="${a.image_url}" alt="${a.name}" loading="lazy">`:'<i class="ti ti-puzzle" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--t3);"></i>'}</div><div><div class="lv-name">${a.name}</div><div class="lv-meta">${a.categories?.name||'—'}</div></div><div class="lv-right"><span class="badge" style="background:var(--pur2);color:var(--pur);text-transform:capitalize;">${(a.addon_type||'addon').replace('_',' ')}</span>${a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}</div></div>`).join('')}</div>`;document.getElementById('md-content').appendChild(aPanel);}
   if(mod.changelog){const pPanel=document.createElement('div');pPanel.className='md-panel';pPanel.id='md-tab-patchnotes';pPanel.innerHTML=`<div class="md-content" style="max-width:600px;">${marked.parse(mod.changelog)}</div>`;document.getElementById('md-content').appendChild(pPanel);}
 }
 window._mdLiveries=null;
-function filterModLiveries(champId,btn,livs){
-  if(livs)window._mdLiveries=livs;
-  document.querySelectorAll('.md-tab-liveries .pill, #md-tab-liveries .pill').forEach(p=>p.classList.remove('on'));
+function filterModLiveries(champId,btn){
+  document.querySelectorAll('#md-tab-liveries .pill').forEach(p=>p.classList.remove('on'));
   btn.classList.add('on');
   const filtered=champId==='all'?window._mdLiveries:(window._mdLiveries||[]).filter(l=>l.championship_id===champId);
   document.getElementById('md-liveries-grid').innerHTML=filtered.map(richCard).join('');
