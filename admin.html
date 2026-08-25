@@ -37,10 +37,10 @@
     .field.full { grid-column:1/-1; }
     .swatch { display:inline-block; width:14px; height:14px; border-radius:3px; margin-right:5px; vertical-align:-2px; }
     .cat-checks { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-    .cat-check-item { display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:20px; border:1px solid var(--border); cursor:pointer; font-size:12px; color:var(--text-2); background:transparent; transition:all .12s; user-select:none; }
+    .cat-check-item { display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border); cursor:pointer; font-family:'Archivo',sans-serif; font-size:12px; font-weight:600; color:var(--text-2); background:transparent; transition:all .12s; user-select:none; }
     .cat-check-item input { display:none; }
     .cat-check-item.checked { color:var(--text); border-color:var(--acc); background:var(--acc-3); }
-    .cat-check-item .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .cat-check-item .dot { width:8px; height:8px; flex-shrink:0; }
     .linked-cats { display:flex; flex-wrap:wrap; gap:4px; }
     .tbl-avatar { width:32px; height:32px; object-fit:cover; border:2px solid var(--amber); vertical-align:middle; }
     .tbl-avatar-ph { width:32px; height:32px; background:var(--bg-s2); display:inline-flex; align-items:center; justify-content:center; font-family:'Archivo Black',sans-serif; font-size:13px; color:var(--text-3); border:2px solid var(--amber); vertical-align:middle; }
@@ -1337,7 +1337,7 @@ function modModalForm(m={}){
   const brandBtns=['RSS','VRC','URD'].map(function(b){
     const bm=BRC[b];
     const active=b===activeBrand;
-    return '<button type="button" id="mf-brand-'+b+'" onclick="selectModBrand(\''+b+'\');" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
+    return '<button type="button" id="mf-brand-'+b+'" onclick="selectModBrand(\''+b+'\');" style="flex:1;height:38px;border:1px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
   }).join('');
   const catOpts=_cats.filter(function(c){return c.brand===activeBrand;}).map(function(c){return '<option value="'+c.id+'" '+(m.category_id===c.id?'selected':'')+'>'+c.name+'</option>';}).join('');
   return '<div style="display:flex;flex-direction:column;gap:12px;">'
@@ -1441,18 +1441,36 @@ function catModalForm(c={}){
   const activeBrand=c.brand||'RSS';
   const brandBtns=['RSS','VRC','URD'].map(function(b){
     const bm=BRC[b]; const active=b===activeBrand;
-    return '<button type="button" id="catf-brand-'+b+'" onclick="selectCatBrand(\''+b+'\');" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-size:14px;font-weight:900;font-style:italic;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
+    return '<button type="button" id="catf-brand-'+b+'" onclick="selectCatBrand(\''+b+'\');" style="flex:1;height:38px;border:1px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
   }).join('');
-  return '<div style="display:flex;flex-direction:column;gap:12px;">'
+  return '<div style="display:flex;flex-direction:column;gap:14px;">'
     +'<input type="hidden" id="catf-brand" value="'+activeBrand+'">'
     +'<div class="field"><label>Publisher</label><div style="display:flex;gap:8px;">'+brandBtns+'</div></div>'
     +'<div class="field"><label>Category name *</label><input id="catf-name" value="'+(c.name||'')+'" placeholder="e.g. GT4"></div>'
+    +'<div class="field"><label style="display:flex;align-items:center;justify-content:space-between;">Colors <button type="button" onclick="randomizeCatColors()" style="display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--acc);font-family:\'Archivo\',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;padding:0;"><i class="ti ti-dice-5" style="font-size:13px;"></i> Randomize</button></label>'
     +'<div style="display:flex;gap:12px;">'
-    +'<div class="field" style="flex:1;"><label>Background color</label><input id="catf-bg" type="color" value="'+(c.color_bg||'#E6F1FB')+'" style="width:100%;height:36px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;"></div>'
-    +'<div class="field" style="flex:1;"><label>Text color</label><input id="catf-text" type="color" value="'+(c.color_text||'#0C447C')+'" style="width:100%;height:36px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;"></div>'
-    +'</div>'
-    +'<div style="font-size:13px;color:var(--text-2);">Preview: <span id="cp-badge" class="cat-badge" style="background:'+(c.color_bg||'#E6F1FB')+';color:'+(c.color_text||'#0C447C')+';padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;">'+(c.name||'Category')+'</span></div>'
+    +'<div style="flex:1;"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px;">Background</div><input id="catf-bg" type="color" value="'+(c.color_bg||'#E6F1FB')+'" style="width:100%;height:38px;padding:2px;border:1px solid var(--border);background:var(--bg);cursor:pointer;"></div>'
+    +'<div style="flex:1;"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px;">Text</div><input id="catf-text" type="color" value="'+(c.color_text||'#0C447C')+'" style="width:100%;height:38px;padding:2px;border:1px solid var(--border);background:var(--bg);cursor:pointer;"></div>'
+    +'</div></div>'
+    +'<div class="field"><label>Preview</label><div style="padding:10px 0;"><span id="cp-badge" class="cat-badge" style="background:'+(c.color_bg||'#E6F1FB')+';color:'+(c.color_text||'#0C447C')+';padding:5px 12px;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;">'+(c.name||'Category')+'</span></div></div>'
     +'</div>';
+}
+function hslToHex(h,s,l){
+  s/=100; l/=100;
+  const k=n=>(n+h/30)%12;
+  const a=s*Math.min(l,1-l);
+  const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+  const toHex=x=>Math.round(255*x).toString(16).padStart(2,'0');
+  return '#'+toHex(f(0))+toHex(f(8))+toHex(f(4));
+}
+function randomizeCatColors(){
+  const hue=Math.floor(Math.random()*360);
+  const bg=hslToHex(hue,65,90);
+  const text=hslToHex(hue,55,28);
+  const bgInput=document.getElementById('catf-bg');
+  const textInput=document.getElementById('catf-text');
+  if(bgInput){bgInput.value=bg;bgInput.dispatchEvent(new Event('input'));}
+  if(textInput){textInput.value=text;textInput.dispatchEvent(new Event('input'));}
 }
 function selectCatBrand(b){
   document.getElementById('catf-brand').value=b;
