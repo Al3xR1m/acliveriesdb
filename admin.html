@@ -574,8 +574,8 @@ async function loadPending(){
       </div>`}).join('');
   }
 }
-async function doApprove(id){if(!await customConfirm('Approve this livery?'))return;await approveLivery(id);await loadPending();await loadDashboard();customAlert('Livery approved.','success');}
-async function doReject(id){if(!await customConfirm('Reject and delete this submission?',{danger:true,okText:'Reject'}))return;await rejectLivery(id);await loadPending();await loadDashboard();customAlert('Submission rejected.');}
+async function doApprove(id){if(!await customConfirm('Approve this livery?'))return;const res=await approveLivery(id);if(!res.ok){customAlert('Failed to approve: '+(res.error?.message||'unknown error'),'error');return;}await loadPending();await loadDashboard();customAlert('Livery approved.','success');}
+async function doReject(id){if(!await customConfirm('Reject and delete this submission?',{danger:true,okText:'Reject'}))return;const res=await rejectLivery(id);if(!res.ok){customAlert('Failed to reject: '+(res.error?.message||'unknown error'),'error');return;}await loadPending();await loadDashboard();customAlert('Submission rejected.','success');}
 
 // REPORTS
 async function loadReports(){
@@ -597,10 +597,13 @@ async function loadReports(){
       </div>
     </div>`).join('');
 }
-async function doResolveReport(id){await resolveReport(id);await loadReports();await loadDashboard();}
+async function doResolveReport(id){const res=await resolveReport(id);if(!res.ok){customAlert('Failed to resolve: '+(res.error?.message||'unknown error'),'error');return;}await loadReports();await loadDashboard();customAlert('Report resolved.','success');}
 async function doDeleteFromReport(liveryId,reportId){
   if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;
-  await deleteLivery(liveryId);await resolveReport(reportId);await loadReports();await loadDashboard();
+  const delRes=await deleteLivery(liveryId);
+  if(!delRes.ok){customAlert('Failed to delete: '+(delRes.error?.message||'unknown error'),'error');return;}
+  await resolveReport(reportId);await loadReports();await loadDashboard();
+  customAlert('Livery deleted and report resolved.','success');
 }
 
 // ALL LIVERIES
@@ -700,9 +703,10 @@ async function loadLiveries(search=''){
 
   t.innerHTML=btnHtml+filtersHtml+gridHtml;
 }
-async function doDeleteLivery(id){if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;const l=await fetchLivery(id);await deleteLivery(id);if(l?.image_url)deleteFromStorage(l.image_url);await loadLiveries();customAlert('Livery deleted.');}
+async function doDeleteLivery(id){if(!await customConfirm('Delete this livery permanently?',{danger:true,okText:'Delete'}))return;const l=await fetchLivery(id);const res=await deleteLivery(id);if(!res.ok){customAlert('Failed to delete: '+(res.error?.message||'unknown error'),'error');return;}if(l?.image_url)deleteFromStorage(l.image_url);await loadLiveries();customAlert('Livery deleted.','success');}
 async function toggleFeatured(id, featured){
-  await updateLivery(id, { featured: featured });
+  const res=await updateLivery(id, { featured: featured });
+  if(!res.ok){customAlert('Failed to update: '+(res.error?.message||'unknown error'),'error');return;}
   customAlert(featured?'Marked as featured.':'Removed from featured.','success');
 }
 async function loadFeatured(){
@@ -788,7 +792,7 @@ async function editLiveryModal(id,isApproval){
       </div>
     </div>`,async()=>{
     const newImageUrl=(window._getLiveryImg?.())||l.image_url||null;
-    await updateLivery(id,{
+    const res=await updateLivery(id,{
       name:document.getElementById('el-name').value,
       category_id:document.getElementById('el-cat').value||null,
       mod_id:document.getElementById('el-mod').value||null,
@@ -805,8 +809,10 @@ async function editLiveryModal(id,isApproval){
       is_paid:document.getElementById('el-paid')?.checked||false,
       approved:isApproval?true:l.approved,
     });
+    if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
     if(newImageUrl&&newImageUrl!==l.image_url)deleteFromStorage(l.image_url);
     closeModal();
+    customAlert(isApproval?'Livery approved.':'Livery updated.','success');
     if(isApproval){await loadPending();await loadDashboard();}else await loadLiveries();
   });
   window._elCurrentModId = l.mod_id||'';
@@ -910,10 +916,12 @@ async function doClaimSelected(artistId){
   const ids = Array.from(document.querySelectorAll('.claim-cb:checked')).map(cb=>cb.value);
   if (!ids.length){ customAlert('Select at least one livery.','error'); return; }
   if (!await customConfirm(`Assign ${ids.length} livery/ies to this artist?`)) return;
-  for (const id of ids) await updateLivery(id, { artist_id: artistId, author: null });
+  let failCount=0;
+  for (const id of ids){ const res=await updateLivery(id, { artist_id: artistId, author: null }); if(!res.ok) failCount++; }
   closeModal();
   await reloadCache(); await loadArtists();
-  customAlert(`${ids.length} livery/ies claimed.`, 'success');
+  if(failCount) customAlert(`${ids.length-failCount} claimed, ${failCount} failed.`,'error');
+  else customAlert(`${ids.length} livery/ies claimed.`, 'success');
 }
 
 function artistModalForm(a={}){
@@ -962,8 +970,10 @@ function getArtistUrls(){
 }
 document.getElementById('addArtistBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-crown"></i> Add confirmed artist',artistModalForm(),async()=>{
-    const _bv=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});const ok=await createArtist({name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv,...getArtistUrls()});
-    if(ok){await reloadCache();closeModal();await loadArtists();}
+    const _bv=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});
+    const res=await createArtist({name:document.getElementById('af-name').value.trim(),avatar_url:_getArtistAvatar()||null,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv,...getArtistUrls()});
+    if(res.ok){await reloadCache();closeModal();await loadArtists();customAlert('Artist created.','success');}
+    else customAlert('Failed to create: '+(res.error?.message||'unknown error'),'error');
   });
   setTimeout(()=>{ _getArtistAvatar = buildUploadWidget('af-avatar-widget',{folder:'artists',isAvatar:true,label:'Upload profile picture'}); },50);
 });
@@ -972,9 +982,10 @@ async function editArtistModal(id){
   openModal('<i class="ti ti-pencil"></i> Edit artist',artistModalForm(a),async()=>{
     const _bv2=Array.from(document.querySelectorAll('input[name="af-brand"]:checked')).map(function(x){return x.value;});
     const newAvatar=_getArtistAvatar()||a.avatar_url||null;
-    await updateArtist(id,{name:document.getElementById('af-name').value.trim(),avatar_url:newAvatar,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv2,...getArtistUrls()});
+    const res=await updateArtist(id,{name:document.getElementById('af-name').value.trim(),avatar_url:newAvatar,discord:document.getElementById('af-discord').value.trim(),bio:document.getElementById('af-bio').value.trim(),brands:_bv2,...getArtistUrls()});
+    if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
     if(newAvatar&&newAvatar!==a.avatar_url)deleteFromStorage(a.avatar_url);
-    await reloadCache();closeModal();await loadArtists();
+    await reloadCache();closeModal();await loadArtists();customAlert('Artist updated.','success');
   });
   setTimeout(()=>{ _getArtistAvatar = buildUploadWidget('af-avatar-widget',{currentUrl:a.avatar_url||'',folder:'artists',isAvatar:true,label:'Upload profile picture'}); },50);
 }
@@ -1004,15 +1015,19 @@ async function loadEditRequests(){
 async function doApproveEditRequest(btn){
   if(!await customConfirm('Apply this change?')) return;
   const id=btn.dataset.id, liveryId=btn.dataset.livery, field=btn.dataset.field, val=decodeURIComponent(btn.dataset.val);
-  await approveEditRequest(id, liveryId, field, val);
+  const res=await approveEditRequest(id, liveryId, field, val);
+  if(!res.ok){customAlert('Failed to apply: '+(res.error?.message||'unknown error'),'error');return;}
   await loadEditRequests(); await loadDashboard();
+  customAlert('Change applied.','success');
 }
 async function doRejectEditRequest(btn){
   if(!await customConfirm('Reject this change request?',{danger:true,okText:'Reject'})) return;
-  await rejectEditRequest(btn.dataset.id);
+  const res=await rejectEditRequest(btn.dataset.id);
+  if(!res.ok){customAlert('Failed to reject: '+(res.error?.message||'unknown error'),'error');return;}
   await loadEditRequests(); await loadDashboard();
+  customAlert('Request rejected.','success');
 }
-async function doDeleteArtist(id){if(!await customConfirm('Remove this confirmed artist? Their liveries will keep the text author name.',{danger:true,okText:'Remove'}))return;const a=_artists.find(x=>x.id===id);await deleteArtist(id);if(a?.avatar_url)deleteFromStorage(a.avatar_url);await reloadCache();await loadArtists();customAlert('Artist removed.');}
+async function doDeleteArtist(id){if(!await customConfirm('Remove this confirmed artist? Their liveries will keep the text author name.',{danger:true,okText:'Remove'}))return;const a=_artists.find(x=>x.id===id);const res=await deleteArtist(id);if(!res.ok){customAlert('Failed to remove: '+(res.error?.message||'unknown error'),'error');return;}if(a?.avatar_url)deleteFromStorage(a.avatar_url);await reloadCache();await loadArtists();customAlert('Artist removed.','success');}
 
 function getBaseUrl() {
   const path = location.pathname.replace(/\/[^/]*$/, '/');
@@ -1169,8 +1184,9 @@ function getCheckedCatIds(){return[...document.querySelectorAll('.cat-check-item
 document.getElementById('addChampBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-trophy"></i> Add championship',champModalForm(),async()=>{
     const name=document.getElementById('cf-name').value.trim();if(!name)return;
-    const ok=await createChampionship({name,short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||null},getCheckedCatIds());
-    if(ok){await reloadCache();closeModal();await loadChampionships();}
+    const res=await createChampionship({name,short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||null},getCheckedCatIds());
+    if(res.ok){await reloadCache();closeModal();await loadChampionships();customAlert('Championship created.','success');}
+    else customAlert('Failed to create: '+(res.error?.message||'unknown error'),'error');
   });
   bindCatChecks();
   setTimeout(()=>{_getChampLogo=buildAdminUploadWidget('cf-logo-widget','');},100);
@@ -1181,16 +1197,17 @@ async function editChampModal(id){
     +'<button type="button" onclick="doDeleteChamp(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete championship</button>'
     +'</div>';
   openModal('<i class="ti ti-pencil"></i> Edit championship',formHtml,async()=>{
-    await updateChampionship(id,{name:document.getElementById('cf-name').value.trim(),short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||ch.logo_url||null},getCheckedCatIds());
-    await reloadCache();closeModal();await loadChampionships();
+    const res=await updateChampionship(id,{name:document.getElementById('cf-name').value.trim(),short_name:document.getElementById('cf-short').value.trim(),logo_url:_getChampLogo()||ch.logo_url||null},getCheckedCatIds());
+    if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
+    await reloadCache();closeModal();await loadChampionships();customAlert('Championship updated.','success');
   });
   bindCatChecks();
   setTimeout(()=>{_getChampLogo=buildAdminUploadWidget('cf-logo-widget',ch.logo_url||'');},100);
 }
-async function doDeleteChamp(id){if(!await customConfirm('Delete this championship?',{danger:true,okText:'Delete'}))return;await deleteChampionship(id);await reloadCache();await loadChampionships();customAlert('Championship deleted.');}
+async function doDeleteChamp(id){if(!await customConfirm('Delete this championship?',{danger:true,okText:'Delete'}))return;const res=await deleteChampionship(id);if(!res.ok){customAlert('Failed to delete: '+(res.error?.message||'unknown error'),'error');return;}await reloadCache();await loadChampionships();customAlert('Championship deleted.','success');}
 
-async function doApproveAddon(id){if(!await customConfirm('Approve this addon?'))return;await approveAddon(id);await loadPending();await loadDashboard();customAlert('Addon approved.','success');}
-async function doRejectAddon(id){if(!await customConfirm('Reject and delete this addon?',{danger:true,okText:'Reject'}))return;await deleteAddon(id);await loadPending();await loadDashboard();customAlert('Addon rejected.');}
+async function doApproveAddon(id){if(!await customConfirm('Approve this addon?'))return;const res=await approveAddon(id);if(!res.ok){customAlert('Failed to approve: '+(res.error?.message||'unknown error'),'error');return;}await loadPending();await loadDashboard();customAlert('Addon approved.','success');}
+async function doRejectAddon(id){if(!await customConfirm('Reject and delete this addon?',{danger:true,okText:'Reject'}))return;const res=await deleteAddon(id);if(!res.ok){customAlert('Failed to reject: '+(res.error?.message||'unknown error'),'error');return;}await loadPending();await loadDashboard();customAlert('Addon rejected.','success');}
 
 // ALL ADDONS
 async function loadAddons(search=''){
@@ -1211,7 +1228,7 @@ async function loadAddons(search=''){
   </tr>`).join('')}</tbody>`;
 }
 document.getElementById('addon-search')?.addEventListener('input', e=>loadAddons(e.target.value));
-async function doDeleteAddon(id){ if(!await customConfirm('Delete this addon permanently?',{danger:true,okText:'Delete'}))return; const a=await fetchAddon(id); await deleteAddon(id); if(a?.image_url)deleteFromStorage(a.image_url); await loadAddons(); customAlert('Addon deleted.'); }
+async function doDeleteAddon(id){ if(!await customConfirm('Delete this addon permanently?',{danger:true,okText:'Delete'}))return; const a=await fetchAddon(id); const res=await deleteAddon(id); if(!res.ok){customAlert('Failed to delete: '+(res.error?.message||'unknown error'),'error');return;} if(a?.image_url)deleteFromStorage(a.image_url); await loadAddons(); customAlert('Addon deleted.','success'); }
 
 async function editAddonModal(id, isApproval=false){
   const list = await fetchPendingAddons();
@@ -1247,7 +1264,7 @@ async function editAddonModal(id, isApproval=false){
       </div>
     </div>`, async()=>{
     const newImg=(window._getAddonImg?.())||a.image_url||null;
-    await updateAddon(id,{
+    const res=await updateAddon(id,{
       name: document.getElementById('ae-name').value.trim(),
       category_id: document.getElementById('ae-cat').value||null,
       mod_id: document.getElementById('ae-mod').value||null,
@@ -1260,8 +1277,10 @@ async function editAddonModal(id, isApproval=false){
       is_paid: document.getElementById('ae-paid')?.checked||false,
       approved: isApproval ? true : a.approved,
     });
+    if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
     if(newImg&&newImg!==a.image_url)deleteFromStorage(a.image_url);
     closeModal();
+    customAlert(isApproval?'Addon approved.':'Addon updated.','success');
     if(isApproval){await loadPending();await loadDashboard();}
   });
   setTimeout(()=>{ window._getAddonImg = buildUploadWidget('ae-img-widget',{currentUrl:a.image_url||'',folder:'addons',label:'Upload preview image'}); },50);
@@ -1374,8 +1393,9 @@ function selectModBrand(b){
 let _getModImg = () => '';
 document.getElementById('addModBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-car"></i> Add mod',modModalForm(),async()=>{
-    const ok=await createMod({name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
-    if(ok){_mods=await fetchMods();closeModal();await loadMods();}
+    const res=await createMod({name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
+    if(res.ok){_mods=await fetchMods();closeModal();await loadMods();customAlert('Mod created.','success');}
+    else customAlert('Failed to create: '+(res.error?.message||'unknown error'),'error');
   });
   setTimeout(()=>{ _getModImg = buildUploadWidget('mf-img-widget',{folder:'mods',label:'Upload mod cover image'}); },50);
 });
@@ -1385,12 +1405,13 @@ async function editModModal(id){
     +'<button type="button" onclick="doDeleteMod(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete mod</button>'
     +'</div>';
   openModal('<i class="ti ti-pencil"></i> Edit mod',formHtml,async()=>{
-    await updateMod(id,{name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||m.image_url||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
-    _mods=await fetchMods();closeModal();await loadMods();
+    const res=await updateMod(id,{name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||m.image_url||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
+    if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
+    _mods=await fetchMods();closeModal();await loadMods();customAlert('Mod updated.','success');
   });
   setTimeout(()=>{ _getModImg = buildUploadWidget('mf-img-widget',{currentUrl:m.image_url||'',folder:'mods',label:'Upload mod cover image'}); },50);
 }
-async function doDeleteMod(id){if(!await customConfirm('Delete this mod?',{danger:true,okText:'Delete'}))return;await deleteMod(id);await reloadCache();await loadMods();customAlert('Mod deleted.');}
+async function doDeleteMod(id){if(!await customConfirm('Delete this mod?',{danger:true,okText:'Delete'}))return;const res=await deleteMod(id);if(!res.ok){customAlert('Failed to delete: '+(res.error?.message||'unknown error'),'error');return;}await reloadCache();await loadMods();customAlert('Mod deleted.','success');}
 
 // CATEGORIES
 async function loadCategories(){
@@ -1485,19 +1506,20 @@ function selectCatBrand(b){
   });
 }
 function bindCatPreview(){setTimeout(()=>{const update=()=>{const n=document.getElementById('catf-name')?.value||'Category';const bg=document.getElementById('catf-bg')?.value||'#E6F1FB';const tc=document.getElementById('catf-text')?.value||'#0C447C';const b=document.getElementById('cp-badge');if(b){b.textContent=n;b.style.background=bg;b.style.color=tc;}};document.getElementById('catf-name')?.addEventListener('input',update);document.getElementById('catf-bg')?.addEventListener('input',update);document.getElementById('catf-text')?.addEventListener('input',update);},100);}
-document.getElementById('addCatBtn').addEventListener('click',()=>{openModal('<i class="ti ti-category"></i> Add category',catModalForm(),async()=>{const nm=document.getElementById('catf-name').value.trim();if(!nm)return;const ok=await createCategory({name:nm,brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});if(ok){_cats=await fetchCategories();closeModal();await loadCategories();}});bindCatPreview();});
+document.getElementById('addCatBtn').addEventListener('click',()=>{openModal('<i class="ti ti-category"></i> Add category',catModalForm(),async()=>{const nm=document.getElementById('catf-name').value.trim();if(!nm)return;const res=await createCategory({name:nm,brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});if(res.ok){_cats=await fetchCategories();closeModal();await loadCategories();customAlert('Category created.','success');}else customAlert('Failed to create: '+(res.error?.message||'unknown error'),'error');});bindCatPreview();});
 async function editCatModal(id){
   const c=_cats.find(x=>x.id===id);if(!c)return;
   const formHtml=catModalForm(c)+'<div style="margin-top:4px;padding-top:12px;border-top:1px solid var(--border);">'
     +'<button type="button" onclick="doDeleteCat(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete category</button>'
     +'</div>';
   openModal('<i class="ti ti-pencil"></i> Edit category',formHtml,async()=>{
-    await updateCategory(id,{name:document.getElementById('catf-name').value.trim(),brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});
-    _cats=await fetchCategories();closeModal();await loadCategories();
+    const res=await updateCategory(id,{name:document.getElementById('catf-name').value.trim(),brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});
+    if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
+    _cats=await fetchCategories();closeModal();await loadCategories();customAlert('Category updated.','success');
   });
   bindCatPreview();
 }
-async function doDeleteCat(id){if(!await customConfirm('Delete this category?',{danger:true,okText:'Delete'}))return;await deleteCategory(id);await reloadCache();await loadCategories();customAlert('Category deleted.');}
+async function doDeleteCat(id){if(!await customConfirm('Delete this category?',{danger:true,okText:'Delete'}))return;const res=await deleteCategory(id);if(!res.ok){customAlert('Failed to delete: '+(res.error?.message||'unknown error'),'error');return;}await reloadCache();await loadCategories();customAlert('Category deleted.','success');}
 
 // IMAGE UPLOAD + COMPRESSION
 async function compressImage(file, opts = {}) {

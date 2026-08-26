@@ -355,73 +355,97 @@ async function reportLivery(id, reason, notes) {
 
 // Admin mutations
 async function approveLivery(id) {
-  await db.rpc('approve_livery', { p_id: id }); return true;
+  const { error } = await db.rpc('approve_livery', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function rejectLivery(id) {
-  await db.rpc('reject_livery', { p_id: id }); return true;
+  const { error } = await db.rpc('reject_livery', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function approveAddon(id) {
-  await db.rpc('approve_addon', { p_id: id }); return true;
+  const { error } = await db.rpc('approve_addon', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function deleteAddon(id) {
-  await db.rpc('delete_addon', { p_id: id }); return true;
+  const { error } = await db.rpc('delete_addon', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function updateLivery(id, data) {
-  await db.rpc('admin_update_livery', { p_id: id, p_data: data }); return true;
+  const { error } = await db.rpc('admin_update_livery', { p_id: id, p_data: data });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function updateAddon(id, data) {
-  await db.rpc('admin_update_addon', { p_id: id, p_data: data }); return true;
+  const { error } = await db.rpc('admin_update_addon', { p_id: id, p_data: data });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function deleteLivery(id) {
-  await db.rpc('admin_delete_livery', { p_id: id }); return true;
+  const { error } = await db.rpc('admin_delete_livery', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function createArtist(data) {
-  const { data: d } = await db.rpc('admin_create_artist', { p_data: data }); return !!d;
+  const { data: d, error } = await db.rpc('admin_create_artist', { p_data: data });
+  return error ? { ok:false, error } : { ok:true, data:d };
 }
 async function updateArtist(id, data) {
-  await db.rpc('admin_update_artist', { p_id: id, p_data: data }); return true;
+  const { error } = await db.rpc('admin_update_artist', { p_id: id, p_data: data });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function deleteArtist(id) {
-  await db.rpc('admin_delete_artist', { p_id: id }); return true;
+  const { error } = await db.rpc('admin_delete_artist', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function generateArtistToken(artistId) {
-  const { data } = await db.rpc('generate_artist_token', { p_artist_id: artistId }); return data;
+  const { data, error } = await db.rpc('generate_artist_token', { p_artist_id: artistId });
+  if (error) { console.error('generateArtistToken failed:', error); return null; }
+  return data;
 }
 async function resolveReport(id) {
-  await db.rpc('admin_resolve_report', { p_id: id }); return true;
+  const { error } = await db.rpc('admin_resolve_report', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function approveEditRequest(reqId, liveryId, field, value) {
-  await db.rpc('admin_approve_edit_request', { p_request_id: reqId, p_livery_id: liveryId, p_field: field, p_value: value }); return true;
+  const { error } = await db.rpc('admin_approve_edit_request', { p_request_id: reqId, p_livery_id: liveryId, p_field: field, p_value: value });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function rejectEditRequest(id) {
-  await db.rpc('admin_reject_edit_request', { p_request_id: id }); return true;
+  const { error } = await db.rpc('admin_reject_edit_request', { p_request_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function createChampionship(data, categoryIds) {
-  const { data: d } = await db.rpc('admin_create_championship', { p_data: data, p_category_ids: categoryIds }); return !!d;
+  const { data: d, error } = await db.rpc('admin_create_championship', { p_data: data, p_category_ids: categoryIds });
+  return error ? { ok:false, error } : { ok:true, data:d };
 }
 async function updateChampionship(id, data, categoryIds) {
-  await db.rpc('admin_update_championship', { p_id: id, p_data: data, p_category_ids: categoryIds }); return true;
+  const { error } = await db.rpc('admin_update_championship', { p_id: id, p_data: data, p_category_ids: categoryIds });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function deleteChampionship(id) {
-  await db.rpc('admin_delete_championship', { p_id: id }); return true;
+  const { error } = await db.rpc('admin_delete_championship', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function createMod(data) {
-  const { data: d } = await db.rpc('admin_create_mod', { p_data: data }); return !!d;
+  const { data: d, error } = await db.rpc('admin_create_mod', { p_data: data });
+  return error ? { ok:false, error } : { ok:true, data:d };
 }
 async function updateMod(id, data) {
-  await db.rpc('admin_update_mod', { p_id: id, p_data: data }); return true;
+  const { error } = await db.rpc('admin_update_mod', { p_id: id, p_data: data });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function deleteMod(id) {
-  await db.rpc('admin_delete_mod', { p_id: id }); return true;
+  const { error } = await db.rpc('admin_delete_mod', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function createCategory(data) {
-  const { data: d } = await db.rpc('admin_create_category', { p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text }); return !!d;
+  const { data: d, error } = await db.rpc('admin_create_category', { p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text });
+  return error ? { ok:false, error } : { ok:true, data:d };
 }
 async function updateCategory(id, data) {
-  await db.rpc('admin_update_category', { p_id: id, p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text }); return true;
+  const { error } = await db.rpc('admin_update_category', { p_id: id, p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text });
+  return error ? { ok:false, error } : { ok:true };
 }
 async function deleteCategory(id) {
-  await db.rpc('admin_delete_category', { p_id: id }); return true;
+  const { error } = await db.rpc('admin_delete_category', { p_id: id });
+  return error ? { ok:false, error } : { ok:true };
 }
 
 // Artist token-based mutations
