@@ -805,7 +805,12 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
 
   <!-- ADDONS -->
   <div class="view" id="view-addons">
-    <div class="add-top"><h2 class="add-title">Addons</h2></div>
+    <div class="page-head">
+      <div class="page-head-eyebrow"><span style="width:18px;height:1px;background:var(--pur);display:inline-block;"></span><span id="ph-add-count">— ADDONS INDEXED</span></div>
+      <h1>Extra <em>content</em></h1>
+      <p class="page-head-sub">Tyre skins, 3D assets, shaders and other extras that go beyond a livery — built by the same community.</p>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;padding:0 28px 20px;" id="add-type-filters"></div>
     <div id="add-content"></div>
   </div>
 
@@ -2172,9 +2177,61 @@ function renderArtistTab(livs, adds, tab){
 }
 
 // ── ADDONS ──
+let _addAll=[],_addTypeFilter='all';
+const ADDON_TYPE_LABELS={tyre_skin:'Tyre skin',_3d_asset:'3D asset','3d_asset':'3D asset',shader:'Shader',ui:'UI element',other:'Other'};
+function addonCard(a){
+  const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
+  const brand=a.mods?.brand||null;
+  const brandColor=brand&&BRC[brand]?BRC[brand]:'var(--acc)';
+  const brandTag=brand?`<span class="bt bt-${brand.toLowerCase()}">${brand}</span>`:'';
+  const paintColor=brand&&BRC[brand]?BRC[brand]:(a.categories?.color_bg||brandColor);
+  const typeLabel=ADDON_TYPE_LABELS[a.addon_type]||'Addon';
+  const isNew2=a.created_at&&(Date.now()-new Date(a.created_at).getTime())<7*24*60*60*1000;
+  return `<div class="lv-card" onclick="openAddon('${a.id}')">
+    <div class="lv-card-thumb">
+      ${a.image_url?`<img src="${a.image_url}" alt="${a.name}" loading="lazy">`:`<div style="position:absolute;inset:0;">${svg(a.categories?.name||'',seed(a))}</div>`}
+      <div class="lv-card-paint" style="background:${paintColor};"></div>
+      <div class="lv-card-ov"></div>
+      ${brandTag?`<div class="lv-card-brand">${brandTag}</div>`:''}
+      <div class="lv-card-top">
+        ${isNew2?'<span class="badge b-n">New</span>':''}
+        ${a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
+      </div>
+      <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${a.upvotes||0}</div>
+      <div class="lv-card-meta">
+        <div class="lv-card-champ-row">
+          <span class="lv-card-champ" style="color:${brandColor};">${typeLabel}</span>
+        </div>
+        <div class="lv-card-name">${a.name}</div>
+        <div class="lv-card-sub">${a.mods?.name||'All mods'}</div>
+      </div>
+    </div>
+  </div>`;
+}
+function openAddon(id){
+  const a=_addAll.find(x=>x.id===id);
+  if(a?.download_url) window.open(a.download_url,'_blank');
+}
 async function loadAddons(){
-  const adds=await fetchAddons({});
-  document.getElementById('add-content').innerHTML=adds.length?`<div class="lv-list" style="padding:0 20px;">${adds.map(a=>`<div class="lv-row"><div class="lv-thumb">${a.image_url?`<img src="${a.image_url}" alt="${a.name}" loading="lazy">`:'<i class="ti ti-puzzle" style="font-size:14px;color:var(--t3);"></i>'}</div><div><div class="lv-name">${a.name}</div><div class="lv-meta">${a.mods?.name||'All mods'} · ${a.categories?.name||'—'}</div></div><div class="lv-right"><span class="badge" style="background:var(--pur2);color:var(--pur);text-transform:capitalize;">${(a.addon_type||'addon').replace('_',' ')}</span>${a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}<span class="lv-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${a.upvotes||0}</span></div></div>`).join('')}</div>`:`<div style="padding:40px;text-align:center;color:var(--t2);">No addons yet.</div>`;
+  _addAll=await fetchAddons({});
+  document.getElementById('ph-add-count').textContent=_addAll.length.toLocaleString()+' ADDONS INDEXED';
+  const types=[...new Set(_addAll.map(a=>a.addon_type).filter(Boolean))];
+  document.getElementById('add-type-filters').innerHTML=
+    `<button class="pill on" onclick="filterAddonType('all',this)">All</button>`
+    +types.map(t=>`<button class="pill" onclick="filterAddonType('${t}',this)">${ADDON_TYPE_LABELS[t]||t}</button>`).join('');
+  renderAddonGrid();
+}
+function filterAddonType(t,btn){
+  _addTypeFilter=t;
+  document.querySelectorAll('#add-type-filters .pill').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  renderAddonGrid();
+}
+function renderAddonGrid(){
+  const filtered=_addTypeFilter==='all'?_addAll:_addAll.filter(a=>a.addon_type===_addTypeFilter);
+  document.getElementById('add-content').innerHTML=filtered.length
+    ?`<div class="lv-cards">${filtered.map(addonCard).join('')}</div>`
+    :`<div style="padding:60px 28px;text-align:center;color:var(--t2);font-size:13px;">No addons yet.</div>`;
 }
 
 // ── SUBMIT ──
