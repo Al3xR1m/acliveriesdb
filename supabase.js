@@ -473,10 +473,11 @@ async function updateArtistProfile(token, data) {
 }
 async function submitEditRequest(token, liveryId, changes) {
   for (const [field, vals] of Object.entries(changes)) {
-    await db.rpc('artist_submit_edit_request', {
+    const { error } = await db.rpc('artist_submit_edit_request', {
       p_token: token, p_livery_id: liveryId,
       p_field: field, p_old_value: String(vals.old || ''), p_new_value: String(vals.new || ''),
     });
+    if (error) return { ok:false, error };
   }
-  return true;
+  return { ok:true };
 }
