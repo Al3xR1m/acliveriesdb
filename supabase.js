@@ -3,6 +3,20 @@
 // ============================================================
 
 const SUPABASE_URL = 'https://edzjwdirlzxrrsksbxpc.supabase.co';
+
+// Neutralizes special HTML characters in user-submitted text (livery names, notes,
+// artist bios, etc.) before it's inserted into the page, so a malicious submission
+// can't run script or break the page layout for anyone viewing it — including admins
+// reviewing it before approval.
+function esc(s){
+  if(s===null||s===undefined) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkemp3ZGlybHp4cnJza3NieHBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NjE1NzIsImV4cCI6MjA5NjIzNzU3Mn0.dY36WSOeZh3EXPLfDH11mmoAP6kYDPRW1AOnfRd0LBk';
 
 const { createClient } = supabase;
