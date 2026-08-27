@@ -299,30 +299,30 @@ async function fetchAddonsByToken(token) {
 
 async function upvoteLivery(id) {
   const fp = await getFingerprint();
-  const { data } = await db.rpc('upvote_livery', { p_livery_id: id, p_fingerprint: fp });
+  const { data, error } = await db.rpc('upvote_livery', { p_livery_id: id, p_fingerprint: fp });
   if (data) { const s = getVotedSet(); s.add(id); saveVotedSet(s); }
-  return !!data;
+  return error ? { ok:false, error } : { ok:!!data };
 }
 
 async function removeUpvoteLivery(id) {
   const fp = await getFingerprint();
-  const { data } = await db.rpc('remove_upvote_livery', { p_livery_id: id, p_fingerprint: fp });
+  const { data, error } = await db.rpc('remove_upvote_livery', { p_livery_id: id, p_fingerprint: fp });
   if (data) { const s = getVotedSet(); s.delete(id); saveVotedSet(s); }
-  return !!data;
+  return error ? { ok:false, error } : { ok:!!data };
 }
 
 async function upvoteAddon(id) {
   const fp = await getFingerprint();
-  const { data } = await db.rpc('upvote_addon', { p_addon_id: id, p_fingerprint: fp });
+  const { data, error } = await db.rpc('upvote_addon', { p_addon_id: id, p_fingerprint: fp });
   if (data) { const s = getVotedSet('addon'); s.add(id); saveVotedSet(s, 'addon'); }
-  return !!data;
+  return error ? { ok:false, error } : { ok:!!data };
 }
 
 async function removeUpvoteAddon(id) {
   const fp = await getFingerprint();
-  const { data } = await db.rpc('remove_upvote_addon', { p_addon_id: id, p_fingerprint: fp });
+  const { data, error } = await db.rpc('remove_upvote_addon', { p_addon_id: id, p_fingerprint: fp });
   if (data) { const s = getVotedSet('addon'); s.delete(id); saveVotedSet(s, 'addon'); }
-  return !!data;
+  return error ? { ok:false, error } : { ok:!!data };
 }
 
 async function submitLivery(d) {

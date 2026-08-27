@@ -1523,8 +1523,15 @@ async function handleUpvote(id){
   const cnt=document.getElementById('upvote-count');
   if(!btn||!cnt)return;
   const isVoted=getVotedSet().has(id);
-  if(isVoted){const ok=await removeUpvoteLivery(id);if(ok){cnt.textContent=Math.max(0,parseInt(cnt.textContent)-1);btn.classList.remove('voted');}}
-  else{const ok=await upvoteLivery(id);if(ok){cnt.textContent=parseInt(cnt.textContent)+1;btn.classList.add('voted');}}
+  if(isVoted){
+    const res=await removeUpvoteLivery(id);
+    if(res.ok){cnt.textContent=Math.max(0,parseInt(cnt.textContent)-1);btn.classList.remove('voted');}
+    else customAlert('Could not remove upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  } else {
+    const res=await upvoteLivery(id);
+    if(res.ok){cnt.textContent=parseInt(cnt.textContent)+1;btn.classList.add('voted');}
+    else customAlert('Could not upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  }
 }
 function customAlert(message,type){
   const t=document.getElementById('custom-toast');
