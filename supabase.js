@@ -53,20 +53,23 @@ function saveVotedSet(set, type = 'livery') {
 // ============================================================
 
 async function fetchCategories() {
-  const { data } = await db.from('categories').select('*').order('name');
+  const { data, error } = await db.from('categories').select('*').order('name');
+  if (error) console.error('fetchCategories failed:', error);
   return data || [];
 }
 
 async function fetchMods() {
-  const { data } = await db.from('mods').select('*, categories(name, color_bg, color_text)').order('name');
+  const { data, error } = await db.from('mods').select('*, categories(name, color_bg, color_text)').order('name');
+  if (error) console.error('fetchMods failed:', error);
   return data || [];
 }
 
 async function fetchChampionships() {
-  const { data } = await db
+  const { data, error } = await db
     .from('championships')
     .select('*, championship_categories(category_id, categories(id, name, color_bg, color_text))')
     .order('name');
+  if (error) console.error('fetchChampionships failed:', error);
   if (!data) return [];
   return data.map(ch => ({
     ...ch,
@@ -75,7 +78,8 @@ async function fetchChampionships() {
 }
 
 async function fetchArtists() {
-  const { data } = await db.from('artists').select('*').order('name');
+  const { data, error } = await db.from('artists').select('*').order('name');
+  if (error) console.error('fetchArtists failed:', error);
   return data || [];
 }
 
@@ -235,16 +239,18 @@ async function fetchAdminStats() {
 }
 
 async function fetchPendingLiveries() {
-  const { data } = await db.from('liveries')
+  const { data, error } = await db.from('liveries')
     .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name), artists(id,name)')
     .eq('approved', false).order('created_at', { ascending: false });
+  if (error) console.error('fetchPendingLiveries failed:', error);
   return data || [];
 }
 
 async function fetchPendingAddons() {
-  const { data } = await db.from('addons')
+  const { data, error } = await db.from('addons')
     .select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), artists(id,name)')
     .eq('approved', false).order('created_at', { ascending: false });
+  if (error) console.error('fetchPendingAddons failed:', error);
   return data || [];
 }
 
@@ -255,9 +261,10 @@ async function fetchReports() {
 }
 
 async function fetchEditRequests() {
-  const { data } = await db.from('livery_edit_requests')
+  const { data, error } = await db.from('livery_edit_requests')
     .select('*, liveries(id,name), artists(id,name)')
     .eq('status', 'pending').order('created_at', { ascending: false });
+  if (error) console.error('fetchEditRequests failed:', error);
   return data || [];
 }
 
@@ -326,7 +333,7 @@ async function removeUpvoteAddon(id) {
 }
 
 async function submitLivery(d) {
-  const { data } = await db.rpc('submit_livery', {
+  const { data, error } = await db.rpc('submit_livery', {
     p_name: d.name, p_mod_id: d.mod_id || null, p_category_id: d.category_id || null,
     p_championship_id: d.championship_id || null, p_team: d.team || null,
     p_driver: d.driver || null, p_season: d.season || null, p_car_number: d.car_number || null,
@@ -334,17 +341,17 @@ async function submitLivery(d) {
     p_download_url: d.download_url || null, p_image_url: d.image_url || null,
     p_notes: d.notes || null, p_is_paid: d.is_paid || false,
   });
-  return !!data;
+  return error ? { ok:false, error } : { ok:!!data };
 }
 
 async function submitAddon(d) {
-  const { data } = await db.rpc('submit_addon', {
+  const { data, error } = await db.rpc('submit_addon', {
     p_name: d.name, p_mod_id: d.mod_id || null, p_category_id: d.category_id || null,
     p_artist_id: d.artist_id || null, p_addon_type: d.addon_type || null,
     p_author: d.author || null, p_download_url: d.download_url || null,
     p_image_url: d.image_url || null, p_notes: d.notes || null, p_is_paid: d.is_paid || false,
   });
-  return !!data;
+  return error ? { ok:false, error } : { ok:!!data };
 }
 
 async function reportLivery(id, reason, notes) {

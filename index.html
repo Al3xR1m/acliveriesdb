@@ -2460,14 +2460,14 @@ document.getElementById('s-submit-btn').addEventListener('click',async()=>{
   errEl.style.display='none';
   const btn=document.getElementById('s-submit-btn');btn.disabled=true;btn.textContent='Submitting…';
   const base={name,category_id:cat,author:author||null,artist_id:_sArtistId||null,download_url:url,image_url:imgUrl,notes:document.getElementById('s-notes').value.trim(),is_paid:document.getElementById('s-paid').checked};
-  let ok;
-  if(isAddon)ok=await submitAddon({...base,mod_id:mod||null,addon_type:addonTypes.join(',')});
-  else ok=await submitLivery({...base,mod_id:mod,championship_id:document.getElementById('s-champ').value||null,team:document.getElementById('s-team').value.trim(),driver:document.getElementById('s-driver').value.trim(),season:document.getElementById('s-season').value.trim(),car_number:document.getElementById('s-carnumber').value.trim()||null});
-  if(ok){
+  let res;
+  if(isAddon)res=await submitAddon({...base,mod_id:mod||null,addon_type:addonTypes.join(',')});
+  else res=await submitLivery({...base,mod_id:mod,championship_id:document.getElementById('s-champ').value||null,team:document.getElementById('s-team').value.trim(),driver:document.getElementById('s-driver').value.trim(),season:document.getElementById('s-season').value.trim(),car_number:document.getElementById('s-carnumber').value.trim()||null});
+  if(res.ok){
     resetSubmitForm();
     showSubmitSuccess(isAddon?'Addon':'Livery');
   }
-  else{btn.disabled=false;btn.textContent='Submit for review';errEl.style.display='block';errEl.textContent='Something went wrong. Please try again.';}
+  else{btn.disabled=false;btn.textContent='Submit for review';errEl.style.display='block';errEl.textContent=res.error?('Error: '+res.error.message):'Something went wrong. Please try again.';}
 });
 function showSubmitSuccess(kind){
   const el=document.createElement('div');
