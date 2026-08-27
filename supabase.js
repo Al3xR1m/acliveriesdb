@@ -443,11 +443,11 @@ async function deleteMod(id) {
   return error ? { ok:false, error } : { ok:true };
 }
 async function createCategory(data) {
-  const { data: d, error } = await db.rpc('admin_create_category', { p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text });
+  const { data: d, error } = await db.rpc('admin_create_category', { p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text, p_brand: data.brand || null });
   return error ? { ok:false, error } : { ok:true, data:d };
 }
 async function updateCategory(id, data) {
-  const { error } = await db.rpc('admin_update_category', { p_id: id, p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text });
+  const { error } = await db.rpc('admin_update_category', { p_id: id, p_name: data.name, p_color_bg: data.color_bg, p_color_text: data.color_text, p_brand: data.brand || null });
   return error ? { ok:false, error } : { ok:true };
 }
 async function deleteCategory(id) {
