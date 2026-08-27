@@ -483,35 +483,35 @@ async function loadPending(){
     const catName=l.categories?.name||'';
     const coverBg=CAT_BG_MAP[catName]||'#111';
     const imgBlock=l.image_url
-      ?`<img src="${l.image_url}" alt="${l.name}" style="width:100%;height:100%;object-fit:cover;">`
+      ?`<img src="${esc(l.image_url)}" alt="${esc(l.name)}" style="width:100%;height:100%;object-fit:cover;">`
       :`<div style="width:100%;height:100%;background:${coverBg};display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:12px;">No image</div>`;
     const paidBadge=l.is_paid?'<span class="badge badge--paid">Paid</span>':'<span class="badge badge--free">Free</span>';
-    const artistBadge=l.artists?`<span style="font-size:11px;color:var(--crown);font-weight:600;">\ud83d\udc51 ${l.artists.name}</span>`:'';
+    const artistBadge=l.artists?`<span style="font-size:11px;color:var(--crown);font-weight:600;">\ud83d\udc51 ${esc(l.artists.name)}</span>`:'';
     const dupes=dupMap[l.id]||[];
     return `
     <div class="card" style="padding:16px;margin-bottom:12px;display:grid;grid-template-columns:140px 1fr auto;gap:16px;align-items:start;">
       <div style="height:90px;overflow:hidden;">${imgBlock}</div>
       <div>
         ${dupes.length?`<div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <div class="badge badge--pending" style="padding:4px 10px;display:inline-flex;align-items:center;gap:5px;" title="${dupes.map(d=>d.livery.name+' (matched: '+d.matched.join(', ')+')').join(' | ')}"><i class="ti ti-alert-triangle" style="font-size:12px;"></i> Possible duplicate — matches "${dupes[0].livery.name}" (${dupes[0].matched.join(', ')})</div>
+          <div class="badge badge--pending" style="padding:4px 10px;display:inline-flex;align-items:center;gap:5px;" title="${esc(dupes.map(d=>d.livery.name+' (matched: '+d.matched.join(', ')+')').join(' | '))}"><i class="ti ti-alert-triangle" style="font-size:12px;"></i> Possible duplicate — matches "${esc(dupes[0].livery.name)}" (${esc(dupes[0].matched.join(', '))})</div>
           <a href="index.html#livery/${dupes[0].livery.id}" target="_blank" style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--acc);display:inline-flex;align-items:center;gap:4px;text-decoration:none;"><i class="ti ti-external-link" style="font-size:12px;"></i> Compare</a>
         </div>` : ''}
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
-          <div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;">${l.name}</div>
+          <div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;">${esc(l.name)}</div>
           ${paidBadge}
-          ${l.categories?`<span class="cat-badge" style="background:${l.categories.color_bg};color:${l.categories.color_text};">${l.categories.name}</span>`:''}
+          ${l.categories?`<span class="cat-badge" style="background:${l.categories.color_bg};color:${l.categories.color_text};">${esc(l.categories.name)}</span>`:''}
           ${artistBadge}
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;color:var(--text-2);">
-          <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${l.mods?.name||'—'}</div>
-          <div><i class="ti ti-trophy" style="font-size:11px;"></i> <strong>Championship:</strong> ${l.championships?.name||'—'}</div>
-          <div><i class="ti ti-users" style="font-size:11px;"></i> <strong>Drivers:</strong> ${l.driver||'—'}</div>
-          <div><i class="ti ti-flag" style="font-size:11px;"></i> <strong>Team:</strong> ${l.team||'—'}</div>
-          <div><i class="ti ti-calendar" style="font-size:11px;"></i> <strong>Season:</strong> ${l.season||'—'}</div>
-          <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${l.author||l.artists?.name||'—'}</div>
+          <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${esc(l.mods?.name)||'—'}</div>
+          <div><i class="ti ti-trophy" style="font-size:11px;"></i> <strong>Championship:</strong> ${esc(l.championships?.name)||'—'}</div>
+          <div><i class="ti ti-users" style="font-size:11px;"></i> <strong>Drivers:</strong> ${esc(l.driver)||'—'}</div>
+          <div><i class="ti ti-flag" style="font-size:11px;"></i> <strong>Team:</strong> ${esc(l.team)||'—'}</div>
+          <div><i class="ti ti-calendar" style="font-size:11px;"></i> <strong>Season:</strong> ${esc(l.season)||'—'}</div>
+          <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${esc(l.author)||esc(l.artists?.name)||'—'}</div>
         </div>
-        ${l.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${l.notes}</div>`:''}
-        ${l.download_url?`<a href="${l.download_url}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
+        ${l.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${esc(l.notes)}</div>`:''}
+        ${l.download_url?`<a href="${esc(l.download_url)}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;min-width:120px;">
         <button class="action-btn" onclick="editLiveryModal('${l.id}',true)"><i class="ti ti-pencil"></i> Edit & approve</button>
@@ -524,28 +524,28 @@ async function loadPending(){
     el.innerHTML += `<div class="label" style="margin:20px 0 10px;display:flex;align-items:center;gap:8px;"><i class="ti ti-puzzle" style="color:var(--purple);"></i> Pending addons (${addonList.length})</div>`;
     el.innerHTML += addonList.map(a=>{
       const imgBlock = a.image_url
-        ? `<img src="${a.image_url}" alt="${a.name}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
+        ? `<img src="${esc(a.image_url)}" alt="${esc(a.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
         : `<div style="width:100%;height:100%;background:#1a001a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:12px;">No image</div>`;
       const paidBadge = a.is_paid?'<span class="badge badge--paid">Paid</span>':'<span class="badge badge--free">Free</span>';
-      const artistBadge = a.artists ? `<span style="font-size:11px;color:var(--crown);font-weight:600;">\ud83d\udc51 ${a.artists.name}</span>` : '';
+      const artistBadge = a.artists ? `<span style="font-size:11px;color:var(--crown);font-weight:600;">\ud83d\udc51 ${esc(a.artists.name)}</span>` : '';
       return `
       <div class="card" style="padding:16px;margin-bottom:12px;display:grid;grid-template-columns:140px 1fr auto;gap:16px;align-items:start;border-color:rgba(168,85,247,0.2);">
         <div style="height:90px;overflow:hidden;border-radius:8px;">${imgBlock}</div>
         <div>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
             <span class="badge badge--3d">Addon</span>
-            <div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;">${a.name}</div>
-            <span class="badge" style="background:var(--bg-s2);color:var(--text-2);">${a.addon_type||'addon'}</span>
+            <div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;">${esc(a.name)}</div>
+            <span class="badge" style="background:var(--bg-s2);color:var(--text-2);">${esc(a.addon_type)||'addon'}</span>
             ${paidBadge}${artistBadge}
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;color:var(--text-2);">
-            <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${a.mods?.name||'—'}</div>
-            <div><i class="ti ti-category" style="font-size:11px;"></i> <strong>Category:</strong> ${a.categories?.name||'—'}</div>
-            <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${a.author||a.artists?.name||'—'}</div>
-            <div><i class="ti ti-puzzle" style="font-size:11px;"></i> <strong>Type:</strong> ${a.addon_type||'—'}</div>
+            <div><i class="ti ti-car" style="font-size:11px;"></i> <strong>Mod:</strong> ${esc(a.mods?.name)||'—'}</div>
+            <div><i class="ti ti-category" style="font-size:11px;"></i> <strong>Category:</strong> ${esc(a.categories?.name)||'—'}</div>
+            <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${esc(a.author)||esc(a.artists?.name)||'—'}</div>
+            <div><i class="ti ti-puzzle" style="font-size:11px;"></i> <strong>Type:</strong> ${esc(a.addon_type)||'—'}</div>
           </div>
-          ${a.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${a.notes}</div>`:''}
-          ${a.download_url?`<a href="${a.download_url}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
+          ${a.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${esc(a.notes)}</div>`:''}
+          ${a.download_url?`<a href="${esc(a.download_url)}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;min-width:120px;">
           <button class="action-btn" onclick="editAddonModal('${a.id}',true)"><i class="ti ti-pencil"></i> Edit & approve</button>
@@ -566,10 +566,10 @@ async function loadReports(){
   el.innerHTML=list.map(r=>`
     <div class="card" style="padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
       <div style="flex:1;min-width:200px;">
-        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">${r.liveries?.name||'Unknown livery'}</div>
-        <div style="font-size:12px;color:var(--text-2);"><i class="ti ti-flag" style="font-size:11px;"></i> ${r.reason.replace('_',' ')} &nbsp;·&nbsp; ${new Date(r.created_at).toLocaleDateString()}</div>
-        ${r.notes?`<div style="font-size:12px;color:var(--text-2);margin-top:6px;padding:6px 10px;background:var(--bg-s2);border-radius:var(--radius-sm);border-left:2px solid var(--acc);font-style:italic;">${r.notes}</div>`:''}
-        ${r.liveries?.download_url?`<a href="${r.liveries.download_url}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i class="ti ti-external-link"></i>Check download link</a>`:''}
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">${esc(r.liveries?.name)||'Unknown livery'}</div>
+        <div style="font-size:12px;color:var(--text-2);"><i class="ti ti-flag" style="font-size:11px;"></i> ${esc(r.reason.replace('_',' '))} &nbsp;·&nbsp; ${new Date(r.created_at).toLocaleDateString()}</div>
+        ${r.notes?`<div style="font-size:12px;color:var(--text-2);margin-top:6px;padding:6px 10px;background:var(--bg-s2);border-radius:var(--radius-sm);border-left:2px solid var(--acc);font-style:italic;">${esc(r.notes)}</div>`:''}
+        ${r.liveries?.download_url?`<a href="${esc(r.liveries.download_url)}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:4px;"><i class="ti ti-external-link"></i>Check download link</a>`:''}
       </div>
       <div style="display:flex;gap:8px;">
         <button class="action-btn" onclick="editLiveryModal('${r.liveries?.id}',false)"><i class="ti ti-pencil"></i> Edit livery</button>
@@ -632,7 +632,7 @@ async function loadLiveries(search=''){
   filtersHtml+='<select onchange="window._livArtist=this.value;loadLiveries();" style="appearance:none;background:var(--bg-s1);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--text-2);font-family:var(--font-body);cursor:pointer;outline:none;">';
   filtersHtml+='<option value="all">All creators</option>';
   _artists.forEach(function(a){
-    filtersHtml+='<option value="'+a.id+'" '+(window._livArtist===a.id?'selected':'')+'>✓ '+a.name+'</option>';
+    filtersHtml+='<option value="'+a.id+'" '+(window._livArtist===a.id?'selected':'')+'>✓ '+esc(a.name)+'</option>';
   });
   filtersHtml+='</select></div>';
   filtersHtml+='</div>';
@@ -657,17 +657,17 @@ async function loadLiveries(search=''){
     gridHtml='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;">';
     list.forEach(function(l){
       var isApproved=l.approved;
-      var creator=l.artists?'<span style="display:inline-flex;"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span> '+l.artists.name:l.author||'—';
+      var creator=l.artists?'<span style="display:inline-flex;"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span> '+esc(l.artists.name):esc(l.author)||'—';
       gridHtml+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;" onclick="editLiveryModal(\''+l.id+'\',false)">';
       gridHtml+='<div style="width:100%;aspect-ratio:16/9;background:var(--bg-s2);position:relative;overflow:hidden;">';
-      gridHtml+=l.image_url?'<img src="'+l.image_url+'" style="width:100%;height:100%;object-fit:cover;">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo" style="font-size:28px;color:var(--text-3);"></i></div>';
+      gridHtml+=l.image_url?'<img src="'+esc(l.image_url)+'" style="width:100%;height:100%;object-fit:cover;">':'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-photo" style="font-size:28px;color:var(--text-3);"></i></div>';
       gridHtml+='<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 50%);pointer-events:none;"></div>';
       gridHtml+='<div style="position:absolute;top:8px;right:8px;display:flex;gap:4px;">'+(l.featured?'<span style="padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;background:rgba(255,177,61,.2);color:#FFB13D;display:flex;align-items:center;gap:3px;"><i class="ti ti-star-filled" style="font-size:10px;"></i> Featured</span>':'')+'<span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:700;background:'+(isApproved?'rgba(48,209,88,.2)':'rgba(255,159,10,.2)')+';color:'+(isApproved?'#30D158':'#FF9F0A')+';">'+(isApproved?'Published':'Pending')+'</span></div>';
-      gridHtml+='<div style="position:absolute;bottom:8px;left:10px;right:10px;"><div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+l.name+'</div></div>';
+      gridHtml+='<div style="position:absolute;bottom:8px;left:10px;right:10px;"><div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(l.name)+'</div></div>';
       gridHtml+='</div>';
       gridHtml+='<div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;">';
       gridHtml+='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">';
-      gridHtml+='<span style="font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(l.mods?.name||'—')+'</span>';
+      gridHtml+='<span style="font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(esc(l.mods?.name)||'—')+'</span>';
       gridHtml+='<span style="font-size:11px;color:var(--text-3);flex-shrink:0;">♥ '+l.upvotes+'</span>';
       gridHtml+='</div>';
       gridHtml+='<div style="font-size:11px;color:var(--text-3);">'+creator+'</div>';
@@ -748,23 +748,23 @@ async function editLiveryModal(id,isApproval){
   const pending=await fetchPendingLiveries();
   const l=(await fetchLivery(id))||pending.find(x=>x.id===id);
   if(!l)return;
-  const catOpts=_cats.map(c=>`<option value="${c.id}" ${l.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
-  const artistOpts=_artists.map(a=>`<option value="${a.id}" ${l.artist_id===a.id?'selected':''}>${a.name}</option>`).join('');
+  const catOpts=_cats.map(c=>`<option value="${c.id}" ${l.category_id===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+  const artistOpts=_artists.map(a=>`<option value="${a.id}" ${l.artist_id===a.id?'selected':''}>${esc(a.name)}</option>`).join('');
   openModal(`<i class="ti ti-pencil"></i> Edit livery`,`
     <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="field full"><label>Name</label><input id="el-name" value="${l.name||''}"></div>
+      <div class="field full"><label>Name</label><input id="el-name" value="${esc(l.name)}"></div>
       <div class="field"><label>Category</label><select id="el-cat" onchange="elFilterModChamp()"><option value="">—</option>${catOpts}</select></div>
       <div class="field"><label>Mod</label><select id="el-mod"></select></div>
       <div class="field full"><label>Championship</label><select id="el-champ"></select></div>
-      <div class="field"><label>Team</label><input id="el-team" value="${l.team||''}"></div>
-      <div class="field"><label>Drivers</label><input id="el-driver" value="${l.driver||''}"></div>
-      <div class="field"><label>Season</label><input id="el-season" value="${l.season||''}"></div>
-      <div class="field"><label>Car number</label><input id="el-carnumber" value="${l.car_number||''}" maxlength="4" placeholder="e.g. 63"></div>
-      <div class="field"><label>Creator (text)</label><input id="el-author" value="${l.author||''}"></div>
+      <div class="field"><label>Team</label><input id="el-team" value="${esc(l.team)}"></div>
+      <div class="field"><label>Drivers</label><input id="el-driver" value="${esc(l.driver)}"></div>
+      <div class="field"><label>Season</label><input id="el-season" value="${esc(l.season)}"></div>
+      <div class="field"><label>Car number</label><input id="el-carnumber" value="${esc(l.car_number)}" maxlength="4" placeholder="e.g. 63"></div>
+      <div class="field"><label>Creator (text)</label><input id="el-author" value="${esc(l.author)}"></div>
       <div class="field full"><label>Confirmed Artist</label><select id="el-artist"><option value="">— None —</option>${artistOpts}</select></div>
-      <div class="field full"><label>Download URL</label><input id="el-url" value="${l.download_url||''}"></div>
+      <div class="field full"><label>Download URL</label><input id="el-url" value="${esc(l.download_url)}"></div>
       <div class="field full"><label>Livery screenshot</label><div id="el-img-widget"></div></div>
-      <div class="field full"><label>Notes</label><textarea id="el-notes">${l.notes||''}</textarea></div>
+      <div class="field full"><label>Notes</label><textarea id="el-notes">${esc(l.notes)}</textarea></div>
       <div class="field full"><label>Pricing</label>
         <div class="pricing-toggle" style="margin-top:6px;">
           <label class="price-opt"><input type="radio" name="el-pricing" id="el-free" ${!l.is_paid?'checked':''}><span>Free</span></label>
@@ -820,13 +820,13 @@ async function loadArtists(){
     var s=stats[a.id]||{count:0,upvotes:0};
     var ini=a.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
     var avatar=a.avatar_url
-      ?'<img src="'+a.avatar_url+'" style="width:48px;height:48px;object-fit:cover;border-radius:50%!important;overflow:hidden;flex-shrink:0;">'
+      ?'<img src="'+esc(a.avatar_url)+'" style="width:48px;height:48px;object-fit:cover;border-radius:50%!important;overflow:hidden;flex-shrink:0;">'
       :'<div style="width:48px;height:48px;background:rgba(255,61,129,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:\'Archivo Black\',sans-serif;font-size:15px;font-weight:400;color:#FF3D81;">'+ini+'</div>';
     h+='<div style="background:var(--bg-s1);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;">';
     // Top row — avatar + name + discord
     h+='<div style="display:flex;align-items:center;gap:12px;">'+avatar;
-    h+='<div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;">'+a.name+' <span style="display:inline-flex;"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span></div>';
-    h+=(a.discord?'<div style="font-size:11px;color:var(--text-3);margin-top:2px;"><i class="ti ti-brand-discord"></i> '+a.discord+'</div>':'');
+    h+='<div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;">'+esc(a.name)+' <span style="display:inline-flex;"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span></div>';
+    h+=(a.discord?'<div style="font-size:11px;color:var(--text-3);margin-top:2px;"><i class="ti ti-brand-discord"></i> '+esc(a.discord)+'</div>':'');
     h+='</div></div>';
     // Stats row
     h+='<div style="display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;">';
@@ -855,14 +855,14 @@ async function loadArtists(){
   t.innerHTML=h;
 }
 async function claimLiveriesModal(artistId, artistName){
-  openModal(`<i class="ti ti-user-search"></i> Claim liveries for ${artistName}`, `
+  openModal(`<i class="ti ti-user-search"></i> Claim liveries for ${esc(artistName)}`, `
     <p style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:14px;">
-      Search for liveries submitted with just a text author name (not linked to a confirmed artist yet) that likely belong to <strong style="color:var(--text);">${artistName}</strong>.
+      Search for liveries submitted with just a text author name (not linked to a confirmed artist yet) that likely belong to <strong style="color:var(--text);">${esc(artistName)}</strong>.
     </p>
     <div class="field full" style="margin-bottom:14px;">
       <label>Search by author name</label>
       <div style="display:flex;gap:8px;">
-        <input id="claim-search" value="${artistName}" style="flex:1;">
+        <input id="claim-search" value="${esc(artistName)}" style="flex:1;">
         <button class="btn btn--surface" onclick="runClaimSearch('${artistId}')"><i class="ti ti-search"></i></button>
       </div>
     </div>
@@ -885,10 +885,10 @@ async function runClaimSearch(artistId){
     + matches.map(l=>`
       <label style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);cursor:pointer;">
         <input type="checkbox" class="claim-cb" value="${l.id}" checked>
-        <div style="width:44px;height:28px;background:var(--bg-s2);flex-shrink:0;overflow:hidden;">${l.image_url?`<img src="${l.image_url}" style="width:100%;height:100%;object-fit:cover;">`:''}</div>
+        <div style="width:44px;height:28px;background:var(--bg-s2);flex-shrink:0;overflow:hidden;">${l.image_url?`<img src="${esc(l.image_url)}" style="width:100%;height:100%;object-fit:cover;">`:''}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:12px;font-weight:700;color:var(--text);">${l.name}</div>
-          <div style="font-size:10px;color:var(--text-3);">Author: "${l.author||'—'}" · ${l.mods?.name||'—'} · ${l.approved?'Published':'Pending'}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text);">${esc(l.name)}</div>
+          <div style="font-size:10px;color:var(--text-3);">Author: "${esc(l.author)||'—'}" · ${esc(l.mods?.name)||'—'} · ${l.approved?'Published':'Pending'}</div>
         </div>
       </label>`).join('')
     + `<button class="btn btn--primary" style="width:100%;justify-content:center;margin-top:8px;" onclick="doClaimSelected('${artistId}')"><i class="ti ti-check"></i> Claim selected</button>`;
@@ -909,7 +909,7 @@ function artistModalForm(a={}){
   function lnk(id, icon, color, label, val){
     return '<div style="display:flex;align-items:center;gap:8px;background:var(--bg-s2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;margin-bottom:6px;">'
       + '<div style="width:24px;height:24px;border-radius:5px;background:'+color+';display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti '+icon+'" style="font-size:13px;color:#fff;"></i></div>'
-      + '<input id="'+id+'" style="border:none;background:transparent;color:var(--text);font-family:var(--font-body);font-size:12px;outline:none;width:100%;min-width:0;" placeholder="'+label+'" value="'+val+'">'
+      + '<input id="'+id+'" style="border:none;background:transparent;color:var(--text);font-family:var(--font-body);font-size:12px;outline:none;width:100%;min-width:0;" placeholder="'+label+'" value="'+esc(val)+'">'
       + '</div>';
   }
   // Brand selector
@@ -926,11 +926,11 @@ function artistModalForm(a={}){
     + '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">'
     +   '<div id="af-avatar-widget" style="flex-shrink:0;"></div>'
     +   '<div style="flex:1;display:flex;flex-direction:column;gap:8px;">'
-    +     '<div class="field" style="margin:0;"><label>Artist name *</label><input id="af-name" value="' + (a.name||'') + '" placeholder="e.g. SimPainter_IT"></div>'
-    +     '<div class="field" style="margin:0;"><label>Discord handle</label><input id="af-discord" value="' + (a.discord||'') + '" placeholder="e.g. simpai_it"></div>'
+    +     '<div class="field" style="margin:0;"><label>Artist name *</label><input id="af-name" value="' + esc(a.name) + '" placeholder="e.g. SimPainter_IT"></div>'
+    +     '<div class="field" style="margin:0;"><label>Discord handle</label><input id="af-discord" value="' + esc(a.discord) + '" placeholder="e.g. simpai_it"></div>'
     +   '</div>'
     + '</div>'
-    + '<div class="field" style="margin-bottom:12px;"><label>Bio</label><textarea id="af-bio" style="min-height:60px;resize:vertical;">' + (a.bio||'') + '</textarea></div>'
+    + '<div class="field" style="margin-bottom:12px;"><label>Bio</label><textarea id="af-bio" style="min-height:60px;resize:vertical;">' + esc(a.bio) + '</textarea></div>'
     + '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin-bottom:8px;">Social links</div>'
     + lnk('af-url-twitter',  'ti-brand-twitter',  '#111',    'https://x.com/...',           a.url_twitter||'')
     + lnk('af-url-discord',  'ti-brand-discord',  '#5865F2', 'https://discord.gg/...',      a.url_discord||'')
@@ -982,9 +982,9 @@ async function loadEditRequests(){
     const approveVal = encodeURIComponent(newId||newVal);
     return '<div class="card" style="padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">'
       + '<div style="flex:1;min-width:200px;">'
-      + '<div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;">' + (r.liveries&&r.liveries.name||'—') + '</div>'
-      + '<div style="font-size:12px;color:var(--text-2);margin-bottom:4px;">By <strong>' + (r.artists&&r.artists.name||'—') + '</strong></div>'
-      + '<div style="font-size:13px;color:var(--text-2);">Change <strong style="color:var(--text);">' + label + '</strong> to <span style="color:var(--acc);font-weight:500;">' + newVal + '</span></div>'
+      + '<div style="font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;">' + esc(r.liveries&&r.liveries.name||'—') + '</div>'
+      + '<div style="font-size:12px;color:var(--text-2);margin-bottom:4px;">By <strong>' + esc(r.artists&&r.artists.name||'—') + '</strong></div>'
+      + '<div style="font-size:13px;color:var(--text-2);">Change <strong style="color:var(--text);">' + esc(label) + '</strong> to <span style="color:var(--acc);font-weight:500;">' + esc(newVal) + '</span></div>'
       + '<div style="font-size:11px;color:var(--text-3);margin-top:4px;">' + new Date(r.created_at).toLocaleDateString() + '</div>'
       + '</div>'
       + '<div style="display:flex;flex-direction:column;gap:8px;min-width:120px;">'
@@ -1090,11 +1090,11 @@ async function loadChampionships(){
       var cats=ch.linked_categories||[];
       gridHtml+='<div onclick="editChampModal(\''+ch.id+'\');" style="background:var(--bg-s1);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;display:flex;align-items:center;gap:10px;" onmouseover="this.style.borderColor=\'var(--border-md)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
       gridHtml+=ch.logo_url
-        ?'<img src="'+ch.logo_url+'" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;">'
+        ?'<img src="'+esc(ch.logo_url)+'" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;">'
         :'<div style="width:32px;height:32px;border-radius:7px;background:var(--bg-s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-trophy" style="font-size:14px;color:var(--text-3);"></i></div>';
       gridHtml+='<div style="min-width:0;">';
-      gridHtml+='<div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(ch.short_name||ch.name)+'</div>';
-      gridHtml+=cats.length?'<div style="font-size:10px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+cats.map(function(c){return c.name;}).join(' · ')+'</div>':'';
+      gridHtml+='<div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(ch.short_name||ch.name)+'</div>';
+      gridHtml+=cats.length?'<div style="font-size:10px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(cats.map(function(c){return c.name;}).join(' · '))+'</div>':'';
       gridHtml+='</div></div>';
     });
     gridHtml+='</div>';
@@ -1138,19 +1138,19 @@ function champModalForm(ch={}){
       <div style="font-size:9px;font-weight:700;color:`+BRC[b]+`;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding:2px 8px;background:`+(b==='RSS'?'rgba(232,49,42,.10)':b==='VRC'?'rgba(48,209,88,.08)':'rgba(255,159,10,.08)')+`;border-radius:4px;display:inline-block;">`+b+`</div>
       <div class="cat-checks">${grouped[b].map(c=>`
         <label class="cat-check-item${linkedIds.includes(c.id)?' checked':''}" data-cat-id="${c.id}">
-          <input type="checkbox" value="${c.id}" ${linkedIds.includes(c.id)?'checked':''}><span class="dot" style="background:${c.color_text};"></span>${c.name}
+          <input type="checkbox" value="${c.id}" ${linkedIds.includes(c.id)?'checked':''}><span class="dot" style="background:${c.color_text};"></span>${esc(c.name)}
         </label>`).join('')}</div>
     </div>`;
   }).join('');
   return `<div style="display:flex;flex-direction:column;gap:12px;">
     <div style="display:flex;gap:12px;align-items:flex-start;">
       <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
-        <div class="field" style="margin:0;"><label>Championship name *</label><input id="cf-name" value="${ch.name||''}"></div>
-        <div class="field" style="margin:0;"><label>Short name</label><input id="cf-short" value="${ch.short_name||''}" placeholder="e.g. F1 2024"></div>
+        <div class="field" style="margin:0;"><label>Championship name *</label><input id="cf-name" value="${esc(ch.name)}"></div>
+        <div class="field" style="margin:0;"><label>Short name</label><input id="cf-short" value="${esc(ch.short_name)}" placeholder="e.g. F1 2024"></div>
       </div>
       <div style="flex-shrink:0;width:120px;">
         <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);display:block;margin-bottom:6px;">Logo</label>
-        ${ch.logo_url ? '<img src="'+ch.logo_url+'" style="width:80px;height:80px;object-fit:contain;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:6px;">' : ''}
+        ${ch.logo_url ? '<img src="'+esc(ch.logo_url)+'" style="width:80px;height:80px;object-fit:contain;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:6px;">' : ''}
         <div id="cf-logo-widget"></div>
       </div>
     </div>
@@ -1197,10 +1197,10 @@ async function loadAddons(search=''){
   if(!list.length){ t.innerHTML='<tr><td style="color:var(--text-3);">No published addons yet.</td></tr>'; return; }
   t.innerHTML=`<thead><tr><th>Name</th><th>Mod</th><th>Type</th><th>Creator</th><th>Votes</th><th>Actions</th></tr></thead>
   <tbody>${list.map(a=>`<tr>
-    <td><strong>${a.name}</strong></td>
-    <td style="color:var(--text-2);">${a.mods?.name||'—'}</td>
-    <td><span class="badge badge--3d" style="text-transform:capitalize;">${a.addon_type||'—'}</span></td>
-    <td style="color:var(--text-2);">${a.artists?`<span style="color:var(--crown);">\ud83d\udc51</span> ${a.artists.name}`:a.author||'—'}</td>
+    <td><strong>${esc(a.name)}</strong></td>
+    <td style="color:var(--text-2);">${esc(a.mods?.name)||'—'}</td>
+    <td><span class="badge badge--3d" style="text-transform:capitalize;">${esc(a.addon_type)||'—'}</span></td>
+    <td style="color:var(--text-2);">${a.artists?`<span style="color:var(--crown);">\ud83d\udc51</span> ${esc(a.artists.name)}`:esc(a.author)||'—'}</td>
     <td>${a.upvotes||0}</td>
     <td>
       <button class="action-btn" onclick="editAddonModal('${a.id}',false)"><i class="ti ti-pencil"></i></button>
@@ -1215,12 +1215,12 @@ async function editAddonModal(id, isApproval=false){
   const list = await fetchPendingAddons();
   const a = list.find(x=>x.id===id) || (await (async()=>{ const {data}=await db.from('addons').select('*, mods(name), categories(name,color_bg,color_text), artists(name)').eq('id',id).single(); return data; })());
   if(!a) return;
-  const catOpts = _cats.map(c=>`<option value="${c.id}" ${a.category_id===c.id?'selected':''}>${c.name}</option>`).join('');
-  const modOpts = _mods.map(m=>`<option value="${m.id}" ${a.mod_id===m.id?'selected':''}>${m.name}</option>`).join('');
-  const artistOpts = _artists.map(ar=>`<option value="${ar.id}" ${a.artist_id===ar.id?'selected':''}>${ar.name}</option>`).join('');
+  const catOpts = _cats.map(c=>`<option value="${c.id}" ${a.category_id===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+  const modOpts = _mods.map(m=>`<option value="${m.id}" ${a.mod_id===m.id?'selected':''}>${esc(m.name)}</option>`).join('');
+  const artistOpts = _artists.map(ar=>`<option value="${ar.id}" ${a.artist_id===ar.id?'selected':''}>${esc(ar.name)}</option>`).join('');
   openModal(`<i class="ti ti-puzzle"></i> ${isApproval?'Edit & approve addon':'Edit addon'}`,`
     <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="field full"><label>Name</label><input id="ae-name" value="${(a.name||'').replace(/"/g,'&quot;')}"></div>
+      <div class="field full"><label>Name</label><input id="ae-name" value="${esc(a.name)}"></div>
       <div class="field"><label>Category</label><select id="ae-cat"><option value="">—</option>${catOpts}</select></div>
       <div class="field"><label>RSS Mod <span style="font-size:10px;color:var(--text-3);font-weight:400;">(optional)</span></label><select id="ae-mod"><option value="">— Entire category —</option>${modOpts}</select></div>
       <div class="field"><label>Addon type</label>
@@ -1232,11 +1232,11 @@ async function editAddonModal(id, isApproval=false){
           <option value="other" ${a.addon_type==='other'?'selected':''}>Other</option>
         </select>
       </div>
-      <div class="field"><label>Creator (text)</label><input id="ae-author" value="${(a.author||'').replace(/"/g,'&quot;')}"></div>
+      <div class="field"><label>Creator (text)</label><input id="ae-author" value="${esc(a.author)}"></div>
       <div class="field full"><label>Confirmed Artist</label><select id="ae-artist"><option value="">— None —</option>${artistOpts}</select></div>
-      <div class="field full"><label>Download URL</label><input id="ae-url" value="${(a.download_url||'').replace(/"/g,'&quot;')}"></div>
+      <div class="field full"><label>Download URL</label><input id="ae-url" value="${esc(a.download_url)}"></div>
       <div class="field full"><label>Preview image</label><div id="ae-img-widget"></div></div>
-      <div class="field full"><label>Notes</label><textarea id="ae-notes">${a.notes||''}</textarea></div>
+      <div class="field full"><label>Notes</label><textarea id="ae-notes">${esc(a.notes)}</textarea></div>
       <div class="field full"><label>Pricing</label>
         <div class="pricing-toggle" style="margin-top:6px;">
           <label class="price-opt"><input type="radio" name="ae-pricing" id="ae-free" ${!a.is_paid?'checked':''}><span>Free</span></label>
@@ -1308,22 +1308,22 @@ async function loadMods(){
     gridHtml+='<div style="margin-bottom:28px;">';
     gridHtml+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">';
     gridHtml+=g.cat
-      ?'<span style="padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.3px;background:'+g.cat.color_bg+';color:'+g.cat.color_text+';">'+catName+'</span>'
-      :'<span style="font-size:11px;font-weight:700;color:var(--text-2);">'+catName+'</span>';
+      ?'<span style="padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.3px;background:'+g.cat.color_bg+';color:'+g.cat.color_text+';">'+esc(catName)+'</span>'
+      :'<span style="font-size:11px;font-weight:700;color:var(--text-2);">'+esc(catName)+'</span>';
     gridHtml+='<span style="font-size:11px;color:var(--text-3);">'+g.items.length+' mod'+(g.items.length!==1?'s':'')+'</span>';
     gridHtml+='</div>';
     gridHtml+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">';
     g.items.forEach(function(m){
       gridHtml+='<div onclick="editModModal(\''+m.id+'\');" style="border-radius:12px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:16/9;background:var(--bg-s2);">';
       if(m.image_url){
-        gridHtml+='<img src="'+m.image_url+'" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        gridHtml+='<img src="'+esc(m.image_url)+'" style="width:100%;height:100%;object-fit:cover;display:block;">';
       } else {
         gridHtml+='<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><i class="ti ti-car" style="font-size:32px;color:var(--text-3);"></i></div>';
       }
       gridHtml+='<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%);pointer-events:none;"></div>';
       gridHtml+='<div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px;">';
-      gridHtml+='<div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+m.name+'</div>';
-      gridHtml+=(m.version?'<div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;">v'+m.version+'</div>':'');
+      gridHtml+='<div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(m.name)+'</div>';
+      gridHtml+=(m.version?'<div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;">v'+esc(m.version)+'</div>':'');
       gridHtml+='</div></div>';
     });
     gridHtml+='</div></div>';
@@ -1339,17 +1339,17 @@ function modModalForm(m={}){
     const active=b===activeBrand;
     return '<button type="button" id="mf-brand-'+b+'" onclick="selectModBrand(\''+b+'\');" style="flex:1;height:38px;border:1px solid '+(active?bm.border:'var(--border)')+';background:'+(active?bm.bg:'transparent')+';cursor:pointer;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:'+(active?bm.c:'var(--text-3)')+';">'+b+'</button>';
   }).join('');
-  const catOpts=_cats.filter(function(c){return c.brand===activeBrand;}).map(function(c){return '<option value="'+c.id+'" '+(m.category_id===c.id?'selected':'')+'>'+c.name+'</option>';}).join('');
+  const catOpts=_cats.filter(function(c){return c.brand===activeBrand;}).map(function(c){return '<option value="'+c.id+'" '+(m.category_id===c.id?'selected':'')+'>'+esc(c.name)+'</option>';}).join('');
   return '<div style="display:flex;flex-direction:column;gap:12px;">'
     +'<input type="hidden" id="mf-brand" value="'+activeBrand+'">'
     +'<div class="field"><label>Publisher</label><div style="display:flex;gap:8px;">'+brandBtns+'</div></div>'
-    +'<div class="field"><label>Mod name *</label><input id="mf-name" value="'+(m.name||'')+'" placeholder="e.g. RSS GT3"></div>'
+    +'<div class="field"><label>Mod name *</label><input id="mf-name" value="'+esc(m.name)+'" placeholder="e.g. RSS GT3"></div>'
     +'<div class="field"><label>Category</label><select id="mf-cat"><option value="">— None —</option>'+catOpts+'</select></div>'
-    +'<div class="field"><label>Version</label><input id="mf-version" value="'+(m.version||'')+'" placeholder="e.g. 1.4.2"></div>'
+    +'<div class="field"><label>Version</label><input id="mf-version" value="'+esc(m.version)+'" placeholder="e.g. 1.4.2"></div>'
     +'<div class="field"><label>Cover image</label><div id="mf-img-widget"></div></div>'
-    +'<div class="field"><label>Official URL</label><input id="mf-url" value="'+(m.official_url||'')+'" placeholder="https://racesimstudio.com"></div>'
-    +'<div class="field"><label>Description</label><textarea id="mf-desc" style="min-height:70px;" placeholder="Short description of the mod…">'+(m.description||'')+'</textarea></div>'
-    +'<div class="field"><label>Changelog <span style="font-size:10px;color:var(--text-3);font-weight:400;">(Markdown)</span></label><textarea id="mf-changelog" style="min-height:100px;font-family:var(--font-mono,monospace);font-size:12px;">'+(m.changelog||'')+'</textarea></div>'
+    +'<div class="field"><label>Official URL</label><input id="mf-url" value="'+esc(m.official_url)+'" placeholder="https://racesimstudio.com"></div>'
+    +'<div class="field"><label>Description</label><textarea id="mf-desc" style="min-height:70px;" placeholder="Short description of the mod…">'+esc(m.description)+'</textarea></div>'
+    +'<div class="field"><label>Changelog <span style="font-size:10px;color:var(--text-3);font-weight:400;">(Markdown)</span></label><textarea id="mf-changelog" style="min-height:100px;font-family:var(--font-mono,monospace);font-size:12px;">'+esc(m.changelog)+'</textarea></div>'
     +'</div>';
 }
 function selectModBrand(b){
@@ -1368,7 +1368,7 @@ function selectModBrand(b){
   const sel=document.getElementById('mf-cat');
   if(sel){
     const cats=_cats.filter(function(c){return c.brand===b;});
-    sel.innerHTML='<option value="">— None —</option>'+cats.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>';}).join('');
+    sel.innerHTML='<option value="">— None —</option>'+cats.map(function(c){return '<option value="'+c.id+'">'+esc(c.name)+'</option>';}).join('');
   }
 }
 let _getModImg = () => '';
@@ -1426,9 +1426,9 @@ async function loadCategories(){
     filtered.forEach(function(c){
       gridHtml+='<div onclick="editCatModal(\''+c.id+'\');" style="background:var(--bg-s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;" onmouseover="this.style.borderColor=\'var(--border-md)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
       gridHtml+='<div style="width:32px;height:32px;border-radius:7px;background:'+c.color_bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
-      gridHtml+='<span style="font-size:14px;font-weight:900;color:'+c.color_text+';">'+c.name.slice(0,1)+'</span></div>';
-      gridHtml+='<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+c.name+'</div>';
-      gridHtml+='<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:'+c.color_bg+';color:'+c.color_text+';">'+c.name+'</span></div>';
+      gridHtml+='<span style="font-size:14px;font-weight:900;color:'+c.color_text+';">'+esc(c.name.slice(0,1))+'</span></div>';
+      gridHtml+='<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(c.name)+'</div>';
+      gridHtml+='<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:'+c.color_bg+';color:'+c.color_text+';">'+esc(c.name)+'</span></div>';
       gridHtml+='</div>';
     });
     gridHtml+='</div>';
@@ -1448,13 +1448,13 @@ function catModalForm(c={}){
   return '<div style="display:flex;flex-direction:column;gap:14px;">'
     +'<input type="hidden" id="catf-brand" value="'+activeBrand+'">'
     +'<div class="field"><label>Publisher</label><div style="display:flex;gap:8px;">'+brandBtns+'</div></div>'
-    +'<div class="field"><label>Category name *</label><input id="catf-name" value="'+(c.name||'')+'" placeholder="e.g. GT4"></div>'
+    +'<div class="field"><label>Category name *</label><input id="catf-name" value="'+esc(c.name)+'" placeholder="e.g. GT4"></div>'
     +'<div class="field"><label style="display:flex;align-items:center;justify-content:space-between;">Colors <button type="button" onclick="randomizeCatColors()" style="display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--acc);font-family:\'Archivo\',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;padding:0;"><i class="ti ti-dice-5" style="font-size:13px;"></i> Randomize</button></label>'
     +'<div style="display:flex;gap:12px;">'
     +'<div style="flex:1;"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px;">Background</div><input id="catf-bg" type="color" value="'+(c.color_bg||'#E6F1FB')+'" style="width:100%;height:38px;padding:2px;border:1px solid var(--border);background:var(--bg);cursor:pointer;"></div>'
     +'<div style="flex:1;"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px;">Text</div><input id="catf-text" type="color" value="'+(c.color_text||'#0C447C')+'" style="width:100%;height:38px;padding:2px;border:1px solid var(--border);background:var(--bg);cursor:pointer;"></div>'
     +'</div></div>'
-    +'<div class="field"><label>Preview</label><div style="padding:10px 0;"><span id="cp-badge" class="cat-badge" style="background:'+(c.color_bg||'#E6F1FB')+';color:'+(c.color_text||'#0C447C')+';padding:5px 12px;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;">'+(c.name||'Category')+'</span></div></div>'
+    +'<div class="field"><label>Preview</label><div style="padding:10px 0;"><span id="cp-badge" class="cat-badge" style="background:'+(c.color_bg||'#E6F1FB')+';color:'+(c.color_text||'#0C447C')+';padding:5px 12px;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;">'+esc(c.name||'Category')+'</span></div></div>'
     +'</div>';
 }
 function hslToHex(h,s,l){

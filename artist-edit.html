@@ -544,8 +544,8 @@ function aeRenderModGrid(list) {
     var d = document.createElement('div');
     d.className = 'pi';
     d.onclick = function(){ aeSelectMod(m.id, m.name); };
-    d.innerHTML = (m.image_url ? '<img src="'+m.image_url+'" class="pi-logo">' : '<div class="pi-logo-ph"><i class="ti ti-car"></i></div>')
-      + '<div class="pi-name">'+m.name+'</div>';
+    d.innerHTML = (m.image_url ? '<img src="'+esc(m.image_url)+'" class="pi-logo">' : '<div class="pi-logo-ph"><i class="ti ti-car"></i></div>')
+      + '<div class="pi-name">'+esc(m.name)+'</div>';
     g.appendChild(d);
   });
 }
@@ -610,8 +610,8 @@ function aeRenderChampGrid(list) {
     var d = document.createElement('div');
     d.className = 'pi';
     d.onclick = function(){ aeSelectChamp(c.id, name); };
-    d.innerHTML = (c.logo_url ? '<img src="'+c.logo_url+'" class="pi-logo">' : '<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>')
-      + '<div class="pi-name">'+name+'</div>';
+    d.innerHTML = (c.logo_url ? '<img src="'+esc(c.logo_url)+'" class="pi-logo">' : '<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>')
+      + '<div class="pi-name">'+esc(name)+'</div>';
     g.appendChild(d);
   });
 }
@@ -674,12 +674,12 @@ async function aeBoot() {
 
   var ini = _ae_artist.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
   var av = document.getElementById('ae-av');
-  if (_ae_artist.avatar_url) av.innerHTML = '<img src="'+_ae_artist.avatar_url+'" style="width:100%;height:100%;object-fit:cover;">';
+  if (_ae_artist.avatar_url) av.innerHTML = '<img src="'+esc(_ae_artist.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;">';
   else av.textContent = ini;
   document.getElementById('ae-name').textContent = _ae_artist.name;
 
   var heroAv = document.getElementById('ae-hero-av');
-  if (_ae_artist.avatar_url) heroAv.innerHTML = '<img src="'+_ae_artist.avatar_url+'" style="width:100%;height:100%;object-fit:cover;">';
+  if (_ae_artist.avatar_url) heroAv.innerHTML = '<img src="'+esc(_ae_artist.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;">';
   else heroAv.textContent = ini;
   document.getElementById('ae-hero-name').textContent = _ae_artist.name;
 
@@ -723,13 +723,13 @@ async function aeLiveries() {
   el.innerHTML = data.map(function(l){
     var brand=l.mods&&l.mods.brand;
     var brandColor=(brand&&BRC[brand])?BRC[brand]:'var(--acc)';
-    var brandTag=brand?'<span class="lv-brand-tag" style="color:'+brandColor+';border-color:'+brandColor+';">'+brand+'</span>':'';
+    var brandTag=brand?'<span class="lv-brand-tag" style="color:'+brandColor+';border-color:'+brandColor+';">'+esc(brand)+'</span>':'';
     var paintColor=(brand&&BRC[brand])?BRC[brand]:((l.categories&&l.categories.color_bg)||brandColor);
-    var champName=(l.championships&&l.championships.short_name)||(l.categories&&l.categories.name)||'—';
-    var driver=l.driver||l.team||'';
-    var season=l.season||'';
+    var champName=esc((l.championships&&l.championships.short_name)||(l.categories&&l.categories.name))||'—';
+    var driver=esc(l.driver||l.team||'');
+    var season=esc(l.season||'');
     return '<div class="lv-card" onclick="aeEditLivery(\''+l.id+'\')">'
-      +'<div class="lv-thumb">'+(l.image_url?'<img src="'+l.image_url+'" loading="lazy">':'<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>')
+      +'<div class="lv-thumb">'+(l.image_url?'<img src="'+esc(l.image_url)+'" loading="lazy">':'<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>')
       +'<div class="lv-paint" style="background:'+paintColor+';"></div>'
       +'<div class="lv-ov"></div>'
       +(brandTag?'<div class="lv-brand">'+brandTag+'</div>':'')
@@ -742,12 +742,12 @@ async function aeLiveries() {
       +'<div class="lv-meta">'
       +'<div class="lv-champ-row"><span class="lv-champ" style="color:'+brandColor+';">'+champName+'</span>'
       +'<span style="display:flex;align-items:center;gap:8px;flex-shrink:0;">'
-      +(l.car_number?'<span class="lv-numtag">#'+l.car_number+'</span>':'')
+      +(l.car_number?'<span class="lv-numtag">#'+esc(l.car_number)+'</span>':'')
       +(season?'<span class="lv-season">'+season+'</span>':'')
       +'</span></div>'
-      +'<div class="lv-name">'+l.name+'</div>'
+      +'<div class="lv-name">'+esc(l.name)+'</div>'
       +(driver?'<div class="lv-driver">'+driver+'</div>':'')
-      +(l.mods&&l.mods.name?'<div class="lv-mod">'+l.mods.name+'</div>':'')
+      +(l.mods&&l.mods.name?'<div class="lv-mod">'+esc(l.mods.name)+'</div>':'')
       +'</div></div></div>';
   }).join('');
 }
@@ -835,7 +835,7 @@ function aeUpdatePreview() {
   var modText = document.getElementById('ae-mod-text').textContent;
   document.getElementById('ae-preview-meta').textContent = (modText==='Select category first'||modText==='Select mod') ? 'Mod' : modText;
   var imgUrl = _ae_preview_img;
-  document.getElementById('ae-preview-thumb').innerHTML = imgUrl?'<img src="'+imgUrl+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>';
+  document.getElementById('ae-preview-thumb').innerHTML = imgUrl?'<img src="'+esc(imgUrl)+'" style="width:100%;height:100%;object-fit:cover;">':'<i class="ti ti-photo" style="font-size:28px;color:var(--t3);"></i>';
 }
 
 function aeUpdateChecklist() {
@@ -874,10 +874,10 @@ async function aeAddons() {
   var data = res.data||[];
   if (!data.length){ el.innerHTML='<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-puzzle" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No addons yet.</div>'; return; }
   el.innerHTML = data.map(function(a){
-    return '<div class="lv-card"><div class="lv-thumb">'+(a.image_url?'<img src="'+a.image_url+'" loading="lazy">':'<i class="ti ti-puzzle" style="font-size:24px;color:var(--t3);"></i>')
+    return '<div class="lv-card"><div class="lv-thumb">'+(a.image_url?'<img src="'+esc(a.image_url)+'" loading="lazy">':'<i class="ti ti-puzzle" style="font-size:24px;color:var(--t3);"></i>')
       +'<div class="lv-ov"></div><div class="lv-badges"><span class="badge '+(a.approved?'b-f':'b-n')+'">'+(a.approved?'Published':'Pending')+'</span></div>'
-      +'</div><div class="lv-body"><div class="lv-name">'+a.name+'</div>'
-      +'<div class="lv-foot"><span style="font-size:10px;color:var(--t2);">'+(a.categories?.name||'—')+'</span>'
+      +'</div><div class="lv-body"><div class="lv-name">'+esc(a.name)+'</div>'
+      +'<div class="lv-foot"><span style="font-size:10px;color:var(--t2);">'+(esc(a.categories?.name)||'—')+'</span>'
       +'<span class="badge '+(a.is_paid?'b-p':'b-f')+'">'+(a.is_paid?'Paid':'Free')+'</span>'
       +'</div></div></div>';
   }).join('');
