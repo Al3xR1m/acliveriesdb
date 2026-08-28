@@ -722,16 +722,18 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
           <i class="ti ti-search"></i>
           <input type="text" id="l-search" placeholder="Search livery, driver, team, car number…">
         </div>
-        <button class="tb-action ph-action" id="l-sort-btn" style="position:relative;" onclick="toggleSortMenu(event)">
-          <i class="ti ti-arrows-sort" style="font-size:13px;"></i>
-          <span id="l-sort-label">Popular</span>
-          <i class="ti ti-chevron-down" style="font-size:11px;margin-left:2px;"></i>
+        <div style="position:relative;display:inline-block;">
+          <button class="tb-action ph-action" id="l-sort-btn" onclick="toggleSortMenu(event)">
+            <i class="ti ti-arrows-sort" style="font-size:13px;"></i>
+            <span id="l-sort-label">Popular</span>
+            <i class="ti ti-chevron-down" style="font-size:11px;margin-left:2px;"></i>
+          </button>
           <div class="sort-menu" id="sort-menu">
             <button class="sort-opt on" data-val="votes" data-label="Popular" onclick="selectSort(event,'votes','Popular')">Popular</button>
             <button class="sort-opt" data-val="newest" data-label="Newest" onclick="selectSort(event,'newest','Newest')">Newest</button>
             <button class="sort-opt" data-val="name" data-label="A–Z" onclick="selectSort(event,'name','A–Z')">A–Z</button>
           </div>
-        </button>
+        </div>
         <button class="tb-action ph-action" id="filters-btn" onclick="openDrawer()">
           <i class="ti ti-adjustments-horizontal" style="font-size:13px;"></i> Filters
           <span class="cnt" id="filters-count" style="display:none;">0</span>
