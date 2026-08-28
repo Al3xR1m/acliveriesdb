@@ -13,8 +13,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Install PostgreSQL 17 client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+          sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Check installed pg_dump versions
+        run: |
+          echo "Versions installées dans /usr/lib/postgresql/ :"
+          ls /usr/lib/postgresql/ || true
+          echo "pg_dump trouvé via PATH :"
+          which pg_dump && pg_dump --version || true
+          echo "pg_dump version 17 (chemin explicite) :"
+          /usr/lib/postgresql/17/bin/pg_dump --version
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,7 +40,7 @@ jobs:
         env:
           PGCONNECT_TIMEOUT: '30'
         run: |
-          pg_dump "${{ secrets.SUPABASE_DB_URL }}" \
+          /usr/lib/postgresql/17/bin/pg_dump "${{ secrets.SUPABASE_DB_URL }}" \
             --no-owner --no-privileges --format=plain \
             --file=db-backup.sql
 
