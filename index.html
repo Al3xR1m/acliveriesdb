@@ -150,12 +150,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .tb-wrap{background:var(--bg);border-bottom:1px solid var(--b1);position:sticky;top:0;z-index:20;transition:border-color .2s;}
 .tb-wrap.focused{border-bottom-color:var(--acc);}
 .tb-inner{padding:0 28px;display:flex;align-items:stretch;gap:0;min-height:46px;}
-.tb-ghost{flex:1;display:flex;align-items:center;gap:12px;border-right:1px solid var(--b1);padding:0 4px;box-shadow:inset 0 -2px 0 var(--acc);}
-.tb-ghost i{color:var(--acc);font-size:16px;flex-shrink:0;}
-.tb-ghost input{background:transparent;border:none;outline:none;font-family:'Azeret Mono',monospace;font-size:14px;color:var(--t1);width:100%;caret-color:var(--acc);}
-.tb-ghost input::placeholder{color:var(--t3);}
-.tb-ghost input::placeholder{color:var(--t3);}
-.tb-ghost.focused i{color:var(--acc);}
+.ph-search{display:flex;align-items:center;gap:12px;border:1px solid var(--b1);padding:14px 18px;max-width:520px;margin-top:24px;transition:border-color .15s;}
+.ph-search:focus-within{border-color:var(--acc);}
+.ph-search i{color:var(--acc);font-size:16px;flex-shrink:0;}
+.ph-search input{background:transparent;border:none;outline:none;font-family:'Azeret Mono',monospace;font-size:14px;color:var(--t1);width:100%;caret-color:var(--acc);}
+.ph-search input::placeholder{color:var(--t3);}
 .tb-action{display:flex;align-items:center;gap:6px;padding:0 16px;border-right:1px solid var(--b1);cursor:pointer;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);background:none;border-top:none;border-bottom:none;transition:color .15s;white-space:nowrap;}
 .tb-action:hover{color:var(--t1);}
 .tb-action.on{color:var(--acc);}
@@ -711,6 +710,10 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
       <div class="page-head-eyebrow"><span style="width:18px;height:1px;background:var(--pur);display:inline-block;"></span><span id="ph-count">— LIVERIES INDEXED</span></div>
       <h1>Browse the archive</h1>
       <p class="page-head-sub">Every livery on the site, one grid. Use quick filters below, or open the full filter panel for mod, championship and pricing.</p>
+      <div class="ph-search" id="tb-ghost">
+        <i class="ti ti-search"></i>
+        <input type="text" id="l-search" placeholder="Search livery, driver, team, car number…">
+      </div>
     </div>
 
     <!-- LIVERY OF THE DAY -->
@@ -727,10 +730,6 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     <!-- TOOLBAR -->
     <div class="tb-wrap" id="tb-wrap">
       <div class="tb-inner">
-        <div class="tb-ghost" id="tb-ghost">
-          <i class="ti ti-search"></i>
-          <input type="text" id="l-search" placeholder="Search livery, driver, team, car number…">
-        </div>
         <button class="tb-action" id="l-sort-btn" style="position:relative;">
           <i class="ti ti-arrows-sort" style="font-size:13px;"></i>
           <span id="l-sort-label">Popular</span>
