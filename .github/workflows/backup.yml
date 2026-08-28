@@ -1,0 +1,55 @@
+name: Weekly backup
+
+on:
+  schedule:
+    # Every Sunday at 03:00 UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch: {}  # lets you also trigger it manually from the Actions tab
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Dump database
+        env:
+          PGCONNECT_TIMEOUT: '30'
+        run: |
+          pg_dump "${{ secrets.SUPABASE_DB_URL }}" \
+            --no-owner --no-privileges --format=plain \
+            --file=db-backup.sql
+
+      - name: Download all images
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python3 scripts/backup_images.py
+
+      - name: Zip images
+        run: zip -r images-backup.zip images-backup
+
+      - name: Set backup date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Publish backup as a GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: backup-${{ steps.date.outputs.date }}
+          name: Backup ${{ steps.date.outputs.date }}
+          body: Automated weekly backup (database + images).
+          files: |
+            db-backup.sql
+            images-backup.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
