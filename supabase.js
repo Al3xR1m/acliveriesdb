@@ -17,6 +17,17 @@ function esc(s){
     .replace(/"/g,'&quot;')
     .replace(/'/g,'&#39;');
 }
+
+// Ensures a user-entered URL has a protocol before it's used as a link href.
+// Without this, a URL typed as "example.com" (no https://) gets treated by the
+// browser as a path relative to the current site instead of an external link.
+function normalizeUrl(u){
+  if(!u) return '';
+  u = String(u).trim();
+  if(!u) return '';
+  if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  return u;
+}
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkemp3ZGlybHp4cnJza3NieHBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NjE1NzIsImV4cCI6MjA5NjIzNzU3Mn0.dY36WSOeZh3EXPLfDH11mmoAP6kYDPRW1AOnfRd0LBk';
 
 const { createClient } = supabase;

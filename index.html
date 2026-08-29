@@ -1497,7 +1497,7 @@ async function loadLiveryDetail(id){
             ${l.season?`<div><div class="ld-stat-num">${esc(l.season)}</div><div class="ld-stat-label">Season</div></div>`:''}
           </div>
           <div class="ld-actions">
-            ${l.download_url?`<a href="${esc(l.download_url)}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download link</a>`:''}
+            ${l.download_url?`<a href="${esc(normalizeUrl(l.download_url))}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download link</a>`:''}
             <button class="ld-btn ghost${voted?' voted':''}" id="upvote-btn" onclick="handleUpvote('${l.id}')"><i class="ti ti-thumb-up"></i> ${voted?'Upvoted':'Upvote'}</button>
           </div>
           <div class="ld-links">
@@ -2007,7 +2007,7 @@ async function loadModDetail(id){
           <div class="md-stat"><div class="md-stat-n">${ac}</div><div class="md-stat-l">Addons</div></div>
           ${mod.version?`<div class="md-stat"><div class="md-stat-n" style="font-size:14px;letter-spacing:-.3px;">v${esc(mod.version)}</div><div class="md-stat-l">Version</div></div>`:''}
         </div>
-        ${mod.official_url?`<a href="${esc(mod.official_url)}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--acc);text-decoration:none;margin-top:12px;"><i class="ti ti-external-link"></i> Official page</a>`:''}
+        ${mod.official_url?`<a href="${esc(normalizeUrl(mod.official_url))}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--acc);text-decoration:none;margin-top:12px;"><i class="ti ti-external-link"></i> Official page</a>`:''}
       </div>
     </div>`;
   const tabsEl=document.createElement('div');tabsEl.className='md-tabs';
@@ -2049,10 +2049,10 @@ async function loadArtists(){
     const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
     const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:3px 9px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;">${esc(b)}</span>`;}).join('');
     const socials=[
-      a.url_twitter?`<a href="${esc(a.url_twitter)}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-x"></i></a>`:'',
-      a.url_patreon?`<a href="${esc(a.url_patreon)}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-patreon"></i></a>`:'',
-      a.url_youtube?`<a href="${esc(a.url_youtube)}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-youtube"></i></a>`:'',
-      a.url_overtake?`<a href="${esc(a.url_overtake)}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-external-link"></i></a>`:'',
+      a.url_twitter?`<a href="${esc(normalizeUrl(a.url_twitter))}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-x"></i></a>`:'',
+      a.url_patreon?`<a href="${esc(normalizeUrl(a.url_patreon))}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-patreon"></i></a>`:'',
+      a.url_youtube?`<a href="${esc(normalizeUrl(a.url_youtube))}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-brand-youtube"></i></a>`:'',
+      a.url_overtake?`<a href="${esc(normalizeUrl(a.url_overtake))}" target="_blank" style="color:var(--t3);font-size:15px;"><i class="ti ti-external-link"></i></a>`:'',
     ].filter(Boolean).join('');
     return `<div class="av-card" onclick="openArtistProfile('${a.id}')" style="cursor:pointer;">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
@@ -2104,10 +2104,10 @@ async function renderArtistProfile(id){
   const brands=(artist.brands||[]);
   const brandPills=brands.length?brands.map(b=>{const bm=BRC[b]||{c:'var(--t2)',bg:'var(--s2)',border:'var(--b1)'};return `<span style="padding:3px 10px;border:1px solid ${bm.border};background:${bm.bg};color:${bm.c};font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;">${esc(b)}</span>`;}).join(''):'';
   const socials=[
-    artist.url_twitter?`<a href="${esc(artist.url_twitter)}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-x"></i></a>`:'',
-    artist.url_patreon?`<a href="${esc(artist.url_patreon)}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-patreon"></i></a>`:'',
-    artist.url_youtube?`<a href="${esc(artist.url_youtube)}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-youtube"></i></a>`:'',
-    artist.url_overtake?`<a href="${esc(artist.url_overtake)}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-external-link"></i></a>`:'',
+    artist.url_twitter?`<a href="${esc(normalizeUrl(artist.url_twitter))}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-x"></i></a>`:'',
+    artist.url_patreon?`<a href="${esc(normalizeUrl(artist.url_patreon))}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-patreon"></i></a>`:'',
+    artist.url_youtube?`<a href="${esc(normalizeUrl(artist.url_youtube))}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-brand-youtube"></i></a>`:'',
+    artist.url_overtake?`<a href="${esc(normalizeUrl(artist.url_overtake))}" target="_blank" style="color:var(--t2);font-size:18px;transition:color .12s;" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t2)'"><i class="ti ti-external-link"></i></a>`:'',
   ].filter(Boolean).join('');
 
   el.innerHTML=`

@@ -511,7 +511,7 @@ async function loadPending(){
           <div><i class="ti ti-pencil" style="font-size:11px;"></i> <strong>Creator:</strong> ${esc(l.author)||esc(l.artists?.name)||'—'}</div>
         </div>
         ${l.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${esc(l.notes)}</div>`:''}
-        ${l.download_url?`<a href="${esc(l.download_url)}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
+        ${l.download_url?`<a href="${esc(normalizeUrl(l.download_url))}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;min-width:120px;">
         <button class="action-btn" onclick="editLiveryModal('${l.id}',true)"><i class="ti ti-pencil"></i> Edit & approve</button>
@@ -545,7 +545,7 @@ async function loadPending(){
             <div><i class="ti ti-puzzle" style="font-size:11px;"></i> <strong>Type:</strong> ${esc(a.addon_type)||'—'}</div>
           </div>
           ${a.notes?`<div style="font-size:12px;color:var(--text-3);margin-top:6px;font-style:italic;">${esc(a.notes)}</div>`:''}
-          ${a.download_url?`<a href="${esc(a.download_url)}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
+          ${a.download_url?`<a href="${esc(normalizeUrl(a.download_url))}" target="_blank" style="font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:4px;margin-top:8px;"><i class="ti ti-external-link"></i>View download page</a>`:''}
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;min-width:120px;">
           <button class="action-btn" onclick="editAddonModal('${a.id}',true)"><i class="ti ti-pencil"></i> Edit & approve</button>
@@ -942,11 +942,11 @@ function artistModalForm(a={}){
 
 function getArtistUrls(){
   return {
-    url_twitter:  document.getElementById('af-url-twitter').value.trim()||null,
-    url_discord:  document.getElementById('af-url-discord').value.trim()||null,
-    url_patreon:  document.getElementById('af-url-patreon').value.trim()||null,
-    url_youtube:  document.getElementById('af-url-youtube').value.trim()||null,
-    url_overtake: document.getElementById('af-url-overtake').value.trim()||null,
+    url_twitter:  document.getElementById('af-url-twitter').value.trim(),
+    url_discord:  document.getElementById('af-url-discord').value.trim(),
+    url_patreon:  document.getElementById('af-url-patreon').value.trim(),
+    url_youtube:  document.getElementById('af-url-youtube').value.trim(),
+    url_overtake: document.getElementById('af-url-overtake').value.trim(),
   };
 }
 document.getElementById('addArtistBtn').addEventListener('click',()=>{
@@ -1374,7 +1374,7 @@ function selectModBrand(b){
 let _getModImg = () => '';
 document.getElementById('addModBtn').addEventListener('click',()=>{
   openModal('<i class="ti ti-car"></i> Add mod',modModalForm(),async()=>{
-    const res=await createMod({name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
+    const res=await createMod({name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim(),description:document.getElementById('mf-desc').value.trim(),changelog:document.getElementById('mf-changelog').value.trim()});
     if(res.ok){_mods=await fetchMods();closeModal();await loadMods();customAlert('Mod created.','success');}
     else customAlert('Failed to create: '+(res.error?.message||'unknown error'),'error');
   });
@@ -1386,7 +1386,7 @@ async function editModModal(id){
     +'<button type="button" onclick="doDeleteMod(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete mod</button>'
     +'</div>';
   openModal('<i class="ti ti-pencil"></i> Edit mod',formHtml,async()=>{
-    const res=await updateMod(id,{name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||m.image_url||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim()||null,description:document.getElementById('mf-desc').value.trim()||null,changelog:document.getElementById('mf-changelog').value.trim()||null});
+    const res=await updateMod(id,{name:document.getElementById('mf-name').value.trim(),brand:document.getElementById('mf-brand').value||null,category_id:document.getElementById('mf-cat').value||null,image_url:_getModImg()||m.image_url||null,official_url:document.getElementById('mf-url').value.trim(),version:document.getElementById('mf-version').value.trim(),description:document.getElementById('mf-desc').value.trim(),changelog:document.getElementById('mf-changelog').value.trim()});
     if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
     _mods=await fetchMods();closeModal();await loadMods();customAlert('Mod updated.','success');
   });
