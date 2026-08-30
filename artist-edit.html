@@ -331,6 +331,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
         <h2 class="page-h1">My <em>profile</em></h2>
       </div>
       <div class="form-wrap">
+        <div class="field">
+          <label>Profile picture</label>
+          <div id="pf-avatar-widget" style="display:flex;align-items:center;gap:14px;"></div>
+        </div>
         <div class="field"><label>Name *</label><input id="pf-name" type="text"></div>
         <div class="field"><label>Discord</label><input id="pf-discord" type="text"></div>
         <div class="field"><label>Bio</label><textarea id="pf-bio"></textarea></div>
@@ -407,6 +411,7 @@ var _ae_edit_original_img = null;
 var _ae_brand = 'RSS';
 var _ae_mode = 'livery';
 var _ae_preview_img = null;
+var _ae_pf_avatar = null;
 var _ae_get_img = function(){ return null; };
 var _cats = [], _mods = [], _champs = [];
 
@@ -529,7 +534,7 @@ var _ae_avail_mods = [], _ae_avail_champs = [];
 
 function aeOpenModPicker() {
   var catId = document.getElementById('ae-cat').value;
-  _ae_avail_mods = _mods.filter(function(m){ return !catId || m.category_id === catId; });
+  _ae_avail_mods = _mods.filter(function(m){ return m.brand === _ae_brand && (!catId || m.category_id === catId); });
   aeRenderModGrid(_ae_avail_mods);
   document.getElementById('ae-mod-picker').style.display = 'flex';
   document.getElementById('ae-mod-search').value = '';
@@ -914,8 +919,45 @@ async function aeDoSubmit() {
   aeNav('liveries', document.querySelector('.sb-link[data-v="liveries"]'));
 }
 
+function aePfBuildAvatarUpload(){
+  var w = document.getElementById('pf-avatar-widget');
+  if (!w) return;
+  var current = _ae_pf_avatar || '';
+  w.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--s2);flex-shrink:0;display:flex;align-items:center;justify-content:center;">'
+    + '<img id="pf-avatar-prev" src="'+current+'" style="width:100%;height:100%;object-fit:cover;'+(current?'':'display:none;')+'" alt="avatar">'
+    + '<i id="pf-avatar-ph" class="ti ti-user" style="font-size:24px;color:var(--t3);'+(current?'display:none;':'')+'"></i>'
+    + '</div>'
+    + '<div>'
+    + '<label class="upload-btn-label" style="cursor:pointer;"><i class="ti ti-upload"></i> '+(current?'Change picture':'Upload picture')+'<input type="file" accept="image/*" style="display:none;" id="pf-avatar-input"></label>'
+    + '<div class="upload-prog" id="pf-avatar-prog" style="margin-top:4px;"></div>'
+    + '</div>';
+  document.getElementById('pf-avatar-input').addEventListener('change', aePfHandleAvatarUpload);
+}
+async function aePfHandleAvatarUpload(){
+  var file = this.files[0]; if (!file) return;
+  if (file.size > 2*1024*1024) { aeToast('Max 2MB.','err'); return; }
+  var lbl = this.parentElement; lbl.style.opacity='.6'; lbl.style.pointerEvents='none';
+  var prog = document.getElementById('pf-avatar-prog'); prog.textContent = 'Compressing…';
+  try {
+    var blob = await aeCompressImg(file, 400, 400, 0.85);
+    prog.textContent = 'Uploading…';
+    var url = await aeUploadImg(blob, 'artists');
+    if (url) {
+      _ae_pf_avatar = url;
+      document.getElementById('pf-avatar-prev').src = url;
+      document.getElementById('pf-avatar-prev').style.display = 'block';
+      document.getElementById('pf-avatar-ph').style.display = 'none';
+      prog.textContent = '✓ Uploaded';
+      lbl.innerHTML = '<i class="ti ti-check" style="color:var(--grn);"></i> Change picture<input type="file" accept="image/*" style="display:none;" id="pf-avatar-input">';
+      document.getElementById('pf-avatar-input').addEventListener('change', aePfHandleAvatarUpload);
+    } else prog.textContent = '✗ Failed.';
+  } catch(e){ prog.textContent = '✗ Error.'; }
+  lbl.style.opacity='1'; lbl.style.pointerEvents='auto';
+}
 function aeProfile() {
   if (!_ae_artist) return;
+  _ae_pf_avatar = _ae_artist.avatar_url || null;
+  aePfBuildAvatarUpload();
   document.getElementById('pf-name').value = _ae_artist.name||'';
   document.getElementById('pf-discord').value = _ae_artist.discord||'';
   document.getElementById('pf-bio').value = _ae_artist.bio||'';
@@ -931,11 +973,15 @@ async function aePfSave() {
   var name = document.getElementById('pf-name').value.trim();
   if (!name){ aeToast('Name required','err'); return; }
   var brands = Array.from(document.querySelectorAll('input[name="pf-brand"]:checked')).map(function(x){return x.value;});
-  var payload = {name:name, discord:document.getElementById('pf-discord').value.trim()||null, bio:document.getElementById('pf-bio').value.trim()||null, brands:brands, url_twitter:document.getElementById('pf-twitter').value.trim()||null, url_patreon:document.getElementById('pf-patreon').value.trim()||null, url_youtube:document.getElementById('pf-youtube').value.trim()||null, url_overtake:document.getElementById('pf-overtake').value.trim()||null};
+  var payload = {name:name, discord:document.getElementById('pf-discord').value.trim()||null, bio:document.getElementById('pf-bio').value.trim()||null, brands:brands, avatar_url:_ae_pf_avatar||null, url_twitter:document.getElementById('pf-twitter').value.trim()||null, url_patreon:document.getElementById('pf-patreon').value.trim()||null, url_youtube:document.getElementById('pf-youtube').value.trim()||null, url_overtake:document.getElementById('pf-overtake').value.trim()||null};
   var res = await db.rpc('artist_update_profile',{p_token:_ae_token,p_data:payload});
   if (res.error){ aeToast('Error: '+res.error.message,'err'); return; }
   Object.assign(_ae_artist, payload);
   document.getElementById('ae-name').textContent = _ae_artist.name;
+  var sidebarAv = document.getElementById('ae-av');
+  if (sidebarAv && _ae_pf_avatar) sidebarAv.innerHTML = '<img src="'+_ae_pf_avatar+'" style="width:100%;height:100%;object-fit:cover;">';
+  var heroAv = document.getElementById('ae-hero-av');
+  if (heroAv && _ae_pf_avatar) heroAv.innerHTML = '<img src="'+_ae_pf_avatar+'" style="width:100%;height:100%;object-fit:cover;">';
   aeToast('Profile saved!');
 }
 
