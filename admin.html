@@ -254,26 +254,9 @@
       <div class="panel" id="panel-championships">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-trophy"></i> Championships</span>
-          <div style="display:flex;gap:8px;">
-            <button class="action-btn" id="bulkAssignBtn"><i class="ti ti-grid-dots"></i> Bulk assign categories</button>
-            <button class="action-btn success" id="addChampBtn"><i class="ti ti-plus"></i> Add championship</button>
-          </div>
+          <button class="action-btn success" id="addChampBtn"><i class="ti ti-plus"></i> Add championship</button>
         </div>
         <div style="overflow-x:auto;"><table class="data-table" id="champ-table"></table></div>
-      </div>
-
-      <!-- CHAMPIONSHIP ↔ CATEGORY ASSIGNMENT -->
-      <div class="panel" id="panel-champ-matrix">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-          <button onclick="showPanel('championships')" style="background:none;border:none;cursor:pointer;color:var(--text-3);font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:inherit;"><i class="ti ti-arrow-left"></i> Back to championships</button>
-        </div>
-        <div style="margin-bottom:16px;">
-          <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-grid-dots"></i> Assign categories</span>
-        </div>
-        <div style="display:grid;grid-template-columns:280px 1fr;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;max-width:700px;">
-          <div id="cm-list" style="background:var(--bg-s1);border-right:1px solid var(--border);max-height:520px;overflow-y:auto;"></div>
-          <div id="cm-right" style="padding:20px;"></div>
-        </div>
       </div>
 
       <!-- MODS -->
@@ -1057,57 +1040,6 @@ function copyArtistLink(token) {
 }
 
 // CHAMPIONSHIPS
-// CHAMPIONSHIP ↔ CATEGORY ASSIGNMENT (linear picker)
-let _cmSelected=null;
-let _cmChecked=new Set();
-document.getElementById('bulkAssignBtn').addEventListener('click',()=>{
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-champ-matrix').classList.add('active');
-  loadChampMatrix();
-});
-function loadChampMatrix(){
-  const listEl=document.getElementById('cm-list');
-  if(!_champs.length){listEl.innerHTML='<div style="padding:16px;color:var(--text-3);font-size:12px;">No championships yet.</div>';document.getElementById('cm-right').innerHTML='';return;}
-  listEl.innerHTML=_champs.map(ch=>`<div class="cm-item${ch.id===_cmSelected?' active':''}" data-id="${ch.id}" onclick="cmSelect('${ch.id}')" style="padding:12px 16px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);${ch.id===_cmSelected?'background:var(--acc-3);color:var(--acc);font-weight:700;border-left:3px solid var(--acc);':''}">${ch.short_name||ch.name}</div>`).join('');
-  if(!_cmSelected && _champs.length) cmSelect(_champs[0].id);
-  else if(_cmSelected) cmRenderRight();
-}
-function cmSelect(id){
-  _cmSelected=id;
-  const ch=_champs.find(c=>c.id===id);
-  _cmChecked=new Set((ch?.linked_categories||[]).map(c=>c.id));
-  document.querySelectorAll('#cm-list .cm-item').forEach(el=>{
-    const active=el.dataset.id===id;
-    el.classList.toggle('active',active);
-    el.style.background=active?'var(--acc-3)':'';
-    el.style.color=active?'var(--acc)':'';
-    el.style.fontWeight=active?'700':'400';
-    el.style.borderLeft=active?'3px solid var(--acc)':'3px solid transparent';
-  });
-  cmRenderRight();
-}
-function cmRenderRight(){
-  const ch=_champs.find(c=>c.id===_cmSelected);
-  const right=document.getElementById('cm-right');
-  if(!ch){right.innerHTML='';return;}
-  if(!_cats.length){right.innerHTML='<p style="color:var(--text-3);font-size:12px;">No categories yet.</p>';return;}
-  right.innerHTML=`<h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">Categories for "${ch.name}"</h3>`
-    + `<div id="cm-checklist">${_cats.map(c=>`
-      <label class="cm-check" style="display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;border-bottom:1px solid var(--border);cursor:pointer;">
-        <input type="checkbox" value="${c.id}" ${_cmChecked.has(c.id)?'checked':''} style="width:16px;height:16px;accent-color:var(--acc);">
-        <span class="dot" style="width:8px;height:8px;background:${c.color_text||'#888'};flex-shrink:0;"></span>
-        ${c.name}
-      </label>`).join('')}</div>`
-    + `<button class="action-btn success" style="margin-top:16px;" onclick="cmSave()"><i class="ti ti-device-floppy"></i> Save</button>`;
-}
-async function cmSave(){
-  const catIds=[...document.querySelectorAll('#cm-checklist input:checked')].map(i=>i.value);
-  const res=await updateChampionship(_cmSelected,{},catIds);
-  if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
-  await reloadCache();
-  customAlert('Categories updated.','success');
-  loadChampMatrix();
-}
 async function loadChampionships(){
   const t=document.getElementById('champ-table');
   if(!_champs.length){t.innerHTML='<p style="color:var(--text-3);padding:20px 0;">No championships yet.</p>';return;}
@@ -1523,7 +1455,34 @@ function catModalForm(c={}){
     +'<div style="flex:1;"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px;">Text</div><input id="catf-text" type="color" value="'+(c.color_text||'#0C447C')+'" style="width:100%;height:38px;padding:2px;border:1px solid var(--border);background:var(--bg);cursor:pointer;"></div>'
     +'</div></div>'
     +'<div class="field"><label>Preview</label><div style="padding:10px 0;"><span id="cp-badge" class="cat-badge" style="background:'+(c.color_bg||'#E6F1FB')+';color:'+(c.color_text||'#0C447C')+';padding:5px 12px;font-family:\'Archivo\',sans-serif;font-size:12px;font-weight:700;">'+esc(c.name||'Category')+'</span></div></div>'
+    +(c.id?catChampSection(c.id):'')
     +'</div>';
+}
+function catChampSection(catId){
+  const memberIds=new Set(_champs.filter(ch=>(ch.linked_categories||[]).some(lc=>lc.id===catId)).map(ch=>ch.id));
+  window._catChampSelected=memberIds;
+  return '<div class="field">'
+    +'<label>Championships in this category <span style="font-size:10px;color:var(--text-3);font-weight:400;">('+memberIds.size+' selected)</span></label>'
+    +'<input id="catf-champ-search" placeholder="Search championships…" oninput="filterCatChampList()" style="margin-bottom:8px;">'
+    +'<div id="catf-champ-list" style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:4px;"></div>'
+    +'</div>';
+}
+function renderCatChampList(filter){
+  const el=document.getElementById('catf-champ-list');
+  if(!el)return;
+  const term=(filter||'').toLowerCase();
+  const list=_champs.filter(ch=>!term||ch.name.toLowerCase().includes(term)||(ch.short_name||'').toLowerCase().includes(term));
+  el.innerHTML=list.length?list.map(ch=>'<label style="display:flex;align-items:center;gap:8px;padding:7px 8px;font-size:12px;cursor:pointer;border-radius:5px;" onmouseover="this.style.background=\'var(--bg-s2)\'" onmouseout="this.style.background=\'\'">'
+    +'<input type="checkbox" value="'+ch.id+'" '+(window._catChampSelected.has(ch.id)?'checked':'')+' onchange="toggleCatChampSel(\''+ch.id+'\',this.checked)" style="width:15px;height:15px;accent-color:var(--acc);flex-shrink:0;">'
+    +esc(ch.short_name||ch.name)+'</label>').join('')
+    : '<div style="padding:8px;font-size:12px;color:var(--text-3);">No matches.</div>';
+}
+function filterCatChampList(){renderCatChampList(document.getElementById('catf-champ-search').value.trim());}
+function toggleCatChampSel(id,checked){
+  if(checked) window._catChampSelected.add(id); else window._catChampSelected.delete(id);
+  const label=document.querySelector('#catf-champ-section-count');
+  const lbl=document.querySelector('#catf-champ-list')?.closest('.field')?.querySelector('label');
+  if(lbl) lbl.innerHTML='Championships in this category <span style="font-size:10px;color:var(--text-3);font-weight:400;">('+window._catChampSelected.size+' selected)</span>';
 }
 function hslToHex(h,s,l){
   s/=100; l/=100;
@@ -1558,15 +1517,33 @@ function bindCatPreview(){setTimeout(()=>{const update=()=>{const n=document.get
 document.getElementById('addCatBtn').addEventListener('click',()=>{openModal('<i class="ti ti-category"></i> Add category',catModalForm(),async()=>{const nm=document.getElementById('catf-name').value.trim();if(!nm)return;const res=await createCategory({name:nm,brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});if(res.ok){_cats=await fetchCategories();closeModal();await loadCategories();customAlert('Category created.','success');}else customAlert('Failed to create: '+(res.error?.message||'unknown error'),'error');});bindCatPreview();});
 async function editCatModal(id){
   const c=_cats.find(x=>x.id===id);if(!c)return;
+  const originalMembers=new Set(_champs.filter(ch=>(ch.linked_categories||[]).some(lc=>lc.id===id)).map(ch=>ch.id));
   const formHtml=catModalForm(c)+'<div style="margin-top:4px;padding-top:12px;border-top:1px solid var(--border);">'
     +'<button type="button" onclick="doDeleteCat(\''+id+'\');closeModal();" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid rgba(255,69,58,.3);background:rgba(255,69,58,.08);color:#FF453A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;"><i class="ti ti-trash"></i> Delete category</button>'
     +'</div>';
   openModal('<i class="ti ti-pencil"></i> Edit category',formHtml,async()=>{
     const res=await updateCategory(id,{name:document.getElementById('catf-name').value.trim(),brand:document.getElementById('catf-brand').value||null,color_bg:document.getElementById('catf-bg').value,color_text:document.getElementById('catf-text').value});
     if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
-    _cats=await fetchCategories();closeModal();await loadCategories();customAlert('Category updated.','success');
+    // Sync championship memberships based on what changed in the checklist
+    const selected=window._catChampSelected||new Set();
+    const added=[...selected].filter(x=>!originalMembers.has(x));
+    const removed=[...originalMembers].filter(x=>!selected.has(x));
+    let failCount=0;
+    for(const champId of [...added,...removed]){
+      const ch=_champs.find(x=>x.id===champId);
+      const currentCatIds=(ch?.linked_categories||[]).map(c2=>c2.id);
+      const newCatIds=selected.has(champId)
+        ? [...new Set([...currentCatIds,id])]
+        : currentCatIds.filter(cid=>cid!==id);
+      const r=await updateChampionship(champId,{},newCatIds);
+      if(!r.ok) failCount++;
+    }
+    await reloadCache();closeModal();await loadCategories();
+    if(failCount) customAlert('Category saved, but '+failCount+' championship link(s) failed.','error');
+    else customAlert('Category updated.','success');
   });
   bindCatPreview();
+  setTimeout(()=>renderCatChampList(''),50);
 }
 async function doDeleteCat(id){if(!await customConfirm('Delete this category?',{danger:true,okText:'Delete'}))return;const res=await deleteCategory(id);if(!res.ok){customAlert('Failed to delete: '+(res.error?.message||'unknown error'),'error');return;}await reloadCache();await loadCategories();customAlert('Category deleted.','success');}
 
