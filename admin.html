@@ -13,17 +13,6 @@
     .panel { display:none; }
     .panel.active { display:block; }
     .data-table { width:100%; border-collapse:collapse; font-size:13px; }
-    .matrix-table { border-collapse:collapse; font-size:12px; white-space:nowrap; }
-    .matrix-table th, .matrix-table td { border:1px solid var(--border); padding:0; }
-    .matrix-table thead th { background:var(--bg-s1); position:sticky; top:0; z-index:2; padding:8px 10px; font-weight:700; color:var(--text-2); }
-    .matrix-table thead th.matrix-corner { left:0; z-index:3; background:var(--bg-s1); }
-    .matrix-table tbody th { position:sticky; left:0; z-index:1; background:var(--bg-s1); text-align:left; padding:8px 12px; font-weight:600; color:var(--text); max-width:220px; overflow:hidden; text-overflow:ellipsis; }
-    .matrix-cell { width:36px; height:36px; text-align:center; cursor:pointer; transition:background .1s; position:relative; }
-    .matrix-cell:hover { background:var(--bg-s2); }
-    .matrix-cell.checked { background:var(--acc-3); }
-    .matrix-cell .dot { width:14px; height:14px; margin:0 auto; border:1.5px solid var(--border-md); display:flex; align-items:center; justify-content:center; }
-    .matrix-cell.checked .dot { background:var(--acc); border-color:var(--acc); color:#fff; }
-    .matrix-cell.dirty::after { content:''; position:absolute; top:3px; right:3px; width:6px; height:6px; background:#FF9F0A; border-radius:50%; }
     .data-table th { text-align:left; padding:8px 12px; font-family:'Azeret Mono',monospace; font-size:9px; font-weight:400; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); border-bottom:1px solid var(--border); }
     .data-table td { padding:10px 12px; border-bottom:1px solid var(--border); color:var(--text); vertical-align:middle; }
     .data-table tr:hover td { background:var(--bg-s2); }
@@ -273,17 +262,18 @@
         <div style="overflow-x:auto;"><table class="data-table" id="champ-table"></table></div>
       </div>
 
-      <!-- CHAMPIONSHIP ↔ CATEGORY MATRIX -->
+      <!-- CHAMPIONSHIP ↔ CATEGORY ASSIGNMENT -->
       <div class="panel" id="panel-champ-matrix">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <button onclick="showPanel('championships')" style="background:none;border:none;cursor:pointer;color:var(--text-3);font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:inherit;"><i class="ti ti-arrow-left"></i> Back to championships</button>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-grid-dots"></i> Bulk assign categories</span>
-          <button class="action-btn success" id="matrixSaveBtn" onclick="saveChampMatrix()"><i class="ti ti-device-floppy"></i> Save changes <span id="matrixChangeCount" style="display:none;"></span></button>
+        <div style="margin-bottom:16px;">
+          <span class="admin-topbar__title" style="display:flex;align-items:center;gap:8px;"><i class="ti ti-grid-dots"></i> Assign categories</span>
         </div>
-        <p style="font-size:12px;color:var(--text-3);margin-bottom:16px;">Click any cell to link or unlink a category from a championship. Nothing saves until you click "Save changes".</p>
-        <div style="overflow-x:auto;"><table class="matrix-table" id="champ-matrix-table"></table></div>
+        <div style="display:grid;grid-template-columns:280px 1fr;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;max-width:700px;">
+          <div id="cm-list" style="background:var(--bg-s1);border-right:1px solid var(--border);max-height:520px;overflow-y:auto;"></div>
+          <div id="cm-right" style="padding:20px;"></div>
+        </div>
       </div>
 
       <!-- MODS -->
@@ -1067,76 +1057,55 @@ function copyArtistLink(token) {
 }
 
 // CHAMPIONSHIPS
-// CHAMPIONSHIP ↔ CATEGORY MATRIX
-let _matrixPending={}; // { championshipId: Set(categoryId) } — only present if changed from original
-let _matrixOriginal={}; // { championshipId: Set(categoryId) } — snapshot at load time
+// CHAMPIONSHIP ↔ CATEGORY ASSIGNMENT (linear picker)
+let _cmSelected=null;
+let _cmChecked=new Set();
 document.getElementById('bulkAssignBtn').addEventListener('click',()=>{
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-champ-matrix').classList.add('active');
   loadChampMatrix();
 });
 function loadChampMatrix(){
-  _matrixPending={};
-  _matrixOriginal={};
-  _champs.forEach(ch=>{ _matrixOriginal[ch.id]=new Set((ch.linked_categories||[]).map(c=>c.id)); });
-  updateMatrixChangeCount();
-  const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
-  const t=document.getElementById('champ-matrix-table');
-  if(!_champs.length||!_cats.length){t.innerHTML='<tr><td style="padding:20px;color:var(--text-3);">Need at least one championship and one category first.</td></tr>';return;}
-  let head='<thead><tr><th class="matrix-corner">Championship</th>';
-  _cats.forEach(c=>{
-    const bc=BRC[c.brand]||'var(--text-3)';
-    head+=`<th title="${c.name}"><span style="color:${bc};">●</span> ${c.name}</th>`;
-  });
-  head+='</tr></thead>';
-  let body='<tbody>';
-  _champs.forEach(ch=>{
-    body+=`<tr><th title="${ch.name}">${ch.short_name||ch.name}</th>`;
-    _cats.forEach(c=>{
-      const checked=_matrixOriginal[ch.id].has(c.id);
-      body+=`<td class="matrix-cell${checked?' checked':''}" data-champ="${ch.id}" data-cat="${c.id}" onclick="toggleMatrixCell(this)"><span class="dot">${checked?'<i class="ti ti-check" style="font-size:10px;"></i>':''}</span></td>`;
-    });
-    body+='</tr>';
-  });
-  body+='</tbody>';
-  t.innerHTML=head+body;
+  const listEl=document.getElementById('cm-list');
+  if(!_champs.length){listEl.innerHTML='<div style="padding:16px;color:var(--text-3);font-size:12px;">No championships yet.</div>';document.getElementById('cm-right').innerHTML='';return;}
+  listEl.innerHTML=_champs.map(ch=>`<div class="cm-item${ch.id===_cmSelected?' active':''}" data-id="${ch.id}" onclick="cmSelect('${ch.id}')" style="padding:12px 16px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);${ch.id===_cmSelected?'background:var(--acc-3);color:var(--acc);font-weight:700;border-left:3px solid var(--acc);':''}">${ch.short_name||ch.name}</div>`).join('');
+  if(!_cmSelected && _champs.length) cmSelect(_champs[0].id);
+  else if(_cmSelected) cmRenderRight();
 }
-function toggleMatrixCell(td){
-  const champId=td.dataset.champ, catId=td.dataset.cat;
-  const nowChecked=!td.classList.contains('checked');
-  td.classList.toggle('checked',nowChecked);
-  td.querySelector('.dot').innerHTML=nowChecked?'<i class="ti ti-check" style="font-size:10px;"></i>':'';
-  if(!_matrixPending[champId]) _matrixPending[champId]=new Set(_matrixOriginal[champId]);
-  if(nowChecked) _matrixPending[champId].add(catId); else _matrixPending[champId].delete(catId);
-  // Compare to original — if back to original, this champ is no longer "dirty"
-  const isDirty=!setsEqual(_matrixPending[champId],_matrixOriginal[champId]);
-  td.closest('tr').querySelectorAll('.matrix-cell').forEach(cell=>{
-    const cellDirty=isDirty && ((_matrixPending[champId].has(cell.dataset.cat))!==(_matrixOriginal[champId].has(cell.dataset.cat)));
-    cell.classList.toggle('dirty',cellDirty);
+function cmSelect(id){
+  _cmSelected=id;
+  const ch=_champs.find(c=>c.id===id);
+  _cmChecked=new Set((ch?.linked_categories||[]).map(c=>c.id));
+  document.querySelectorAll('#cm-list .cm-item').forEach(el=>{
+    const active=el.dataset.id===id;
+    el.classList.toggle('active',active);
+    el.style.background=active?'var(--acc-3)':'';
+    el.style.color=active?'var(--acc)':'';
+    el.style.fontWeight=active?'700':'400';
+    el.style.borderLeft=active?'3px solid var(--acc)':'3px solid transparent';
   });
-  if(!isDirty) delete _matrixPending[champId];
-  updateMatrixChangeCount();
+  cmRenderRight();
 }
-function setsEqual(a,b){if(a.size!==b.size)return false;for(const v of a)if(!b.has(v))return false;return true;}
-function updateMatrixChangeCount(){
-  const n=Object.keys(_matrixPending).length;
-  const el=document.getElementById('matrixChangeCount');
-  if(n>0){el.style.display='inline';el.textContent=`(${n})`;}
-  else el.style.display='none';
+function cmRenderRight(){
+  const ch=_champs.find(c=>c.id===_cmSelected);
+  const right=document.getElementById('cm-right');
+  if(!ch){right.innerHTML='';return;}
+  if(!_cats.length){right.innerHTML='<p style="color:var(--text-3);font-size:12px;">No categories yet.</p>';return;}
+  right.innerHTML=`<h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">Categories for "${ch.name}"</h3>`
+    + `<div id="cm-checklist">${_cats.map(c=>`
+      <label class="cm-check" style="display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;border-bottom:1px solid var(--border);cursor:pointer;">
+        <input type="checkbox" value="${c.id}" ${_cmChecked.has(c.id)?'checked':''} style="width:16px;height:16px;accent-color:var(--acc);">
+        <span class="dot" style="width:8px;height:8px;background:${c.color_text||'#888'};flex-shrink:0;"></span>
+        ${c.name}
+      </label>`).join('')}</div>`
+    + `<button class="action-btn success" style="margin-top:16px;" onclick="cmSave()"><i class="ti ti-device-floppy"></i> Save</button>`;
 }
-async function saveChampMatrix(){
-  const ids=Object.keys(_matrixPending);
-  if(!ids.length){customAlert('No changes to save.');return;}
-  if(!await customConfirm(`Save category changes for ${ids.length} championship${ids.length>1?'s':''}?`))return;
-  let failCount=0;
-  for(const champId of ids){
-    const catIds=[..._matrixPending[champId]];
-    const res=await updateChampionship(champId,{},catIds);
-    if(!res.ok) failCount++;
-  }
+async function cmSave(){
+  const catIds=[...document.querySelectorAll('#cm-checklist input:checked')].map(i=>i.value);
+  const res=await updateChampionship(_cmSelected,{},catIds);
+  if(!res.ok){customAlert('Failed to save: '+(res.error?.message||'unknown error'),'error');return;}
   await reloadCache();
-  if(failCount) customAlert(`${ids.length-failCount} saved, ${failCount} failed.`,'error');
-  else customAlert(`${ids.length} championship${ids.length>1?'s':''} updated.`,'success');
+  customAlert('Categories updated.','success');
   loadChampMatrix();
 }
 async function loadChampionships(){
