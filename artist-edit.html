@@ -127,8 +127,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .picker-search::placeholder{color:var(--t3);}
 .picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
 .picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;}
-.picker-btn2{height:38px;padding:0 12px;background:var(--s2);border:1px solid var(--b1);color:var(--t2);font-family:'Archivo',sans-serif;font-size:13px;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;width:100%;transition:border-color .12s;}
-.picker-btn2:hover{border-color:var(--b2);}
+.picker-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;background:var(--s2);border:1px solid var(--b1);cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;font-family:'Archivo',sans-serif;}
+.picker-btn:hover{border-color:var(--b2);}
+.picker-btn:disabled{opacity:.45;cursor:not-allowed;}
+.picker-ph{width:22px;height:22px;border-radius:5px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--t3);flex-shrink:0;}
 
 /* ── PAINT-SWATCH DA: GLOBAL OVERRIDES ── */
 *{border-radius:0!important;}
@@ -246,17 +248,17 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
           <div class="sub-step">
             <div class="sub-step-label"><span class="sub-step-n">2</span> Mod &amp; championship</div>
             <div class="form-grid">
-              <div class="field full"><label>Mod</label>
-                <button type="button" onclick="aeOpenModPicker()" id="ae-mod-btn" class="picker-btn2">
+              <div class="field full"><label id="ae-mod-label">Mod</label>
+                <button type="button" onclick="aeOpenModPicker()" id="ae-mod-btn" class="picker-btn" disabled>
+                  <div class="picker-ph" id="ae-mod-ph"><i class="ti ti-car"></i></div>
                   <span id="ae-mod-text">Select category first</span>
-                  <i class="ti ti-chevron-right" style="font-size:12px;"></i>
                 </button>
                 <input type="hidden" id="ae-mod">
               </div>
               <div class="field full livery-only" id="ae-champ-wrap"><label>Championship</label>
-                <button type="button" onclick="aeOpenChampPicker()" id="ae-champ-btn" class="picker-btn2">
-                  <span id="ae-champ-text">None</span>
-                  <i class="ti ti-chevron-right" style="font-size:12px;"></i>
+                <button type="button" onclick="aeOpenChampPicker()" id="ae-champ-btn" class="picker-btn" disabled>
+                  <div class="picker-ph" id="ae-champ-ph"><i class="ti ti-trophy"></i></div>
+                  <span id="ae-champ-text">Select category first</span>
                 </button>
                 <input type="hidden" id="ae-champ">
               </div>
@@ -513,20 +515,28 @@ function aeFilterCats() {
   _cats.filter(function(c){ return c.brand === _ae_brand; }).forEach(function(c){
     var o = document.createElement('option'); o.value = c.id; o.textContent = c.name; catSel.appendChild(o);
   });
-  aeFilterMods('');
-  aeFilterChamps('');
+  document.getElementById('ae-mod').value = '';
+  document.getElementById('ae-mod-text').textContent = 'Select category first';
+  document.getElementById('ae-mod-text').style.color = 'var(--t2)';
+  document.getElementById('ae-mod-btn').disabled = true;
+  document.getElementById('ae-champ').value = '';
+  document.getElementById('ae-champ-text').textContent = 'Select category first';
+  document.getElementById('ae-champ-text').style.color = 'var(--t2)';
+  document.getElementById('ae-champ-btn').disabled = true;
 }
 
 function aeOnCatChange() {
   var catId = document.getElementById('ae-cat').value;
-  aeFilterMods(catId);
-  aeFilterChamps(catId);
-  document.getElementById('ae-mod-text').textContent = catId ? 'Select mod' : 'Select category first';
+  var availMods = _mods.filter(function(m){ return m.brand === _ae_brand && (!catId || m.category_id === catId); });
+  var availChamps = _champs.filter(function(ch){ return !catId || (ch.championship_categories||[]).some(function(cc){return cc.category_id===catId;}); });
+  document.getElementById('ae-mod-btn').disabled = !catId || !availMods.length;
+  document.getElementById('ae-mod-text').textContent = catId ? (availMods.length ? 'Select a mod…' : 'No mods for this category') : 'Select category first';
   document.getElementById('ae-mod-text').style.color = 'var(--t2)';
   document.getElementById('ae-mod').value = '';
-  document.getElementById('ae-champ').value = '';
-  document.getElementById('ae-champ-text').textContent = 'None';
+  document.getElementById('ae-champ-btn').disabled = !catId || !availChamps.length;
+  document.getElementById('ae-champ-text').textContent = catId ? (availChamps.length ? 'None' : 'No championships for this category') : 'Select category first';
   document.getElementById('ae-champ-text').style.color = 'var(--t2)';
+  document.getElementById('ae-champ').value = '';
   aeUpdatePreview(); aeUpdateChecklist();
 }
 
@@ -631,22 +641,6 @@ function aeSelectChamp(id, name) {
   document.getElementById('ae-champ-text').style.color = 'var(--t1)';
   document.getElementById('ae-champ-picker').style.display = 'none';
   aeUpdatePreview(); aeCheckDuplicate();
-}
-
-function aeFilterMods(catId) {
-  var sel = document.getElementById('ae-mod');
-  sel.innerHTML = '<option value="">Select…</option>';
-  _mods.filter(function(m){ return !catId || m.category_id === catId; }).forEach(function(m){
-    var o = document.createElement('option'); o.value = m.id; o.textContent = m.name; sel.appendChild(o);
-  });
-}
-
-function aeFilterChamps(catId) {
-  var sel = document.getElementById('ae-champ');
-  sel.innerHTML = '<option value="">None</option>';
-  _champs.filter(function(c){ return !catId || !c.category_id || c.category_id === catId; }).forEach(function(c){
-    var o = document.createElement('option'); o.value = c.id; o.textContent = c.short_name||c.name; sel.appendChild(o);
-  });
 }
 
 function aeSetMode(m) {
