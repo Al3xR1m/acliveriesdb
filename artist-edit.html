@@ -115,7 +115,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .tab-btn{padding:12px 16px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);display:flex;align-items:center;gap:6px;transition:all .12s;}
 .tab-btn.on{color:var(--t1);border-bottom-color:var(--acc);}
 
-.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;cursor:pointer;border:1px solid var(--b1);background:var(--s2);transition:all .12s;overflow:hidden;}
+.pi{display:flex;flex-direction:column;align-items:flex-start;gap:0;cursor:pointer;border:1px solid var(--b1);background:var(--s2);transition:all .12s;overflow:visible;}
 .pi:hover{border-color:var(--acc);}
 .pi.selected{border-color:var(--acc);background:var(--acc2);}
 .pi-logo{width:100%;aspect-ratio:16/10;object-fit:contain;object-position:center;display:block;background:#0d0d10;padding:10px;box-sizing:border-box;}
@@ -126,7 +126,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .picker-search{flex:1;background:transparent;border:none;outline:none;font-family:'Azeret Mono',monospace;font-size:13px;color:var(--t1);}
 .picker-search::placeholder{color:var(--t3);}
 .picker-close{background:none;border:none;font-size:20px;color:var(--t2);cursor:pointer;padding:0 4px;line-height:1;}
-.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;}
+.picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:22px;overflow-y:auto;align-items:start;}
 .picker-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;background:var(--s2);border:1px solid var(--b1);cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;font-family:'Archivo',sans-serif;}
 .picker-btn:hover{border-color:var(--b2);}
 .picker-btn:disabled{opacity:.45;cursor:not-allowed;}
@@ -241,14 +241,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
                   <br><span style="color:var(--t2);">You can still submit — this is just a heads up.</span>
                 </div>
               </div>
-              <div class="field full"><label>Category</label><select id="ae-cat" onchange="aeOnCatChange()"><option value="">Select…</option></select></div>
+              <div class="field full"><label>Category *</label><select id="ae-cat" onchange="aeOnCatChange()"><option value="">Select…</option></select></div>
             </div>
           </div>
 
           <div class="sub-step">
             <div class="sub-step-label"><span class="sub-step-n">2</span> Mod &amp; championship</div>
             <div class="form-grid">
-              <div class="field full"><label id="ae-mod-label">Mod</label>
+              <div class="field full"><label id="ae-mod-label">Mod *</label>
                 <button type="button" onclick="aeOpenModPicker()" id="ae-mod-btn" class="picker-btn" disabled>
                   <div class="picker-ph" id="ae-mod-ph"><i class="ti ti-car"></i></div>
                   <span id="ae-mod-text">Select category first</span>
@@ -268,10 +268,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
           <div class="sub-step livery-only">
             <div class="sub-step-label"><span class="sub-step-n">3</span> Race info</div>
             <div class="form-grid">
-              <div class="field"><label>Team</label><input id="ae-team" type="text"></div>
-              <div class="field"><label>Driver(s)</label><input id="ae-driver" type="text"></div>
-              <div class="field"><label>Season</label><input id="ae-season" type="text" placeholder="e.g. 2026" oninput="aeCheckDuplicate()"></div>
-              <div class="field"><label>Car number</label><input id="ae-carnumber" type="text" maxlength="4" placeholder="e.g. 27" oninput="aeCheckDuplicate()"></div>
+              <div class="field"><label>Team *</label><input id="ae-team" type="text"></div>
+              <div class="field"><label>Driver(s) *</label><input id="ae-driver" type="text"></div>
+              <div class="field"><label>Season *</label><input id="ae-season" type="text" placeholder="e.g. 2026" oninput="aeCheckDuplicate()"></div>
+              <div class="field"><label>Car number *</label><input id="ae-carnumber" type="text" maxlength="4" placeholder="e.g. 27" oninput="aeCheckDuplicate()"></div>
             </div>
           </div>
 
@@ -294,7 +294,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
             <div class="sub-step-label"><span class="sub-step-n">4</span> Link &amp; preview</div>
             <div class="form-grid">
               <div class="field full"><label>Download URL *</label><input id="ae-url" type="url" placeholder="https://…"></div>
-              <div class="field full"><label>Preview image</label><div id="ae-img-widget"></div></div>
+              <div class="field full"><label>Preview image *</label><div id="ae-img-widget"></div></div>
               <div class="field"><label>Pricing</label><select id="ae-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
               <div class="field"><label>Notes</label><input id="ae-notes" type="text"></div>
             </div>
@@ -885,12 +885,23 @@ async function aeAddons() {
 async function aeDoSubmit() {
   var name = document.getElementById('ae-lname').value.trim();
   var url = document.getElementById('ae-url').value.trim();
+  var catId = document.getElementById('ae-cat').value;
+  var modId = document.getElementById('ae-mod').value;
   var err = document.getElementById('ae-submit-err');
-  if (!name){ err.textContent='Name required.'; err.style.display='block'; return; }
-  if (!url){ err.textContent='Download URL required.'; err.style.display='block'; return; }
+  if (!name){ err.textContent='Name is required.'; err.style.display='block'; return; }
+  if (!catId){ err.textContent='Category is required.'; err.style.display='block'; return; }
+  if (!modId){ err.textContent='Mod is required.'; err.style.display='block'; return; }
+  if (!url){ err.textContent='Download URL is required.'; err.style.display='block'; return; }
+  if (!_ae_preview_img){ err.textContent='Preview image is required.'; err.style.display='block'; return; }
+  if (_ae_mode === 'livery') {
+    if (!document.getElementById('ae-team').value.trim()){ err.textContent='Team is required.'; err.style.display='block'; return; }
+    if (!document.getElementById('ae-driver').value.trim()){ err.textContent='Driver(s) is required.'; err.style.display='block'; return; }
+    if (!document.getElementById('ae-season').value.trim()){ err.textContent='Season is required.'; err.style.display='block'; return; }
+    if (!document.getElementById('ae-carnumber').value.trim()){ err.textContent='Car number is required.'; err.style.display='block'; return; }
+  }
   err.style.display='none';
   if (_ae_edit_id) {
-    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null};
+    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:catId||null, mod_id:modId||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null};
     var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:_ae_edit_id,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     if(_ae_preview_img && _ae_preview_img!==_ae_edit_original_img) deleteFromStorage(_ae_edit_original_img);
@@ -900,12 +911,12 @@ async function aeDoSubmit() {
     return;
   }
   if (_ae_mode === 'livery') {
-    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
+    var payload = {name:name, team:document.getElementById('ae-team').value.trim()||null, driver:document.getElementById('ae-driver').value.trim()||null, season:document.getElementById('ae-season').value.trim()||null, car_number:document.getElementById('ae-carnumber').value.trim()||null, category_id:catId||null, mod_id:modId||null, championship_id:document.getElementById('ae-champ').value||null, download_url:url, image_url:_ae_preview_img, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
     var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     aeToast('Livery published!');
   } else {
-    var payload = {name:name, category_id:document.getElementById('ae-cat').value||null, mod_id:document.getElementById('ae-mod').value||null, download_url:url, image_url:_ae_preview_img, addon_type:document.getElementById('ae-addon-type').value, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
+    var payload = {name:name, category_id:catId||null, mod_id:modId||null, download_url:url, image_url:_ae_preview_img, addon_type:document.getElementById('ae-addon-type').value, is_paid:document.getElementById('ae-paid').value==='true', notes:document.getElementById('ae-notes').value.trim()||null, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true};
     var res = await db.rpc('artist_submit_addon',{p_token:_ae_token,p_data:payload});
     if (res.error){ err.textContent='Error: '+res.error.message; err.style.display='block'; return; }
     aeToast('Addon published!');
