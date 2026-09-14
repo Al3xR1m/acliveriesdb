@@ -951,7 +951,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
         <div style="padding:20px 0;border-bottom:1px solid var(--b1);">
           <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-message-circle" style="font-size:13px;"></i> Contact</div>
           <p style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;">Questions, bug reports, or want to become a confirmed artist? Reach out on Discord.</p>
-          <a href="https://discord.com/users/alexrim__" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:42px;width:100%;border:1px solid var(--t1);color:var(--t1);text-decoration:none;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:all .18s;box-sizing:border-box;" onmouseover="this.style.background='var(--acc)';this.style.borderColor='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.borderColor='var(--t1)';this.style.color='var(--t1)'">
+          <a href="https://discord.gg/kUVrGX8WdY" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:42px;width:100%;border:1px solid var(--t1);color:var(--t1);text-decoration:none;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:all .18s;box-sizing:border-box;" onmouseover="this.style.background='var(--acc)';this.style.borderColor='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.borderColor='var(--t1)';this.style.color='var(--t1)'">
             <i class="ti ti-brand-discord"></i> alexrim__
           </a>
         </div>
@@ -1136,7 +1136,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
       <div style="font-family:'Archivo Black',sans-serif;font-size:16px;font-weight:400;text-transform:uppercase;color:var(--t1);margin-bottom:10px;">AC Liveries DB</div>
       <div style="display:flex;gap:16px;">
         <span onclick="nav('about')" style="font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:color .15s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">About</span>
-        <a href="https://discord.com/users/alexrim__" target="_blank" style="font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;color:var(--t2);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">Contact</a>
+        <a href="https://discord.gg/kUVrGX8WdY" target="_blank" style="font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;color:var(--t2);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--t2)'">Contact</a>
       </div>
     </div>
     <div style="font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);line-height:1.8;text-align:right;">
@@ -1750,11 +1750,7 @@ async function loadHome(){
 
   // ── ARTISTS ──
   document.getElementById('h-artists-list').innerHTML = _artists.slice(0,3).map((a,i)=>{
-    const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const [abg,ac]=AVC[i%AVC.length]; const s=stArtist[a.id]||{c:0,v:0};
-    const avatar=a.avatar_url
-      ?`<img src="${esc(a.avatar_url)}" alt="${esc(a.name)}" style="width:44px;height:44px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">`
-      :`<div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;background:${abg};color:${ac};">${ini}</div>`;
+    const avatar=`<img src="${a.avatar_url?esc(a.avatar_url):'avatar-placeholder.png'}" alt="${esc(a.name)}" style="width:44px;height:44px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">`;
     return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
       ${avatar}
       <div style="flex:1;"><div style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:6px;">${esc(a.name)} <svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></div><div style="font-family:'Azeret Mono',monospace;font-size:12px;color:var(--t2);margin-top:4px;">${s.c} liveri${s.c!==1?'es':'y'}</div></div>
@@ -2041,11 +2037,8 @@ async function loadArtists(){
   const livs=await fetchLiveries({sort:'votes',pageSize:1000});
   const st={};livs.forEach(l=>{if(!l.artist_id)return;if(!st[l.artist_id])st[l.artist_id]={c:0,v:0};st[l.artist_id].c++;st[l.artist_id].v+=l.upvotes||0;});
   document.getElementById('a-grid').innerHTML=_artists.length?_artists.map((a,i)=>{
-    const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const[abg,ac]=AVC[i%AVC.length];const s=st[a.id]||{c:0,v:0};
-    const avatar=a.avatar_url
-      ?`<div class="av-av"><img class="av-avatar-img" src="${esc(a.avatar_url)}" alt="${esc(a.name)}"></div>`
-      :`<div class="av-av" style="background:${abg};color:${ac};">${ini}</div>`;
+    const s=st[a.id]||{c:0,v:0};
+    const avatar=`<div class="av-av"><img class="av-avatar-img" src="${a.avatar_url?esc(a.avatar_url):'avatar-placeholder.png'}" alt="${esc(a.name)}"></div>`;
     const BRC={RSS:{c:'#E8312A',bg:'rgba(232,49,42,.12)',border:'rgba(232,49,42,.3)'},VRC:{c:'#30D158',bg:'rgba(48,209,88,.10)',border:'rgba(48,209,88,.25)'},URD:{c:'#FF9F0A',bg:'rgba(255,159,10,.10)',border:'rgba(255,159,10,.25)'}};
     const brandPills=(a.brands||[]).map(b=>{const bm=BRC[b]||{};return `<span style="padding:3px 9px;border:1px solid ${bm.border||'var(--b1)'};background:${bm.bg||'var(--s2)'};color:${bm.c||'var(--t2)'};font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;">${esc(b)}</span>`;}).join('');
     const socials=[
@@ -2120,10 +2113,7 @@ async function renderArtistProfile(id){
 
     <!-- HEADER -->
     <div style="padding:32px 28px 24px;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;gap:24px;">
-      ${artist.avatar_url
-        ?`<img src="${esc(artist.avatar_url)}" style="width:80px;height:80px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">`
-        :`<div style="width:80px;height:80px;background:linear-gradient(135deg,var(--acc),var(--pur));display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:26px;font-weight:400;color:#0A0A0F;flex-shrink:0;">${ini}</div>`
-      }
+      <img src="${artist.avatar_url?esc(artist.avatar_url):'avatar-placeholder.png'}" style="width:80px;height:80px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">
       <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
           <h2 style="font-family:'Archivo Black',sans-serif;font-size:28px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);"><svg width="22" height="22" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${esc(artist.name)}</h2>
@@ -2273,12 +2263,8 @@ function initSubmit(){
   // Artist picker
   const ap=document.getElementById('s-artist-picker');
   ap.innerHTML=_artists.map((a,i)=>{
-  const ini=a.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  const[abg,ac]=AVC[i%AVC.length];
-  const avatar=a.avatar_url
-    ?`<div class="ap-av"><img src="${a.avatar_url}" alt="${a.name}"></div>`
-    :`<div class="ap-av-ph" style="background:${abg};color:${ac};">${ini}</div>`;
-  return `<div class="ap-item" data-id="${a.id}" data-name="${a.name}" onclick="selectArtist(this)">${avatar}<div class="ap-name"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${a.name}</div></div>`;
+  const avatar=`<div class="ap-av"><img src="${a.avatar_url?esc(a.avatar_url):'avatar-placeholder.png'}" alt="${esc(a.name)}"></div>`;
+  return `<div class="ap-item" data-id="${a.id}" data-name="${esc(a.name)}" onclick="selectArtist(this)">${avatar}<div class="ap-name"><svg width="13" height="13" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${esc(a.name)}</div></div>`;
 }).join('');
   // Upload widget
   _getSubmitImg=buildSubmitUpload();
