@@ -951,7 +951,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
         <div style="padding:20px 0;border-bottom:1px solid var(--b1);">
           <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-message-circle" style="font-size:13px;"></i> Contact</div>
           <p style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;">Questions, bug reports, or want to become a confirmed artist? Reach out on Discord.</p>
-          <a href="https://discord.gg/jqr7j9fcb3" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:42px;width:100%;border:1px solid var(--t1);color:var(--t1);text-decoration:none;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:all .18s;box-sizing:border-box;" onmouseover="this.style.background='var(--acc)';this.style.borderColor='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.borderColor='var(--t1)';this.style.color='var(--t1)'">
+          <a href="https://discord.gg/kUVrGX8WdY" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;height:42px;width:100%;border:1px solid var(--t1);color:var(--t1);text-decoration:none;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:all .18s;box-sizing:border-box;" onmouseover="this.style.background='var(--acc)';this.style.borderColor='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.borderColor='var(--t1)';this.style.color='var(--t1)'">
             <i class="ti ti-brand-discord"></i> Join our Discord
           </a>
         </div>
@@ -1433,9 +1433,9 @@ function lvRow(l){
 
 // ── LOAD LIVERIES ──
 async function loadLiveries(){
-  const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',featuredOnly:_featuredOnly||undefined,search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
+  const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,brand:_activeBrand||undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',featuredOnly:_featuredOnly||undefined,search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
   // Brand filter applied client-side after fetch
-  const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
+  const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,brand:params.brand,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
   _total=total;_voted=getVotedSet();
   document.getElementById('l-count').textContent=`${total} liveri${total!==1?'es':'y'}`;
   document.getElementById('l-info').textContent=`${Math.min((_page-1)*PAGE+1,total)}–${Math.min(_page*PAGE,total)} of ${total}`;

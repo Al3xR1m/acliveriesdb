@@ -146,13 +146,15 @@ async function findDuplicates(modId, fields, excludeId, approvedOnly = true) {
 }
 
 async function fetchLiveries({
-  categoryId, championshipId, modId, artistId,
+  categoryId, championshipId, modId, artistId, brand,
   isPaid, confirmedOnly, communityOnly, featuredOnly,
   search, sort = 'votes', page = 1, pageSize = 24,
   approvedOnly = true,
 } = {}) {
-  let q = db.from('liveries').select('*, mods(id,name,brand), categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url)');
+  const modsJoin = brand ? 'mods!inner(id,name,brand)' : 'mods(id,name,brand)';
+  let q = db.from('liveries').select(`*, ${modsJoin}, categories(id,name,color_bg,color_text), championships(id,name,short_name), artists(id,name,avatar_url)`);
   if (approvedOnly) q = q.eq('approved', true);
+  if (brand)          q = q.eq('mods.brand', brand);
   if (categoryId)     q = q.eq('category_id', categoryId);
   if (championshipId) q = q.eq('championship_id', championshipId);
   if (modId)          q = q.eq('mod_id', modId);
@@ -175,12 +177,16 @@ async function fetchLiveries({
 }
 
 async function fetchLiveriesCount({
-  categoryId, championshipId, modId, artistId,
+  categoryId, championshipId, modId, artistId, brand,
   isPaid, confirmedOnly, communityOnly, search,
   approvedOnly = true,
 } = {}) {
-  let q = db.from('liveries').select('id', { count: 'exact', head: true });
+  const modsJoin = brand ? 'mods!inner(brand)' : null;
+  let q = modsJoin
+    ? db.from('liveries').select(`id, ${modsJoin}`, { count: 'exact', head: true })
+    : db.from('liveries').select('id', { count: 'exact', head: true });
   if (approvedOnly) q = q.eq('approved', true);
+  if (brand)          q = q.eq('mods.brand', brand);
   if (categoryId)     q = q.eq('category_id', categoryId);
   if (championshipId) q = q.eq('championship_id', championshipId);
   if (modId)          q = q.eq('mod_id', modId);
