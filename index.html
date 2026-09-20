@@ -782,6 +782,12 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     <div id="ld-content"></div>
   </div>
 
+  <!-- ADDON DETAIL -->
+  <div class="view" id="view-addon-detail">
+    <div class="ld-back" onclick="navBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div id="ad-content"></div>
+  </div>
+
   <!-- MODS -->
   <div class="view" id="view-mods">
     <div class="mv-top"><h2 class="mv-title">Supported <em>mods</em></h2></div>
@@ -1547,6 +1553,77 @@ async function handleUpvote(id){
     else customAlert('Could not upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
   }
 }
+
+async function loadAddonDetail(id){
+  document.getElementById('ad-content').innerHTML=`<div style="padding:40px;text-align:center;"><div class="sk" style="height:200px;margin-bottom:16px;"></div><div class="sk" style="height:120px;"></div></div>`;
+  const a=await fetchAddon(id);
+  if(!a){document.getElementById('ad-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Addon not found.</div>';return;}
+  const votedSet=getVotedSet('addon');
+  const cn=a.categories?.name||'';
+  const voted=votedSet.has(a.id);
+  const typeLabels=esc(addonTypeList(a).map(t=>ADDON_TYPE_LABELS[t]||t).join(', '))||'Addon';
+  const rows=[
+    ['Type',typeLabels],
+    ['Mod',esc(a.mods?.name)||'All mods'],
+    ['Category',esc(a.categories?.name)||'—'],
+    ['Pricing',a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'],
+  ];
+  const artistName=a.artists?.name||a.author||'';
+  const isConfirmed=!!a.artists;
+
+  document.getElementById('ad-content').innerHTML=`
+    <div class="ld-body">
+      <div class="ld-crumb"><a onclick="nav('addons')">Addons</a> / <a onclick="nav('addons')">${esc(cn)||'All'}</a> / ${esc(a.name)}</div>
+      <div class="ld-grid">
+        <div>
+          <div class="ld-cover">${a.image_url?`<img src="${esc(a.image_url)}" alt="${esc(a.name)}">`:`<div style="position:absolute;inset:0;">${svg(cn,seed(a))}</div>`}</div>
+        </div>
+        <div>
+          <span class="ld-tag">${typeLabels}</span>
+          <h1 class="ld-title">${esc(a.name)}</h1>
+          <div class="ld-artist-line">
+            ${artistName?`by <strong onclick="${isConfirmed?`openArtistProfile('${a.artists.id}')`:''}">${esc(artistName)}</strong>`:''}
+            ${isConfirmed?'<span class="ld-artist-badge"><svg width="11" height="11" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> Confirmed</span>':''}
+          </div>
+          <div class="ld-stats">
+            <div><div class="ld-stat-num" id="addon-upvote-count">${a.upvotes||0}</div><div class="ld-stat-label">Upvotes</div></div>
+          </div>
+          <div class="ld-actions">
+            ${a.download_url?`<a href="${esc(normalizeUrl(a.download_url))}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download link</a>`:''}
+            <button class="ld-btn ghost${voted?' voted':''}" id="addon-upvote-btn" onclick="handleAddonUpvote('${a.id}')"><i class="ti ti-thumb-up"></i> ${voted?'Upvoted':'Upvote'}</button>
+          </div>
+          <div class="ld-links">
+            <a onclick="copyLink('${a.id}','addon')"><i class="ti ti-link"></i> Copy link</a>
+          </div>
+          <div class="ld-meta-panel">
+            ${rows.map(([k,v])=>`<div class="ld-row"><div class="ld-key">${k}</div><div class="ld-val">${v}</div></div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      ${a.notes?`<section class="ld-section">
+        <span class="ld-section-tag">// About this addon</span>
+        <h2>Extra details</h2>
+        <p class="ld-desc">${esc(a.notes)}</p>
+      </section>`:''}
+    </div>`;
+}
+async function handleAddonUpvote(id){
+  const btn=document.getElementById('addon-upvote-btn');
+  const cnt=document.getElementById('addon-upvote-count');
+  if(!btn||!cnt)return;
+  const isVoted=getVotedSet('addon').has(id);
+  if(isVoted){
+    const res=await removeUpvoteAddon(id);
+    if(res.ok){cnt.textContent=Math.max(0,parseInt(cnt.textContent)-1);btn.classList.remove('voted');btn.innerHTML='<i class="ti ti-thumb-up"></i> Upvote';}
+    else customAlert('Could not remove upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  } else {
+    const res=await upvoteAddon(id);
+    if(res.ok){cnt.textContent=parseInt(cnt.textContent)+1;btn.classList.add('voted');btn.innerHTML='<i class="ti ti-thumb-up"></i> Upvoted';}
+    else customAlert('Could not upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  }
+}
+
 function customAlert(message,type){
   const t=document.getElementById('custom-toast');
   const icon=type==='error'?'ti-x':type==='success'?'ti-circle-check':'ti-info-circle';
@@ -1557,8 +1634,8 @@ function customAlert(message,type){
   clearTimeout(window._toastTimer);
   window._toastTimer=setTimeout(()=>{t.style.transform='translateY(20px)';t.style.opacity='0';t.style.pointerEvents='none';},3500);
 }
-function copyLink(id){
-  navigator.clipboard.writeText(location.origin+location.pathname+'#livery/'+id).then(()=>{const btn=event.currentTarget;if(btn){const orig=btn.innerHTML;btn.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Copied!';setTimeout(()=>btn.innerHTML=orig,1500);}});
+function copyLink(id,type='livery'){
+  navigator.clipboard.writeText(location.origin+location.pathname+'#'+type+'/'+id).then(()=>{const btn=event.currentTarget;if(btn){const orig=btn.innerHTML;btn.innerHTML='<i class="ti ti-check" style="color:var(--grn);"></i> Copied!';setTimeout(()=>btn.innerHTML=orig,1500);}});
 }
 function openReport(id){_pendingReport=id;document.getElementById('report-modal').classList.add('open');}
 function closeReport(){document.getElementById('report-modal').classList.remove('open');document.getElementById('report-notes').value='';}
@@ -2179,7 +2256,7 @@ function renderArtistTab(livs, adds, tab){
     el.innerHTML=`<div class="lv-cards">${livs.map(l=>richCard(l)).join('')}</div>`;
   } else {
     if(!adds.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">No addons yet.</div>';return;}
-    el.innerHTML=`<div class="lv-list">${adds.map(a=>`<div class="lv-row" onclick="openLivery('${a.id}')">
+    el.innerHTML=`<div class="lv-list">${adds.map(a=>`<div class="lv-row" onclick="openAddon('${a.id}')">
       <div class="lv-thumb">${a.image_url?`<img src="${esc(a.image_url)}" loading="lazy">`:'<i class="ti ti-puzzle" style="font-size:14px;color:var(--t3);"></i>'}</div>
       <div><div class="lv-name">${esc(a.name)}</div><div class="lv-meta">${esc(a.mods?.name)||'—'} · ${esc(a.categories?.name)||'—'}</div></div>
       <div class="lv-right"><span class="badge b-${a.is_paid?'p':'f'}">${a.is_paid?'Paid':'Free'}</span><span class="lv-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${a.upvotes||0}</span></div>
@@ -2220,10 +2297,7 @@ function addonCard(a){
     </div>
   </div>`;
 }
-function openAddon(id){
-  const a=_addAll.find(x=>x.id===id);
-  if(a?.download_url) window.open(a.download_url,'_blank');
-}
+function openAddon(id){_prevView=document.querySelector('.view.on')?.id?.replace('view-','')??'addons';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('view-addon-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;if(location.hash!=='#addon/'+id) history.pushState(null,'','#addon/'+id);loadAddonDetail(id);}
 async function loadAddons(){
   _addAll=await fetchAddons({});
   document.getElementById('ph-add-count').textContent=_addAll.length.toLocaleString()+' ADDONS INDEXED';
@@ -2523,6 +2597,7 @@ function handleHash(){
   const h=location.hash;
   if(!h||h==='#'){nav('liveries');return;}
   if(h.startsWith('#livery/'))openLivery(h.replace('#livery/',''));
+  else if(h.startsWith('#addon/'))openAddon(h.replace('#addon/',''));
   else if(h.startsWith('#mod/'))openModDetail(h.replace('#mod/',''));
   else if(h.startsWith('#artist/'))openArtistProfile(h.replace('#artist/',''));
   else if(h.startsWith('#brand/'))openBrandDetail(h.replace('#brand/',''));
