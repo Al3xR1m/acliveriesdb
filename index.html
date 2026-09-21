@@ -451,18 +451,21 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .md-back{display:flex;align-items:center;gap:6px;padding:16px 20px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:color .12s;border-bottom:0.5px solid var(--b1);background:var(--bg);position:sticky;top:0;z-index:10;}
 .md-back:hover{color:var(--t1);}
 .md-body{padding:20px 0;}
-.md-header{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:28px;align-items:stretch;padding:0 28px;}
-.md-cover{width:100%;height:150px;position:relative;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;border:1px solid var(--b1);}
+.md-header{position:relative;height:220px;overflow:hidden;margin:0 28px 28px;border:1px solid var(--b1);}
+.md-cover-bg{position:absolute;inset:0;background:var(--s2);}
+.md-cover-bg img{width:100%;height:100%;object-fit:cover;display:block;}
+.md-header-fade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,15,.94) 30%,rgba(10,10,15,.55) 65%,rgba(10,10,15,.2) 100%),linear-gradient(to top,rgba(10,10,15,.5) 0%,transparent 40%);}
+.md-header-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 32px;}
 .md-brand-label{font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
-.md-name{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,32px);font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);margin-bottom:12px;}
-.md-stat{flex:1;padding:12px 16px;border-right:1px solid var(--b1);text-align:center;}
+.md-name{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);margin-bottom:12px;}
+.md-stat{padding:0 16px 0 0;text-align:left;}
 .md-stat-n{font-family:'Archivo Black',sans-serif;font-size:20px;font-weight:400;letter-spacing:0;color:var(--t1);}
 .md-stat-l{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
 .md-tabs{display:flex;gap:2px;border-bottom:1px solid var(--b1);padding:0 28px;}
 .md-tab{padding:10px 16px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;}
 .md-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-.md-desc{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;}
-.md-stats{display:flex;gap:0;border:1px solid var(--b1);overflow:hidden;max-width:320px;}
+.md-desc{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px;max-width:520px;}
+.md-stats{display:flex;gap:24px;}
 .md-stat:last-child{border-right:none;}
 .md-tab:hover{color:var(--t1);}
 .md-tab.on{color:var(--t1);border-bottom-color:var(--acc);}
@@ -2074,20 +2077,19 @@ async function loadModDetail(id){
   const lc=livs.length;const ac=adds.length;
   document.getElementById('md-content').innerHTML=`
     <div class="md-header">
-      <div class="md-cover">${mod.image_url?`<img src="${esc(mod.image_url)}" alt="${esc(mod.name)}">`:`<i class="ti ti-car" style="font-size:36px;color:var(--t3);"></i>`}</div>
-      <div style="display:flex;flex-direction:column;height:100%;">
-        <div>
-          ${br?`<div class="md-brand-label" style="color:${br.c};">${br.l}</div>`:''}
-          <div class="md-name">${esc(mod.name)}</div>
-          ${mod.description?`<div class="md-desc">${esc(mod.description)}</div>`:''}
-        </div>
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:auto;padding-top:16px;">
-          <div class="md-stats" style="margin:0;">
+      <div class="md-cover-bg">${mod.image_url?`<img src="${esc(mod.image_url)}" alt="${esc(mod.name)}">`:''}</div>
+      <div class="md-header-fade"></div>
+      <div class="md-header-content">
+        ${br?`<div class="md-brand-label" style="color:${br.c};">${br.l}</div>`:''}
+        <div class="md-name">${esc(mod.name)}</div>
+        ${mod.description?`<div class="md-desc">${esc(mod.description)}</div>`:''}
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+          ${mod.official_url?`<a href="${esc(normalizeUrl(mod.official_url))}" target="_blank" class="ld-btn primary"><i class="ti ti-external-link" style="font-size:13px;"></i> Official page</a>`:''}
+          <div class="md-stats">
             <div class="md-stat"><div class="md-stat-n">${lc}</div><div class="md-stat-l">Liveries</div></div>
             <div class="md-stat"><div class="md-stat-n">${ac}</div><div class="md-stat-l">Addons</div></div>
             ${mod.version?`<div class="md-stat"><div class="md-stat-n" style="font-size:14px;letter-spacing:-.3px;">v${esc(mod.version)}</div><div class="md-stat-l">Version</div></div>`:''}
           </div>
-          ${mod.official_url?`<a href="${esc(normalizeUrl(mod.official_url))}" target="_blank" class="ld-btn" style="height:auto;align-self:stretch;padding:0 20px;"><i class="ti ti-external-link" style="font-size:13px;"></i> Official page</a>`:''}
         </div>
       </div>
     </div>`;
