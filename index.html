@@ -210,7 +210,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-featured{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:4;width:24px;height:24px;background:var(--amb2);border:1px solid var(--amb);color:var(--amb);display:flex;align-items:center;justify-content:center;font-size:11px;}
 .lv-card-top{position:absolute;top:34px;left:10px;display:flex;gap:4px;z-index:3;transition:opacity .25s;}
 .lv-card-crown{position:absolute;top:10px;right:10px;font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;z-index:3;transition:opacity .25s;color:var(--t1);background:rgba(10,10,15,.7);border:1px solid var(--crown);padding:3px 8px;display:flex;align-items:center;gap:5px;white-space:nowrap;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;}
-.lv-card-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
+.lv-card-dl{position:absolute;top:9px;right:9px;font-family:'Azeret Mono',monospace;font-size:12px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:5px;z-index:4;background:rgba(10,10,15,.72);padding:5px 9px;border:1px solid rgba(242,240,234,.15);cursor:pointer;transition:border-color .15s,background .15s;}
+.lv-card-dl:hover{border-color:var(--acc);background:rgba(10,10,15,.88);}
+.lv-card-dl.voted{border-color:var(--acc);}
+.lv-card-dl.voted i{color:var(--acc);}
 .lv-card:hover .lv-card-top,.lv-card:hover .lv-card-crown,.lv-card:hover .lv-card-dl{opacity:0;}
 .lv-card-thumb:has(.lv-card-crown) .lv-card-dl{top:36px;}
 .lv-card-meta{position:absolute;inset:0;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
@@ -1242,7 +1245,7 @@ function richCard(l){
         ${l.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
       </div>
       ${isArtist?`<span class="lv-card-crown"><svg width="12" height="12" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> ${esc(l.artists.name)}</span>`:''}
-      <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${l.upvotes||0}</div>
+      <div class="lv-card-dl${_voted.has(l.id)?' voted':''}" onclick="handleCardUpvote(event,'${l.id}','livery')"><i class="ti ti-heart${_voted.has(l.id)?'-filled':''}" style="font-size:11px;"></i><span class="dl-n">${l.upvotes||0}</span></div>
       ${l.car_number?`<div class="lv-card-bignum">#${esc(l.car_number)}</div>`:''}
       <div class="lv-card-meta">
         <div class="lv-card-champ-row">
@@ -1375,7 +1378,7 @@ const isNew=l=>l.created_at&&(Date.now()-new Date(l.created_at).getTime())<7*24*
 var _cats=[],_champs=[],_mods=[],_artists=[];
 var _cat='all',_champ='all',_price=null,_artistFilter='all',_activeBrand=null,_featuredOnly=false,_sort='votes',_search='',_page=1,_total=0,_vmode='grid';
 var _champLivCounts={cat:{},champ:{},brand:{}};
-let _prevView='liveries',_voted=getVotedSet(),_pendingReport=null;
+let _prevView='liveries',_voted=getVotedSet(),_votedAddons=getVotedSet('addon'),_pendingReport=null;
 const PAGE=20;
 let _sAvailMods=[],_sAvailChamps=[],_sSelMod='',_sSelChamp='',_sArtistId=null,_sPreviewImg=null,_sMode='livery';
 let _getSubmitImg=()=>null;
@@ -1627,6 +1630,27 @@ async function handleAddonUpvote(id){
     const res=await upvoteAddon(id);
     if(res.ok){cnt.textContent=parseInt(cnt.textContent)+1;btn.classList.add('voted');btn.innerHTML='<i class="ti ti-thumb-up"></i> Upvoted';}
     else customAlert('Could not upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  }
+}
+async function handleCardUpvote(event,id,type){
+  event.stopPropagation();
+  const el=event.currentTarget;
+  const votedSet=type==='addon'?_votedAddons:_voted;
+  const icon=el.querySelector('i');
+  const countEl=el.querySelector('.dl-n');
+  const isVoted=votedSet.has(id);
+  let res;
+  if(isVoted) res=type==='addon'?await removeUpvoteAddon(id):await removeUpvoteLivery(id);
+  else res=type==='addon'?await upvoteAddon(id):await upvoteLivery(id);
+  if(!res.ok){customAlert('Could not update vote'+(res.error?': '+res.error.message:'')+'. Try again.','error');return;}
+  if(isVoted){
+    countEl.textContent=Math.max(0,parseInt(countEl.textContent)-1);
+    el.classList.remove('voted');icon.classList.remove('ti-heart-filled');icon.classList.add('ti-heart');
+    votedSet.delete(id);
+  } else {
+    countEl.textContent=parseInt(countEl.textContent)+1;
+    el.classList.add('voted');icon.classList.remove('ti-heart');icon.classList.add('ti-heart-filled');
+    votedSet.add(id);
   }
 }
 
@@ -2299,7 +2323,7 @@ function addonCard(a){
         ${isNew2?'<span class="badge b-n">New</span>':''}
         ${a.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'}
       </div>
-      <div class="lv-card-dl"><i class="ti ti-heart" style="font-size:9px;"></i>${a.upvotes||0}</div>
+      <div class="lv-card-dl${_votedAddons.has(a.id)?' voted':''}" onclick="handleCardUpvote(event,'${a.id}','addon')"><i class="ti ti-heart${_votedAddons.has(a.id)?'-filled':''}" style="font-size:11px;"></i><span class="dl-n">${a.upvotes||0}</span></div>
       <div class="lv-card-meta">
         <div class="lv-card-champ-row">
           <span class="lv-card-champ" style="color:${brandColor};">${typeLabels}</span>
