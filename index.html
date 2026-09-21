@@ -443,7 +443,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .mv-browse-btn{height:28px;padding:0 11px;background:transparent;color:var(--acc);border:1px solid var(--acc);font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;}
 .mv-browse-btn:hover{background:var(--acc);color:#fff;}
 /* Cat sub-section label */
-.mv-cat-label{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.mv-cat-label{font-family:'Azeret Mono',monospace;font-size:15px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .mv-cat-dot{width:5px;height:5px;display:inline-block;flex-shrink:0;}
 .mv-cat-sep{flex:1;height:1px;background:var(--b1);}
 
@@ -2028,7 +2028,11 @@ async function openBrandDetail(brand){
       </div>
     </div>`;
 
-  Object.entries(bycat).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([catName,g])=>{
+  Object.entries(bycat).sort((a,b)=>{
+    const totalA=a[1].mods.reduce((s,m)=>s+(lc[m.id]||0),0);
+    const totalB=b[1].mods.reduce((s,m)=>s+(lc[m.id]||0),0);
+    return totalB-totalA;
+  }).forEach(([catName,g])=>{
     html+=`<div style="margin-bottom:24px;">
       <div class="mv-cat-label" style="margin-bottom:10px;">
         <span class="mv-cat-dot" style="background:${g.cat?.color_text||'#888'};"></span>
