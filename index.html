@@ -2256,11 +2256,7 @@ function renderArtistTab(livs, adds, tab){
     el.innerHTML=`<div class="lv-cards">${livs.map(l=>richCard(l)).join('')}</div>`;
   } else {
     if(!adds.length){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">No addons yet.</div>';return;}
-    el.innerHTML=`<div class="lv-list">${adds.map(a=>`<div class="lv-row" onclick="openAddon('${a.id}')">
-      <div class="lv-thumb">${a.image_url?`<img src="${esc(a.image_url)}" loading="lazy">`:'<i class="ti ti-puzzle" style="font-size:14px;color:var(--t3);"></i>'}</div>
-      <div><div class="lv-name">${esc(a.name)}</div><div class="lv-meta">${esc(a.mods?.name)||'—'} · ${esc(a.categories?.name)||'—'}</div></div>
-      <div class="lv-right"><span class="badge b-${a.is_paid?'p':'f'}">${a.is_paid?'Paid':'Free'}</span><span class="lv-votes"><i class="ti ti-heart" style="font-size:8px;"></i>${a.upvotes||0}</span></div>
-    </div>`).join('')}</div>`;
+    el.innerHTML=`<div class="lv-cards">${adds.map(a=>addonCard(a)).join('')}</div>`;
   }
 }
 
