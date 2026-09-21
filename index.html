@@ -1830,6 +1830,7 @@ async function loadHome(){
 
   // ── ARTISTS ──
   document.getElementById('h-artists-list').innerHTML = _artists.slice(0,3).map((a,i)=>{
+    const s=stArtist[a.id]||{c:0,v:0};
     const avatar=`<img src="${a.avatar_url?esc(a.avatar_url):'avatar-placeholder.png'}" alt="${esc(a.name)}" style="width:44px;height:44px;object-fit:cover;flex-shrink:0;border-radius:50%!important;overflow:hidden;">`;
     return `<div style="display:flex;align-items:center;gap:14px;padding:11px 10px;cursor:pointer;transition:background .12s;" onclick="nav('artists')" onmouseover="this.style.background='var(--s1)'" onmouseout="this.style.background=''">
       ${avatar}
