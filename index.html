@@ -453,9 +453,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .md-body{padding:20px 0;}
 .md-header{position:relative;height:220px;overflow:hidden;margin:0 28px 28px;border:1px solid var(--b1);}
 .md-cover-bg{position:absolute;inset:0;background:var(--s2);}
-.md-cover-bg img{width:100%;height:100%;object-fit:cover;display:block;}
-.md-header-fade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,15,.94) 30%,rgba(10,10,15,.55) 65%,rgba(10,10,15,.2) 100%),linear-gradient(to top,rgba(10,10,15,.5) 0%,transparent 40%);}
-.md-header-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 32px;}
+.md-cover-bg img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(18px) brightness(.65) saturate(1.15);transform:scale(1.1);}
+.md-header-fade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,15,.85) 30%,rgba(10,10,15,.5) 65%,rgba(10,10,15,.25) 100%),linear-gradient(to top,rgba(10,10,15,.4) 0%,transparent 40%);}
+.md-header-content{position:relative;z-index:2;height:100%;display:flex;align-items:center;gap:24px;padding:0 32px;}
+.md-thumb{width:110px;height:110px;flex-shrink:0;background:var(--s2);border:1px solid var(--b2);overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.md-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .md-brand-label{font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
 .md-name{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);margin-bottom:12px;}
 .md-stat{padding:0 16px 0 0;text-align:left;}
@@ -2080,15 +2082,18 @@ async function loadModDetail(id){
       <div class="md-cover-bg">${mod.image_url?`<img src="${esc(mod.image_url)}" alt="${esc(mod.name)}">`:''}</div>
       <div class="md-header-fade"></div>
       <div class="md-header-content">
-        ${br?`<div class="md-brand-label" style="color:${br.c};">${br.l}</div>`:''}
-        <div class="md-name">${esc(mod.name)}</div>
-        ${mod.description?`<div class="md-desc">${esc(mod.description)}</div>`:''}
-        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-          ${mod.official_url?`<a href="${esc(normalizeUrl(mod.official_url))}" target="_blank" class="ld-btn primary"><i class="ti ti-external-link" style="font-size:13px;"></i> Official page</a>`:''}
-          <div class="md-stats">
-            <div class="md-stat"><div class="md-stat-n">${lc}</div><div class="md-stat-l">Liveries</div></div>
-            <div class="md-stat"><div class="md-stat-n">${ac}</div><div class="md-stat-l">Addons</div></div>
-            ${mod.version?`<div class="md-stat"><div class="md-stat-n" style="font-size:14px;letter-spacing:-.3px;">v${esc(mod.version)}</div><div class="md-stat-l">Version</div></div>`:''}
+        <div class="md-thumb">${mod.image_url?`<img src="${esc(mod.image_url)}" alt="${esc(mod.name)}">`:`<i class="ti ti-car" style="font-size:30px;color:var(--t3);"></i>`}</div>
+        <div>
+          ${br?`<div class="md-brand-label" style="color:${br.c};">${br.l}</div>`:''}
+          <div class="md-name">${esc(mod.name)}</div>
+          ${mod.description?`<div class="md-desc">${esc(mod.description)}</div>`:''}
+          <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            ${mod.official_url?`<a href="${esc(normalizeUrl(mod.official_url))}" target="_blank" class="ld-btn primary"><i class="ti ti-external-link" style="font-size:13px;"></i> Official page</a>`:''}
+            <div class="md-stats">
+              <div class="md-stat"><div class="md-stat-n">${lc}</div><div class="md-stat-l">Liveries</div></div>
+              <div class="md-stat"><div class="md-stat-n">${ac}</div><div class="md-stat-l">Addons</div></div>
+              ${mod.version?`<div class="md-stat"><div class="md-stat-n" style="font-size:14px;letter-spacing:-.3px;">v${esc(mod.version)}</div><div class="md-stat-l">Version</div></div>`:''}
+            </div>
           </div>
         </div>
       </div>
