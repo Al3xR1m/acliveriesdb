@@ -40,6 +40,9 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .page-h1 em{color:var(--acc);}
 .lv-grid{padding:0 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
 .lv-card{background:var(--s1);position:relative;overflow:hidden;transition:border-color .18s;border:1px solid var(--b1);cursor:pointer;}
+.lv-card.lv-selected{border-color:var(--acc);}
+.lv-select-dot{position:absolute;top:9px;left:10px;width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(242,240,234,.5);background:rgba(10,10,15,.6);display:flex;align-items:center;justify-content:center;z-index:5;color:transparent;font-size:11px;}
+.lv-select-dot.on{background:var(--acc);border-color:var(--acc);color:#fff;}
 .lv-card:hover{border-color:var(--acc);}
 .lv-card::after{content:'';position:absolute;right:0;bottom:0;width:0;height:0;background:var(--acc);transition:width .18s,height .18s;z-index:3;}
 .lv-card:hover::after{width:10px;height:10px;}
@@ -57,9 +60,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-dl{opacity:0;}
 .lv-edit-hint{position:absolute;top:9px;right:10px;width:22px;height:22px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;}
-.lv-pack-hint{position:absolute;top:9px;right:36px;width:22px;height:22px;background:var(--s1);border:1px solid var(--b2);color:var(--t1);display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;cursor:pointer;}
-.lv-card:hover .lv-pack-hint{opacity:1;}
-.lv-pack-hint:hover{background:var(--acc);border-color:var(--acc);}
 .lv-pack-badge{position:absolute;bottom:8px;right:8px;background:rgba(10,10,15,.75);border:1px solid rgba(242,240,234,.2);display:flex;align-items:center;gap:5px;padding:3px 7px;font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;color:var(--t2);z-index:3;text-transform:uppercase;letter-spacing:.04em;}
 .lv-card:hover .lv-edit-hint{opacity:1;}
 .lv-meta{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
@@ -102,6 +102,8 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .btn-ghost{height:38px;padding:0 14px;background:transparent;color:var(--t2);border:1px solid var(--b1);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
 .btn-ghost:hover{color:var(--t1);border-color:var(--b2);}
 .btn-danger{height:38px;padding:0 14px;background:transparent;color:var(--red);border:1px solid var(--red);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.btn-secondary{height:42px;padding:0 20px;background:transparent;color:var(--t2);border:1px solid var(--b2);font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s;}
+.btn-secondary:hover{color:var(--acc);border-color:var(--acc);}
 .btn-danger:hover{background:var(--red);color:#fff;}
 .modal-ov{position:fixed;inset:0;background:rgba(10,10,15,.8);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-ov.open{display:flex;}
@@ -202,6 +204,12 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
       <div style="padding:20px 28px 12px;display:flex;align-items:center;gap:10px;">
         <span style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;">// Liveries</span>
         <span style="flex:1;height:1px;background:var(--b1);"></span>
+        <button class="btn-secondary" id="ae-group-toggle" style="height:32px;padding:0 12px;font-size:10px;" onclick="aeToggleGroupMode()"><i class="ti ti-stack-2"></i> Group into pack</button>
+      </div>
+      <div id="ae-group-bar" style="display:none;padding:0 28px 14px;align-items:center;gap:12px;">
+        <span style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t2);"><span id="ae-group-count">0</span> selected</span>
+        <button class="btn-primary" style="height:32px;padding:0 14px;font-size:10px;" onclick="aeConfirmGroupPack()"><i class="ti ti-check"></i> Create pack</button>
+        <button style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;font-family:inherit;" onclick="aeToggleGroupMode()">Cancel</button>
       </div>
       <div class="lv-grid" id="ae-liveries-grid"></div>
     </div>
@@ -325,6 +333,11 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
             <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
             <div id="ae-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
           </div>
+          <div id="ae-pack-wrap" class="livery-only" style="display:none;border:1px solid var(--b1);padding:14px;margin-bottom:14px;">
+            <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Pack variants (<span id="ae-pack-count">0</span>)</div>
+            <div id="ae-pack-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <button class="btn-secondary livery-only" id="ae-pack-add-btn" style="width:100%;justify-content:center;margin-bottom:10px;" onclick="aeAddToPack()"><i class="ti ti-plus"></i> Add to pack &amp; continue</button>
           <button class="btn-primary" style="width:100%;justify-content:center;" onclick="aeDoSubmit()"><i class="ti ti-send"></i> <span id="ae-submit-label">Publish livery</span></button>
           <button class="btn-danger" id="ae-edit-delete-btn" style="width:100%;justify-content:center;display:none;" onclick="aeDeleteFromForm()"><i class="ti ti-trash"></i> Delete livery</button>
         </div>
@@ -398,56 +411,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 </div>
 <div class="toast" id="ae-toast"></div>
 
-<!-- PACK VARIANT MODAL -->
-<div id="pv-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.75);z-index:400;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)pvClose()">
-  <div style="background:var(--bg);border:1px solid var(--b1);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;">
-    <div style="padding:20px 24px;border-bottom:1px solid var(--b1);">
-      <div style="font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;">Add pack variant</div>
-      <div style="font-size:12px;color:var(--t3);margin-top:4px;">Based on <strong id="pv-source-name" style="color:var(--t2);"></strong> — everything's pre-filled except the championship and image.</div>
-    </div>
-    <div style="padding:20px 24px;" class="form-wrap">
-      <div class="field full"><label>Livery name *</label><input id="pv-name" type="text"></div>
-      <div class="field"><label>Team *</label><input id="pv-team" type="text"></div>
-      <div class="field"><label>Driver(s) *</label><input id="pv-driver" type="text"></div>
-      <div class="field"><label>Season *</label><input id="pv-season" type="text"></div>
-      <div class="field"><label>Car number *</label><input id="pv-carnumber" type="text" maxlength="4"></div>
-      <div class="field full"><label>Championship *</label>
-        <button type="button" onclick="pvOpenChampPicker()" id="pv-champ-btn" class="picker-btn">
-          <span id="pv-champ-text">Select championship…</span>
-        </button>
-        <input type="hidden" id="pv-champ">
-      </div>
-      <div class="field full"><label>Download URL *</label><input id="pv-url" type="url" placeholder="https://…"></div>
-      <div class="field full"><label>Preview image *</label><div id="pv-img-widget"></div></div>
-      <div class="field"><label>Pricing</label><select id="pv-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
-      <div class="field"><label>Notes</label><input id="pv-notes" type="text"></div>
-      <div id="pv-err" style="display:none;grid-column:1/-1;color:var(--red);font-size:12px;"></div>
-    </div>
-    <div style="padding:16px 24px;display:flex;justify-content:flex-end;">
-      <button class="btn-primary" onclick="pvAddVariant()"><i class="ti ti-plus"></i> Add to pack</button>
-    </div>
-    <div id="pv-staged-wrap" style="display:none;border-top:1px solid var(--b1);padding:16px 24px;">
-      <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Variants to add (<span id="pv-staged-count">0</span>)</div>
-      <div id="pv-staged-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-    </div>
-    <div style="padding:16px 24px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;">
-      <button type="button" onclick="pvClose()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit;">Cancel</button>
-      <button class="btn-primary" onclick="pvSaveAll()" id="pv-save-btn" disabled><i class="ti ti-device-floppy"></i> Save <span id="pv-save-count">0</span> variant<span id="pv-save-s">s</span></button>
-    </div>
-  </div>
-</div>
-
-<div id="pv-champ-picker" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.7);z-index:500;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
-  <div class="picker-box">
-    <div class="picker-head">
-      <i class="ti ti-search" style="color:var(--t3);"></i>
-      <input id="pv-champ-search" type="text" placeholder="Search championship…" oninput="pvFilterChampPicker(this.value)" class="picker-search">
-      <button onclick="document.getElementById('pv-champ-picker').style.display='none'" class="picker-close">&times;</button>
-    </div>
-    <div id="pv-champ-grid" class="picker-grid"></div>
-  </div>
-</div>
-
 
 <div class="modal-ov" id="ae-confirm-ov">
   <div class="modal" style="max-width:380px;">
@@ -470,10 +433,9 @@ var _ae_mode = 'livery';
 var _ae_preview_img = null;
 var _ae_pf_avatar = null;
 var _ae_my_liveries = [];
-var _ae_pack_source = null;
 var _ae_pack_staged = [];
-var _pv_champs_avail = [];
-var _pv_img = null;
+var _ae_group_mode = false;
+var _ae_group_selected = new Set();
 var _ae_get_img = function(){ return null; };
 var _cats = [], _mods = [], _champs = [];
 
@@ -785,7 +747,10 @@ async function aeLiveries() {
     var champName=esc((l.championships&&l.championships.short_name)||(l.categories&&l.categories.name))||'—';
     var driver=esc(l.driver||l.team||'');
     var season=esc(l.season||'');
-    return '<div class="lv-card" onclick="aeEditLivery(\''+l.id+'\')">'
+    var selected = _ae_group_selected.has(l.id);
+    var clickAction = _ae_group_mode ? ("aeToggleGroupSelect('"+l.id+"')") : ("aeEditLivery('"+l.id+"')");
+    return '<div class="lv-card'+(selected?' lv-selected':'')+'" onclick="'+clickAction+'">'
+      +(_ae_group_mode?'<div class="lv-select-dot'+(selected?' on':'')+'"><i class="ti ti-check"></i></div>':'')
       +'<div class="lv-thumb">'+(l.image_url?'<img src="'+esc(l.image_url)+'" loading="lazy">':'<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>')
       +'<div class="lv-paint" style="background:'+paintColor+';"></div>'
       +'<div class="lv-ov"></div>'
@@ -795,7 +760,6 @@ async function aeLiveries() {
       +'<span class="badge '+(l.approved?'b-f':'b-p')+'">'+(l.approved?'Published':'Pending')+'</span>'
       +'</div>'
       +'<div class="lv-edit-hint"><i class="ti ti-pencil"></i></div>'
-      +'<div class="lv-pack-hint" onclick="event.stopPropagation();aeOpenPackModal(\''+l.id+'\')" title="Add pack variant"><i class="ti ti-copy"></i></div>'
       +(l.pack_id?'<div class="lv-pack-badge"><i class="ti ti-stack-2"></i> Pack</div>':'')
       +'<div class="lv-dl"><i class="ti ti-heart" style="font-size:9px;"></i>'+(l.upvotes||0)+'</div>'
       +'<div class="lv-meta">'
@@ -811,175 +775,35 @@ async function aeLiveries() {
   }).join('');
 }
 
-function aeOpenPackModal(sourceId){
-  var src = _ae_my_liveries.find(function(l){ return l.id === sourceId; });
-  if (!src) { aeToast('Could not find that livery.','err'); return; }
-  _ae_pack_source = src;
-  _ae_pack_staged = [];
-  document.getElementById('pv-source-name').textContent = src.name;
-  pvResetForm();
-  pvRenderStagedList();
-  document.getElementById('pv-modal').style.display = 'flex';
+function aeToggleGroupMode(){
+  _ae_group_mode = !_ae_group_mode;
+  _ae_group_selected = new Set();
+  document.getElementById('ae-group-toggle').style.display = _ae_group_mode ? 'none' : '';
+  document.getElementById('ae-group-bar').style.display = _ae_group_mode ? 'flex' : 'none';
+  document.getElementById('ae-group-count').textContent = '0';
+  aeLiveries();
 }
-function pvResetForm(){
-  var src = _ae_pack_source;
-  document.getElementById('pv-name').value = src.name||'';
-  document.getElementById('pv-team').value = src.team||'';
-  document.getElementById('pv-driver').value = src.driver||'';
-  document.getElementById('pv-season').value = src.season||'';
-  document.getElementById('pv-carnumber').value = src.car_number||'';
-  document.getElementById('pv-url').value = src.download_url||'';
-  document.getElementById('pv-paid').value = src.is_paid?'true':'false';
-  document.getElementById('pv-notes').value = src.notes||'';
-  document.getElementById('pv-champ').value = '';
-  document.getElementById('pv-champ-text').textContent = 'Select championship…';
-  document.getElementById('pv-champ-text').style.color = 'var(--t2)';
-  _pv_img = null;
-  pvBuildImageUpload();
-  document.getElementById('pv-err').style.display = 'none';
+function aeToggleGroupSelect(id){
+  if (_ae_group_selected.has(id)) _ae_group_selected.delete(id);
+  else _ae_group_selected.add(id);
+  document.getElementById('ae-group-count').textContent = _ae_group_selected.size;
+  aeLiveries();
 }
-function pvBuildImageUpload(){
-  var w = document.getElementById('pv-img-widget');
-  if (!w) return;
-  w.innerHTML = '<img id="pv-img-prev" class="upload-preview" alt="preview"><label class="upload-btn-label"><i class="ti ti-upload"></i> Upload preview image<input type="file" accept="image/*" style="display:none;" id="pv-img-input"></label><div class="upload-prog" id="pv-img-prog"></div>';
-  document.getElementById('pv-img-input').addEventListener('change', pvHandleImgUpload);
-}
-async function pvHandleImgUpload(){
-  var file = this.files[0]; if (!file) return;
-  if (file.size > 2*1024*1024) { aeToast('Max 2MB.','err'); return; }
-  var lbl = this.parentElement; lbl.style.opacity='.6'; lbl.style.pointerEvents='none';
-  var prog = document.getElementById('pv-img-prog'); prog.textContent = 'Compressing…';
-  try {
-    var blob = await aeCompressImg(file);
-    prog.textContent = 'Uploading…';
-    var url = await aeUploadImg(blob, 'liveries');
-    if (url) {
-      _pv_img = url;
-      var prev = document.getElementById('pv-img-prev');
-      prev.src = url; prev.classList.add('visible');
-      prog.textContent = '✓ Uploaded';
-      lbl.innerHTML = '<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="pv-img-input">';
-      document.getElementById('pv-img-input').addEventListener('change', pvHandleImgUpload);
-    } else prog.textContent = '✗ Failed.';
-  } catch(e){ prog.textContent = '✗ Error.'; }
-  lbl.style.opacity='1'; lbl.style.pointerEvents='auto';
-}
-function pvOpenChampPicker(){
-  var catId = _ae_pack_source.category_id;
-  _pv_champs_avail = catId
-    ? _champs.filter(function(c){ return c.championship_categories && c.championship_categories.some(function(cc){ return cc.category_id === catId; }); })
-    : _champs;
-  pvRenderChampGrid(_pv_champs_avail);
-  document.getElementById('pv-champ-picker').style.display = 'flex';
-  document.getElementById('pv-champ-search').value = '';
-  setTimeout(function(){ document.getElementById('pv-champ-search').focus(); }, 50);
-}
-function pvRenderChampGrid(list){
-  var g = document.getElementById('pv-champ-grid');
-  g.innerHTML = '';
-  if (!list.length) { g.innerHTML = '<div style="padding:20px;color:var(--t3);font-size:12px;">No championships for this category.</div>'; return; }
-  list.forEach(function(c){
-    var name = c.short_name || c.name;
-    var already = _ae_pack_staged.some(function(v){ return v.championship_id === c.id; }) || _ae_pack_source.championship_id === c.id;
-    var d = document.createElement('div');
-    d.className = 'pi';
-    if (already) { d.style.opacity='.35'; d.title='Already used in this pack'; }
-    else d.onclick = function(){ pvSelectChamp(c.id, name); };
-    d.innerHTML = (c.logo_url ? '<img src="'+esc(c.logo_url)+'" class="pi-logo">' : '<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>')
-      + '<div class="pi-name">'+esc(name)+(already?' (used)':'')+'</div>';
-    g.appendChild(d);
-  });
-}
-function pvFilterChampPicker(q){
-  pvRenderChampGrid(_pv_champs_avail.filter(function(c){ return (c.short_name||c.name).toLowerCase().includes(q.toLowerCase()); }));
-}
-function pvSelectChamp(id, name){
-  document.getElementById('pv-champ').value = id;
-  document.getElementById('pv-champ-text').textContent = name;
-  document.getElementById('pv-champ-text').style.color = 'var(--t1)';
-  document.getElementById('pv-champ-picker').style.display = 'none';
-}
-function pvAddVariant(){
-  var err = document.getElementById('pv-err');
-  var name = document.getElementById('pv-name').value.trim();
-  var team = document.getElementById('pv-team').value.trim();
-  var driver = document.getElementById('pv-driver').value.trim();
-  var season = document.getElementById('pv-season').value.trim();
-  var carnumber = document.getElementById('pv-carnumber').value.trim();
-  var champId = document.getElementById('pv-champ').value;
-  var url = document.getElementById('pv-url').value.trim();
-  if (!name){ err.textContent='Name is required.'; err.style.display='block'; return; }
-  if (!team){ err.textContent='Team is required.'; err.style.display='block'; return; }
-  if (!driver){ err.textContent='Driver(s) is required.'; err.style.display='block'; return; }
-  if (!season){ err.textContent='Season is required.'; err.style.display='block'; return; }
-  if (!carnumber){ err.textContent='Car number is required.'; err.style.display='block'; return; }
-  if (!champId){ err.textContent='Championship is required.'; err.style.display='block'; return; }
-  if (!url){ err.textContent='Download URL is required.'; err.style.display='block'; return; }
-  if (!_pv_img){ err.textContent='Preview image is required.'; err.style.display='block'; return; }
-  err.style.display = 'none';
-  var champName = document.getElementById('pv-champ-text').textContent;
-  _ae_pack_staged.push({
-    name:name, team:team, driver:driver, season:season, car_number:carnumber,
-    championship_id:champId, championship_name:champName,
-    download_url:url, image_url:_pv_img,
-    is_paid:document.getElementById('pv-paid').value==='true',
-    notes:document.getElementById('pv-notes').value.trim()||null,
-  });
-  pvRenderStagedList();
-  pvResetForm();
-  document.getElementById('pv-champ').focus();
-}
-function pvRenderStagedList(){
-  var wrap = document.getElementById('pv-staged-wrap');
-  var list = document.getElementById('pv-staged-list');
-  var n = _ae_pack_staged.length;
-  document.getElementById('pv-staged-count').textContent = n;
-  document.getElementById('pv-save-count').textContent = n;
-  document.getElementById('pv-save-s').textContent = n===1?'':'s';
-  document.getElementById('pv-save-btn').disabled = n===0;
-  wrap.style.display = n ? 'block' : 'none';
-  list.innerHTML = _ae_pack_staged.map(function(v,i){
-    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s1);border:1px solid var(--b1);">'
-      + '<img src="'+esc(v.image_url)+'" style="width:44px;height:28px;object-fit:cover;flex-shrink:0;">'
-      + '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:var(--t1);">'+esc(v.championship_name)+'</div><div style="font-size:11px;color:var(--t3);">#'+esc(v.car_number)+' · '+esc(v.season)+'</div></div>'
-      + '<button onclick="pvRemoveStaged('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;" title="Remove"><i class="ti ti-x"></i></button>'
-      + '</div>';
-  }).join('');
-}
-function pvRemoveStaged(i){
-  _ae_pack_staged.splice(i,1);
-  pvRenderStagedList();
-}
-async function pvSaveAll(){
-  if (!_ae_pack_staged.length) return;
-  var btn = document.getElementById('pv-save-btn');
-  btn.disabled = true; btn.innerHTML = 'Saving…';
-  var packId = _ae_pack_source.pack_id;
-  if (!packId){
-    packId = crypto.randomUUID();
-    await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:_ae_pack_source.id,p_data:{pack_id:packId}});
-  }
+async function aeConfirmGroupPack(){
+  if (_ae_group_selected.size < 2){ aeToast('Select at least 2 liveries.','err'); return; }
+  var ids = Array.from(_ae_group_selected);
+  var selected = _ae_my_liveries.filter(function(l){ return ids.indexOf(l.id) !== -1; });
+  var existingPackId = selected.find(function(l){ return l.pack_id; });
+  var packId = existingPackId ? existingPackId.pack_id : crypto.randomUUID();
   var failCount = 0;
-  for (var i=0; i<_ae_pack_staged.length; i++){
-    var v = _ae_pack_staged[i];
-    var payload = {
-      name:v.name, team:v.team, driver:v.driver, season:v.season, car_number:v.car_number,
-      category_id:_ae_pack_source.category_id, mod_id:_ae_pack_source.mod_id, championship_id:v.championship_id,
-      download_url:v.download_url, image_url:v.image_url, is_paid:v.is_paid, notes:v.notes,
-      artist_id:_ae_artist.id, author:_ae_artist.name, approved:true, pack_id:packId,
-    };
-    var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
+  for (var i=0; i<selected.length; i++){
+    if (selected[i].pack_id === packId) continue;
+    var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:selected[i].id,p_data:{pack_id:packId}});
     if (res.error) failCount++;
   }
-  pvClose();
-  await aeLiveries();
-  if (failCount) aeToast(failCount+' variant(s) failed to save.','err');
-  else aeToast('Pack variants saved!');
-}
-function pvClose(){
-  document.getElementById('pv-modal').style.display = 'none';
-  _ae_pack_source = null;
-  _ae_pack_staged = [];
+  aeToggleGroupMode();
+  if (failCount) aeToast(failCount+' failed to group.','err');
+  else aeToast(selected.length+' liveries grouped into a pack!');
 }
 
 async function aeEditLivery(id) {
@@ -987,6 +811,9 @@ async function aeEditLivery(id) {
   var l = res.data; if (!l) return;
   _ae_edit_id = id;
   _ae_edit_original_img = l.image_url || null;
+  _ae_pack_staged = [];
+  aeRenderPackList();
+  document.getElementById('ae-pack-add-btn').style.display = 'none';
   aeNav('submit', document.querySelector('.sb-link[data-v="submit"]'));
   aeSetMode('livery');
   document.getElementById('ae-submit-title').innerHTML = 'Edit <em>livery</em>';
@@ -1029,6 +856,9 @@ async function aeEditLivery(id) {
 
 function aeResetSubmitForm() {
   _ae_edit_id = null;
+  _ae_pack_staged = [];
+  aeRenderPackList();
+  document.getElementById('ae-pack-add-btn').style.display = '';
   document.getElementById('ae-dup-warning').style.display='none';
   document.getElementById('ae-submit-title').innerHTML = 'Add <em>content</em>';
   document.getElementById('ae-submit-label').textContent = _ae_mode==='livery' ? 'Publish livery' : 'Publish addon';
@@ -1113,12 +943,100 @@ async function aeAddons() {
   }).join('');
 }
 
-async function aeDoSubmit() {
+function aeValidateLiveryForm(){
   var name = document.getElementById('ae-lname').value.trim();
   var url = document.getElementById('ae-url').value.trim();
   var catId = document.getElementById('ae-cat').value;
   var modId = document.getElementById('ae-mod').value;
+  if (!name) return 'Name is required.';
+  if (!catId) return 'Category is required.';
+  if (!modId) return 'Mod is required.';
+  if (!document.getElementById('ae-team').value.trim()) return 'Team is required.';
+  if (!document.getElementById('ae-driver').value.trim()) return 'Driver(s) is required.';
+  if (!document.getElementById('ae-season').value.trim()) return 'Season is required.';
+  if (!document.getElementById('ae-carnumber').value.trim()) return 'Car number is required.';
+  if (!document.getElementById('ae-champ').value) return 'Championship is required.';
+  if (!url) return 'Download URL is required.';
+  if (!_ae_preview_img) return 'Preview image is required.';
+  return null;
+}
+function aeCurrentLiveryPayload(){
+  return {
+    name:document.getElementById('ae-lname').value.trim(),
+    team:document.getElementById('ae-team').value.trim()||null,
+    driver:document.getElementById('ae-driver').value.trim()||null,
+    season:document.getElementById('ae-season').value.trim()||null,
+    car_number:document.getElementById('ae-carnumber').value.trim()||null,
+    category_id:document.getElementById('ae-cat').value||null,
+    mod_id:document.getElementById('ae-mod').value||null,
+    championship_id:document.getElementById('ae-champ').value||null,
+    championship_name:document.getElementById('ae-champ-text').textContent,
+    download_url:document.getElementById('ae-url').value.trim(),
+    image_url:_ae_preview_img,
+    is_paid:document.getElementById('ae-paid').value==='true',
+    notes:document.getElementById('ae-notes').value.trim()||null,
+  };
+}
+function aeAddToPack(){
   var err = document.getElementById('ae-submit-err');
+  var msg = aeValidateLiveryForm();
+  if (msg){ err.textContent=msg; err.style.display='block'; return; }
+  err.style.display='none';
+  _ae_pack_staged.push(aeCurrentLiveryPayload());
+  aeRenderPackList();
+  // Clear only championship + image; keep everything else for the next variant
+  document.getElementById('ae-champ').value = '';
+  document.getElementById('ae-champ-text').textContent = 'None';
+  document.getElementById('ae-champ-text').style.color = 'var(--t2)';
+  _ae_preview_img = null;
+  aeBuildUpload();
+  aeUpdatePreview(); aeUpdateChecklist();
+  document.getElementById('ae-champ-btn').focus();
+}
+function aeRenderPackList(){
+  var wrap = document.getElementById('ae-pack-wrap');
+  var list = document.getElementById('ae-pack-list');
+  var n = _ae_pack_staged.length;
+  document.getElementById('ae-pack-count').textContent = n;
+  wrap.style.display = n ? 'block' : 'none';
+  document.getElementById('ae-submit-label').textContent = n ? ('Publish '+(n+1)+' liveries') : 'Publish livery';
+  list.innerHTML = _ae_pack_staged.map(function(v,i){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s1);border:1px solid var(--b1);">'
+      + '<img src="'+esc(v.image_url)+'" style="width:44px;height:28px;object-fit:cover;flex-shrink:0;">'
+      + '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:var(--t1);">'+esc(v.championship_name)+'</div><div style="font-size:11px;color:var(--t3);">#'+esc(v.car_number)+' · '+esc(v.season)+'</div></div>'
+      + '<button onclick="aeRemoveFromPack('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;" title="Remove"><i class="ti ti-x"></i></button>'
+      + '</div>';
+  }).join('');
+}
+function aeRemoveFromPack(i){
+  _ae_pack_staged.splice(i,1);
+  aeRenderPackList();
+}
+async function aeDoSubmit() {
+  var err = document.getElementById('ae-submit-err');
+  if (_ae_mode === 'livery' && _ae_pack_staged.length && !_ae_edit_id) {
+    var msg = aeValidateLiveryForm();
+    if (msg){ err.textContent=msg; err.style.display='block'; return; }
+    err.style.display='none';
+    var variants = _ae_pack_staged.concat([aeCurrentLiveryPayload()]);
+    var packId = crypto.randomUUID();
+    var failCount = 0;
+    for (var i=0; i<variants.length; i++){
+      var v = variants[i];
+      var payload = {name:v.name, team:v.team, driver:v.driver, season:v.season, car_number:v.car_number, category_id:v.category_id, mod_id:v.mod_id, championship_id:v.championship_id, download_url:v.download_url, image_url:v.image_url, is_paid:v.is_paid, notes:v.notes, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true, pack_id:packId};
+      var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
+      if (res.error) failCount++;
+    }
+    _ae_pack_staged = [];
+    if (failCount) aeToast(failCount+' variant(s) failed to save.','err');
+    else aeToast(variants.length+' pack liveries published!');
+    aeNav('liveries', document.querySelector('.sb-link[data-v="liveries"]'));
+    return;
+  }
+  var name = document.getElementById('ae-lname').value.trim();
+  var url = document.getElementById('ae-url').value.trim();
+  var catId = document.getElementById('ae-cat').value;
+  var modId = document.getElementById('ae-mod').value;
   if (!name){ err.textContent='Name is required.'; err.style.display='block'; return; }
   if (!catId){ err.textContent='Category is required.'; err.style.display='block'; return; }
   if (!modId){ err.textContent='Mod is required.'; err.style.display='block'; return; }
