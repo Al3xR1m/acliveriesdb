@@ -57,6 +57,10 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-dl{opacity:0;}
 .lv-edit-hint{position:absolute;top:9px;right:10px;width:22px;height:22px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;}
+.lv-pack-hint{position:absolute;top:9px;right:36px;width:22px;height:22px;background:var(--s1);border:1px solid var(--b2);color:var(--t1);display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;cursor:pointer;}
+.lv-card:hover .lv-pack-hint{opacity:1;}
+.lv-pack-hint:hover{background:var(--acc);border-color:var(--acc);}
+.lv-pack-badge{position:absolute;bottom:8px;right:8px;background:rgba(10,10,15,.75);border:1px solid rgba(242,240,234,.2);display:flex;align-items:center;gap:5px;padding:3px 7px;font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;color:var(--t2);z-index:3;text-transform:uppercase;letter-spacing:.04em;}
 .lv-card:hover .lv-edit-hint{opacity:1;}
 .lv-meta{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-meta *{color:var(--bg)!important;}
@@ -394,6 +398,57 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 </div>
 <div class="toast" id="ae-toast"></div>
 
+<!-- PACK VARIANT MODAL -->
+<div id="pv-modal" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.75);z-index:400;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)pvClose()">
+  <div style="background:var(--bg);border:1px solid var(--b1);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;">
+    <div style="padding:20px 24px;border-bottom:1px solid var(--b1);">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;">Add pack variant</div>
+      <div style="font-size:12px;color:var(--t3);margin-top:4px;">Based on <strong id="pv-source-name" style="color:var(--t2);"></strong> — everything's pre-filled except the championship and image.</div>
+    </div>
+    <div style="padding:20px 24px;" class="form-wrap">
+      <div class="field full"><label>Livery name *</label><input id="pv-name" type="text"></div>
+      <div class="field"><label>Team *</label><input id="pv-team" type="text"></div>
+      <div class="field"><label>Driver(s) *</label><input id="pv-driver" type="text"></div>
+      <div class="field"><label>Season *</label><input id="pv-season" type="text"></div>
+      <div class="field"><label>Car number *</label><input id="pv-carnumber" type="text" maxlength="4"></div>
+      <div class="field full"><label>Championship *</label>
+        <button type="button" onclick="pvOpenChampPicker()" id="pv-champ-btn" class="picker-btn">
+          <span id="pv-champ-text">Select championship…</span>
+        </button>
+        <input type="hidden" id="pv-champ">
+      </div>
+      <div class="field full"><label>Download URL *</label><input id="pv-url" type="url" placeholder="https://…"></div>
+      <div class="field full"><label>Preview image *</label><div id="pv-img-widget"></div></div>
+      <div class="field"><label>Pricing</label><select id="pv-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
+      <div class="field"><label>Notes</label><input id="pv-notes" type="text"></div>
+      <div id="pv-err" style="display:none;grid-column:1/-1;color:var(--red);font-size:12px;"></div>
+    </div>
+    <div style="padding:16px 24px;display:flex;justify-content:flex-end;">
+      <button class="btn-primary" onclick="pvAddVariant()"><i class="ti ti-plus"></i> Add to pack</button>
+    </div>
+    <div id="pv-staged-wrap" style="display:none;border-top:1px solid var(--b1);padding:16px 24px;">
+      <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Variants to add (<span id="pv-staged-count">0</span>)</div>
+      <div id="pv-staged-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+    <div style="padding:16px 24px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;">
+      <button type="button" onclick="pvClose()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit;">Cancel</button>
+      <button class="btn-primary" onclick="pvSaveAll()" id="pv-save-btn" disabled><i class="ti ti-device-floppy"></i> Save <span id="pv-save-count">0</span> variant<span id="pv-save-s">s</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="pv-champ-picker" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.7);z-index:500;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="picker-box">
+    <div class="picker-head">
+      <i class="ti ti-search" style="color:var(--t3);"></i>
+      <input id="pv-champ-search" type="text" placeholder="Search championship…" oninput="pvFilterChampPicker(this.value)" class="picker-search">
+      <button onclick="document.getElementById('pv-champ-picker').style.display='none'" class="picker-close">&times;</button>
+    </div>
+    <div id="pv-champ-grid" class="picker-grid"></div>
+  </div>
+</div>
+
+
 <div class="modal-ov" id="ae-confirm-ov">
   <div class="modal" style="max-width:380px;">
     <div class="modal-title"><i class="ti ti-alert-triangle" style="color:var(--amb);"></i> Are you sure?</div>
@@ -414,6 +469,11 @@ var _ae_brand = 'RSS';
 var _ae_mode = 'livery';
 var _ae_preview_img = null;
 var _ae_pf_avatar = null;
+var _ae_my_liveries = [];
+var _ae_pack_source = null;
+var _ae_pack_staged = [];
+var _pv_champs_avail = [];
+var _pv_img = null;
 var _ae_get_img = function(){ return null; };
 var _cats = [], _mods = [], _champs = [];
 
@@ -671,15 +731,12 @@ async function aeBoot() {
   document.getElementById('ae-gate').style.display = 'none';
   document.getElementById('ae-shell').style.display = 'flex';
 
-  var ini = _ae_artist.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
   var av = document.getElementById('ae-av');
-  if (_ae_artist.avatar_url) av.innerHTML = '<img src="'+esc(_ae_artist.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;">';
-  else av.textContent = ini;
+  av.innerHTML = '<img src="'+(_ae_artist.avatar_url?esc(_ae_artist.avatar_url):'avatar-placeholder.png')+'" style="width:100%;height:100%;object-fit:cover;">';
   document.getElementById('ae-name').textContent = _ae_artist.name;
 
   var heroAv = document.getElementById('ae-hero-av');
-  if (_ae_artist.avatar_url) heroAv.innerHTML = '<img src="'+esc(_ae_artist.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;">';
-  else heroAv.textContent = ini;
+  heroAv.innerHTML = '<img src="'+(_ae_artist.avatar_url?esc(_ae_artist.avatar_url):'avatar-placeholder.png')+'" style="width:100%;height:100%;object-fit:cover;">';
   document.getElementById('ae-hero-name').textContent = _ae_artist.name;
 
   aeHandleHash();
@@ -705,6 +762,7 @@ async function aeLiveries() {
   el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
   var res = await db.from('liveries').select('*,categories(name,color_bg),mods(name,brand),championships(short_name)').eq('artist_id',_ae_artist.id).order('created_at',{ascending:false});
   var data = res.data||[];
+  _ae_my_liveries = data;
 
   // Hero stats
   var addonsRes = await db.from('addons').select('id',{count:'exact',head:true}).eq('artist_id',_ae_artist.id);
@@ -737,6 +795,8 @@ async function aeLiveries() {
       +'<span class="badge '+(l.approved?'b-f':'b-p')+'">'+(l.approved?'Published':'Pending')+'</span>'
       +'</div>'
       +'<div class="lv-edit-hint"><i class="ti ti-pencil"></i></div>'
+      +'<div class="lv-pack-hint" onclick="event.stopPropagation();aeOpenPackModal(\''+l.id+'\')" title="Add pack variant"><i class="ti ti-copy"></i></div>'
+      +(l.pack_id?'<div class="lv-pack-badge"><i class="ti ti-stack-2"></i> Pack</div>':'')
       +'<div class="lv-dl"><i class="ti ti-heart" style="font-size:9px;"></i>'+(l.upvotes||0)+'</div>'
       +'<div class="lv-meta">'
       +'<div class="lv-champ-row"><span class="lv-champ" style="color:'+brandColor+';">'+champName+'</span>'
@@ -749,6 +809,177 @@ async function aeLiveries() {
       +(l.mods&&l.mods.name?'<div class="lv-mod">'+esc(l.mods.name)+'</div>':'')
       +'</div></div></div>';
   }).join('');
+}
+
+function aeOpenPackModal(sourceId){
+  var src = _ae_my_liveries.find(function(l){ return l.id === sourceId; });
+  if (!src) { aeToast('Could not find that livery.','err'); return; }
+  _ae_pack_source = src;
+  _ae_pack_staged = [];
+  document.getElementById('pv-source-name').textContent = src.name;
+  pvResetForm();
+  pvRenderStagedList();
+  document.getElementById('pv-modal').style.display = 'flex';
+}
+function pvResetForm(){
+  var src = _ae_pack_source;
+  document.getElementById('pv-name').value = src.name||'';
+  document.getElementById('pv-team').value = src.team||'';
+  document.getElementById('pv-driver').value = src.driver||'';
+  document.getElementById('pv-season').value = src.season||'';
+  document.getElementById('pv-carnumber').value = src.car_number||'';
+  document.getElementById('pv-url').value = src.download_url||'';
+  document.getElementById('pv-paid').value = src.is_paid?'true':'false';
+  document.getElementById('pv-notes').value = src.notes||'';
+  document.getElementById('pv-champ').value = '';
+  document.getElementById('pv-champ-text').textContent = 'Select championship…';
+  document.getElementById('pv-champ-text').style.color = 'var(--t2)';
+  _pv_img = null;
+  pvBuildImageUpload();
+  document.getElementById('pv-err').style.display = 'none';
+}
+function pvBuildImageUpload(){
+  var w = document.getElementById('pv-img-widget');
+  if (!w) return;
+  w.innerHTML = '<img id="pv-img-prev" class="upload-preview" alt="preview"><label class="upload-btn-label"><i class="ti ti-upload"></i> Upload preview image<input type="file" accept="image/*" style="display:none;" id="pv-img-input"></label><div class="upload-prog" id="pv-img-prog"></div>';
+  document.getElementById('pv-img-input').addEventListener('change', pvHandleImgUpload);
+}
+async function pvHandleImgUpload(){
+  var file = this.files[0]; if (!file) return;
+  if (file.size > 2*1024*1024) { aeToast('Max 2MB.','err'); return; }
+  var lbl = this.parentElement; lbl.style.opacity='.6'; lbl.style.pointerEvents='none';
+  var prog = document.getElementById('pv-img-prog'); prog.textContent = 'Compressing…';
+  try {
+    var blob = await aeCompressImg(file);
+    prog.textContent = 'Uploading…';
+    var url = await aeUploadImg(blob, 'liveries');
+    if (url) {
+      _pv_img = url;
+      var prev = document.getElementById('pv-img-prev');
+      prev.src = url; prev.classList.add('visible');
+      prog.textContent = '✓ Uploaded';
+      lbl.innerHTML = '<i class="ti ti-check" style="color:var(--grn);"></i> Image uploaded — click to replace<input type="file" accept="image/*" style="display:none;" id="pv-img-input">';
+      document.getElementById('pv-img-input').addEventListener('change', pvHandleImgUpload);
+    } else prog.textContent = '✗ Failed.';
+  } catch(e){ prog.textContent = '✗ Error.'; }
+  lbl.style.opacity='1'; lbl.style.pointerEvents='auto';
+}
+function pvOpenChampPicker(){
+  var catId = _ae_pack_source.category_id;
+  _pv_champs_avail = catId
+    ? _champs.filter(function(c){ return c.championship_categories && c.championship_categories.some(function(cc){ return cc.category_id === catId; }); })
+    : _champs;
+  pvRenderChampGrid(_pv_champs_avail);
+  document.getElementById('pv-champ-picker').style.display = 'flex';
+  document.getElementById('pv-champ-search').value = '';
+  setTimeout(function(){ document.getElementById('pv-champ-search').focus(); }, 50);
+}
+function pvRenderChampGrid(list){
+  var g = document.getElementById('pv-champ-grid');
+  g.innerHTML = '';
+  if (!list.length) { g.innerHTML = '<div style="padding:20px;color:var(--t3);font-size:12px;">No championships for this category.</div>'; return; }
+  list.forEach(function(c){
+    var name = c.short_name || c.name;
+    var already = _ae_pack_staged.some(function(v){ return v.championship_id === c.id; }) || _ae_pack_source.championship_id === c.id;
+    var d = document.createElement('div');
+    d.className = 'pi';
+    if (already) { d.style.opacity='.35'; d.title='Already used in this pack'; }
+    else d.onclick = function(){ pvSelectChamp(c.id, name); };
+    d.innerHTML = (c.logo_url ? '<img src="'+esc(c.logo_url)+'" class="pi-logo">' : '<div class="pi-logo-ph"><i class="ti ti-trophy"></i></div>')
+      + '<div class="pi-name">'+esc(name)+(already?' (used)':'')+'</div>';
+    g.appendChild(d);
+  });
+}
+function pvFilterChampPicker(q){
+  pvRenderChampGrid(_pv_champs_avail.filter(function(c){ return (c.short_name||c.name).toLowerCase().includes(q.toLowerCase()); }));
+}
+function pvSelectChamp(id, name){
+  document.getElementById('pv-champ').value = id;
+  document.getElementById('pv-champ-text').textContent = name;
+  document.getElementById('pv-champ-text').style.color = 'var(--t1)';
+  document.getElementById('pv-champ-picker').style.display = 'none';
+}
+function pvAddVariant(){
+  var err = document.getElementById('pv-err');
+  var name = document.getElementById('pv-name').value.trim();
+  var team = document.getElementById('pv-team').value.trim();
+  var driver = document.getElementById('pv-driver').value.trim();
+  var season = document.getElementById('pv-season').value.trim();
+  var carnumber = document.getElementById('pv-carnumber').value.trim();
+  var champId = document.getElementById('pv-champ').value;
+  var url = document.getElementById('pv-url').value.trim();
+  if (!name){ err.textContent='Name is required.'; err.style.display='block'; return; }
+  if (!team){ err.textContent='Team is required.'; err.style.display='block'; return; }
+  if (!driver){ err.textContent='Driver(s) is required.'; err.style.display='block'; return; }
+  if (!season){ err.textContent='Season is required.'; err.style.display='block'; return; }
+  if (!carnumber){ err.textContent='Car number is required.'; err.style.display='block'; return; }
+  if (!champId){ err.textContent='Championship is required.'; err.style.display='block'; return; }
+  if (!url){ err.textContent='Download URL is required.'; err.style.display='block'; return; }
+  if (!_pv_img){ err.textContent='Preview image is required.'; err.style.display='block'; return; }
+  err.style.display = 'none';
+  var champName = document.getElementById('pv-champ-text').textContent;
+  _ae_pack_staged.push({
+    name:name, team:team, driver:driver, season:season, car_number:carnumber,
+    championship_id:champId, championship_name:champName,
+    download_url:url, image_url:_pv_img,
+    is_paid:document.getElementById('pv-paid').value==='true',
+    notes:document.getElementById('pv-notes').value.trim()||null,
+  });
+  pvRenderStagedList();
+  pvResetForm();
+  document.getElementById('pv-champ').focus();
+}
+function pvRenderStagedList(){
+  var wrap = document.getElementById('pv-staged-wrap');
+  var list = document.getElementById('pv-staged-list');
+  var n = _ae_pack_staged.length;
+  document.getElementById('pv-staged-count').textContent = n;
+  document.getElementById('pv-save-count').textContent = n;
+  document.getElementById('pv-save-s').textContent = n===1?'':'s';
+  document.getElementById('pv-save-btn').disabled = n===0;
+  wrap.style.display = n ? 'block' : 'none';
+  list.innerHTML = _ae_pack_staged.map(function(v,i){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s1);border:1px solid var(--b1);">'
+      + '<img src="'+esc(v.image_url)+'" style="width:44px;height:28px;object-fit:cover;flex-shrink:0;">'
+      + '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:var(--t1);">'+esc(v.championship_name)+'</div><div style="font-size:11px;color:var(--t3);">#'+esc(v.car_number)+' · '+esc(v.season)+'</div></div>'
+      + '<button onclick="pvRemoveStaged('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;" title="Remove"><i class="ti ti-x"></i></button>'
+      + '</div>';
+  }).join('');
+}
+function pvRemoveStaged(i){
+  _ae_pack_staged.splice(i,1);
+  pvRenderStagedList();
+}
+async function pvSaveAll(){
+  if (!_ae_pack_staged.length) return;
+  var btn = document.getElementById('pv-save-btn');
+  btn.disabled = true; btn.innerHTML = 'Saving…';
+  var packId = _ae_pack_source.pack_id;
+  if (!packId){
+    packId = crypto.randomUUID();
+    await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:_ae_pack_source.id,p_data:{pack_id:packId}});
+  }
+  var failCount = 0;
+  for (var i=0; i<_ae_pack_staged.length; i++){
+    var v = _ae_pack_staged[i];
+    var payload = {
+      name:v.name, team:v.team, driver:v.driver, season:v.season, car_number:v.car_number,
+      category_id:_ae_pack_source.category_id, mod_id:_ae_pack_source.mod_id, championship_id:v.championship_id,
+      download_url:v.download_url, image_url:v.image_url, is_paid:v.is_paid, notes:v.notes,
+      artist_id:_ae_artist.id, author:_ae_artist.name, approved:true, pack_id:packId,
+    };
+    var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
+    if (res.error) failCount++;
+  }
+  pvClose();
+  await aeLiveries();
+  if (failCount) aeToast(failCount+' variant(s) failed to save.','err');
+  else aeToast('Pack variants saved!');
+}
+function pvClose(){
+  document.getElementById('pv-modal').style.display = 'none';
+  _ae_pack_source = null;
+  _ae_pack_staged = [];
 }
 
 async function aeEditLivery(id) {
@@ -928,9 +1159,8 @@ function aePfBuildAvatarUpload(){
   var w = document.getElementById('pf-avatar-widget');
   if (!w) return;
   var current = _ae_pf_avatar || '';
-  w.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--s2);flex-shrink:0;display:flex;align-items:center;justify-content:center;">'
-    + '<img id="pf-avatar-prev" src="'+current+'" style="width:100%;height:100%;object-fit:cover;'+(current?'':'display:none;')+'" alt="avatar">'
-    + '<i id="pf-avatar-ph" class="ti ti-user" style="font-size:24px;color:var(--t3);'+(current?'display:none;':'')+'"></i>'
+  w.innerHTML = '<div style="width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--s2);flex-shrink:0;">'
+    + '<img id="pf-avatar-prev" src="'+(current||'avatar-placeholder.png')+'" style="width:100%;height:100%;object-fit:cover;" alt="avatar">'
     + '</div>'
     + '<div>'
     + '<label class="upload-btn-label" style="cursor:pointer;"><i class="ti ti-upload"></i> '+(current?'Change picture':'Upload picture')+'<input type="file" accept="image/*" style="display:none;" id="pf-avatar-input"></label>'
@@ -950,8 +1180,6 @@ async function aePfHandleAvatarUpload(){
     if (url) {
       _ae_pf_avatar = url;
       document.getElementById('pf-avatar-prev').src = url;
-      document.getElementById('pf-avatar-prev').style.display = 'block';
-      document.getElementById('pf-avatar-ph').style.display = 'none';
       prog.textContent = '✓ Uploaded';
       lbl.innerHTML = '<i class="ti ti-check" style="color:var(--grn);"></i> Change picture<input type="file" accept="image/*" style="display:none;" id="pf-avatar-input">';
       document.getElementById('pf-avatar-input').addEventListener('change', aePfHandleAvatarUpload);
