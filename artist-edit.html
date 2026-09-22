@@ -208,6 +208,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
       </div>
       <div id="ae-group-bar" style="display:none;padding:0 28px 14px;align-items:center;gap:12px;">
         <span style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t2);"><span id="ae-group-count">0</span> selected</span>
+        <input id="ae-group-name" type="text" placeholder="Pack name…" style="height:32px;flex:1;max-width:260px;">
         <button class="btn-primary" style="height:32px;padding:0 14px;font-size:10px;" onclick="aeConfirmGroupPack()"><i class="ti ti-check"></i> Create pack</button>
         <button style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;font-family:inherit;" onclick="aeToggleGroupMode()">Cancel</button>
       </div>
@@ -335,6 +336,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
           </div>
           <div id="ae-pack-wrap" class="livery-only" style="display:none;border:1px solid var(--b1);padding:14px;margin-bottom:14px;">
             <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Pack variants (<span id="ae-pack-count">0</span>)</div>
+            <div class="field full" style="margin-bottom:10px;"><label>Pack name *</label><input id="ae-pack-name" type="text" placeholder="e.g. #44 Proton Competition — 2024 Season"></div>
             <div id="ae-pack-list" style="display:flex;flex-direction:column;gap:8px;"></div>
           </div>
           <button class="btn-secondary livery-only" id="ae-pack-add-btn" style="width:100%;justify-content:center;margin-bottom:10px;" onclick="aeAddToPack()"><i class="ti ti-plus"></i> Add to pack &amp; continue</button>
@@ -778,6 +780,7 @@ async function aeLiveries() {
 function aeToggleGroupMode(){
   _ae_group_mode = !_ae_group_mode;
   _ae_group_selected = new Set();
+  document.getElementById('ae-group-name').value = '';
   document.getElementById('ae-group-toggle').style.display = _ae_group_mode ? 'none' : '';
   document.getElementById('ae-group-bar').style.display = _ae_group_mode ? 'flex' : 'none';
   document.getElementById('ae-group-count').textContent = '0';
@@ -791,14 +794,15 @@ function aeToggleGroupSelect(id){
 }
 async function aeConfirmGroupPack(){
   if (_ae_group_selected.size < 2){ aeToast('Select at least 2 liveries.','err'); return; }
+  var packName = document.getElementById('ae-group-name').value.trim();
+  if (!packName){ aeToast('Pack name is required.','err'); return; }
   var ids = Array.from(_ae_group_selected);
   var selected = _ae_my_liveries.filter(function(l){ return ids.indexOf(l.id) !== -1; });
   var existingPackId = selected.find(function(l){ return l.pack_id; });
   var packId = existingPackId ? existingPackId.pack_id : crypto.randomUUID();
   var failCount = 0;
   for (var i=0; i<selected.length; i++){
-    if (selected[i].pack_id === packId) continue;
-    var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:selected[i].id,p_data:{pack_id:packId}});
+    var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:selected[i].id,p_data:{pack_id:packId,pack_name:packName}});
     if (res.error) failCount++;
   }
   aeToggleGroupMode();
@@ -858,6 +862,7 @@ function aeResetSubmitForm() {
   _ae_edit_id = null;
   _ae_pack_staged = [];
   aeRenderPackList();
+  document.getElementById('ae-pack-name').value = '';
   document.getElementById('ae-pack-add-btn').style.display = '';
   document.getElementById('ae-dup-warning').style.display='none';
   document.getElementById('ae-submit-title').innerHTML = 'Add <em>content</em>';
@@ -1015,6 +1020,8 @@ function aeRemoveFromPack(i){
 async function aeDoSubmit() {
   var err = document.getElementById('ae-submit-err');
   if (_ae_mode === 'livery' && _ae_pack_staged.length && !_ae_edit_id) {
+    var packName = document.getElementById('ae-pack-name').value.trim();
+    if (!packName){ err.textContent='Pack name is required.'; err.style.display='block'; return; }
     var msg = aeValidateLiveryForm();
     if (msg){ err.textContent=msg; err.style.display='block'; return; }
     err.style.display='none';
@@ -1023,7 +1030,7 @@ async function aeDoSubmit() {
     var failCount = 0;
     for (var i=0; i<variants.length; i++){
       var v = variants[i];
-      var payload = {name:v.name, team:v.team, driver:v.driver, season:v.season, car_number:v.car_number, category_id:v.category_id, mod_id:v.mod_id, championship_id:v.championship_id, download_url:v.download_url, image_url:v.image_url, is_paid:v.is_paid, notes:v.notes, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true, pack_id:packId};
+      var payload = {name:v.name, team:v.team, driver:v.driver, season:v.season, car_number:v.car_number, category_id:v.category_id, mod_id:v.mod_id, championship_id:v.championship_id, download_url:v.download_url, image_url:v.image_url, is_paid:v.is_paid, notes:v.notes, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true, pack_id:packId, pack_name:packName};
       var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
       if (res.error) failCount++;
     }
