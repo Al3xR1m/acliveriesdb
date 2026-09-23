@@ -860,7 +860,7 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
       <p class="page-head-sub">Same livery, run across multiple championships — grouped together instead of scattered across the archive.</p>
     </div>
     <div id="packs-content" style="padding:0 28px 40px;"></div>
-    <style>#packs-content .lv-grid{grid-template-columns:repeat(auto-fit,minmax(280px,320px));margin:0;background:none;border:none;border-radius:0;gap:16px;}</style>
+    <style>#packs-content .lv-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));margin:0;background:none;border:none;border-radius:0;gap:16px;}</style>
   </div>
 
   <!-- ABOUT -->
@@ -2429,7 +2429,7 @@ async function loadPacks(){
     idx++;
     document.querySelectorAll('.pack-slides').forEach(wrap=>{
       const slides=wrap.querySelectorAll('.pack-slide');
-      const dots=wrap.querySelectorAll('.pack-dot');
+      const dots=wrap.parentElement.querySelectorAll('.pack-dot');
       if(!slides.length)return;
       const cur=idx%slides.length;
       slides.forEach((s,i)=>s.classList.toggle('on',i===cur));
