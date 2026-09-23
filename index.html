@@ -226,16 +226,20 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-season{font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;color:var(--t1);flex-shrink:0;margin-left:6px;}
 .lv-card-pack{color:var(--acc);font-size:12px;cursor:pointer;transition:opacity .12s;background:rgba(255,61,129,.15);border:1px solid rgba(255,61,129,.4);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .lv-card-pack:hover{opacity:.75;}
-.packs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
-.pack-card{background:var(--s1);border:1px solid var(--b1);cursor:pointer;transition:border-color .15s;overflow:hidden;}
-.pack-card:hover{border-color:var(--acc);}
+.packs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;}
+.pack-card{background:var(--s1);border:1px solid var(--b1);cursor:pointer;transition:border-color .18s,transform .18s;overflow:hidden;}
+.pack-card:hover{transform:translateY(-2px);border-color:var(--acc);}
 .pack-slides{aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--s2);}
+.pack-icon-badge{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(10,10,15,.75);border:1px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--acc);font-size:15px;z-index:2;}
+.pack-info{padding:18px 20px;}
+.pack-name{font-family:'Archivo Black',sans-serif;font-weight:400;font-size:17px;letter-spacing:0;color:var(--t1);margin-bottom:6px;line-height:1.2;}
+.pack-meta{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
 .pack-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;}
 .pack-slide img{width:100%;height:100%;object-fit:cover;}
 .pack-slide.on{opacity:1;}
 .pack-dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:4px;z-index:2;}
-.pack-dot{width:5px;height:5px;border-radius:50%;background:rgba(242,240,234,.35);transition:all .2s;}
-.pack-dot.on{background:var(--acc);width:14px;border-radius:3px;}
+.pack-dot{width:6px;height:6px;border-radius:50%;background:rgba(242,240,234,.4);transition:all .2s;}
+.pack-dot.on{background:var(--acc);width:16px;border-radius:3px;}
 .pack-icon-badge{position:absolute;top:8px;right:8px;width:24px;height:24px;background:rgba(255,61,129,.15);border:1px solid rgba(255,61,129,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--acc);font-size:12px;z-index:2;}
 .pack-info{padding:12px 14px;}
 .pack-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;color:var(--t1);margin-bottom:4px;}
@@ -656,10 +660,10 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
   <div class="sb-nav">
     <button class="sb-link" id="nl-home" onclick="nav('home')"><i class="ti ti-home sb-icon"></i> Home</button>
     <button class="sb-link on" id="nl-liveries" onclick="nav('liveries')"><i class="ti ti-layout-grid sb-icon"></i> Liveries <span class="sb-badge" id="sb-lc">—</span></button>
+    <button class="sb-link" id="nl-packs" onclick="nav('packs')"><i class="ti ti-stack-2 sb-icon"></i> Packs</button>
     <button class="sb-link" id="nl-mods" onclick="nav('mods')"><i class="ti ti-package sb-icon"></i> Mods <span class="sb-badge" id="sb-mc">—</span></button>
     <button class="sb-link" id="nl-artists" onclick="nav('artists')"><i class="ti ti-user-star sb-icon"></i> Artists <span class="sb-badge" id="sb-ac">—</span></button>
     <button class="sb-link" id="nl-addons" onclick="nav('addons')"><i class="ti ti-puzzle sb-icon"></i> Addons <span class="sb-badge" id="sb-addc">—</span></button>
-    <button class="sb-link" id="nl-packs" onclick="nav('packs')"><i class="ti ti-stack-2 sb-icon"></i> Packs</button>
     <button class="sb-link" id="nl-about" onclick="nav('about')"><i class="ti ti-info-circle sb-icon"></i> About</button>
   </div>
   <div class="sb-stats">
