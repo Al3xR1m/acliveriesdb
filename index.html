@@ -226,24 +226,15 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-season{font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;color:var(--t1);flex-shrink:0;margin-left:6px;}
 .lv-card-pack{color:var(--acc);font-size:12px;cursor:pointer;transition:opacity .12s;background:rgba(255,61,129,.15);border:1px solid rgba(255,61,129,.4);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .lv-card-pack:hover{opacity:.75;}
-.packs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;}
-.pack-card{background:var(--s1);border:1px solid var(--b1);cursor:pointer;transition:border-color .18s,transform .18s;overflow:hidden;}
-.pack-card:hover{transform:translateY(-2px);border-color:var(--acc);}
-.pack-slides{aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--s2);}
-.pack-icon-badge{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(10,10,15,.75);border:1px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--acc);font-size:15px;z-index:2;}
-.pack-info{padding:18px 20px;}
-.pack-name{font-family:'Archivo Black',sans-serif;font-weight:400;font-size:17px;letter-spacing:0;color:var(--t1);margin-bottom:6px;line-height:1.2;}
-.pack-meta{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;}
+.packs-grid{display:none;}
+.pack-slides{position:absolute;inset:0;}
 .pack-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;}
 .pack-slide img{width:100%;height:100%;object-fit:cover;}
 .pack-slide.on{opacity:1;}
-.pack-dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:4px;z-index:2;}
+.pack-dots{position:absolute;bottom:10px;left:12px;display:flex;gap:4px;z-index:3;}
 .pack-dot{width:6px;height:6px;border-radius:50%;background:rgba(242,240,234,.4);transition:all .2s;}
 .pack-dot.on{background:var(--acc);width:16px;border-radius:3px;}
-.pack-icon-badge{position:absolute;top:8px;right:8px;width:24px;height:24px;background:rgba(255,61,129,.15);border:1px solid rgba(255,61,129,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--acc);font-size:12px;z-index:2;}
-.pack-info{padding:12px 14px;}
-.pack-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;color:var(--t1);margin-bottom:4px;}
-.pack-meta{font-family:'Azeret Mono',monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.pack-icon-badge{position:absolute;top:11px;right:11px;width:26px;height:26px;background:rgba(10,10,15,.75);border:1px solid var(--acc);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--acc);font-size:12px;z-index:3;}
 .lv-card-name{font-family:'Archivo',sans-serif;font-size:19px;font-weight:700;letter-spacing:0;color:var(--t1);line-height:1.15;}
 .lv-card-driver{font-family:'Archivo',sans-serif;font-size:12px;color:var(--t2);margin-top:5px;}
 .lv-card-sub{font-family:'Archivo',sans-serif;font-size:12px;color:var(--t2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -2386,7 +2377,7 @@ function openAddon(id){_prevView=document.querySelector('.view.on')?.id?.replace
 let _packSlideTimer=null;
 async function loadPacks(){
   const el=document.getElementById('packs-content');
-  el.innerHTML='<div class="packs-grid"><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div></div>';
+  el.innerHTML='<div class="lv-grid"><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div></div>';
   clearInterval(_packSlideTimer);
   const {data,error}=await db.from('liveries').select('id,name,pack_id,pack_name,image_url,upvotes,mods(brand)').eq('approved',true).not('pack_id','is',null);
   if(error) console.error('loadPacks failed:',error);
@@ -2405,19 +2396,33 @@ async function loadPacks(){
     el.innerHTML='<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-stack-2" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No packs yet.</div>';
     return;
   }
-  el.innerHTML=`<div class="packs-grid">${packs.map((p,pi)=>`
-    <div class="pack-card" onclick="openLivery('${p.mainId}')">
-      <div class="pack-slides" data-pack="${pi}">
-        ${p.liveries.map((l,i)=>`<div class="pack-slide${i===0?' on':''}">${l.image_url?`<img src="${esc(l.image_url)}" alt="${esc(l.name)}">`:''}</div>`).join('')}
+  el.innerHTML=`<div class="lv-grid">${packs.map((p,pi)=>{
+    const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
+    const brandColor=p.brand&&BRC[p.brand]?BRC[p.brand]:'var(--acc)';
+    const brandTag=p.brand?`<span class="bt bt-${p.brand.toLowerCase()}">${p.brand}</span>`:'';
+    const team=p.liveries[0]?.team||'';
+    const modName=p.liveries[0]?.mods?.name||'';
+    return `<div class="lv-card${p.brand?' '+p.brand.toLowerCase():''}" onclick="openLivery('${p.mainId}')">
+      <div class="lv-card-thumb">
+        <div class="pack-slides" data-pack="${pi}">
+          ${p.liveries.map((l,i)=>`<div class="pack-slide${i===0?' on':''}">${l.image_url?`<img src="${esc(l.image_url)}" alt="${esc(l.name)}" loading="lazy">`:''}</div>`).join('')}
+        </div>
+        <div class="lv-card-ov"></div>
+        ${brandTag?`<div class="lv-card-brand">${brandTag}</div>`:''}
         <div class="pack-icon-badge"><i class="ti ti-stack-2"></i></div>
         ${p.liveries.length>1?`<div class="pack-dots">${p.liveries.map((l,i)=>`<span class="pack-dot${i===0?' on':''}"></span>`).join('')}</div>`:''}
+        <div class="lv-card-meta">
+          <div class="lv-card-champ-row">
+            <span class="lv-card-champ" style="color:${brandColor};">Pack</span>
+            <span class="lv-card-season">${p.liveries.length} variants</span>
+          </div>
+          <div class="lv-card-name">${esc(p.name)}</div>
+          ${team?`<div class="lv-card-driver">${esc(team)}</div>`:''}
+          ${modName?`<div class="lv-card-sub">${esc(modName)}</div>`:''}
+        </div>
       </div>
-      <div class="pack-info">
-        <div class="pack-name">${esc(p.name)}</div>
-        <div class="pack-meta">${p.liveries.length} variant${p.liveries.length>1?'s':''}${p.brand?` · ${esc(p.brand)}`:''}</div>
-      </div>
-    </div>
-  `).join('')}</div>`;
+    </div>`;
+  }).join('')}</div>`;
   let idx=0;
   _packSlideTimer=setInterval(()=>{
     idx++;
