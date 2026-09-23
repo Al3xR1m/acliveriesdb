@@ -241,12 +241,12 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 
     <!-- PACK PICKER MODAL -->
     <div id="ae-pack-picker" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.75);z-index:400;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)aeClosePackPicker()">
-      <div style="background:var(--bg);border:1px solid var(--b1);width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;">
+      <div style="background:var(--bg);border:1px solid var(--b1);width:100%;max-width:680px;max-height:80vh;display:flex;flex-direction:column;">
         <div style="padding:18px 22px;border-bottom:1px solid var(--b1);">
           <div style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;" id="ae-pp-title">Select liveries</div>
           <input id="ae-pp-name" type="text" placeholder="Pack name…" style="margin-top:10px;width:100%;">
         </div>
-        <div id="ae-pp-list" style="overflow-y:auto;flex:1;padding:10px 12px;"></div>
+        <div id="ae-pp-list" class="picker-grid" style="overflow-y:auto;flex:1;padding:14px;"></div>
         <div style="padding:14px 22px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;">
           <button onclick="aeClosePackPicker()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit;">Cancel</button>
           <button class="btn-primary" onclick="aeConfirmPackPicker()"><i class="ti ti-check"></i> Confirm (<span id="ae-pp-selcount">0</span>)</button>
@@ -900,24 +900,31 @@ function aeOpenPackPicker(packId){
   document.getElementById('ae-pp-name').style.display = isNew ? '' : 'none';
   document.getElementById('ae-pp-name').value = '';
   var available = _ae_my_liveries.filter(function(l){ return !l.pack_id; });
-  var list = document.getElementById('ae-pp-list');
-  if (!available.length){
-    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--t3);font-size:12px;">No ungrouped liveries available.</div>';
-  } else {
-    list.innerHTML = available.map(function(l){
-      return '<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'var(--s1)\'" onmouseout="this.style.background=\'\'">'
-        + '<input type="checkbox" value="'+l.id+'" onchange="aePPToggle(\''+l.id+'\',this.checked)" style="width:15px;height:15px;accent-color:var(--acc);flex-shrink:0;">'
-        + '<div style="width:44px;height:28px;flex-shrink:0;background:var(--s2);overflow:hidden;">' + (l.image_url?'<img src="'+esc(l.image_url)+'" style="width:100%;height:100%;object-fit:cover;">':'') + '</div>'
-        + '<div style="font-size:12px;color:var(--t1);">' + esc(l.name) + '</div>'
-        + '</label>';
-    }).join('');
-  }
+  window._ae_pp_available = available;
+  aeRenderPPGrid();
   document.getElementById('ae-pp-selcount').textContent = '0';
   document.getElementById('ae-pack-picker').style.display = 'flex';
 }
-function aePPToggle(id, checked){
-  if (checked) _ae_pp_selected.add(id); else _ae_pp_selected.delete(id);
+function aeRenderPPGrid(){
+  var list = document.getElementById('ae-pp-list');
+  var available = window._ae_pp_available||[];
+  if (!available.length){
+    list.innerHTML = '<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t3);font-size:12px;">No ungrouped liveries available.</div>';
+    return;
+  }
+  list.innerHTML = available.map(function(l){
+    var on = _ae_pp_selected.has(l.id);
+    return '<div class="pi'+(on?' selected':'')+'" onclick="aePPToggle(\''+l.id+'\')" style="position:relative;">'
+      + (on?'<div style="position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;z-index:2;"><i class="ti ti-check" style="font-size:11px;color:#fff;"></i></div>':'')
+      + (l.image_url?'<img src="'+esc(l.image_url)+'" class="pi-logo" style="object-fit:cover;">':'<div class="pi-logo-ph"><i class="ti ti-photo"></i></div>')
+      + '<div class="pi-name">' + esc(l.name) + '</div>'
+      + '</div>';
+  }).join('');
+}
+function aePPToggle(id){
+  if (_ae_pp_selected.has(id)) _ae_pp_selected.delete(id); else _ae_pp_selected.add(id);
   document.getElementById('ae-pp-selcount').textContent = _ae_pp_selected.size;
+  aeRenderPPGrid();
 }
 function aeClosePackPicker(){
   document.getElementById('ae-pack-picker').style.display = 'none';
