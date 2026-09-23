@@ -244,7 +244,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
       <div style="background:var(--bg);border:1px solid var(--b1);width:100%;max-width:680px;max-height:80vh;display:flex;flex-direction:column;">
         <div style="padding:18px 22px;border-bottom:1px solid var(--b1);">
           <div style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;" id="ae-pp-title">Select liveries</div>
-          <input id="ae-pp-name" type="text" placeholder="Pack name…" style="margin-top:10px;width:100%;">
+          <input id="ae-pp-name" type="text" placeholder="Pack name…" style="margin-top:10px;width:100%;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;box-sizing:border-box;">
         </div>
         <div id="ae-pp-list" class="picker-grid" style="overflow-y:auto;flex:1;padding:14px;"></div>
         <div style="padding:14px 22px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;">
@@ -817,7 +817,11 @@ var _ae_pm_pack_id = null;
 var _ae_pp_target_pack_id = null;
 var _ae_pp_selected = new Set();
 
-function aePacks(){
+async function aePacks(){
+  var el = document.getElementById('ae-packs-list');
+  el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
+  var res = await db.from('liveries').select('*,categories(name,color_bg),mods(name,brand),championships(short_name)').eq('artist_id',_ae_artist.id).order('created_at',{ascending:false});
+  _ae_my_liveries = res.data||[];
   var groups = {};
   _ae_my_liveries.forEach(function(l){
     if (!l.pack_id) return;
@@ -825,7 +829,6 @@ function aePacks(){
     groups[l.pack_id].liveries.push(l);
   });
   var packs = Object.values(groups);
-  var el = document.getElementById('ae-packs-list');
   if (!packs.length){
     el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);"><i class="ti ti-stack-2" style="font-size:28px;display:block;margin-bottom:10px;color:var(--t3);"></i>No packs yet. Group liveries that share the same car across championships.</div>';
     return;
