@@ -238,46 +238,42 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-name{font-family:'Archivo',sans-serif;font-size:19px;font-weight:700;letter-spacing:0;color:var(--t1);line-height:1.15;}
 .lv-card-driver{font-family:'Archivo',sans-serif;font-size:12px;color:var(--t2);margin-top:5px;}
 .lv-card-sub{font-family:'Archivo',sans-serif;font-size:12px;color:var(--t2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-/* FILTER DRAWER */
-.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:none;}
-/* Cascade steps */
-.dr-step{border-bottom:0.5px solid var(--b1);transition:opacity .2s;}
-.dr-step.locked{opacity:.4;pointer-events:none;}
-.dr-step.locked .dr-step-body{display:none;}
-.dr-step-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;}
-.dr-step-num{width:20px;height:20px;background:var(--acc);color:#fff;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.dr-step.locked .dr-step-num{background:var(--t3);}
-.dr-step.done .dr-step-num{background:var(--grn);}
-.dr-step-title{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:-.2px;}
-.dr-step-hint{font-size:11px;color:var(--t2);margin-left:auto;}
-.dr-step-body{padding:0 8px 12px;}
-/* Breadcrumb */
-.dr-crumb{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:var(--s2);border:0.5px solid var(--b1);font-size:11px;font-weight:600;color:var(--t1);cursor:pointer;}
-.dr-crumb:hover{border-color:var(--b2);}
-.dr-crumb-sep{color:var(--t3);font-size:10px;}
-.drawer-overlay.open{display:block;}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--s1);border-left:0.5px solid var(--b2);z-index:151;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;}
-.drawer.open{transform:translateX(0);}
-.drawer-head{padding:18px 20px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.drawer-title{font-family:'Archivo Black',sans-serif;font-size:15px;font-weight:400;text-transform:uppercase;letter-spacing:0;color:var(--t1);}
-.drawer-close{width:28px;height:28px;border-radius:7px;border:0.5px solid var(--b1);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:16px;transition:all .12s;}
-.drawer-close:hover{background:var(--s2);color:var(--t1);}
-.drawer-body{flex:1;overflow-y:auto;padding:0;}
-.drawer-section{padding:14px 20px;border-bottom:0.5px solid var(--b1);}
-.drawer-section-title{font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
-.drawer-items{display:flex;flex-direction:column;gap:2px;}
-.di{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;border:none;background:none;font-family:inherit;width:100%;text-align:left;}
-.di:hover{background:var(--s2);color:var(--t1);}
-.di.on{background:var(--acc2);color:var(--acc);}
-.di.on .di-count{color:var(--acc);opacity:.7;}
-.di .di-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.di .di-count{margin-left:auto;font-size:10px;font-weight:700;color:var(--t3);}
-.di .di-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;}
-.drawer-foot{padding:14px 20px;border-top:0.5px solid var(--b1);display:flex;gap:8px;flex-shrink:0;}
-.drawer-reset{flex:1;height:34px;background:transparent;border:0.5px solid var(--b1);border-radius:8px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;font-family:inherit;transition:all .12s;}
-.drawer-reset:hover{color:var(--t1);border-color:var(--b2);}
-.drawer-apply{flex:2;height:34px;background:var(--acc);border:none;border-radius:8px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;transition:opacity .15s;}
-.drawer-apply:hover{opacity:.88;}
+/* FILTER MODAL */
+.fm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:150;display:none;align-items:center;justify-content:center;padding:20px;}
+.fm-overlay.open{display:flex;}
+.fm-modal{width:100%;max-width:600px;max-height:85vh;background:var(--s1);border:1px solid var(--b2);display:flex;flex-direction:column;}
+.fm-head{padding:20px 24px;border-bottom:0.5px solid var(--b1);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.fm-title{font-family:'Archivo Black',sans-serif;font-size:18px;font-weight:400;text-transform:uppercase;color:var(--t1);}
+.fm-sub{font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);margin-top:4px;}
+.fm-close{width:28px;height:28px;border:0.5px solid var(--b1);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:14px;transition:all .12s;flex-shrink:0;}
+.fm-close:hover{background:var(--s2);color:var(--t1);}
+.fm-search-wrap{display:flex;align-items:center;gap:9px;padding:0 24px;margin:16px 0 0;height:38px;border:0.5px solid var(--b1);margin-left:24px;margin-right:24px;background:var(--s2);}
+.fm-search-wrap input{flex:1;background:transparent;border:none;outline:none;color:var(--t1);font-family:'Azeret Mono',monospace;font-size:12px;height:100%;}
+.fm-featured-toggle{background:transparent;border:none;cursor:pointer;color:var(--t3);padding:0;display:flex;align-items:center;transition:color .12s;}
+.fm-featured-toggle:hover{color:var(--amb);}
+.fm-featured-toggle.on{color:var(--amb);}
+.fm-tabs{display:flex;gap:2px;padding:14px 24px 0;overflow-x:auto;flex-shrink:0;}
+.fm-tab{padding:8px 12px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:color .12s;}
+.fm-tab:hover{color:var(--t1);}
+.fm-tab.on{color:var(--acc);border-color:var(--acc);}
+.fm-body{padding:16px 24px 8px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;flex:1;min-height:160px;}
+.fm-body.scrollable{max-height:280px;flex:none;}
+.fm-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border:0.5px solid var(--b1);cursor:pointer;font-size:13px;color:var(--t2);transition:all .12s;background:none;font-family:inherit;width:100%;text-align:left;}
+.fm-chip:hover{border-color:var(--b2);color:var(--t1);}
+.fm-chip.on{background:var(--acc2);border-color:var(--acc);color:var(--acc);font-weight:700;}
+.fm-chip-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fm-chip-pub{font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;flex-shrink:0;}
+.fm-chip-n{font-family:'Azeret Mono',monospace;font-size:10px;background:var(--s2);padding:2px 6px;color:var(--t3);flex-shrink:0;}
+.fm-chip.on .fm-chip-n{background:rgba(255,61,129,.25);color:var(--acc);}
+.fm-more{padding:8px 4px;font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);cursor:pointer;text-decoration:underline;background:none;border:none;text-align:left;}
+.fm-empty{padding:30px;text-align:center;color:var(--t3);font-size:12px;}
+.fm-active-row{padding:0 24px 14px;display:flex;flex-wrap:wrap;gap:6px;flex-shrink:0;}
+.fm-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;background:var(--acc2);border:1px solid var(--acc);font-size:11px;font-weight:700;color:var(--acc);cursor:pointer;}
+.fm-foot{padding:16px 24px;border-top:0.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.fm-clear{background:none;border:none;font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);cursor:pointer;text-transform:uppercase;letter-spacing:.04em;}
+.fm-clear:hover{color:var(--t1);}
+.fm-done{height:40px;padding:0 22px;background:var(--acc);border:none;color:#fff;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:opacity .15s;}
+.fm-done:hover{opacity:.88;}
 /* Filter chips */
 .filter-chips{display:flex;gap:5px;flex-wrap:wrap;padding:8px 20px;border-bottom:0.5px solid var(--b1);}
 .fchip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-family:'Azeret Mono',monospace;background:var(--acc2);border:1px solid var(--acc);font-size:10px;font-weight:700;color:var(--acc);cursor:pointer;transition:all .12s;}
@@ -2771,161 +2767,107 @@ window.addEventListener('hashchange',handleHash);
 window.addEventListener('popstate',handleHash);
 
 // ── BOOT ──
-// ── DRAWER ──────────────────────────────────
-// ── FILTER DRAWER (cascade) ────────────────────────────────
-var _drawerBuilt=false;
-
-function buildDrawerOnce(){
-  if(_drawerBuilt)return;
-  _drawerBuilt=true;
-  rebuildCatStep();
-  initDrawerListeners();
-}
-
-function updateDrawerCounts(){
-  ['RSS','VRC','URD'].forEach(b=>{
-    const el=document.getElementById('dr-cnt-'+b);
-    if(el)el.textContent=_champLivCounts.brand[b]||'';
-  });
-  _cats.forEach(c=>{
-    const el=document.getElementById('drc-'+c.id);
-    if(el)el.textContent=_champLivCounts.cat[c.id]||'';
-  });
-}
-
-function rebuildCatStep(){
-  const catEl=document.getElementById('dr-categories');
-  const visibleCatIds=_activeBrand
-    ? new Set(_mods.filter(m=>m.brand===_activeBrand).map(m=>m.category_id))
-    : null;
-  const vis=visibleCatIds ? _cats.filter(c=>visibleCatIds.has(c.id)) : _cats;
-  if(!vis.length){
-    catEl.innerHTML='<div style="padding:8px 9px;font-size:12px;color:var(--t3);">No categories for this publisher.</div>';
-    return;
-  }
-  catEl.innerHTML=
-    '<button class="di on" data-step="2" data-type="cat" data-val="all" data-label="All categories"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All categories</span></button>'
-    +vis.map(c=>`<button class="di" data-step="2" data-type="cat" data-val="${c.id}" data-label="${esc(c.name)}"><span class="di-dot" style="background:${c.color_text||'#888'};"></span><span style="flex:1;">${esc(c.name)}</span><span class="di-count" id="drc-${c.id}"></span></button>`).join('');
-  updateDrawerCounts();
-}
-
-function rebuildChampStep(){
-  // Only show champs matching current cat (and brand via mods)
-  const champEl=document.getElementById('dr-championships');
-  const vis=_champs.filter(ch=>{
-    if(_cat==='all')return true;
-    return ch.championship_categories?.some(cc=>cc.category_id===_cat);
-  });
-  if(!vis.length){
-    champEl.innerHTML='<div style="padding:8px 9px;font-size:12px;color:var(--t3);">No championships for this category.</div>';
-    return;
-  }
-  champEl.innerHTML=
-    '<button class="di on" data-step="3" data-type="champ" data-val="all" data-label="All championships"><span class="di-dot" style="background:var(--t3);"></span><span style="flex:1;">All championships</span></button>'
-    +vis.map(c=>`<button class="di" data-step="3" data-type="champ" data-val="${c.id}" data-label="${esc(c.short_name||c.name)}"><span class="di-dot" style="background:var(--acc);"></span><span style="flex:1;">${esc(c.short_name||c.name)}</span><span class="di-count">${_champLivCounts.champ[c.id]||''}</span></button>`).join('');
-}
-
-function syncDrawerActive(){
-  // Brand
-  document.querySelectorAll('.di[data-type="brand"]').forEach(b=>b.classList.toggle('on',b.dataset.val===(_activeBrand||'all')));
-  // Cat
-  document.querySelectorAll('.di[data-type="cat"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_cat));
-  // Champ
-  document.querySelectorAll('.di[data-type="champ"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_champ));
-  // Price
-  document.querySelectorAll('.di[data-type="price"]').forEach(b=>{
-    const v=b.dataset.val;
-    b.classList.toggle('on',(v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true));
-  });
-  // Artist
-  document.querySelectorAll('.di[data-type="artist"]').forEach(b=>b.classList.toggle('on',b.dataset.val===_artistFilter));
-  // Featured
-  document.querySelectorAll('.di[data-type="featured"]').forEach(b=>b.classList.toggle('on',_featuredOnly));
-  // Step lock/unlock
-  const step2=document.getElementById('dr-step-2');
-  const step3=document.getElementById('dr-step-3');
-  // Step 2 always unlocked (brand doesn't gate category)
-  step2?.classList.remove('locked');
-  document.getElementById('dr-step-2-hint').textContent=_activeBrand&&_activeBrand!=='all'?_activeBrand:'All publishers';
-  // Step 3 unlocks after cat chosen
-  if(_cat!=='all'){
-    step3?.classList.remove('locked');
-    const catName=_cats.find(c=>c.id===_cat)?.name||'';
-    document.getElementById('dr-step-3-hint').textContent=catName;
-    // Mark step 2 done
-    step2?.classList.add('done');
-  } else {
-    step3?.classList.add('locked');
-    step3?.classList.remove('done');
-    document.getElementById('dr-step-3-hint').textContent='Choose category first';
-    step2?.classList.remove('done');
-  }
-  if(_champ!=='all') step3?.classList.add('done');
-  else step3?.classList.remove('done');
-  updateBreadcrumb();
-}
-
-function updateBreadcrumb(){
-  const crumbs=[];
-  if(_activeBrand) crumbs.push({label:_activeBrand,type:'brand'});
-  if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)crumbs.push({label:c.name,type:'cat'});}
-  if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)crumbs.push({label:c.short_name||c.name,type:'champ'});}
-  if(_price===false)crumbs.push({label:'Free',type:'price'});
-  if(_price===true)crumbs.push({label:'Paid',type:'price'});
-  if(_artistFilter==='confirmed')crumbs.push({label:'✓ Confirmed',type:'artist'});
-  if(_artistFilter==='community')crumbs.push({label:'Community',type:'artist'});
-  if(_featuredOnly)crumbs.push({label:'★ Featured',type:'featured'});
-  const el=document.getElementById('dr-breadcrumb');
-  if(!el)return;
-  if(!crumbs.length){el.innerHTML='<span style="font-size:11px;color:var(--t3);">No filters active</span>';return;}
-  el.innerHTML=crumbs.map((c,i)=>`${i>0?'<span class="dr-crumb-sep">›</span>':''}<span class="dr-crumb" onclick="removeChip('${c.type}')">${c.label} <span style="opacity:.5;margin-left:2px;">×</span></span>`).join('');
-}
+// ── FILTER MODAL ────────────────────────────────
+var _fmTab='champ';
+var _fmSearch='';
+var _fmExpanded={champ:false,cat:false};
+const TOP_N=6;
 
 function openDrawer(){
-  buildDrawerOnce();
-  rebuildChampStep();
-  syncDrawerActive();
-  document.getElementById('filter-drawer').classList.add('open');
-  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('filter-modal-overlay').classList.add('open');
+  renderFilterBody();
+  renderActiveRow();
+  updateFeaturedToggleUI();
 }
-
 function closeDrawer(){
-  document.getElementById('filter-drawer').classList.remove('open');
-  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('filter-modal-overlay').classList.remove('open');
+}
+function switchFilterTab(tab){
+  _fmTab=tab;_fmSearch='';
+  document.getElementById('fm-search').value='';
+  document.querySelectorAll('.fm-tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===tab));
+  renderFilterBody();
+}
+function onFilterSearchInput(v){
+  _fmSearch=v.toLowerCase();
+  renderFilterBody();
+}
+function toggleFeaturedFilter(){
+  _featuredOnly=!_featuredOnly;_page=1;
+  updateFeaturedToggleUI();
+  updateFilterBadge();renderActiveRow();loadLiveries();
+}
+function updateFeaturedToggleUI(){
+  document.getElementById('fm-featured-toggle')?.classList.toggle('on',_featuredOnly);
 }
 
-function initDrawerListeners(){
-  const drawer=document.getElementById('filter-drawer');
-  if(!drawer)return;
-  drawer.addEventListener('click',e=>{
-    const btn=e.target.closest('.di[data-type]');
-    if(!btn)return;
-    const type=btn.dataset.type, val=btn.dataset.val;
-    if(type==='brand'){
-      _activeBrand=val==='all'?null:val;
-      // Reset downstream
-      _cat='all';_champ='all';_page=1;
-      rebuildCatStep();
-      rebuildChampStep();
-    } else if(type==='cat'){
-      _cat=val;
-      // Reset downstream
-      _champ='all';_page=1;
-      rebuildChampStep();
-    } else if(type==='champ'){
-      _champ=val;_page=1;
-    } else if(type==='price'){
-      _price=val==='free'?false:val==='paid'?true:null;_page=1;
-    } else if(type==='artist'){
-      _artistFilter=val;_page=1;
-    } else if(type==='featured'){
-      _featuredOnly=!_featuredOnly;_page=1;
-    }
-    syncDrawerActive();
-    updateFilterBadge();
-    loadLiveries();
-  });
-} // end initDrawerListeners
+function renderFilterBody(){
+  const body=document.getElementById('fm-body');
+  if(_fmTab==='champ'){
+    let list=_champs.map(c=>({id:c.id,name:c.short_name||c.name,n:_champLivCounts.champ[c.id]||0}));
+    list=list.filter(x=>!_fmSearch||x.name.toLowerCase().includes(_fmSearch));
+    list.sort((a,b)=>b.n-a.n);
+    const expand=_fmExpanded.champ||!!_fmSearch;
+    const shown=expand?list:list.slice(0,TOP_N);
+    body.innerHTML=(!list.length?'<div class="fm-empty">No championships match.</div>':
+      `<button class="fm-chip${_champ==='all'?' on':''}" onclick="selectFilterChip('champ','all')"><span class="fm-chip-name">All championships</span></button>`
+      +shown.map(x=>`<button class="fm-chip${_champ===x.id?' on':''}" onclick="selectFilterChip('champ','${x.id}')"><span class="fm-chip-name">${esc(x.name)}</span><span class="fm-chip-n">${x.n}</span></button>`).join('')
+    )+(!expand&&list.length>TOP_N?`<button class="fm-more" onclick="_fmExpanded.champ=true;renderFilterBody();">Show all ${list.length} championships ↓</button>`:'');
+    body.classList.toggle('scrollable',expand);
+  } else if(_fmTab==='cat'){
+    const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
+    let list=_cats.map(c=>({id:c.id,name:c.name,brand:c.brand,n:_champLivCounts.cat[c.id]||0}));
+    list=list.filter(x=>!_fmSearch||x.name.toLowerCase().includes(_fmSearch));
+    list.sort((a,b)=>b.n-a.n);
+    const expand=_fmExpanded.cat||!!_fmSearch;
+    const shown=expand?list:list.slice(0,TOP_N);
+    body.innerHTML=(!list.length?'<div class="fm-empty">No categories match.</div>':
+      `<button class="fm-chip${_cat==='all'?' on':''}" onclick="selectFilterChip('cat','all')"><span class="fm-chip-name">All categories</span></button>`
+      +shown.map(x=>`<button class="fm-chip${_cat===x.id?' on':''}" onclick="selectFilterChip('cat','${x.id}')"><span class="fm-chip-name">${esc(x.name)}</span>${x.brand?`<span class="fm-chip-pub" style="background:${BRC[x.brand]}22;color:${BRC[x.brand]};">${x.brand}</span>`:''}<span class="fm-chip-n">${x.n}</span></button>`).join('')
+    )+(!expand&&list.length>TOP_N?`<button class="fm-more" onclick="_fmExpanded.cat=true;renderFilterBody();">Show all ${list.length} categories ↓</button>`:'');
+    body.classList.toggle('scrollable',expand);
+  } else if(_fmTab==='brand'){
+    body.classList.remove('scrollable');
+    const opts=[['all','All publishers',_champLivCounts.total||0],['RSS','RSS — Race Sim Studio',_champLivCounts.brand.RSS||0],['VRC','VRC — Virtual Racing Cars',_champLivCounts.brand.VRC||0],['URD','URD — United Racing Design',_champLivCounts.brand.URD||0]];
+    body.innerHTML=opts.map(([v,l,n])=>`<button class="fm-chip${(_activeBrand||'all')===v?' on':''}" onclick="selectFilterChip('brand','${v}')"><span class="fm-chip-name">${l}</span><span class="fm-chip-n">${n}</span></button>`).join('');
+  } else if(_fmTab==='artist'){
+    body.classList.remove('scrollable');
+    const opts=[['all','All creators',_champLivCounts.total||0],['confirmed','Confirmed artists',_champLivCounts.confirmed||0],['community','Community submissions',_champLivCounts.community||0]];
+    body.innerHTML=opts.map(([v,l,n])=>`<button class="fm-chip${_artistFilter===v?' on':''}" onclick="selectFilterChip('artist','${v}')"><span class="fm-chip-name">${l}</span><span class="fm-chip-n">${n}</span></button>`).join('');
+  } else if(_fmTab==='price'){
+    body.classList.remove('scrollable');
+    const opts=[['all','All pricing',_champLivCounts.total||0],['free','Free',_champLivCounts.free||0],['paid','Paid',_champLivCounts.paid||0]];
+    body.innerHTML=opts.map(([v,l,n])=>`<button class="fm-chip${((v==='all'&&_price===null)||(v==='free'&&_price===false)||(v==='paid'&&_price===true))?' on':''}" onclick="selectFilterChip('price','${v}')"><span class="fm-chip-name">${l}</span><span class="fm-chip-n">${n}</span></button>`).join('');
+  }
+}
+
+function selectFilterChip(type,val){
+  if(type==='champ')_champ=val;
+  else if(type==='cat')_cat=val;
+  else if(type==='brand')_activeBrand=val==='all'?null:val;
+  else if(type==='artist')_artistFilter=val;
+  else if(type==='price')_price=val==='free'?false:val==='paid'?true:null;
+  _page=1;
+  renderFilterBody();
+  renderActiveRow();
+  updateFilterBadge();
+  loadLiveries();
+}
+
+function renderActiveRow(){
+  const chips=[];
+  if(_activeBrand)chips.push({label:_activeBrand,type:'brand'});
+  if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)chips.push({label:c.name,type:'cat'});}
+  if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)chips.push({label:c.short_name||c.name,type:'champ'});}
+  if(_price===false)chips.push({label:'Free',type:'price'});
+  if(_price===true)chips.push({label:'Paid',type:'price'});
+  if(_artistFilter==='confirmed')chips.push({label:'Confirmed',type:'artist'});
+  if(_artistFilter==='community')chips.push({label:'Community',type:'artist'});
+  if(_featuredOnly)chips.push({label:'★ Featured',type:'featured'});
+  const el=document.getElementById('fm-active-row');
+  if(!el)return;
+  el.innerHTML=chips.map(c=>`<span class="fm-pill" onclick="removeChip('${c.type}')">${esc(c.label)} ✕</span>`).join('');
+}
 
 function updateFilterBadge(){
   const count=[
@@ -2940,7 +2882,6 @@ function updateFilterBadge(){
   const badge=document.getElementById('filters-count');
   if(count>0){badge.style.display='inline-block';badge.textContent=count;btn.classList.add('active');}
   else{badge.style.display='none';btn.classList.remove('active');}
-  // Update chips
   const chips=[];
   if(_activeBrand)chips.push({label:_activeBrand,type:'brand'});
   if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)chips.push({label:c.name,type:'cat'});}
@@ -2960,38 +2901,45 @@ function updateFilterBadge(){
 }
 
 function removeChip(type){
-  if(type==='brand'){_activeBrand=null;_cat='all';_champ='all';rebuildCatStep();rebuildChampStep();}
+  if(type==='brand'){_activeBrand=null;}
   if(type==='cat'){_cat='all';}
   if(type==='champ'){_champ='all';}
   if(type==='price'){_price=null;}
   if(type==='artist'){_artistFilter='all';}
-  if(type==='featured'){_featuredOnly=false;}
-  _page=1;updateFilterBadge();loadLiveries();
+  if(type==='featured'){_featuredOnly=false;updateFeaturedToggleUI();}
+  _page=1;updateFilterBadge();renderActiveRow();renderFilterBody();loadLiveries();
 }
 
 function resetFilters(){
   _activeBrand=null;_cat='all';_champ='all';_price=null;_artistFilter='all';_featuredOnly=false;_search='';_page=1;
+  _fmSearch='';_fmExpanded={champ:false,cat:false};
   document.getElementById('l-search').value='';
-  rebuildCatStep();rebuildChampStep();
-  updateFilterBadge();loadLiveries();closeDrawer();
+  document.getElementById('fm-search').value='';
+  updateFeaturedToggleUI();
+  renderFilterBody();renderActiveRow();
+  updateFilterBadge();loadLiveries();
 }
 
 // Live counts cache
 async function buildLivCounts(){
   const all=await fetchLiveries({sort:'votes',pageSize:5000});
+  _champLivCounts.total=all.length;
+  _champLivCounts.free=0;_champLivCounts.paid=0;_champLivCounts.confirmed=0;_champLivCounts.community=0;
   all.forEach(l=>{
     if(l.category_id) _champLivCounts.cat[l.category_id]=(_champLivCounts.cat[l.category_id]||0)+1;
     if(l.championship_id) _champLivCounts.champ[l.championship_id]=(_champLivCounts.champ[l.championship_id]||0)+1;
     if(l.mods?.brand) _champLivCounts.brand[l.mods.brand]=(_champLivCounts.brand[l.mods.brand]||0)+1;
+    if(l.is_paid) _champLivCounts.paid++; else _champLivCounts.free++;
+    if(l.artist_id) _champLivCounts.confirmed++; else _champLivCounts.community++;
   });
+  const sub=document.getElementById('fm-sub');
+  if(sub) sub.textContent=all.length+' liveries match your current filters';
 }
 
 // ── BOOT ──────────────────────────────────────
 boot().then(handleHash).then(()=>{
   buildLivCounts();
-  initDrawerListeners();
   loadLOTD();
-  buildDrawerOnce();
   // Toolbar focus
   const inp=document.getElementById('l-search');
   const wrap=document.getElementById('tb-wrap');
@@ -3019,100 +2967,35 @@ function selectSort(e,val,label){
 <div id="custom-toast" style="position:fixed;bottom:24px;right:24px;z-index:2000;background:var(--s1);border:1px solid var(--b2);padding:12px 18px;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:var(--t1);display:flex;align-items:center;gap:10px;transform:translateY(20px);opacity:0;pointer-events:none;transition:all .25s;max-width:360px;"></div>
 
 <!-- DRAWER OVERLAY -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="filter-drawer">
-  <div class="drawer-head">
-    <span class="drawer-title">Filters</span>
-    <button class="drawer-close" onclick="closeDrawer()">×</button>
-  </div>
-  <!-- BREADCRUMB -->
-  <div id="dr-breadcrumb" style="padding:10px 16px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:38px;"></div>
-  <!-- STEPS CONTAINER -->
-  <div class="drawer-body" id="dr-steps">
-    <!-- Step 1: Publisher -->
-    <div class="dr-step" id="dr-step-1">
-      <div class="dr-step-header">
-        <span class="dr-step-num">1</span>
-        <span class="dr-step-title">Publisher</span>
-        <span class="dr-step-hint">Choose a mod publisher</span>
+<div class="fm-overlay" id="filter-modal-overlay" onclick="closeDrawer()">
+  <div class="fm-modal" id="filter-modal" onclick="event.stopPropagation()">
+    <div class="fm-head">
+      <div>
+        <div class="fm-title">Filters</div>
+        <div class="fm-sub" id="fm-sub">312 liveries match your current filters</div>
       </div>
-      <div class="dr-step-body">
-        <button class="di on" data-step="1" data-type="brand" data-val="all" data-label="All publishers">
-          <i class="ti ti-flag" style="font-size:14px;"></i><span style="flex:1;">All publishers</span>
-          <span class="di-count" id="dr-cnt-all-brand"></span>
-        </button>
-        <button class="di" data-step="1" data-type="brand" data-val="RSS" data-label="RSS">
-          <div class="di-icon" style="background:var(--acc2);color:var(--acc);">R</div>
-          <span style="flex:1;">RSS — Race Sim Studio</span>
-          <span class="di-count" id="dr-cnt-RSS">—</span>
-        </button>
-        <button class="di" data-step="1" data-type="brand" data-val="VRC" data-label="VRC">
-          <div class="di-icon" style="background:rgba(48,209,88,.12);color:#30D158;">V</div>
-          <span style="flex:1;">VRC — Virtual Racing Cars</span>
-          <span class="di-count" id="dr-cnt-VRC">—</span>
-        </button>
-        <button class="di" data-step="1" data-type="brand" data-val="URD" data-label="URD">
-          <div class="di-icon" style="background:rgba(255,159,10,.12);color:#FF9F0A;">U</div>
-          <span style="flex:1;">URD — United Racing Design</span>
-          <span class="di-count" id="dr-cnt-URD">—</span>
-        </button>
-      </div>
+      <button class="fm-close" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
     </div>
-    <!-- Step 2: Category (unlocks after step 1) -->
-    <div class="dr-step locked" id="dr-step-2">
-      <div class="dr-step-header">
-        <span class="dr-step-num">2</span>
-        <span class="dr-step-title">Category</span>
-        <span class="dr-step-hint" id="dr-step-2-hint">Choose publisher first</span>
-      </div>
-      <div class="dr-step-body" id="dr-categories"></div>
+    <div class="fm-search-wrap">
+      <i class="ti ti-search" style="color:var(--t3);font-size:14px;"></i>
+      <input type="text" id="fm-search" placeholder="Search…" oninput="onFilterSearchInput(this.value)">
+      <button class="fm-featured-toggle" id="fm-featured-toggle" onclick="toggleFeaturedFilter()" title="Featured only">
+        <i class="ti ti-star-filled" style="font-size:14px;"></i>
+      </button>
     </div>
-    <!-- Step 3: Championship (unlocks after step 2) -->
-    <div class="dr-step locked" id="dr-step-3">
-      <div class="dr-step-header">
-        <span class="dr-step-num">3</span>
-        <span class="dr-step-title">Championship</span>
-        <span class="dr-step-hint" id="dr-step-3-hint">Choose category first</span>
-      </div>
-      <div class="dr-step-body" id="dr-championships"></div>
+    <div class="fm-tabs" id="fm-tabs">
+      <button class="fm-tab on" data-tab="champ" onclick="switchFilterTab('champ')">Championship</button>
+      <button class="fm-tab" data-tab="cat" onclick="switchFilterTab('cat')">Category</button>
+      <button class="fm-tab" data-tab="brand" onclick="switchFilterTab('brand')">Publisher</button>
+      <button class="fm-tab" data-tab="artist" onclick="switchFilterTab('artist')">Creator</button>
+      <button class="fm-tab" data-tab="price" onclick="switchFilterTab('price')">Pricing</button>
     </div>
-    <!-- Step 4: Pricing + Creator (always visible) -->
-    <div class="dr-step" id="dr-step-4">
-      <div class="dr-step-header">
-        <span class="dr-step-num">4</span>
-        <span class="dr-step-title">Pricing & Creator</span>
-      </div>
-      <div class="dr-step-body">
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:0 9px 6px;">Pricing</div>
-        <button class="di on" data-step="4" data-type="price" data-val="all" data-label="">
-          <i class="ti ti-coin" style="font-size:13px;"></i><span style="flex:1;">All pricing</span>
-        </button>
-        <button class="di" data-step="4" data-type="price" data-val="free" data-label="Free">
-          <i class="ti ti-lock-open" style="font-size:13px;color:#30D158;"></i><span style="flex:1;">Free only</span>
-        </button>
-        <button class="di" data-step="4" data-type="price" data-val="paid" data-label="Paid">
-          <i class="ti ti-lock" style="font-size:13px;color:#FF9F0A;"></i><span style="flex:1;">Paid only</span>
-        </button>
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:12px 9px 6px;">Creator</div>
-        <button class="di on" data-step="4" data-type="artist" data-val="all" data-label="">
-          <i class="ti ti-users" style="font-size:13px;"></i><span style="flex:1;">All creators</span>
-        </button>
-        <button class="di" data-step="4" data-type="artist" data-val="confirmed" data-label="✓ Confirmed">
-          <span style="display:inline-flex;"><svg width="14" height="14" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg></span><span style="flex:1;">Confirmed artists only</span>
-        </button>
-        <button class="di" data-step="4" data-type="artist" data-val="community" data-label="Community">
-          <i class="ti ti-user" style="font-size:13px;color:var(--t3);"></i><span style="flex:1;">Community only</span>
-        </button>
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:12px 9px 6px;">Highlights</div>
-        <button class="di" data-step="4" data-type="featured" data-val="featured" data-label="Featured">
-          <span style="font-size:13px;color:var(--amb);"><i class="ti ti-star-filled"></i></span><span style="flex:1;">Featured only</span>
-        </button>
-      </div>
+    <div class="fm-body" id="fm-body"></div>
+    <div class="fm-active-row" id="fm-active-row"></div>
+    <div class="fm-foot">
+      <button class="fm-clear" onclick="resetFilters()">Clear all</button>
+      <button class="fm-done" onclick="closeDrawer()">Done</button>
     </div>
-  </div>
-  <div class="drawer-foot">
-    <button class="drawer-reset" onclick="resetFilters()">Reset all</button>
-    <button class="drawer-apply" onclick="closeDrawer()">Show results</button>
   </div>
 </div>
 
