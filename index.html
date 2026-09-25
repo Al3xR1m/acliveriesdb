@@ -1412,6 +1412,19 @@ let _getSubmitImg=()=>null;
 
 // ── NAVIGATION ──
 const ROUTABLE_VIEWS=['home','liveries','mods','artists','addons','packs','submit','about'];
+const _defaultTitle=document.title;
+const _defaultDesc=document.querySelector('meta[name="description"]').content;
+function updateSEO(title,desc){
+  document.title=title?title+' — AC Liveries DB':_defaultTitle;
+  const d=desc||_defaultDesc;
+  document.querySelector('meta[name="description"]').content=d;
+  document.querySelector('meta[property="og:title"]').content=title?title+' — AC Liveries DB':_defaultTitle;
+  document.querySelector('meta[property="og:description"]').content=d;
+  const tt=document.querySelector('meta[name="twitter:title"]');
+  const td=document.querySelector('meta[name="twitter:description"]');
+  if(tt) tt.content=title?title+' — AC Liveries DB':_defaultTitle;
+  if(td) td.content=d;
+}
 function nav(v){
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));
@@ -1419,6 +1432,7 @@ function nav(v){
   document.getElementById('nl-'+v)?.classList.add('on');
   document.getElementById('main-scroll').scrollTop=0;
   if(ROUTABLE_VIEWS.includes(v) && location.hash.slice(1)!==v) history.pushState(null,'','#'+v);
+  if(['home','liveries','mods','artists','addons','packs','about','submit'].includes(v)) updateSEO();
   if(v==='home')loadHome();
   if(v==='liveries')loadLiveries();
   if(v==='mods')loadMods();
@@ -1507,6 +1521,7 @@ async function loadLiveryDetail(id){
   document.getElementById('ld-content').innerHTML=`<div style="padding:40px;text-align:center;"><div class="sk" style="height:200px;margin-bottom:16px;"></div><div class="sk" style="height:120px;"></div></div>`;
   const l=await fetchLivery(id);
   if(!l){document.getElementById('ld-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Livery not found.</div>';return;}
+  updateSEO(l.name,`${l.name} — a ${l.mods?.name||'AC'} livery${l.team?' for '+l.team:''}${l.season?' ('+l.season+')':''}. Free download on AC Liveries DB.`);
   _voted=getVotedSet();
   const cn=l.categories?.name||'';
   const voted=_voted.has(l.id);
@@ -2145,8 +2160,9 @@ async function loadModDetail(id){
   document.getElementById('md-content').innerHTML='<div class="sk" style="height:130px;border-radius:12px;margin-bottom:20px;"></div>';
   const [mod,livs,adds]=await Promise.all([fetchModDetail(id),fetchLiveries({modId:id,sort:'votes',pageSize:1000}),fetchAddons({modId:id})]);
   if(!mod){document.getElementById('md-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Mod not found.</div>';return;}
-  const br=mod.brand?BR[mod.brand]:null;
   const lc=livs.length;const ac=adds.length;
+  updateSEO(mod.name,`${lc} free ${mod.name} ${lc===1?'livery':'liveries'} for Assetto Corsa, made by the community. Browse and download on AC Liveries DB.`);
+  const br=mod.brand?BR[mod.brand]:null;
   document.getElementById('md-content').innerHTML=`
     <div class="md-header">
       <div class="md-cover-bg">${mod.image_url?`<img src="${esc(mod.image_url)}" alt="${esc(mod.name)}">`:''}</div>
@@ -2246,6 +2262,7 @@ async function renderArtistProfile(id){
   el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
   const artist=_artists.find(a=>a.id===id);
   if(!artist){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Artist not found.</div>';return;}
+  updateSEO(artist.name,`${artist.name}'s liveries for Assetto Corsa — browse and download their work on AC Liveries DB.`);
   const [allLivs, allAdds] = await Promise.all([
     fetchLiveries({sort:'votes',pageSize:1000}),
     fetchAddons({}),
