@@ -1399,8 +1399,8 @@ const isNew=l=>l.created_at&&(Date.now()-new Date(l.created_at).getTime())<7*24*
 
 // ── STATE ──
 var _cats=[],_champs=[],_mods=[],_artists=[];
-var _cat='all',_champ='all',_price=null,_artistFilter='all',_activeBrand=null,_featuredOnly=false,_sort='newest',_search='',_page=1,_total=0,_vmode='grid';
-var _champLivCounts={cat:{},champ:{},brand:{}};
+var _cat='all',_champ='all',_year='all',_price=null,_artistFilter='all',_activeBrand=null,_featuredOnly=false,_sort='newest',_search='',_page=1,_total=0,_vmode='grid';
+var _champLivCounts={cat:{},champ:{},brand:{},year:{}};
 let _prevView='liveries',_voted=getVotedSet(),_votedAddons=getVotedSet('addon'),_pendingReport=null;
 const PAGE=20;
 let _sAvailMods=[],_sAvailChamps=[],_sSelMod='',_sSelChamp='',_sArtistId=null,_sPreviewImg=null,_sMode='livery';
@@ -1486,9 +1486,9 @@ function lvRow(l){
 
 // ── LOAD LIVERIES ──
 async function loadLiveries(){
-  const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,brand:_activeBrand||undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',featuredOnly:_featuredOnly||undefined,search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
+  const params={categoryId:_cat!=='all'?_cat:undefined,championshipId:_champ!=='all'?_champ:undefined,season:_year!=='all'?_year:undefined,brand:_activeBrand||undefined,isPaid:_price,confirmedOnly:_artistFilter==='confirmed',communityOnly:_artistFilter==='community',featuredOnly:_featuredOnly||undefined,search:_search||undefined,sort:_sort,page:_page,pageSize:PAGE};
   // Brand filter applied client-side after fetch
-  const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,brand:params.brand,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
+  const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,season:params.season,brand:params.brand,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
   _total=total;_voted=getVotedSet();
   document.getElementById('l-count').textContent=`${total} liveri${total!==1?'es':'y'}`;
   document.getElementById('l-info').textContent=`${Math.min((_page-1)*PAGE+1,total)}–${Math.min(_page*PAGE,total)} of ${total}`;
@@ -2770,7 +2770,7 @@ window.addEventListener('popstate',handleHash);
 // ── FILTER MODAL ────────────────────────────────
 var _fmTab='champ';
 var _fmSearch='';
-var _fmExpanded={champ:false,cat:false};
+var _fmExpanded={champ:false,cat:false,year:false};
 const TOP_N=6;
 
 function openDrawer(){
@@ -2826,6 +2826,17 @@ function renderFilterBody(){
       +shown.map(x=>`<button class="fm-chip${_cat===x.id?' on':''}" onclick="selectFilterChip('cat','${x.id}')"><span class="fm-chip-name">${esc(x.name)}</span>${x.brand?`<span class="fm-chip-pub" style="background:${BRC[x.brand]}22;color:${BRC[x.brand]};">${x.brand}</span>`:''}<span class="fm-chip-n">${x.n}</span></button>`).join('')
     )+(!expand&&list.length>TOP_N?`<button class="fm-more" onclick="_fmExpanded.cat=true;renderFilterBody();">Show all ${list.length} categories ↓</button>`:'');
     body.classList.toggle('scrollable',expand);
+  } else if(_fmTab==='year'){
+    let list=Object.keys(_champLivCounts.year).map(y=>({id:y,name:y,n:_champLivCounts.year[y]}));
+    list=list.filter(x=>!_fmSearch||x.name.toLowerCase().includes(_fmSearch));
+    list.sort((a,b)=>b.n-a.n);
+    const expand=_fmExpanded.year||!!_fmSearch;
+    const shown=expand?list:list.slice(0,TOP_N);
+    body.innerHTML=(!list.length?'<div class="fm-empty">No years match.</div>':
+      `<button class="fm-chip${_year==='all'?' on':''}" onclick="selectFilterChip('year','all')"><span class="fm-chip-name">All years</span></button>`
+      +shown.map(x=>`<button class="fm-chip${_year===x.id?' on':''}" onclick="selectFilterChip('year','${esc(x.id)}')"><span class="fm-chip-name">${esc(x.name)}</span><span class="fm-chip-n">${x.n}</span></button>`).join('')
+    )+(!expand&&list.length>TOP_N?`<button class="fm-more" onclick="_fmExpanded.year=true;renderFilterBody();">Show all ${list.length} years ↓</button>`:'');
+    body.classList.toggle('scrollable',expand);
   } else if(_fmTab==='brand'){
     body.classList.remove('scrollable');
     const opts=[['all','All publishers',_champLivCounts.total||0],['RSS','RSS — Race Sim Studio',_champLivCounts.brand.RSS||0],['VRC','VRC — Virtual Racing Cars',_champLivCounts.brand.VRC||0],['URD','URD — United Racing Design',_champLivCounts.brand.URD||0]];
@@ -2844,6 +2855,7 @@ function renderFilterBody(){
 function selectFilterChip(type,val){
   if(type==='champ')_champ=val;
   else if(type==='cat')_cat=val;
+  else if(type==='year')_year=val;
   else if(type==='brand')_activeBrand=val==='all'?null:val;
   else if(type==='artist')_artistFilter=val;
   else if(type==='price')_price=val==='free'?false:val==='paid'?true:null;
@@ -2859,6 +2871,7 @@ function renderActiveRow(){
   if(_activeBrand)chips.push({label:_activeBrand,type:'brand'});
   if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)chips.push({label:c.name,type:'cat'});}
   if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)chips.push({label:c.short_name||c.name,type:'champ'});}
+  if(_year!=='all')chips.push({label:_year,type:'year'});
   if(_price===false)chips.push({label:'Free',type:'price'});
   if(_price===true)chips.push({label:'Paid',type:'price'});
   if(_artistFilter==='confirmed')chips.push({label:'Confirmed',type:'artist'});
@@ -2874,6 +2887,7 @@ function updateFilterBadge(){
     _activeBrand!==null,
     _cat!=='all',
     _champ!=='all',
+    _year!=='all',
     _price!==null,
     _artistFilter!=='all',
     _featuredOnly
@@ -2886,6 +2900,7 @@ function updateFilterBadge(){
   if(_activeBrand)chips.push({label:_activeBrand,type:'brand'});
   if(_cat!=='all'){const c=_cats.find(x=>x.id===_cat);if(c)chips.push({label:c.name,type:'cat'});}
   if(_champ!=='all'){const c=_champs.find(x=>x.id===_champ);if(c)chips.push({label:c.short_name||c.name,type:'champ'});}
+  if(_year!=='all')chips.push({label:_year,type:'year'});
   if(_price===false)chips.push({label:'Free',type:'price'});
   if(_price===true)chips.push({label:'Paid',type:'price'});
   if(_artistFilter==='confirmed')chips.push({label:'✓ Confirmed',type:'artist'});
@@ -2904,6 +2919,7 @@ function removeChip(type){
   if(type==='brand'){_activeBrand=null;}
   if(type==='cat'){_cat='all';}
   if(type==='champ'){_champ='all';}
+  if(type==='year'){_year='all';}
   if(type==='price'){_price=null;}
   if(type==='artist'){_artistFilter='all';}
   if(type==='featured'){_featuredOnly=false;updateFeaturedToggleUI();}
@@ -2911,8 +2927,8 @@ function removeChip(type){
 }
 
 function resetFilters(){
-  _activeBrand=null;_cat='all';_champ='all';_price=null;_artistFilter='all';_featuredOnly=false;_search='';_page=1;
-  _fmSearch='';_fmExpanded={champ:false,cat:false};
+  _activeBrand=null;_cat='all';_champ='all';_year='all';_price=null;_artistFilter='all';_featuredOnly=false;_search='';_page=1;
+  _fmSearch='';_fmExpanded={champ:false,cat:false,year:false};
   document.getElementById('l-search').value='';
   document.getElementById('fm-search').value='';
   updateFeaturedToggleUI();
@@ -2929,6 +2945,7 @@ async function buildLivCounts(){
     if(l.category_id) _champLivCounts.cat[l.category_id]=(_champLivCounts.cat[l.category_id]||0)+1;
     if(l.championship_id) _champLivCounts.champ[l.championship_id]=(_champLivCounts.champ[l.championship_id]||0)+1;
     if(l.mods?.brand) _champLivCounts.brand[l.mods.brand]=(_champLivCounts.brand[l.mods.brand]||0)+1;
+    if(l.season) _champLivCounts.year[l.season]=(_champLivCounts.year[l.season]||0)+1;
     if(l.is_paid) _champLivCounts.paid++; else _champLivCounts.free++;
     if(l.artist_id) _champLivCounts.confirmed++; else _champLivCounts.community++;
   });
@@ -2986,6 +3003,7 @@ function selectSort(e,val,label){
     <div class="fm-tabs" id="fm-tabs">
       <button class="fm-tab on" data-tab="champ" onclick="switchFilterTab('champ')">Championship</button>
       <button class="fm-tab" data-tab="cat" onclick="switchFilterTab('cat')">Category</button>
+      <button class="fm-tab" data-tab="year" onclick="switchFilterTab('year')">Year</button>
       <button class="fm-tab" data-tab="brand" onclick="switchFilterTab('brand')">Publisher</button>
       <button class="fm-tab" data-tab="artist" onclick="switchFilterTab('artist')">Creator</button>
       <button class="fm-tab" data-tab="price" onclick="switchFilterTab('price')">Pricing</button>

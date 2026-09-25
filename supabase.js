@@ -146,7 +146,7 @@ async function findDuplicates(modId, fields, excludeId, approvedOnly = true) {
 }
 
 async function fetchLiveries({
-  categoryId, championshipId, modId, artistId, brand, packId,
+  categoryId, championshipId, modId, artistId, brand, packId, season,
   isPaid, confirmedOnly, communityOnly, featuredOnly,
   search, sort = 'votes', page = 1, pageSize = 24,
   approvedOnly = true,
@@ -160,6 +160,7 @@ async function fetchLiveries({
   if (modId)          q = q.eq('mod_id', modId);
   if (artistId)       q = q.eq('artist_id', artistId);
   if (packId)         q = q.eq('pack_id', packId);
+  if (season)         q = q.eq('season', season);
   if (isPaid === true)  q = q.eq('is_paid', true);
   if (isPaid === false) q = q.eq('is_paid', false);
   if (confirmedOnly)  q = q.not('artist_id', 'is', null);
@@ -178,7 +179,7 @@ async function fetchLiveries({
 }
 
 async function fetchLiveriesCount({
-  categoryId, championshipId, modId, artistId, brand,
+  categoryId, championshipId, modId, artistId, brand, season,
   isPaid, confirmedOnly, communityOnly, search,
   approvedOnly = true,
 } = {}) {
@@ -192,6 +193,7 @@ async function fetchLiveriesCount({
   if (championshipId) q = q.eq('championship_id', championshipId);
   if (modId)          q = q.eq('mod_id', modId);
   if (artistId)       q = q.eq('artist_id', artistId);
+  if (season)         q = q.eq('season', season);
   if (isPaid === true)  q = q.eq('is_paid', true);
   if (isPaid === false) q = q.eq('is_paid', false);
   if (confirmedOnly)  q = q.not('artist_id', 'is', null);
