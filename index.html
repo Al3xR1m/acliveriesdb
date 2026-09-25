@@ -2829,7 +2829,7 @@ function renderFilterBody(){
   } else if(_fmTab==='year'){
     let list=Object.keys(_champLivCounts.year).map(y=>({id:y,name:y,n:_champLivCounts.year[y]}));
     list=list.filter(x=>!_fmSearch||x.name.toLowerCase().includes(_fmSearch));
-    list.sort((a,b)=>b.n-a.n);
+    list.sort((a,b)=>b.name.localeCompare(a.name,undefined,{numeric:true}));
     const expand=_fmExpanded.year||!!_fmSearch;
     const shown=expand?list:list.slice(0,TOP_N);
     body.innerHTML=(!list.length?'<div class="fm-empty">No years match.</div>':
