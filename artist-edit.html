@@ -57,7 +57,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-dl{position:absolute;top:11px;right:10px;font-family:'Azeret Mono',monospace;font-size:10px;font-weight:700;color:rgba(242,240,234,.6);display:flex;align-items:center;gap:2px;z-index:3;transition:opacity .25s;}
 .lv-card:hover .lv-dl{opacity:0;}
 .lv-edit-hint{position:absolute;top:9px;right:10px;width:22px;height:22px;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;z-index:4;opacity:0;transition:opacity .2s;}
-.lv-pack-badge{position:absolute;bottom:8px;right:8px;background:rgba(10,10,15,.75);border:1px solid rgba(242,240,234,.2);display:flex;align-items:center;gap:5px;padding:3px 7px;font-family:'Azeret Mono',monospace;font-size:9px;font-weight:700;color:var(--t2);z-index:3;text-transform:uppercase;letter-spacing:.04em;}
+.pe-brand{padding:12px 14px;border:1px solid var(--b1);background:transparent;cursor:pointer;text-align:left;font-family:'Archivo',sans-serif;color:var(--t3);width:100%;transition:all .15s;}
+.pe-brand.rss.on{border-color:#E8312A;background:rgba(232,49,42,.10);color:#E8312A;}
+.pe-brand.vrc.on{border-color:#30D158;background:rgba(48,209,88,.08);color:#30D158;}
+.pe-brand.urd.on{border-color:#FF9F0A;background:rgba(255,159,10,.08);color:#FF9F0A;}
+.pe-item{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:start;padding:14px;border:1px solid var(--b1);background:var(--s2);margin-bottom:10px;}
+.pe-thumb{width:150px;aspect-ratio:16/10;background:var(--bg);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.pe-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .lv-card:hover .lv-edit-hint{opacity:1;}
 .lv-meta{position:absolute;inset:0;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;transition:color .3s;}
 .lv-card:hover .lv-meta *{color:var(--bg)!important;}
@@ -211,45 +217,55 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
       <div class="page-top">
         <div class="page-ey"><span></span>Creator Dashboard</div>
         <h2 class="page-h1" style="font-size:30px;">My packs</h2>
-        <p style="font-family:'Archivo',sans-serif;font-size:13px;color:var(--t2);margin-top:10px;max-width:480px;">Group liveries that share the same car and team across different championships.</p>
+        <p style="font-family:'Archivo',sans-serif;font-size:13px;color:var(--t2);margin-top:10px;max-width:520px;">One download, several liveries — a pack shows up as a single entry on the site, with all its previews together.</p>
       </div>
       <div style="padding:20px 28px 12px;display:flex;align-items:center;gap:10px;">
         <span style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;">// Packs</span>
         <span style="flex:1;height:1px;background:var(--b1);"></span>
-        <button class="btn-secondary" style="height:32px;padding:0 12px;font-size:10px;" onclick="aeOpenPackPicker(null)"><i class="ti ti-plus"></i> New pack</button>
+        <button class="btn-secondary" style="height:32px;padding:0 12px;font-size:10px;" onclick="aeOpenPackEditor(null)"><i class="ti ti-plus"></i> New pack</button>
       </div>
       <div id="ae-packs-list" style="padding:0 28px 28px;"></div>
     </div>
 
-    <!-- PACK MANAGE -->
-    <div class="view" id="ae-view-pack-manage">
+    <!-- PACK EDITOR -->
+    <div class="view" id="ae-view-pack-edit">
       <div class="page-top">
-        <button onclick="aeNav('packs',document.querySelector('.sb-link[data-v=\'packs\']'))" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;margin-bottom:14px;"><i class="ti ti-arrow-left"></i> Back to packs</button>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <input id="ae-pm-name" type="text" style="font-family:'Archivo Black',sans-serif;font-size:24px;background:transparent;border:none;border-bottom:1px solid transparent;color:var(--t1);padding:2px 0;flex:1;" onblur="aePackRename()">
-          <i class="ti ti-pencil" style="color:var(--t3);font-size:14px;"></i>
-        </div>
-        <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--t3);margin-top:6px;"><span id="ae-pm-count">0</span> liveries in this pack</div>
+        <button onclick="aePeBack()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;margin-bottom:14px;"><i class="ti ti-arrow-left"></i> Back to packs</button>
+        <div class="page-ey"><span></span>Creator Dashboard</div>
+        <h2 class="page-h1" id="pe-title" style="font-size:30px;">New pack</h2>
       </div>
-      <div style="padding:20px 28px 12px;display:flex;align-items:center;gap:10px;">
-        <span style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--acc);letter-spacing:.1em;text-transform:uppercase;">// Liveries in this pack</span>
-        <span style="flex:1;height:1px;background:var(--b1);"></span>
-        <button class="btn-secondary" style="height:32px;padding:0 12px;font-size:10px;" onclick="aeOpenPackPicker(_ae_pm_pack_id)"><i class="ti ti-plus"></i> Add livery</button>
-      </div>
-      <div id="ae-pm-list" style="padding:0 28px 28px;display:flex;flex-direction:column;gap:8px;"></div>
-    </div>
-
-    <!-- PACK PICKER MODAL -->
-    <div id="ae-pack-picker" style="display:none;position:fixed;inset:0;background:rgba(10,10,15,.75);z-index:400;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)aeClosePackPicker()">
-      <div style="background:var(--bg);border:1px solid var(--b1);width:100%;max-width:680px;max-height:80vh;display:flex;flex-direction:column;">
-        <div style="padding:18px 22px;border-bottom:1px solid var(--b1);">
-          <div style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;" id="ae-pp-title">Select liveries</div>
-          <input id="ae-pp-name" type="text" placeholder="Pack name…" style="margin-top:10px;width:100%;background:var(--s1);border:0.5px solid var(--b1);border-radius:9px;padding:9px 12px;color:var(--t1);font-size:13px;outline:none;font-family:inherit;box-sizing:border-box;">
+      <div style="max-width:880px;padding:22px 24px 60px;">
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">1</span> Publisher, category &amp; mod</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">
+            <button class="pe-brand rss on" data-b="RSS" onclick="aePeBrand('RSS')"><div style="font-family:'Archivo Black',sans-serif;font-size:15px;">RSS</div><div style="font-size:10px;margin-top:2px;">Race Sim Studio</div></button>
+            <button class="pe-brand vrc" data-b="VRC" onclick="aePeBrand('VRC')"><div style="font-family:'Archivo Black',sans-serif;font-size:15px;">VRC</div><div style="font-size:10px;margin-top:2px;">Virtual Racing Cars</div></button>
+            <button class="pe-brand urd" data-b="URD" onclick="aePeBrand('URD')"><div style="font-family:'Archivo Black',sans-serif;font-size:15px;">URD</div><div style="font-size:10px;margin-top:2px;">United Racing Design</div></button>
+          </div>
+          <div class="form-grid">
+            <div class="field full"><label>Pack name *</label><input id="pe-name" type="text" placeholder="e.g. 2025 | PONOS Racing Pack"></div>
+            <div class="field"><label>Category *</label><select id="pe-cat" onchange="aePeCatChange()"></select></div>
+            <div class="field"><label>Mod *</label><select id="pe-mod"></select></div>
+          </div>
         </div>
-        <div id="ae-pp-list" class="picker-grid" style="overflow-y:auto;flex:1;padding:14px;"></div>
-        <div style="padding:14px 22px;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;">
-          <button onclick="aeClosePackPicker()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit;">Cancel</button>
-          <button class="btn-primary" onclick="aeConfirmPackPicker()"><i class="ti ti-check"></i> Confirm (<span id="ae-pp-selcount">0</span>)</button>
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">2</span> Details &amp; download</div>
+          <div class="form-grid">
+            <div class="field"><label>Season *</label><input id="pe-season" type="text" placeholder="e.g. 2026"></div>
+            <div class="field"><label>Pricing</label><select id="pe-paid"><option value="false">Free</option><option value="true">Paid</option></select></div>
+            <div class="field full"><label>Download URL *</label><input id="pe-url" type="url" placeholder="https://…"></div>
+            <div class="field full"><label>Description</label><textarea id="pe-desc" rows="3" placeholder="Optional — anything worth knowing about this pack"></textarea></div>
+          </div>
+        </div>
+        <div class="sub-step">
+          <div class="sub-step-label"><span class="sub-step-n">3</span> Liveries included</div>
+          <div id="pe-items"></div>
+          <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="aePeAddItem()"><i class="ti ti-plus"></i> Add a livery</button>
+        </div>
+        <div id="pe-err" style="color:var(--red);font-size:12px;margin-bottom:12px;display:none;"></div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-primary" id="pe-save-btn" onclick="aePeSave()"><i class="ti ti-send"></i> <span id="pe-save-label">Publish pack</span></button>
+          <button class="btn-danger" id="pe-delete-btn" style="display:none;" onclick="aePeDelete()"><i class="ti ti-trash"></i> Delete pack</button>
         </div>
       </div>
     </div>
@@ -373,12 +389,6 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
             <div style="font-family:'Azeret Mono',monospace;font-size:10px;font-weight:400;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;">Required fields</div>
             <div id="ae-checklist" style="display:flex;flex-direction:column;gap:6px;"></div>
           </div>
-          <div id="ae-pack-wrap" class="livery-only" style="display:none;border:1px solid var(--b1);padding:14px;margin-bottom:14px;">
-            <div style="font-family:'Azeret Mono',monospace;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Pack variants (<span id="ae-pack-count">0</span>)</div>
-            <div class="field full" style="margin-bottom:10px;"><label>Pack name *</label><input id="ae-pack-name" type="text" placeholder="e.g. #44 Proton Competition — 2024 Season"></div>
-            <div id="ae-pack-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-          </div>
-          <button class="btn-secondary livery-only" id="ae-pack-add-btn" style="width:100%;justify-content:center;margin-bottom:10px;" onclick="aeAddToPack()"><i class="ti ti-plus"></i> Add to pack &amp; continue</button>
           <button class="btn-primary" style="width:100%;justify-content:center;" onclick="aeDoSubmit()"><i class="ti ti-send"></i> <span id="ae-submit-label">Publish livery</span></button>
           <button class="btn-danger" id="ae-edit-delete-btn" style="width:100%;justify-content:center;display:none;" onclick="aeDeleteFromForm()"><i class="ti ti-trash"></i> Delete livery</button>
         </div>
@@ -474,7 +484,6 @@ var _ae_mode = 'livery';
 var _ae_preview_img = null;
 var _ae_pf_avatar = null;
 var _ae_my_liveries = [];
-var _ae_pack_staged = [];
 var _ae_get_img = function(){ return null; };
 var _cats = [], _mods = [], _champs = [];
 
@@ -798,7 +807,6 @@ async function aeLiveries() {
       +'<span class="badge '+(l.approved?'b-f':'b-p')+'">'+(l.approved?'Published':'Pending')+'</span>'
       +'</div>'
       +'<div class="lv-edit-hint"><i class="ti ti-pencil"></i></div>'
-      +(l.pack_id?'<div class="lv-pack-badge"><i class="ti ti-stack-2"></i> Pack</div>':'')
       +'<div class="lv-dl"><i class="ti ti-heart" style="font-size:9px;"></i>'+(l.upvotes||0)+'</div>'
       +'<div class="lv-meta">'
       +'<div class="lv-champ-row"><span class="lv-champ" style="color:'+brandColor+';">'+champName+'</span>'
@@ -813,156 +821,192 @@ async function aeLiveries() {
   }).join('');
 }
 
-var _ae_pm_pack_id = null;
-var _ae_pp_target_pack_id = null;
-var _ae_pp_selected = new Set();
+var _pe = {id:null, brand:'RSS', items:[], origImages:[], uploaded:[]};
 
 async function aePacks(){
   var el = document.getElementById('ae-packs-list');
   el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);">Loading…</div>';
-  var res = await db.from('liveries').select('*,categories(name,color_bg),mods(name,brand),championships(short_name)').eq('artist_id',_ae_artist.id).order('created_at',{ascending:false});
-  _ae_my_liveries = res.data||[];
-  var groups = {};
-  _ae_my_liveries.forEach(function(l){
-    if (!l.pack_id) return;
-    if (!groups[l.pack_id]) groups[l.pack_id] = {id:l.pack_id, name:l.pack_name||'Untitled pack', liveries:[]};
-    groups[l.pack_id].liveries.push(l);
-  });
-  var packs = Object.values(groups);
+  var packs = await fetchPacks({approvedOnly:false, artistId:_ae_artist.id});
+  window._ae_my_packs = packs;
   if (!packs.length){
-    el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);"><i class="ti ti-stack-2" style="font-size:28px;display:block;margin-bottom:10px;color:var(--t3);"></i>No packs yet. Group liveries that share the same car across championships.</div>';
+    el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--t2);"><i class="ti ti-stack-2" style="font-size:28px;display:block;margin-bottom:10px;color:var(--t3);"></i>No packs yet. Create one to share several liveries with a single download.</div>';
     return;
   }
-  el.innerHTML = '<div class="lv-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));">' + packs.map(function(p){
-    var img = p.liveries[0] && p.liveries[0].image_url;
-    return '<div class="lv-card" onclick="aeOpenPackManage(\''+p.id+'\')">'
-      + '<div class="lv-thumb">' + (img ? '<img src="'+esc(img)+'" loading="lazy">' : '<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>') + '</div>'
+  el.innerHTML = '<div class="lv-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));">' + packs.map(function(p){
+    var imgs = (p.pack_items||[]).map(function(it){ return it.image_url; }).filter(Boolean);
+    var n = (p.pack_items||[]).length;
+    return '<div class="lv-card" onclick="aeOpenPackEditor(\''+p.id+'\')">'
+      + '<div class="lv-thumb">' + (imgs[0] ? '<img src="'+esc(imgs[0])+'" loading="lazy">' : '<i class="ti ti-photo" style="font-size:24px;color:var(--t3);"></i>') + '</div>'
       + '<div style="padding:10px 12px;">'
       + '<div style="font-size:13px;font-weight:700;color:var(--t1);">' + esc(p.name) + '</div>'
-      + '<div style="font-family:\'Azeret Mono\',monospace;font-size:10px;color:var(--t3);margin-top:3px;">' + p.liveries.length + ' liveries</div>'
+      + '<div style="font-family:\'Azeret Mono\',monospace;font-size:10px;color:var(--t3);margin-top:3px;">' + n + ' liveries · ' + (p.upvotes||0) + ' upvotes</div>'
       + '</div></div>';
   }).join('') + '</div>';
 }
 
-function aeOpenPackManage(packId){
-  _ae_pm_pack_id = packId;
+function aePeBlankItem(){ return {image_url:null, label:'', championship_id:'', car_number:''}; }
+
+function aeOpenPackEditor(id){
+  var p = id ? (window._ae_my_packs||[]).find(function(x){ return x.id === id; }) : null;
+  _pe = {id:id||null, brand:'RSS', items:[], origImages:[], uploaded:[]};
+  if (p){
+    _pe.brand = (p.mods && p.mods.brand) || 'RSS';
+    _pe.items = (p.pack_items||[]).map(function(it){
+      return {image_url:it.image_url||null, label:it.label||'', championship_id:it.championship_id||'', car_number:it.car_number||''};
+    });
+    _pe.origImages = _pe.items.map(function(i){ return i.image_url; }).filter(Boolean);
+  } else {
+    _pe.items = [aePeBlankItem(), aePeBlankItem()];
+  }
+  document.getElementById('pe-err').style.display = 'none';
+  aePeBrandUI();
+  aePeFillCats(p ? p.category_id : '');
+  aePeFillMods(p ? p.mod_id : '');
+  document.getElementById('pe-name').value = p ? p.name : '';
+  document.getElementById('pe-season').value = p ? (p.season||'') : '';
+  document.getElementById('pe-paid').value = (p && p.is_paid) ? 'true' : 'false';
+  document.getElementById('pe-url').value = p ? p.download_url : '';
+  document.getElementById('pe-desc').value = p ? (p.description||'') : '';
+  document.getElementById('pe-title').textContent = p ? 'Edit pack' : 'New pack';
+  document.getElementById('pe-save-label').textContent = p ? 'Save changes' : 'Publish pack';
+  document.getElementById('pe-delete-btn').style.display = p ? 'inline-flex' : 'none';
+  aePeRenderItems();
   document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
-  document.getElementById('ae-view-pack-manage').classList.add('on');
-  aeRenderPackManage();
-}
-function aeRenderPackManage(){
-  var liveries = _ae_my_liveries.filter(function(l){ return l.pack_id === _ae_pm_pack_id; });
-  var name = liveries[0] ? (liveries[0].pack_name||'Untitled pack') : 'Pack';
-  document.getElementById('ae-pm-name').value = name;
-  document.getElementById('ae-pm-count').textContent = liveries.length;
-  document.getElementById('ae-pm-list').innerHTML = liveries.map(function(l){
-    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s1);border:1px solid var(--b1);">'
-      + '<div style="width:60px;height:38px;flex-shrink:0;background:var(--s2);overflow:hidden;">' + (l.image_url?'<img src="'+esc(l.image_url)+'" style="width:100%;height:100%;object-fit:cover;">':'') + '</div>'
-      + '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(l.championships?.short_name || l.name) + '</div><div style="font-family:\'Azeret Mono\',monospace;font-size:10px;color:var(--t3);">#' + esc(l.car_number||'') + ' · ' + esc(l.season||'') + '</div></div>'
-      + '<button class="btn-danger" style="height:30px;padding:0 10px;font-size:10px;" onclick="aeRemoveFromPackUI(\''+l.id+'\')"><i class="ti ti-x"></i> Remove</button>'
-      + '</div>';
-  }).join('');
-}
-async function aePackRename(){
-  var newName = document.getElementById('ae-pm-name').value.trim();
-  if (!newName) return;
-  var liveries = _ae_my_liveries.filter(function(l){ return l.pack_id === _ae_pm_pack_id; });
-  for (var i=0; i<liveries.length; i++){
-    await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:liveries[i].id,p_data:{pack_name:newName}});
-    liveries[i].pack_name = newName;
-  }
-  aeToast('Pack renamed.');
-  aePacks();
-}
-async function aeRemoveFromPackUI(liveryId){
-  if (!await aeConfirm('Remove this livery from the pack? It stays published, just ungrouped.')) return;
-  var res = await db.rpc('artist_remove_from_pack',{p_token:_ae_token,p_livery_id:liveryId});
-  if (!res.data){ aeToast('Failed to remove.','err'); return; }
-  var l = _ae_my_liveries.find(function(x){ return x.id === liveryId; });
-  if (l){ l.pack_id = null; l.pack_name = null; }
-  var remaining = _ae_my_liveries.filter(function(x){ return x.pack_id === _ae_pm_pack_id; });
-  if (remaining.length < 2){
-    // Pack no longer makes sense with 0-1 members — ungroup the last one too
-    if (remaining.length === 1){
-      await db.rpc('artist_remove_from_pack',{p_token:_ae_token,p_livery_id:remaining[0].id});
-      remaining[0].pack_id = null; remaining[0].pack_name = null;
-    }
-    aeToast('Pack removed (not enough liveries left).');
-    aeNav('packs', document.querySelector('.sb-link[data-v="packs"]'));
-    return;
-  }
-  aeToast('Removed from pack.');
-  aeRenderPackManage();
+  document.getElementById('ae-view-pack-edit').classList.add('on');
+  document.querySelectorAll('.sb-link').forEach(function(x){ x.classList.remove('on'); });
+  var nb = document.querySelector('.sb-link[data-v="packs"]'); if (nb) nb.classList.add('on');
 }
 
-function aeOpenPackPicker(packId){
-  _ae_pp_target_pack_id = packId;
-  _ae_pp_selected = new Set();
-  var isNew = !packId;
-  document.getElementById('ae-pp-title').textContent = isNew ? 'Create a pack' : 'Add liveries to pack';
-  document.getElementById('ae-pp-name').style.display = isNew ? '' : 'none';
-  document.getElementById('ae-pp-name').value = '';
-  var available = _ae_my_liveries.filter(function(l){ return !l.pack_id; });
-  window._ae_pp_available = available;
-  aeRenderPPGrid();
-  document.getElementById('ae-pp-selcount').textContent = '0';
-  document.getElementById('ae-pack-picker').style.display = 'flex';
+function aePeBrandUI(){
+  document.querySelectorAll('.pe-brand').forEach(function(x){ x.classList.toggle('on', x.dataset.b === _pe.brand); });
 }
-function aeRenderPPGrid(){
-  var list = document.getElementById('ae-pp-list');
-  var available = window._ae_pp_available||[];
-  if (!available.length){
-    list.innerHTML = '<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t3);font-size:12px;">No ungrouped liveries available.</div>';
-    return;
-  }
-  list.innerHTML = available.map(function(l){
-    var on = _ae_pp_selected.has(l.id);
-    return '<div class="pi'+(on?' selected':'')+'" onclick="aePPToggle(\''+l.id+'\')" style="position:relative;">'
-      + (on?'<div style="position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;z-index:2;"><i class="ti ti-check" style="font-size:11px;color:#fff;"></i></div>':'')
-      + (l.image_url?'<img src="'+esc(l.image_url)+'" class="pi-logo" style="object-fit:cover;">':'<div class="pi-logo-ph"><i class="ti ti-photo"></i></div>')
-      + '<div class="pi-name">' + esc(l.name) + '</div>'
+function aePeBrand(b){
+  _pe.brand = b; aePeBrandUI(); aePeFillCats(''); aePeFillMods(''); aePeRenderItems();
+}
+function aePeFillCats(sel){
+  var s = document.getElementById('pe-cat');
+  s.innerHTML = '<option value="">Select…</option>' + _cats.filter(function(c){ return c.brand === _pe.brand; }).map(function(c){
+    return '<option value="'+c.id+'">'+esc(c.name)+'</option>';
+  }).join('');
+  s.value = sel || '';
+}
+function aePeFillMods(sel){
+  var cat = document.getElementById('pe-cat').value;
+  var s = document.getElementById('pe-mod');
+  var mods = cat ? _mods.filter(function(m){ return m.brand === _pe.brand && m.category_id === cat; }) : [];
+  s.innerHTML = '<option value="">' + (cat ? (mods.length ? 'Select…' : 'No mods for this category') : 'Select category first') + '</option>'
+    + mods.map(function(m){ return '<option value="'+m.id+'">'+esc(m.name)+'</option>'; }).join('');
+  s.disabled = !mods.length;
+  s.value = sel || '';
+}
+function aePeCatChange(){ aePeFillMods(''); aePeRenderItems(); }
+
+function aePeAddItem(){ _pe.items.push(aePeBlankItem()); aePeRenderItems(); }
+function aePeRemoveItem(i){
+  var it = _pe.items[i];
+  if (it && it.image_url && _pe.uploaded.indexOf(it.image_url) !== -1){ deleteFromStorage(it.image_url); _pe.uploaded = _pe.uploaded.filter(function(u){ return u !== it.image_url; }); }
+  _pe.items.splice(i,1); aePeRenderItems();
+}
+function aePeSet(i,key,val){ _pe.items[i][key] = val; }
+function aePeChampOptions(selected){
+  var cat = document.getElementById('pe-cat').value;
+  var list = _champs.filter(function(ch){ return !cat || (ch.championship_categories||[]).some(function(cc){ return cc.category_id === cat; }); });
+  return '<option value="">No championship</option>' + list.map(function(ch){
+    return '<option value="'+ch.id+'"'+(ch.id===selected?' selected':'')+'>'+esc(ch.short_name||ch.name)+'</option>';
+  }).join('');
+}
+function aePeRenderItems(){
+  var el = document.getElementById('pe-items');
+  el.innerHTML = _pe.items.map(function(it,i){
+    return '<div class="pe-item">'
+      + '<div>'
+        + '<div class="pe-thumb">' + (it.image_url ? '<img src="'+esc(it.image_url)+'">' : '<i class="ti ti-photo" style="font-size:22px;color:var(--t3);"></i>') + '</div>'
+        + '<label class="upload-btn-label" style="margin-top:6px;padding:7px 8px;font-size:10px;"><i class="ti ti-upload"></i> ' + (it.image_url ? 'Replace' : 'Upload') + '<input type="file" accept="image/*" style="display:none;" onchange="aePeUpload('+i+',this)"></label>'
+        + '<div class="upload-prog" id="pe-prog-'+i+'"></div>'
+      + '</div>'
+      + '<div>'
+        + '<div class="field" style="margin-bottom:10px;"><label>Livery name *</label><input type="text" value="'+esc(it.label)+'" placeholder="e.g. 2025 Super GT #45 PONOS Racing" oninput="aePeSet('+i+',\'label\',this.value)"></div>'
+        + '<div class="form-grid">'
+          + '<div class="field" style="margin-bottom:0;"><label>Championship</label><select onchange="aePeSet('+i+',\'championship_id\',this.value)">' + aePeChampOptions(it.championship_id) + '</select></div>'
+          + '<div class="field" style="margin-bottom:0;"><label>Car #</label><input type="text" maxlength="4" value="'+esc(it.car_number)+'" placeholder="e.g. 45" oninput="aePeSet('+i+',\'car_number\',this.value)"></div>'
+        + '</div>'
+      + '</div>'
+      + '<button class="btn-danger" style="height:30px;padding:0 10px;font-size:10px;" onclick="aePeRemoveItem('+i+')" title="Remove"><i class="ti ti-x"></i></button>'
       + '</div>';
   }).join('');
 }
-function aePPToggle(id){
-  if (_ae_pp_selected.has(id)) _ae_pp_selected.delete(id); else _ae_pp_selected.add(id);
-  document.getElementById('ae-pp-selcount').textContent = _ae_pp_selected.size;
-  aeRenderPPGrid();
+
+async function aePeUpload(i, input){
+  var file = input.files[0]; if (!file) return;
+  if (file.size > 2*1024*1024){ aeToast('Max 2MB.','err'); return; }
+  var prog = document.getElementById('pe-prog-'+i);
+  prog.textContent = 'Compressing…';
+  try {
+    var blob = await aeCompressImg(file);
+    prog.textContent = 'Uploading…';
+    var url = await aeUploadImg(blob, 'liveries');
+    if (!url){ prog.textContent = '✗ Failed.'; return; }
+    var old = _pe.items[i].image_url;
+    if (old && _pe.uploaded.indexOf(old) !== -1){ deleteFromStorage(old); _pe.uploaded = _pe.uploaded.filter(function(u){ return u !== old; }); }
+    _pe.items[i].image_url = url;
+    _pe.uploaded.push(url);
+  } catch(e){ prog.textContent = '✗ Error.'; return; }
+  aePeRenderItems();
 }
-function aeClosePackPicker(){
-  document.getElementById('ae-pack-picker').style.display = 'none';
+
+function aePeBack(){
+  // drop images uploaded during this session that were never saved
+  _pe.uploaded.forEach(function(u){ deleteFromStorage(u); });
+  _pe.uploaded = [];
+  aeNav('packs', document.querySelector('.sb-link[data-v="packs"]'));
 }
-async function aeConfirmPackPicker(){
-  var isNew = !_ae_pp_target_pack_id;
-  var ids = Array.from(_ae_pp_selected);
-  if (isNew){
-    if (ids.length < 2){ aeToast('Select at least 2 liveries.','err'); return; }
-    var packName = document.getElementById('ae-pp-name').value.trim();
-    if (!packName){ aeToast('Pack name is required.','err'); return; }
-    var packId = crypto.randomUUID();
-    var failCount = 0;
-    for (var i=0; i<ids.length; i++){
-      var res = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:ids[i],p_data:{pack_id:packId,pack_name:packName}});
-      if (res.error) failCount++;
-      else { var l=_ae_my_liveries.find(function(x){return x.id===ids[i];}); if(l){l.pack_id=packId;l.pack_name=packName;} }
-    }
-    aeClosePackPicker();
-    if (failCount) aeToast(failCount+' failed.','err'); else aeToast('Pack created!');
-    aePacks();
-  } else {
-    if (!ids.length){ aeClosePackPicker(); return; }
-    var pl = _ae_my_liveries.find(function(l){ return l.pack_id === _ae_pp_target_pack_id; });
-    var pname = pl ? pl.pack_name : 'Untitled pack';
-    var failCount2 = 0;
-    for (var j=0; j<ids.length; j++){
-      var res2 = await db.rpc('artist_update_livery',{p_token:_ae_token,p_livery_id:ids[j],p_data:{pack_id:_ae_pp_target_pack_id,pack_name:pname}});
-      if (res2.error) failCount2++;
-      else { var l2=_ae_my_liveries.find(function(x){return x.id===ids[j];}); if(l2){l2.pack_id=_ae_pp_target_pack_id;l2.pack_name=pname;} }
-    }
-    aeClosePackPicker();
-    if (failCount2) aeToast(failCount2+' failed.','err'); else aeToast('Added to pack!');
-    aeRenderPackManage();
+
+async function aePeSave(){
+  var err = document.getElementById('pe-err');
+  function fail(m){ err.textContent = m; err.style.display = 'block'; }
+  var name = document.getElementById('pe-name').value.trim();
+  var cat = document.getElementById('pe-cat').value;
+  var mod = document.getElementById('pe-mod').value;
+  var season = document.getElementById('pe-season').value.trim();
+  var url = document.getElementById('pe-url').value.trim();
+  if (!name) return fail('Pack name is required.');
+  if (!cat) return fail('Category is required.');
+  if (!mod) return fail('Mod is required.');
+  if (!season) return fail('Season is required.');
+  if (!url) return fail('Download URL is required.');
+  if (_pe.items.length < 2) return fail('A pack needs at least 2 liveries.');
+  for (var i=0; i<_pe.items.length; i++){
+    if (!_pe.items[i].image_url) return fail('Livery #'+(i+1)+': a preview image is required.');
+    if (!_pe.items[i].label.trim()) return fail('Livery #'+(i+1)+': a name is required.');
   }
+  err.style.display = 'none';
+  var data = {name:name, description:document.getElementById('pe-desc').value.trim(), download_url:normalizeUrl(url),
+    is_paid:document.getElementById('pe-paid').value==='true', season:season, mod_id:mod, category_id:cat};
+  var items = _pe.items.map(function(it){
+    return {label:it.label.trim(), image_url:it.image_url, championship_id:it.championship_id||null, car_number:it.car_number.trim()||null};
+  });
+  var btn = document.getElementById('pe-save-btn'); btn.disabled = true;
+  var res = _pe.id
+    ? await db.rpc('artist_update_pack', {p_token:_ae_token, p_pack_id:_pe.id, p_data:data, p_items:items})
+    : await db.rpc('artist_submit_pack', {p_token:_ae_token, p_data:data, p_items:items});
+  btn.disabled = false;
+  if (res.error || !res.data){ fail('Error: ' + (res.error ? res.error.message : 'could not save the pack.')); return; }
+  var finalImgs = items.map(function(i){ return i.image_url; });
+  _pe.origImages.concat(_pe.uploaded).filter(function(u){ return finalImgs.indexOf(u) === -1; }).forEach(function(u){ deleteFromStorage(u); });
+  _pe.uploaded = [];
+  aeToast(_pe.id ? 'Pack updated!' : 'Pack published!');
+  aeNav('packs', document.querySelector('.sb-link[data-v="packs"]'));
+}
+
+async function aePeDelete(){
+  if (!_pe.id) return;
+  if (!await aeConfirm('Delete this pack permanently? This cannot be undone.')) return;
+  var res = await db.rpc('artist_delete_pack', {p_token:_ae_token, p_pack_id:_pe.id});
+  if (!res.data){ aeToast('Failed to delete.','err'); return; }
+  _pe.origImages.concat(_pe.uploaded).forEach(function(u){ deleteFromStorage(u); });
+  _pe.uploaded = [];
+  aeToast('Pack deleted.');
+  aeNav('packs', document.querySelector('.sb-link[data-v="packs"]'));
 }
 
 async function aeEditLivery(id) {
@@ -970,9 +1014,6 @@ async function aeEditLivery(id) {
   var l = res.data; if (!l) return;
   _ae_edit_id = id;
   _ae_edit_original_img = l.image_url || null;
-  _ae_pack_staged = [];
-  aeRenderPackList();
-  document.getElementById('ae-pack-add-btn').style.display = 'none';
   aeNav('submit', document.querySelector('.sb-link[data-v="submit"]'));
   aeSetMode('livery');
   document.getElementById('ae-submit-title').innerHTML = 'Edit <em>livery</em>';
@@ -1015,10 +1056,6 @@ async function aeEditLivery(id) {
 
 function aeResetSubmitForm() {
   _ae_edit_id = null;
-  _ae_pack_staged = [];
-  aeRenderPackList();
-  document.getElementById('ae-pack-name').value = '';
-  document.getElementById('ae-pack-add-btn').style.display = '';
   document.getElementById('ae-dup-warning').style.display='none';
   document.getElementById('ae-submit-title').innerHTML = 'Add <em>content</em>';
   document.getElementById('ae-submit-label').textContent = _ae_mode==='livery' ? 'Publish livery' : 'Publish addon';
@@ -1103,98 +1140,8 @@ async function aeAddons() {
   }).join('');
 }
 
-function aeValidateLiveryForm(){
-  var name = document.getElementById('ae-lname').value.trim();
-  var url = document.getElementById('ae-url').value.trim();
-  var catId = document.getElementById('ae-cat').value;
-  var modId = document.getElementById('ae-mod').value;
-  if (!name) return 'Name is required.';
-  if (!catId) return 'Category is required.';
-  if (!modId) return 'Mod is required.';
-  if (!document.getElementById('ae-team').value.trim()) return 'Team is required.';
-  if (!document.getElementById('ae-driver').value.trim()) return 'Driver(s) is required.';
-  if (!document.getElementById('ae-season').value.trim()) return 'Season is required.';
-  if (!document.getElementById('ae-carnumber').value.trim()) return 'Car number is required.';
-  if (!document.getElementById('ae-champ').value) return 'Championship is required.';
-  if (!url) return 'Download URL is required.';
-  if (!_ae_preview_img) return 'Preview image is required.';
-  return null;
-}
-function aeCurrentLiveryPayload(){
-  return {
-    name:document.getElementById('ae-lname').value.trim(),
-    team:document.getElementById('ae-team').value.trim()||null,
-    driver:document.getElementById('ae-driver').value.trim()||null,
-    season:document.getElementById('ae-season').value.trim()||null,
-    car_number:document.getElementById('ae-carnumber').value.trim()||null,
-    category_id:document.getElementById('ae-cat').value||null,
-    mod_id:document.getElementById('ae-mod').value||null,
-    championship_id:document.getElementById('ae-champ').value||null,
-    championship_name:document.getElementById('ae-champ-text').textContent,
-    download_url:document.getElementById('ae-url').value.trim(),
-    image_url:_ae_preview_img,
-    is_paid:document.getElementById('ae-paid').value==='true',
-    notes:document.getElementById('ae-notes').value.trim()||null,
-  };
-}
-function aeAddToPack(){
-  var err = document.getElementById('ae-submit-err');
-  var msg = aeValidateLiveryForm();
-  if (msg){ err.textContent=msg; err.style.display='block'; return; }
-  err.style.display='none';
-  _ae_pack_staged.push(aeCurrentLiveryPayload());
-  aeRenderPackList();
-  // Clear only championship + image; keep everything else for the next variant
-  document.getElementById('ae-champ').value = '';
-  document.getElementById('ae-champ-text').textContent = 'None';
-  document.getElementById('ae-champ-text').style.color = 'var(--t2)';
-  _ae_preview_img = null;
-  aeBuildUpload();
-  aeUpdatePreview(); aeUpdateChecklist();
-  document.getElementById('ae-champ-btn').focus();
-}
-function aeRenderPackList(){
-  var wrap = document.getElementById('ae-pack-wrap');
-  var list = document.getElementById('ae-pack-list');
-  var n = _ae_pack_staged.length;
-  document.getElementById('ae-pack-count').textContent = n;
-  wrap.style.display = n ? 'block' : 'none';
-  document.getElementById('ae-submit-label').textContent = n ? ('Publish '+(n+1)+' liveries') : 'Publish livery';
-  list.innerHTML = _ae_pack_staged.map(function(v,i){
-    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s1);border:1px solid var(--b1);">'
-      + '<img src="'+esc(v.image_url)+'" style="width:44px;height:28px;object-fit:cover;flex-shrink:0;">'
-      + '<div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:700;color:var(--t1);">'+esc(v.championship_name)+'</div><div style="font-size:11px;color:var(--t3);">#'+esc(v.car_number)+' · '+esc(v.season)+'</div></div>'
-      + '<button onclick="aeRemoveFromPack('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;" title="Remove"><i class="ti ti-x"></i></button>'
-      + '</div>';
-  }).join('');
-}
-function aeRemoveFromPack(i){
-  _ae_pack_staged.splice(i,1);
-  aeRenderPackList();
-}
 async function aeDoSubmit() {
   var err = document.getElementById('ae-submit-err');
-  if (_ae_mode === 'livery' && _ae_pack_staged.length && !_ae_edit_id) {
-    var packName = document.getElementById('ae-pack-name').value.trim();
-    if (!packName){ err.textContent='Pack name is required.'; err.style.display='block'; return; }
-    var msg = aeValidateLiveryForm();
-    if (msg){ err.textContent=msg; err.style.display='block'; return; }
-    err.style.display='none';
-    var variants = _ae_pack_staged.concat([aeCurrentLiveryPayload()]);
-    var packId = crypto.randomUUID();
-    var failCount = 0;
-    for (var i=0; i<variants.length; i++){
-      var v = variants[i];
-      var payload = {name:v.name, team:v.team, driver:v.driver, season:v.season, car_number:v.car_number, category_id:v.category_id, mod_id:v.mod_id, championship_id:v.championship_id, download_url:v.download_url, image_url:v.image_url, is_paid:v.is_paid, notes:v.notes, artist_id:_ae_artist.id, author:_ae_artist.name, approved:true, pack_id:packId, pack_name:packName};
-      var res = await db.rpc('artist_submit_livery',{p_token:_ae_token,p_data:payload});
-      if (res.error) failCount++;
-    }
-    _ae_pack_staged = [];
-    if (failCount) aeToast(failCount+' variant(s) failed to save.','err');
-    else aeToast(variants.length+' pack liveries published!');
-    aeNav('liveries', document.querySelector('.sb-link[data-v="liveries"]'));
-    return;
-  }
   var name = document.getElementById('ae-lname').value.trim();
   var url = document.getElementById('ae-url').value.trim();
   var catId = document.getElementById('ae-cat').value;

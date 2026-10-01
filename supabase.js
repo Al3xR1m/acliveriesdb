@@ -63,13 +63,17 @@ async function getFingerprint() {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('').slice(0,32);
 }
 
+function votedKey(type) {
+  return type === 'addon' ? 'acl_addon_votes' : type === 'pack' ? 'acl_pack_votes' : 'acl_votes';
+}
+
 function getVotedSet(type = 'livery') {
-  const key = type === 'addon' ? 'acl_addon_votes' : 'acl_votes';
+  const key = votedKey(type);
   try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); } catch { return new Set(); }
 }
 
 function saveVotedSet(set, type = 'livery') {
-  const key = type === 'addon' ? 'acl_addon_votes' : 'acl_votes';
+  const key = votedKey(type);
   localStorage.setItem(key, JSON.stringify([...set]));
 }
 
@@ -231,6 +235,30 @@ async function fetchAddons({ modId, categoryId, sort = 'votes', approvedOnly = t
   return data || [];
 }
 
+
+const PACK_SELECT = '*, mods(id,name,brand), categories(id,name,color_bg,color_text), artists(id,name,avatar_url), pack_items(id,label,image_url,championship_id,car_number,sort_order,championships(id,name,short_name))';
+
+function _sortPackItems(p) {
+  if (p && p.pack_items) p.pack_items.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  return p;
+}
+
+async function fetchPacks({ approvedOnly = true, artistId } = {}) {
+  let q = db.from('packs').select(PACK_SELECT);
+  if (approvedOnly) q = q.eq('approved', true);
+  if (artistId)     q = q.eq('artist_id', artistId);
+  q = q.order('created_at', { ascending: false });
+  const { data, error } = await q;
+  if (error) console.error('fetchPacks failed:', error);
+  return (data || []).map(_sortPackItems);
+}
+
+async function fetchPack(id) {
+  const { data, error } = await db.from('packs').select(PACK_SELECT).eq('id', id).single();
+  if (error) console.error('fetchPack failed:', error);
+  return _sortPackItems(data);
+}
+
 async function fetchModDetail(id) {
   const { data } = await db.from('mods')
     .select('*, categories(id,name,color_bg,color_text)')
@@ -363,6 +391,20 @@ async function removeUpvoteAddon(id) {
   const fp = await getFingerprint();
   const { data, error } = await db.rpc('remove_upvote_addon', { p_addon_id: id, p_fingerprint: fp });
   if (data) { const s = getVotedSet('addon'); s.delete(id); saveVotedSet(s, 'addon'); }
+  return error ? { ok:false, error } : { ok:!!data };
+}
+
+async function upvotePack(id) {
+  const fp = await getFingerprint();
+  const { data, error } = await db.rpc('upvote_pack', { p_pack_id: id, p_fingerprint: fp });
+  if (data) { const s = getVotedSet('pack'); s.add(id); saveVotedSet(s, 'pack'); }
+  return error ? { ok:false, error } : { ok:!!data };
+}
+
+async function removeUpvotePack(id) {
+  const fp = await getFingerprint();
+  const { data, error } = await db.rpc('remove_upvote_pack', { p_pack_id: id, p_fingerprint: fp });
+  if (data) { const s = getVotedSet('pack'); s.delete(id); saveVotedSet(s, 'pack'); }
   return error ? { ok:false, error } : { ok:!!data };
 }
 

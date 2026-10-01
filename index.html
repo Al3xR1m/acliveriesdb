@@ -224,8 +224,14 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 .lv-card-numtag{font-family:'Archivo Black',sans-serif;font-size:13px;font-weight:400;color:var(--t1);}
 .lv-card-champ{font-family:'Azeret Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
 .lv-card-season{font-family:'Azeret Mono',monospace;font-size:13px;font-weight:700;color:var(--t1);flex-shrink:0;margin-left:6px;}
-.lv-card-pack{color:var(--acc);font-size:12px;cursor:pointer;transition:opacity .12s;background:rgba(255,61,129,.15);border:1px solid rgba(255,61,129,.4);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.lv-card-pack:hover{opacity:.75;}
+.ld-grid.pk-grid{grid-template-columns:minmax(0,1.7fr) minmax(320px,1fr);}
+.pk-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.pk-gallery.one{grid-template-columns:minmax(0,1fr);}
+.pk-shot{position:relative;aspect-ratio:16/10;background:var(--s2);overflow:hidden;border:1px solid var(--b1);}
+.pk-shot img{width:100%;height:100%;object-fit:cover;display:block;}
+.pk-shot::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,15,.88),transparent 48%);pointer-events:none;}
+.pk-shot-label{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;color:var(--t1);z-index:2;line-height:1.2;}
+@media(max-width:900px){.ld-grid.pk-grid{grid-template-columns:minmax(0,1fr);}}
 .packs-grid{display:none;}
 .pack-slides{position:absolute;inset:0;}
 .pack-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;}
@@ -806,6 +812,12 @@ button,input,select,textarea{font-family:'Archivo',sans-serif;}
     <div id="ad-content"></div>
   </div>
 
+  <!-- PACK DETAIL -->
+  <div class="view" id="view-pack-detail">
+    <div class="ld-back" onclick="navBack()"><i class="ti ti-arrow-left"></i> Back</div>
+    <div id="pk-content"></div>
+  </div>
+
   <!-- MODS -->
   <div class="view" id="view-mods">
     <div class="mv-top"><h2 class="mv-title">Supported <em>mods</em></h2></div>
@@ -1271,7 +1283,6 @@ function richCard(l){
         <div class="lv-card-champ-row">
           <span class="lv-card-champ" style="color:${brandColor};">${esc(champName)||esc(cn)||'—'}</span>
           <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-            ${l.pack_id?`<span class="lv-card-pack" title="Part of a pack — other championships available" onclick="event.stopPropagation();openLivery('${l.id}')"><i class="ti ti-stack-2"></i></span>`:''}
             ${season?`<span class="lv-card-season">${esc(season)}</span>`:''}
           </span>
         </div>
@@ -1490,13 +1501,15 @@ async function loadLiveries(){
   // Brand filter applied client-side after fetch
   const[list,total]=await Promise.all([fetchLiveries(params),fetchLiveriesCount({categoryId:params.categoryId,championshipId:params.championshipId,season:params.season,brand:params.brand,isPaid:params.isPaid,confirmedOnly:params.confirmedOnly,communityOnly:params.communityOnly,search:params.search})]);
   _total=total;_voted=getVotedSet();
-  document.getElementById('l-count').textContent=`${total} liveri${total!==1?'es':'y'}`;
+  const mPacks=await getMatchingPacks();
+  const shownPacks=_page===1?mPacks:[];
+  document.getElementById('l-count').textContent=`${total} liveri${total!==1?'es':'y'}`+(mPacks.length?` · ${mPacks.length} pack${mPacks.length!==1?'s':''}`:'');
   document.getElementById('l-info').textContent=`${Math.min((_page-1)*PAGE+1,total)}–${Math.min(_page*PAGE,total)} of ${total}`;
   const empty=`<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i><p>No liveries found.</p></div>`;
   const grid = document.getElementById('l-content');
   grid.className = 'lv-cards';
-  if(!list.length){ grid.innerHTML=empty; return; }
-  grid.innerHTML=list.map(richCard).join('');
+  if(!list.length&&!shownPacks.length){ grid.innerHTML=empty; renderPag(); return; }
+  grid.innerHTML=shownPacks.map(packCard).join('')+list.map(richCard).join('');
   renderPag();
 }
 function renderPag(){
@@ -1573,13 +1586,6 @@ async function loadLiveryDetail(id){
         <p class="ld-desc">${esc(l.notes)}</p>
       </section>`:''}
 
-      ${l.pack_id?`<section class="ld-section">
-        <span class="ld-section-tag">// Part of a pack</span>
-        <h2>${l.pack_name?esc(l.pack_name):'Other variants'}</h2>
-        <div class="ld-more-grid" id="ld-pack-variants">
-          <div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div>
-        </div>
-      </section>`:''}
 
       <section class="ld-section">
         <span class="ld-section-tag">// You may like</span>
@@ -1589,11 +1595,6 @@ async function loadLiveryDetail(id){
         </div>
       </section>
     </div>`;
-  if (l.pack_id) {
-    const packMates=await fetchLiveries({packId:l.pack_id,sort:'votes',pageSize:12});
-    const others=packMates.filter(x=>x.id!==l.id);
-    document.getElementById('ld-pack-variants').innerHTML=others.length?others.map(richCard).join(''):'<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t2);font-size:12px;">No other variants found.</div>';
-  }
   const similar=await fetchLiveries({modId:l.mod_id,sort:'votes',pageSize:8});
   const sim=similar.filter(x=>x.id!==l.id).slice(0,4);
   document.getElementById('ld-similar').innerHTML=sim.length?sim.map(richCard).join(''):'<div style="grid-column:1/-1;padding:20px;text-align:center;color:var(--t2);font-size:12px;">No other liveries for this mod yet.</div>';
@@ -2389,67 +2390,173 @@ function addonCard(a){
   </div>`;
 }
 function openAddon(id){_prevView=document.querySelector('.view.on')?.id?.replace('view-','')??'addons';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('view-addon-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;if(location.hash!=='#addon/'+id) history.pushState(null,'','#addon/'+id);loadAddonDetail(id);}
-let _packSlideTimer=null;
+// ── PACKS ──────────────────────────────────────
+let _packsCache=null;
+async function ensurePacks(force){
+  if(!_packsCache||force) _packsCache=await fetchPacks();
+  return _packsCache;
+}
+function packEntryLabel(it){
+  const ch=it.championships?.short_name||it.championships?.name||'';
+  const n=it.car_number?('#'+it.car_number):'';
+  return [ch,n].filter(Boolean).join(' ')||it.label||'';
+}
+function packMatches(p){
+  if(_cat!=='all'&&p.category_id!==_cat)return false;
+  if(_champ!=='all'&&!(p.pack_items||[]).some(it=>it.championship_id===_champ))return false;
+  if(_year!=='all'&&p.season!==_year)return false;
+  if(_activeBrand&&p.mods?.brand!==_activeBrand)return false;
+  if(_price!==null&&!!p.is_paid!==_price)return false;
+  if(_artistFilter==='community')return false;
+  if(_featuredOnly)return false;
+  if(_search){
+    const hay=[p.name,p.description,p.author,p.artists?.name,p.mods?.name,p.categories?.name,p.season,
+      ...(p.pack_items||[]).flatMap(it=>[it.label,it.car_number,it.championships?.name,it.championships?.short_name])
+    ].filter(Boolean).join(' ').toLowerCase();
+    if(!hay.includes(_search.toLowerCase()))return false;
+  }
+  return true;
+}
+async function getMatchingPacks(){
+  const all=await ensurePacks();
+  const list=all.filter(packMatches);
+  if(_sort==='votes')list.sort((a,b)=>(b.upvotes||0)-(a.upvotes||0));
+  else if(_sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name));
+  else list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  return list;
+}
+function packCard(p){
+  const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
+  const brand=p.mods?.brand||'';
+  const brandColor=BRC[brand]||'var(--acc)';
+  const brandTag=brand?`<span class="bt bt-${brand.toLowerCase()}">${brand}</span>`:'';
+  const items=p.pack_items||[];
+  const imgs=items.filter(it=>it.image_url);
+  const n=items.length;
+  const artist=p.artists?.name||p.author||'';
+  const modName=p.mods?.name||'';
+  return `<div class="lv-card${brand?' '+brand.toLowerCase():''}" onclick="openPack('${p.id}')">
+    <div class="lv-card-thumb">
+      <div class="pack-slides">
+        ${imgs.map((it,i)=>`<div class="pack-slide${i===0?' on':''}"><img src="${esc(it.image_url)}" alt="${esc(it.label||p.name)}" loading="lazy"></div>`).join('')}
+      </div>
+      <div class="lv-card-ov"></div>
+      ${brandTag?`<div class="lv-card-brand">${brandTag}</div>`:''}
+      <div class="pack-icon-badge"><i class="ti ti-stack-2"></i></div>
+      ${imgs.length>1?`<div class="pack-dots">${imgs.map((_,i)=>`<span class="pack-dot${i===0?' on':''}"></span>`).join('')}</div>`:''}
+      <div class="lv-card-meta">
+        <div class="lv-card-champ-row">
+          <span class="lv-card-champ" style="color:${brandColor};">Pack</span>
+          <span class="lv-card-season">${n} liver${n===1?'y':'ies'}</span>
+        </div>
+        <div class="lv-card-name">${esc(p.name)}</div>
+        ${artist?`<div class="lv-card-driver">${esc(artist)}</div>`:''}
+        ${modName?`<div class="lv-card-sub">${esc(modName)}${p.season?' · '+esc(p.season):''}</div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+// one global ticker for every pack slideshow on screen
+let _packSlideIdx=0;
+setInterval(()=>{
+  _packSlideIdx++;
+  document.querySelectorAll('.pack-slides').forEach(wrap=>{
+    const slides=wrap.querySelectorAll('.pack-slide');
+    if(slides.length<2)return;
+    const dots=wrap.parentElement.querySelectorAll('.pack-dot');
+    const cur=_packSlideIdx%slides.length;
+    slides.forEach((s,i)=>s.classList.toggle('on',i===cur));
+    dots.forEach((d,i)=>d.classList.toggle('on',i===cur));
+  });
+},2800);
+
 async function loadPacks(){
   const el=document.getElementById('packs-content');
-  el.innerHTML='<div class="lv-grid"><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div></div>';
-  clearInterval(_packSlideTimer);
-  const {data,error}=await db.from('liveries').select('id,name,pack_id,pack_name,image_url,upvotes,mods(brand)').eq('approved',true).not('pack_id','is',null);
-  if(error) console.error('loadPacks failed:',error);
-  const list=data||[];
-  const groups={};
-  list.forEach(l=>{
-    if(!groups[l.pack_id]) groups[l.pack_id]={id:l.pack_id,name:l.pack_name||'Untitled pack',brand:l.mods?.brand||'',liveries:[]};
-    groups[l.pack_id].liveries.push(l);
-  });
-  const packs=Object.values(groups).map(p=>{
-    p.liveries.sort((a,b)=>(b.upvotes||0)-(a.upvotes||0));
-    p.mainId=p.liveries[0]?.id;
-    return p;
-  }).filter(p=>p.liveries.length>1);
+  el.innerHTML='<div class="lv-grid"><div class="sk" style="aspect-ratio:16/10;"></div><div class="sk" style="aspect-ratio:16/10;"></div></div>';
+  const packs=await ensurePacks(true);
   if(!packs.length){
     el.innerHTML='<div style="padding:60px;text-align:center;color:var(--t2);"><i class="ti ti-stack-2" style="font-size:32px;display:block;margin-bottom:12px;color:var(--t3);"></i>No packs yet.</div>';
     return;
   }
-  el.innerHTML=`<div class="lv-grid">${packs.map((p,pi)=>{
-    const BRC={RSS:'#E8312A',VRC:'#30D158',URD:'#FF9F0A'};
-    const brandColor=p.brand&&BRC[p.brand]?BRC[p.brand]:'var(--acc)';
-    const brandTag=p.brand?`<span class="bt bt-${p.brand.toLowerCase()}">${p.brand}</span>`:'';
-    const team=p.liveries[0]?.team||'';
-    const modName=p.liveries[0]?.mods?.name||'';
-    return `<div class="lv-card${p.brand?' '+p.brand.toLowerCase():''}" onclick="openLivery('${p.mainId}')">
-      <div class="lv-card-thumb">
-        <div class="pack-slides" data-pack="${pi}">
-          ${p.liveries.map((l,i)=>`<div class="pack-slide${i===0?' on':''}">${l.image_url?`<img src="${esc(l.image_url)}" alt="${esc(l.name)}" loading="lazy">`:''}</div>`).join('')}
-        </div>
-        <div class="lv-card-ov"></div>
-        ${brandTag?`<div class="lv-card-brand">${brandTag}</div>`:''}
-        <div class="pack-icon-badge"><i class="ti ti-stack-2"></i></div>
-        ${p.liveries.length>1?`<div class="pack-dots">${p.liveries.map((l,i)=>`<span class="pack-dot${i===0?' on':''}"></span>`).join('')}</div>`:''}
-        <div class="lv-card-meta">
-          <div class="lv-card-champ-row">
-            <span class="lv-card-champ" style="color:${brandColor};">Pack</span>
-            <span class="lv-card-season">${p.liveries.length} variants</span>
+  el.innerHTML=`<div class="lv-grid">${packs.map(packCard).join('')}</div>`;
+}
+
+function openPack(id){_prevView=document.querySelector('.view.on')?.id?.replace('view-','')??'packs';document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.sb-link').forEach(x=>x.classList.remove('on'));document.getElementById('nl-packs')?.classList.add('on');document.getElementById('view-pack-detail').classList.add('on');document.getElementById('main-scroll').scrollTop=0;if(location.hash!=='#pack/'+id) history.pushState(null,'','#pack/'+id);loadPackDetail(id);}
+
+async function loadPackDetail(id){
+  const el=document.getElementById('pk-content');
+  el.innerHTML=`<div style="padding:40px;text-align:center;"><div class="sk" style="height:200px;margin-bottom:16px;"></div><div class="sk" style="height:120px;"></div></div>`;
+  const p=await fetchPack(id);
+  if(!p||p.approved===false){el.innerHTML='<div style="padding:40px;text-align:center;color:var(--t2);">Pack not found.</div>';return;}
+  const items=p.pack_items||[];
+  updateSEO(p.name,`${p.name} — a pack of ${items.length} ${p.mods?.name||'Assetto Corsa'} liveries${p.season?' ('+p.season+')':''}. Free download on AC Liveries DB.`);
+  const voted=getVotedSet('pack').has(p.id);
+  const brand=p.mods?.brand||'';
+  const br=brand?BR[brand]:null;
+  const artistName=p.artists?.name||p.author||'';
+  const isConfirmed=!!p.artists;
+  const included=items.map(packEntryLabel).filter(Boolean);
+  const rows=[
+    ['Liveries included',included.length?included.map(esc).join('<br>'):'—'],
+    ['Category',esc(p.categories?.name)||'—'],
+    ['Season',esc(p.season)||'—'],
+    ['Pricing',p.is_paid?'<span class="badge b-p">Paid</span>':'<span class="badge b-f">Free</span>'],
+    ['Mod maker',br?`<span style="color:${br.c};font-weight:700;">${brand}</span> — ${esc(br.l)}`:'—'],
+    ['Mod',esc(p.mods?.name)||'—'],
+  ];
+  el.innerHTML=`
+    <div class="ld-body">
+      <div class="ld-crumb"><a onclick="nav('packs')">Packs</a> / ${esc(p.name)}</div>
+      <div class="ld-grid pk-grid">
+        <div>
+          <div class="pk-gallery${items.length===1?' one':''}">
+            ${items.map(it=>`<div class="pk-shot">${it.image_url?`<img src="${esc(it.image_url)}" alt="${esc(it.label||'')}" loading="lazy">`:''}<div class="pk-shot-label">${esc(it.label||packEntryLabel(it))}</div></div>`).join('')}
           </div>
-          <div class="lv-card-name">${esc(p.name)}</div>
-          ${team?`<div class="lv-card-driver">${esc(team)}</div>`:''}
-          ${modName?`<div class="lv-card-sub">${esc(modName)}</div>`:''}
+        </div>
+        <div>
+          <span class="ld-tag">Pack · ${items.length} liver${items.length===1?'y':'ies'}</span>
+          <h1 class="ld-title">${esc(p.name)}</h1>
+          <div class="ld-artist-line">
+            ${artistName?`by <strong onclick="${isConfirmed?`openArtistProfile('${p.artists.id}')`:''}">${esc(artistName)}</strong>`:''}
+            ${isConfirmed?'<span class="ld-artist-badge"><svg width="11" height="11" viewBox="0 0 14 14" style="display:inline-block;vertical-align:-2px;flex-shrink:0;"><rect x="1" y="1" width="12" height="12" transform="rotate(45 7 7)" fill="var(--crown)"/><path d="M4 7L6 9.2L10 4.8" fill="none" stroke="#0A0A0F" stroke-width="1.4" stroke-linecap="square"/></svg> Confirmed</span>':''}
+          </div>
+          <div class="ld-stats">
+            <div><div class="ld-stat-num" id="pack-upvote-count">${p.upvotes||0}</div><div class="ld-stat-label">Upvotes</div></div>
+            ${p.season?`<div><div class="ld-stat-num">${esc(p.season)}</div><div class="ld-stat-label">Season</div></div>`:''}
+          </div>
+          <div class="ld-actions">
+            ${p.download_url?`<a href="${esc(normalizeUrl(p.download_url))}" target="_blank" class="ld-btn primary"><i class="ti ti-download"></i> Download pack</a>`:''}
+            <button class="ld-btn ghost${voted?' voted':''}" id="pack-upvote-btn" onclick="handlePackUpvote('${p.id}')"><i class="ti ti-thumb-up"></i> ${voted?'Upvoted':'Upvote'}</button>
+          </div>
+          <div class="ld-links">
+            <a onclick="copyLink('${p.id}','pack')"><i class="ti ti-link"></i> Copy link</a>
+          </div>
+          <div class="ld-meta-panel">
+            ${rows.map(([k,v])=>`<div class="ld-row"><div class="ld-key">${k}</div><div class="ld-val">${v}</div></div>`).join('')}
+          </div>
         </div>
       </div>
+      ${p.description?`<section class="ld-section">
+        <span class="ld-section-tag">// About this pack</span>
+        <h2>Details</h2>
+        <p class="ld-desc">${esc(p.description)}</p>
+      </section>`:''}
     </div>`;
-  }).join('')}</div>`;
-  let idx=0;
-  _packSlideTimer=setInterval(()=>{
-    idx++;
-    document.querySelectorAll('.pack-slides').forEach(wrap=>{
-      const slides=wrap.querySelectorAll('.pack-slide');
-      const dots=wrap.parentElement.querySelectorAll('.pack-dot');
-      if(!slides.length)return;
-      const cur=idx%slides.length;
-      slides.forEach((s,i)=>s.classList.toggle('on',i===cur));
-      dots.forEach((d,i)=>d.classList.toggle('on',i===cur));
-    });
-  },2800);
+}
+async function handlePackUpvote(id){
+  const btn=document.getElementById('pack-upvote-btn');
+  const cnt=document.getElementById('pack-upvote-count');
+  if(!btn||!cnt)return;
+  const isVoted=getVotedSet('pack').has(id);
+  if(isVoted){
+    const res=await removeUpvotePack(id);
+    if(res.ok){cnt.textContent=Math.max(0,parseInt(cnt.textContent)-1);btn.classList.remove('voted');btn.innerHTML='<i class="ti ti-thumb-up"></i> Upvote';_packsCache=null;}
+    else customAlert('Could not remove upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  } else {
+    const res=await upvotePack(id);
+    if(res.ok){cnt.textContent=parseInt(cnt.textContent)+1;btn.classList.add('voted');btn.innerHTML='<i class="ti ti-thumb-up"></i> Upvoted';_packsCache=null;}
+    else customAlert('Could not upvote'+(res.error?': '+res.error.message:'')+'. Try again.','error');
+  }
 }
 async function loadAddons(){
   _addAll=await fetchAddons({});
@@ -2751,6 +2858,7 @@ function handleHash(){
   if(!h||h==='#'){nav('home');return;}
   if(h.startsWith('#livery/'))openLivery(h.replace('#livery/',''));
   else if(h.startsWith('#addon/'))openAddon(h.replace('#addon/',''));
+  else if(h.startsWith('#pack/'))openPack(h.replace('#pack/',''));
   else if(h.startsWith('#mod/'))openModDetail(h.replace('#mod/',''));
   else if(h.startsWith('#artist/'))openArtistProfile(h.replace('#artist/',''));
   else if(h.startsWith('#brand/'))openBrandDetail(h.replace('#brand/',''));
@@ -2949,8 +3057,18 @@ async function buildLivCounts(){
     if(l.is_paid) _champLivCounts.paid++; else _champLivCounts.free++;
     if(l.artist_id) _champLivCounts.confirmed++; else _champLivCounts.community++;
   });
+  const packs=await ensurePacks();
+  packs.forEach(p=>{
+    _champLivCounts.total++;
+    if(p.category_id) _champLivCounts.cat[p.category_id]=(_champLivCounts.cat[p.category_id]||0)+1;
+    if(p.mods?.brand) _champLivCounts.brand[p.mods.brand]=(_champLivCounts.brand[p.mods.brand]||0)+1;
+    if(p.season) _champLivCounts.year[p.season]=(_champLivCounts.year[p.season]||0)+1;
+    if(p.is_paid) _champLivCounts.paid++; else _champLivCounts.free++;
+    _champLivCounts.confirmed++;
+    new Set((p.pack_items||[]).map(it=>it.championship_id).filter(Boolean)).forEach(cid=>{_champLivCounts.champ[cid]=(_champLivCounts.champ[cid]||0)+1;});
+  });
   const sub=document.getElementById('fm-sub');
-  if(sub) sub.textContent=all.length+' liveries match your current filters';
+  if(sub) sub.textContent=_champLivCounts.total+' entries available';
 }
 
 // ── BOOT ──────────────────────────────────────
