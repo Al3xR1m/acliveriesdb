@@ -234,7 +234,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:'Archivo',sans-serif;
 @media(max-width:900px){.ld-grid.pk-grid{grid-template-columns:minmax(0,1fr);}}
 .packs-grid{display:none;}
 .pack-slides{position:absolute;inset:0;}
-.pack-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;}
+.pack-slide{position:absolute;inset:0;opacity:0;}
 .pack-slide img{width:100%;height:100%;object-fit:cover;}
 .pack-slide.on{opacity:1;}
 .pack-dots{position:absolute;bottom:10px;left:12px;display:flex;gap:4px;z-index:3;}
@@ -2468,7 +2468,7 @@ setInterval(()=>{
     slides.forEach((s,i)=>s.classList.toggle('on',i===cur));
     dots.forEach((d,i)=>d.classList.toggle('on',i===cur));
   });
-},2800);
+},1400);
 
 async function loadPacks(){
   const el=document.getElementById('packs-content');
